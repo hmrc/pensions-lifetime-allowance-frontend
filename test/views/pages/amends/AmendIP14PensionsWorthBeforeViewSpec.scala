@@ -17,11 +17,14 @@
 package views.pages.amends
 
 import forms.AmendPensionsWorthBeforeForm
+import models.amendModels.AmendPensionsWorthBeforeModel
 import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.scalatestplus.mockito.MockitoSugar
-import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
-import testHelpers.ViewSpecHelpers.amends.AmendIP14PensionsWorthBeforeViewMessages
+import play.api.data.Form
+import testHelpers.CommonViewSpecHelper
+import testHelpers.messages.amends.AmendIP14PensionsWorthBeforeViewMessages
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.amendIP14PensionsWorthBefore
 
@@ -29,16 +32,18 @@ class AmendIP14PensionsWorthBeforeViewSpec
     extends CommonViewSpecHelper
     with AmendIP14PensionsWorthBeforeViewMessages
     with MockitoSugar {
-  implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
+  implicit val formWithCSRF: FormWithCSRF = inject[FormWithCSRF]
+
+  val view: amendIP14PensionsWorthBefore = inject[amendIP14PensionsWorthBefore]
+
+  val form: Form[AmendPensionsWorthBeforeModel] = AmendPensionsWorthBeforeForm
+    .amendPensionsWorthBeforeForm(IndividualProtection2016.toString)
+    .bind(Map("amendedPensionsWorthBefore" -> "yes", "amendedPensionsTakenBeforeAmt" -> "12345"))
+
+  val doc: Document =
+    Jsoup.parse(view.apply(form, IndividualProtection2016.toString, "open").body)
 
   "the AmendIP14PensionsWorthBeforeView" should {
-    val pensionsForm = AmendPensionsWorthBeforeForm
-      .amendPensionsWorthBeforeForm(IndividualProtection2016.toString)
-      .bind(Map("amendedPensionsWorthBefore" -> "yes", "amendedPensionsTakenBeforeAmt" -> "12345"))
-    lazy val view = app.injector.instanceOf[amendIP14PensionsWorthBefore]
-    lazy val doc =
-      Jsoup.parse(view.apply(pensionsForm, IndividualProtection2016.toString, "open").body)
-
     "have the correct old title when applyFor2016IPAndFpShutterEnabled is disabled" in {
       doc.title() shouldBe plaIP14PensionsWorthBeforeTitle
     }
@@ -92,7 +97,7 @@ class AmendIP14PensionsWorthBeforeViewSpec
     }
 
     "not have errors on valid pages" in {
-      pensionsForm.hasErrors shouldBe false
+      form.hasErrors shouldBe false
       doc.select(".govuk-error-message").text shouldBe ""
     }
   }

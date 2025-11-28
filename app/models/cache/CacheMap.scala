@@ -16,25 +16,9 @@
 
 package models.cache
 
-import play.api.libs.json.{JsValue, Json, OFormat, Reads}
-import uk.gov.hmrc.http.InternalServerException
+import play.api.libs.json.{JsValue, Json, OFormat}
 
-case class CacheMap(id: String, data: Map[String, JsValue]) {
-
-  def getEntry[T](key: String)(implicit fjs: Reads[T]): Option[T] =
-    data
-      .get(key)
-      .map(json =>
-        json
-          .validate[T]
-          .fold(
-            errors =>
-              throw new InternalServerException(s"CacheMap entry for $key could not be parsed, errors: $errors"),
-            valid => valid
-          )
-      )
-
-}
+case class CacheMap(id: String, data: Map[String, JsValue]) {}
 
 object CacheMap {
   implicit val formats: OFormat[CacheMap] = Json.format[CacheMap]

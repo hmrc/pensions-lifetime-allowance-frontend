@@ -16,8 +16,8 @@
 
 @import config.FrontendAppConfig
 @import uk.gov.hmrc.hmrcfrontend.config.AccountMenuConfig
-@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage._
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.implicits.RichAccountMenu
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage._
 
 
 @this(
@@ -33,11 +33,11 @@
 
 @(
     pageTitle: String,
-    isPSALookupPage: Boolean = false,
+    isPsaLookupPage: Boolean = false,
     backLinkEnabled: Boolean = true,
     isUserResearchBannerVisible: Boolean = false,
     timeoutEnabled: Boolean = true,
-    additionalPrintCSS: Boolean = false,
+    additionalPrintCss: Boolean = false,
     fullGrid: Boolean = false
 )(
     contentBlock: Html
@@ -47,9 +47,10 @@
 )
 
 @serviceName = @{
-  (appConfig.hipMigrationEnabled, isPSALookupPage) match {
-    case (true, false) => messages("service.name")
-    case _             => messages("psa.service.name")
+    if(isPsaLookupPage) {
+        messages("psa.service.name")
+    } else {
+        messages("service.name")
   }
 }
 
@@ -59,8 +60,8 @@
             signOutUrl = routes.TimeoutController.timeout.url
         )
     }
-    @if(additionalPrintCSS) {
-    <link href='@routes.Assets.versioned("stylesheets/pla-print.css")' media="print" rel="stylesheet" type="text/css" />
+    @if(additionalPrintCss) {
+        <link href='@routes.Assets.versioned("stylesheets/pla-print.css")' media="print" rel="stylesheet" type="text/css" />
     }
 }
 

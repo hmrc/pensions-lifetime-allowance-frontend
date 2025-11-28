@@ -18,7 +18,7 @@ package controllers
 
 import auth.AuthFunction
 import common._
-import config.{FrontendAppConfig, PlaContext}
+import config.FrontendAppConfig
 import forms.AmendPensionsUsedBetweenForm._
 import models.amendModels._
 import models.pla.AmendProtectionLifetimeAllowanceType
@@ -39,12 +39,11 @@ class AmendsPensionUsedBetweenController @Inject() (
     mcc: MessagesControllerComponents,
     authFunction: AuthFunction,
     technicalError: views.html.pages.fallback.technicalError,
-    amendPensionsUsedBetween: pages.amends.amendPensionsUsedBetween,
+    amendIP16PensionsUsedBetween: pages.amends.amendIP16PensionsUsedBetween,
     amendIP14PensionsUsedBetween: pages.amends.amendIP14PensionsUsedBetween
 )(
     implicit val appConfig: FrontendAppConfig,
     val formWithCSRF: FormWithCSRF,
-    val plaContext: PlaContext,
     val ec: ExecutionContext
 ) extends FrontendController(mcc)
     with AmendControllerCacheHelper
@@ -64,7 +63,7 @@ class AmendsPensionUsedBetweenController @Inject() (
                   protectionType match {
                     case IndividualProtection2016 | IndividualProtection2016LTA =>
                       Ok(
-                        amendPensionsUsedBetween(
+                        amendIP16PensionsUsedBetween(
                           amendPensionsUsedBetweenForm(protectionType.toString).fill(
                             AmendPensionsUsedBetweenModel(
                               Some(
@@ -120,7 +119,7 @@ class AmendsPensionUsedBetweenController @Inject() (
                   protectionType match {
                     case IndividualProtection2016 | IndividualProtection2016LTA =>
                       Future
-                        .successful(BadRequest(amendPensionsUsedBetween(errors, protectionType.toString, status)))
+                        .successful(BadRequest(amendIP16PensionsUsedBetween(errors, protectionType.toString, status)))
                     case IndividualProtection2014 | IndividualProtection2014LTA =>
                       Future.successful(
                         BadRequest(amendIP14PensionsUsedBetween(errors, protectionType.toString, status))

@@ -18,31 +18,37 @@ package views.pages.amends
 
 import common.Strings
 import forms.AmendCurrentPensionForm
+import models.amendModels.AmendCurrentPensionModel
 import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
 import org.jsoup.Jsoup
-import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
-import testHelpers.ViewSpecHelpers.amends.AmendIP14CurrentPensionsViewSpecMessages
+import org.jsoup.nodes.Document
+import org.jsoup.select.Elements
+import play.api.data.Form
+import testHelpers.CommonViewSpecHelper
+import testHelpers.messages.amends.AmendIP14CurrentPensionsViewMessages
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.amendIP14CurrentPensions
 
-class AmendIP14CurrentPensionsViewSpec extends CommonViewSpecHelper with AmendIP14CurrentPensionsViewSpecMessages {
+class AmendIP14CurrentPensionsViewSpec extends CommonViewSpecHelper with AmendIP14CurrentPensionsViewMessages {
 
-  implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
+  implicit val formWithCSRF: FormWithCSRF = inject[FormWithCSRF]
+
+  val view: amendIP14CurrentPensions = inject[amendIP14CurrentPensions]
+
+  val form: Form[AmendCurrentPensionModel] =
+    AmendCurrentPensionForm
+      .amendCurrentPensionForm(IndividualProtection2016.toString)
+      .bind(Map("amendedUKPensionAmt" -> "12000"))
+
+  val doc: Document = Jsoup.parse(view.apply(form, IndividualProtection2016.toString, "open").body)
+
+  val errorForm: Form[AmendCurrentPensionModel] = AmendCurrentPensionForm
+    .amendCurrentPensionForm(IndividualProtection2016.toString)
+    .bind(Map("amendedUKPensionAmt" -> "a"))
+
+  val errorDoc: Document = Jsoup.parse(view.apply(errorForm, IndividualProtection2016.toString, "open").body)
 
   "the AmendIP14CurrentPensionsView" should {
-    val amendCurrentPensionsForm =
-      AmendCurrentPensionForm
-        .amendCurrentPensionForm(IndividualProtection2016.toString)
-        .bind(Map("amendedUKPensionAmt" -> "12000"))
-    lazy val view = app.injector.instanceOf[amendIP14CurrentPensions]
-    lazy val doc  = Jsoup.parse(view.apply(amendCurrentPensionsForm, IndividualProtection2016.toString, "open").body)
-
-    val errorForm = AmendCurrentPensionForm
-      .amendCurrentPensionForm(IndividualProtection2016.toString)
-      .bind(Map("amendedUKPensionAmt" -> "a"))
-    lazy val errorView = app.injector.instanceOf[amendIP14CurrentPensions]
-    lazy val errorDoc  = Jsoup.parse(errorView.apply(errorForm, IndividualProtection2016.toString, "open").body)
-    lazy val form      = doc.select("form")
 
     "have the correct title" in {
       doc.title() shouldBe plaIp14CurrentPensionsTitleNew
@@ -69,14 +75,16 @@ class AmendIP14CurrentPensionsViewSpec extends CommonViewSpecHelper with AmendIP
 
     "have a help link redirecting to the right location" in {
       doc.select("#ip14-amend-current-pensions-help > div > p:nth-child(3)").text shouldBe plaHelpLinkCompleteMessageNew
-      doc.select("#ip14-amend-current-pensions-help-link").text shouldBe plaHelpLinkNew
+      doc.select("#ip14-amend-current-pensions-help-link").text shouldBe plaHelpLink
       doc.select("#ip14-amend-current-pensions-help-link").attr("href") shouldBe plaHelpLinkExternalReference
     }
 
     "has a valid form" in {
-      form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.AmendsCurrentPensionController
-        .submitAmendCurrentPension(Strings.ProtectionTypeURL.IndividualProtection2016, "open")
+      val formElement: Elements = doc.select("form")
+
+      formElement.attr("method") shouldBe "POST"
+      formElement.attr("action") shouldBe controllers.routes.AmendsCurrentPensionController
+        .submitAmendCurrentPension(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")
         .url
       doc.getElementsByClass("govuk-visually-hidden").eq(1).text() shouldBe plaIp14CurrentPensionsTitle
     }
@@ -95,7 +103,7 @@ class AmendIP14CurrentPensionsViewSpec extends CommonViewSpecHelper with AmendIP
     }
 
     "not have errors on valid pages" in {
-      amendCurrentPensionsForm.hasErrors shouldBe false
+      form.hasErrors shouldBe false
       doc.select("a#amendedUKPensionAmt-error-summary").text shouldBe ""
       doc.select("span#amendedUKPensionAmt-error-message.error-notification").text shouldBe ""
     }

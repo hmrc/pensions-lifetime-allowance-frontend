@@ -25,11 +25,7 @@
 @()(implicit request: Request[_], messages: Messages)
 
 @linkText = @{
-  if(appConfig.hipMigrationEnabled) {
     messages("pla.timeout.returnToPTA.href.linkText")
-  } else {
-    messages("pla.timeout.returnToPTA.href.2")
-  }
 }
 
 @returnToPTALink = {

@@ -16,30 +16,17 @@
 
 package views
 
-import config.FrontendAppConfig
 import play.api.i18n.Messages
 
 object HeaderContent {
 
-  def getProtectedLifetimeAllowance(frontendAppConfig: FrontendAppConfig)(implicit messages: Messages): String =
-    if (frontendAppConfig.hipMigrationEnabled) {
-      messages("common.header.protectedAmount")
-    } else {
-      messages("common.header.protectedLifetimeAllowance")
-    }
+  def getProtectedLifetimeAllowance(implicit messages: Messages): String =
+    messages("common.header.protectedAmount")
 
-  def getProtectionNotificatioNumber(frontendAppConfig: FrontendAppConfig)(implicit messages: Messages): String =
-    if (frontendAppConfig.hipMigrationEnabled) {
-      messages("common.header.protectionReferenceNumber")
-    } else {
-      messages("common.header.protectionNotificationNumber")
-    }
+  def getProtectionNotificationNumber(implicit messages: Messages): String =
+    messages("common.header.protectionReferenceNumber")
 
-  def getSchemeAdministratorReference(frontendAppConfig: FrontendAppConfig)(implicit messages: Messages): String =
-    if (frontendAppConfig.hipMigrationEnabled) {
-      messages("common.header.pensionSchemeAdministratorCheckReference")
-    } else {
-      messages("common.header.schemeAdministratorReference")
-    }
+  def getSchemeAdministratorReference(implicit messages: Messages): String =
+    messages("common.header.pensionSchemeAdministratorCheckReference")
 
 }

@@ -16,7 +16,7 @@
 
 package auth
 
-import config.{FrontendAppConfig, PlaContext}
+import config.FrontendAppConfig
 import mocks.AuthMock
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
@@ -46,36 +46,33 @@ class AuthFunctionSpec
 
   implicit val system: ActorSystem              = ActorSystem()
   implicit val materializer: Materializer       = mock[Materializer]
-  implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
-  implicit val mockPlaContext: PlaContext       = mock[PlaContext]
+  implicit val mockAppConfig: FrontendAppConfig = inject[FrontendAppConfig]
   implicit val hc: HeaderCarrier                = HeaderCarrier()
 
-  val mockPlayAuthConnector = mock[PlayAuthConnector]
+  val mockPlayAuthConnector: PlayAuthConnector = mock[PlayAuthConnector]
+
+  val requestUrl  = "https://www.pla-frontend.gov.uk/ip16-start-page"
+  val fakeRequest = FakeRequest(GET, requestUrl)
 
   implicit val mockMessages: Messages =
-    fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
+    inject[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
 
   val mockEnv: Environment                  = mock[Environment]
-  val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
+  val mockMCC: MessagesControllerComponents = inject[MessagesControllerComponents]
 
   override def beforeEach(): Unit = {
     reset(mockPlayAuthConnector)
     reset(mockAuthConnector)
-    reset(mockPlaContext)
   }
 
   class TestAuthFunction extends AuthFunction {
 
-    lazy val plaContext: PlaContext                               = mockPlaContext
-    lazy val appConfig: FrontendAppConfig                         = mockAppConfig
-    override lazy val authConnector                               = mockAuthConnector
+    val appConfig: FrontendAppConfig                              = mockAppConfig
+    override val authConnector: AuthConnector                     = mockAuthConnector
     override def upliftEnvironmentUrl(requestUri: String): String = requestUri
-    override implicit val technicalError: technicalError          = app.injector.instanceOf[technicalError]
-    override implicit val ec: ExecutionContext                    = app.injector.instanceOf[ExecutionContext]
+    override implicit val technicalError: technicalError          = inject[technicalError]
+    override implicit val ec: ExecutionContext                    = inject[ExecutionContext]
   }
-
-  lazy val requestUrl  = "http://www.pla-frontend.gov.uk/ip16-start-page"
-  lazy val fakeRequest = FakeRequest(GET, requestUrl)
 
   "In AuthFunction calling the genericAuthWithoutNino action" when {
     "passing auth validation" should {
@@ -98,7 +95,7 @@ class AuthFunctionSpec
       "redirect to IV uplift page on an insufficient confidence level exception" in {
         val authFunction = new TestAuthFunction
         when(mockEnv.mode).thenReturn(Mode.Test)
-        mockAuthConnector(Future.failed(new InsufficientConfidenceLevel("")))
+        mockAuthConnector(Future.failed(InsufficientConfidenceLevel("")))
         val result = authFunction.genericAuthWithoutNino("IP2016")(Future.successful(InternalServerError("Test body")))(
           fakeRequest,
           mockMessages,
@@ -107,13 +104,13 @@ class AuthFunctionSpec
 
         status(result) shouldBe 303
         redirectLocation(result) shouldBe Some(
-          s"${mockAppConfig.ivUpliftUrl}?" + "origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/check-your-pension-protections-and-enhancements/not-authorised"
+          s"${mockAppConfig.ivUpliftUrl}?" + "origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=https://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/check-your-pension-protections-and-enhancements/not-authorised"
         )
       }
 
       "return a 500 on an unexpected authorisation exception" in {
         val authFunction = new TestAuthFunction
-        mockAuthConnector(Future.failed(new InternalError("")))
+        mockAuthConnector(Future.failed(InternalError("")))
         val result = authFunction.genericAuthWithoutNino("IP2016")(Future.successful(Ok("Test body")))(
           fakeRequest,
           mockMessages,
@@ -125,7 +122,7 @@ class AuthFunctionSpec
 
       "redirect to IV uplift page on an insufficient enrolments exception" in {
         val authFunction = new TestAuthFunction
-        mockAuthConnector(Future.failed(new InsufficientEnrolments("")))
+        mockAuthConnector(Future.failed(InsufficientEnrolments("")))
         val result = authFunction.genericAuthWithoutNino("IP2016")(Future.successful(InternalServerError("Test body")))(
           fakeRequest,
           mockMessages,
@@ -134,7 +131,7 @@ class AuthFunctionSpec
 
         status(result) shouldBe 303
         redirectLocation(result) shouldBe Some(
-          s"${mockAppConfig.ivUpliftUrl}?" + "origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/check-your-pension-protections-and-enhancements/not-authorised"
+          s"${mockAppConfig.ivUpliftUrl}?" + "origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=https://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/check-your-pension-protections-and-enhancements/not-authorised"
         )
       }
 
@@ -172,18 +169,18 @@ class AuthFunctionSpec
 
       "redirect to IV uplift page on an insufficient confidence level exception" in {
         val authFunction = new TestAuthFunction
-        mockAuthConnector(Future.failed(new InsufficientConfidenceLevel("")))
+        mockAuthConnector(Future.failed(InsufficientConfidenceLevel("")))
         val result = authFunction.genericAuthWithNino("IP2016")(body)(fakeRequest, mockMessages, hc)
 
         status(result) shouldBe 303
         redirectLocation(result) shouldBe Some(
-          s"${mockAppConfig.ivUpliftUrl}?" + "origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/check-your-pension-protections-and-enhancements/not-authorised"
+          s"${mockAppConfig.ivUpliftUrl}?" + "origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=https://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/check-your-pension-protections-and-enhancements/not-authorised"
         )
       }
 
       "return a 500 on an unexpected authorisation exception" in {
         val authFunction = new TestAuthFunction
-        mockAuthConnector(Future.failed(new InternalError("")))
+        mockAuthConnector(Future.failed(InternalError("")))
         val result = authFunction.genericAuthWithNino("IP2016")(body)(fakeRequest, mockMessages, hc)
 
         status(result) shouldBe 500
@@ -191,12 +188,12 @@ class AuthFunctionSpec
 
       "redirect to IV uplift page on an insufficient enrolments exception" in {
         val authFunction = new TestAuthFunction
-        mockAuthConnector(Future.failed(new InsufficientEnrolments("")))
+        mockAuthConnector(Future.failed(InsufficientEnrolments("")))
         val result = authFunction.genericAuthWithNino("IP2016")(body)(fakeRequest, mockMessages, hc)
 
         status(result) shouldBe 303
         redirectLocation(result) shouldBe Some(
-          s"${mockAppConfig.ivUpliftUrl}?" + "origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/check-your-pension-protections-and-enhancements/not-authorised"
+          s"${mockAppConfig.ivUpliftUrl}?" + "origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=https://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/check-your-pension-protections-and-enhancements/not-authorised"
         )
       }
 

@@ -26,13 +26,14 @@ import models.pla.response.ProtectionStatus.Dormant
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.mockito.ArgumentMatchers.{any, anyString}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Environment
 import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
-import play.api.mvc.{AnyContent, MessagesControllerComponents}
+import play.api.mvc.{AnyContent, MessagesControllerComponents, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionCacheService
@@ -53,28 +54,31 @@ class AmendsPensionUsedBetweenControllerSpec
     with AuthMock
     with I18nSupport {
 
-  implicit lazy val mockMessage: Messages =
-    fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
+  implicit val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
 
-  val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
-  val mockMCC: MessagesControllerComponents        = fakeApplication().injector.instanceOf[MessagesControllerComponents]
-  val mockAuthFunction: AuthFunction               = mock[AuthFunction]
-  val mockTechnicalError: technicalError           = app.injector.instanceOf[technicalError]
-  val mockAmendPensionsUsedBetween: amendPensionsUsedBetween = app.injector.instanceOf[amendPensionsUsedBetween]
+  val mcc: MessagesControllerComponents = inject[MessagesControllerComponents]
+  val messagesApi: MessagesApi          = mcc.messagesApi
 
-  val mockAmendIP14PensionsUsedBetween: amendIP14PensionsUsedBetween =
-    app.injector.instanceOf[amendIP14PensionsUsedBetween]
+  implicit val messages: Messages = messagesApi.preferred(fakeRequest)
 
-  val mockEnv: Environment     = mock[Environment]
-  val messagesApi: MessagesApi = mockMCC.messagesApi
-
-  implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
-  implicit val mockPlaContext: PlaContext       = mock[PlaContext]
+  implicit val mockAppConfig: FrontendAppConfig = inject[FrontendAppConfig]
   implicit val system: ActorSystem              = ActorSystem()
   implicit val materializer: Materializer       = mock[Materializer]
   implicit val mockLang: Lang                   = mock[Lang]
-  implicit val formWithCSRF: FormWithCSRF       = app.injector.instanceOf[FormWithCSRF]
-  implicit val ec: ExecutionContext             = app.injector.instanceOf[ExecutionContext]
+  implicit val formWithCSRF: FormWithCSRF       = inject[FormWithCSRF]
+  implicit val ec: ExecutionContext             = inject[ExecutionContext]
+
+  val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
+  val mockAuthFunction: AuthFunction               = mock[AuthFunction]
+  val technicalErrorView: technicalError           = inject[technicalError]
+
+  val amendIP16PensionsUsedBetweenView: amendIP16PensionsUsedBetween =
+    inject[amendIP16PensionsUsedBetween]
+
+  val amendIP14PensionsUsedBetweenView: amendIP14PensionsUsedBetween =
+    inject[amendIP14PensionsUsedBetween]
+
+  val mockEnv: Environment = mock[Environment]
 
   override def beforeEach(): Unit = {
     reset(mockSessionCacheService)
@@ -95,29 +99,24 @@ class AmendsPensionUsedBetweenControllerSpec
     )
   )
 
-  class Setup {
+  val authFunction = new AuthFunctionImpl(
+    mcc,
+    mockAuthConnector,
+    technicalErrorView
+  )
 
-    val authFunction = new AuthFunctionImpl(
-      mockMCC,
-      mockAuthConnector,
-      mockTechnicalError
-    )
+  val controller = new AmendsPensionUsedBetweenController(
+    mockSessionCacheService,
+    mcc,
+    authFunction,
+    technicalErrorView,
+    amendIP16PensionsUsedBetweenView,
+    amendIP14PensionsUsedBetweenView
+  )
 
-    val controller = new AmendsPensionUsedBetweenController(
-      mockSessionCacheService,
-      mockMCC,
-      authFunction,
-      mockTechnicalError,
-      mockAmendPensionsUsedBetween,
-      mockAmendIP14PensionsUsedBetween
-    )
-
-  }
-
-  val sessionId                                     = UUID.randomUUID.toString
-  implicit val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
-  val mockUsername                                  = "mockuser"
-  val mockUserId                                    = "/auth/oid/" + mockUsername
+  val sessionId: String  = UUID.randomUUID.toString
+  val mockUsername       = "mockuser"
+  val mockUserId: String = "/auth/oid/" + mockUsername
 
   val individualProtection2016Protection = ProtectionModel(
     psaCheckReference = Some("testPSARef"),
@@ -232,37 +231,39 @@ class AmendsPensionUsedBetweenControllerSpec
       .thenReturn(Future.successful(data))
 
   "In AmendsPensionUsedBetweenController calling the .amendPensionsUsedBetween action" when {
-    "not supplied with a stored model" in new Setup {
-
-      lazy val result =
-        controller.amendPensionsUsedBetween(Strings.ProtectionTypeURL.IndividualProtection2016, "open")(fakeRequest)
+    "not supplied with a stored model" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](None)
+
+      val result: Future[Result] =
+        controller.amendPensionsUsedBetween(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")(fakeRequest)
 
       status(result) shouldBe 500
 
     }
-    "supplied with the stored test model for (dormant, IndividualProtection2016, preADay = £0.0)" in new Setup {
-      lazy val result =
-        controller.amendPensionsUsedBetween(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(fakeRequest)
-      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
-
+    "supplied with the stored test model for (dormant, IndividualProtection2016, preADay = £0.0)" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016ProtectionModelWithNoDebit))
+
+      val result: Future[Result] =
+        controller.amendPensionsUsedBetween(Strings.ProtectionTypeUrl.IndividualProtection2016, "dormant")(fakeRequest)
+      val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
+
       jsoupDoc.body
         .getElementById("amendedPensionsUsedBetweenAmt")
         .attr("class") shouldBe "govuk-input govuk-input--width-10"
     }
 
-    "supplied with the stored test model for (dormant, IndividualProtection2016LTA, preADay = £0.0)" in new Setup {
-      lazy val result =
-        controller.amendPensionsUsedBetween(Strings.ProtectionTypeURL.IndividualProtection2016LTA, "dormant")(
-          fakeRequest
-        )
-      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
-
+    "supplied with the stored test model for (dormant, IndividualProtection2016LTA, preADay = £0.0)" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016LTAProtectionModelWithNoDebit))
+
+      val result: Future[Result] =
+        controller.amendPensionsUsedBetween(Strings.ProtectionTypeUrl.IndividualProtection2016LTA, "dormant")(
+          fakeRequest
+        )
+      val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
+
       jsoupDoc.body
         .getElementById("amendedPensionsUsedBetweenAmt")
         .attr("class") shouldBe "govuk-input govuk-input--width-10"
@@ -271,196 +272,188 @@ class AmendsPensionUsedBetweenControllerSpec
 
   "Submitting Amend IndividualProtection2016 Pensions Used Between data" when {
 
-    "the model can't be fetched from cache" in new Setup {
-      object DataItem
-          extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsUsedBetween(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant"),
-            ("amendedPensionsUsedBetweenAmt", "0")
-          )
-
+    "the model can't be fetched from cache" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](None)
 
-      status(DataItem.result) shouldBe 500
+      val result = FakeRequests.authorisedPost(
+        controller.submitAmendPensionsUsedBetween(Strings.ProtectionTypeUrl.IndividualProtection2016, "dormant"),
+        ("amendedPensionsUsedBetweenAmt", "0")
+      )
+
+      status(result) shouldBe 500
     }
 
-    "the data is invalid on validation" in new Setup {
-      object DataItem
-          extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsUsedBetween(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant"),
-            ("amendedPensionsUsedBetweenAmt", "yes")
-          )
-
+    "the data is invalid on validation" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      status(DataItem.result) shouldBe 400
+
+      val result = FakeRequests.authorisedPost(
+        controller.submitAmendPensionsUsedBetween(Strings.ProtectionTypeUrl.IndividualProtection2016, "dormant"),
+        ("amendedPensionsUsedBetweenAmt", "yes")
+      )
+
+      status(result) shouldBe 400
     }
 
-    "the data is valid with a no response" in new Setup {
-      object DataItem
-          extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsUsedBetween(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant"),
-            ("amendedPensionsUsedBetweenAmt", "0")
-          )
-
+    "the data is valid with a no response" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016ProtectionModel))
       cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
 
-      status(DataItem.result) shouldBe 303
+      val result = FakeRequests.authorisedPost(
+        controller.submitAmendPensionsUsedBetween(Strings.ProtectionTypeUrl.IndividualProtection2016, "dormant"),
+        ("amendedPensionsUsedBetweenAmt", "0")
+      )
 
-      redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary(
-          Strings.ProtectionTypeURL.IndividualProtection2016,
-          Strings.StatusURL.Dormant
+      status(result) shouldBe 303
+
+      redirectLocation(result) shouldBe Some(s"${routes.AmendsController.amendsSummary(
+          Strings.ProtectionTypeUrl.IndividualProtection2016,
+          Strings.StatusUrl.Dormant
         )}")
     }
   }
 
   "Submitting Amend IndividualProtection2016LTA Pensions Used Between data" when {
 
-    "the model can't be fetched from cache" in new Setup {
-      object DataItem
-          extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsUsedBetween(Strings.ProtectionTypeURL.IndividualProtection2016LTA, "dormant"),
-            ("amendedPensionsUsedBetweenAmt", "0")
-          )
-
+    "the model can't be fetched from cache" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](None)
 
-      status(DataItem.result) shouldBe 500
+      val result = FakeRequests.authorisedPost(
+        controller.submitAmendPensionsUsedBetween(Strings.ProtectionTypeUrl.IndividualProtection2016LTA, "dormant"),
+        ("amendedPensionsUsedBetweenAmt", "0")
+      )
+
+      status(result) shouldBe 500
     }
 
-    "the data is invalid on validation" in new Setup {
-      object DataItem
-          extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsUsedBetween(Strings.ProtectionTypeURL.IndividualProtection2016LTA, "dormant"),
-            ("amendedPensionsUsedBetweenAmt", "yes")
-          )
-
+    "the data is invalid on validation" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      status(DataItem.result) shouldBe 400
+
+      val result = FakeRequests.authorisedPost(
+        controller.submitAmendPensionsUsedBetween(Strings.ProtectionTypeUrl.IndividualProtection2016LTA, "dormant"),
+        ("amendedPensionsUsedBetweenAmt", "yes")
+      )
+
+      status(result) shouldBe 400
     }
 
-    "the data is valid with a no response" in new Setup {
-      object DataItem
-          extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsUsedBetween(Strings.ProtectionTypeURL.IndividualProtection2016LTA, "dormant"),
-            ("amendedPensionsUsedBetweenAmt", "0")
-          )
-
+    "the data is valid with a no response" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016LTAProtectionModel))
       cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
 
-      status(DataItem.result) shouldBe 303
+      val result = FakeRequests.authorisedPost(
+        controller.submitAmendPensionsUsedBetween(Strings.ProtectionTypeUrl.IndividualProtection2016LTA, "dormant"),
+        ("amendedPensionsUsedBetweenAmt", "0")
+      )
 
-      redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary(
-          Strings.ProtectionTypeURL.IndividualProtection2016LTA,
-          Strings.StatusURL.Dormant
+      status(result) shouldBe 303
+
+      redirectLocation(result) shouldBe Some(s"${routes.AmendsController.amendsSummary(
+          Strings.ProtectionTypeUrl.IndividualProtection2016LTA,
+          Strings.StatusUrl.Dormant
         )}")
     }
   }
 
   "Submitting Amend IndividualProtection2014 Pensions Used Between data" when {
 
-    "the model can't be fetched from cache" in new Setup {
-      object DataItem
-          extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsUsedBetween(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant"),
-            ("amendedPensionsUsedBetweenAmt", "0")
-          )
-
+    "the model can't be fetched from cache" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](None)
 
-      status(DataItem.result) shouldBe 500
+      val result = FakeRequests.authorisedPost(
+        controller.submitAmendPensionsUsedBetween(Strings.ProtectionTypeUrl.IndividualProtection2014, "dormant"),
+        ("amendedPensionsUsedBetweenAmt", "0")
+      )
+
+      status(result) shouldBe 500
     }
 
-    "the data is invalid on validation" in new Setup {
-      object DataItem
-          extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsUsedBetween(
-              Strings.ProtectionTypeURL.IndividualProtection2014,
-              Strings.StatusURL.Dormant
-            ),
-            ("amendedPensionsUsedBetweenAmt", "yes")
-          )
-
+    "the data is invalid on validation" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      status(DataItem.result) shouldBe 400
+
+      val result = FakeRequests.authorisedPost(
+        controller.submitAmendPensionsUsedBetween(
+          Strings.ProtectionTypeUrl.IndividualProtection2014,
+          Strings.StatusUrl.Dormant
+        ),
+        ("amendedPensionsUsedBetweenAmt", "yes")
+      )
+
+      status(result) shouldBe 400
     }
 
-    "the data is valid with a no response" in new Setup {
-      object DataItem
-          extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsUsedBetween(
-              Strings.ProtectionTypeURL.IndividualProtection2014,
-              Strings.StatusURL.Dormant
-            ),
-            ("amendedPensionsUsedBetweenAmt", "0")
-          )
-
+    "the data is valid with a no response" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2014ProtectionModel))
       cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
 
-      status(DataItem.result) shouldBe 303
+      val result = FakeRequests.authorisedPost(
+        controller.submitAmendPensionsUsedBetween(
+          Strings.ProtectionTypeUrl.IndividualProtection2014,
+          Strings.StatusUrl.Dormant
+        ),
+        ("amendedPensionsUsedBetweenAmt", "0")
+      )
 
-      redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary(
-          Strings.ProtectionTypeURL.IndividualProtection2014,
-          Strings.StatusURL.Dormant
+      status(result) shouldBe 303
+
+      redirectLocation(result) shouldBe Some(s"${routes.AmendsController.amendsSummary(
+          Strings.ProtectionTypeUrl.IndividualProtection2014,
+          Strings.StatusUrl.Dormant
         )}")
     }
   }
 
   "Submitting Amend IndividualProtection2014LTA Pensions Used Between data" when {
 
-    "the model can't be fetched from cache" in new Setup {
-      object DataItem
-          extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsUsedBetween(Strings.ProtectionTypeURL.IndividualProtection2014LTA, "dormant"),
-            ("amendedPensionsUsedBetweenAmt", "0")
-          )
-
+    "the model can't be fetched from cache" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](None)
 
-      status(DataItem.result) shouldBe 500
+      val result = FakeRequests.authorisedPost(
+        controller.submitAmendPensionsUsedBetween(Strings.ProtectionTypeUrl.IndividualProtection2014LTA, "dormant"),
+        ("amendedPensionsUsedBetweenAmt", "0")
+      )
+
+      status(result) shouldBe 500
     }
 
-    "the data is invalid on validation" in new Setup {
-      object DataItem
-          extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsUsedBetween(
-              Strings.ProtectionTypeURL.IndividualProtection2014LTA,
-              Strings.StatusURL.Dormant
-            ),
-            ("amendedPensionsUsedBetweenAmt", "yes")
-          )
-
+    "the data is invalid on validation" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      status(DataItem.result) shouldBe 400
+
+      val result = FakeRequests.authorisedPost(
+        controller.submitAmendPensionsUsedBetween(
+          Strings.ProtectionTypeUrl.IndividualProtection2014LTA,
+          Strings.StatusUrl.Dormant
+        ),
+        ("amendedPensionsUsedBetweenAmt", "yes")
+      )
+
+      status(result) shouldBe 400
     }
 
-    "the data is valid with a no response" in new Setup {
-      object DataItem
-          extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsUsedBetween(
-              Strings.ProtectionTypeURL.IndividualProtection2014LTA,
-              Strings.StatusURL.Dormant
-            ),
-            ("amendedPensionsUsedBetweenAmt", "0")
-          )
-
+    "the data is valid with a no response" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2014LTAProtectionModel))
       cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
 
-      status(DataItem.result) shouldBe 303
+      val result = FakeRequests.authorisedPost(
+        controller.submitAmendPensionsUsedBetween(
+          Strings.ProtectionTypeUrl.IndividualProtection2014LTA,
+          Strings.StatusUrl.Dormant
+        ),
+        ("amendedPensionsUsedBetweenAmt", "0")
+      )
 
-      redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary(
-          Strings.ProtectionTypeURL.IndividualProtection2014LTA,
-          Strings.StatusURL.Dormant
+      status(result) shouldBe 303
+
+      redirectLocation(result) shouldBe Some(s"${routes.AmendsController.amendsSummary(
+          Strings.ProtectionTypeUrl.IndividualProtection2014LTA,
+          Strings.StatusUrl.Dormant
         )}")
     }
   }

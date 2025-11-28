@@ -18,36 +18,38 @@ package views.pages.amends
 
 import common.Strings
 import forms.AmendPensionsTakenBeforeForm
+import models.amendModels.AmendPensionsTakenBeforeModel
 import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
 import org.jsoup.Jsoup
-import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
-import testHelpers.ViewSpecHelpers.amends.AmendIP14PensionsTakenBeforeViewSpecMessages
+import org.jsoup.nodes.Document
+import org.jsoup.select.Elements
+import play.api.data.Form
+import testHelpers.CommonViewSpecHelper
+import testHelpers.messages.amends.AmendIP14PensionsTakenBeforeViewMessages
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.amendIP14PensionsTakenBefore
 
-class AmendIP14PensionsTakenBeforeViewSpec
-    extends CommonViewSpecHelper
-    with AmendIP14PensionsTakenBeforeViewSpecMessages {
+class AmendIP14PensionsTakenBeforeViewSpec extends CommonViewSpecHelper with AmendIP14PensionsTakenBeforeViewMessages {
 
-  implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
+  implicit val formWithCSRF: FormWithCSRF = inject[FormWithCSRF]
+
+  val view: amendIP14PensionsTakenBefore = inject[amendIP14PensionsTakenBefore]
+
+  val form: Form[AmendPensionsTakenBeforeModel] = AmendPensionsTakenBeforeForm
+    .amendPensionsTakenBeforeForm(IndividualProtection2016.toString)
+    .bind(Map("amendedPensionsTakenBefore" -> "yes", "amendedPensionsTakenBeforeAmt" -> "12345"))
+
+  val doc: Document =
+    Jsoup.parse(view.apply(form, IndividualProtection2016.toString, "open").body)
+
+  val errorForm: Form[AmendPensionsTakenBeforeModel] = AmendPensionsTakenBeforeForm
+    .amendPensionsTakenBeforeForm(IndividualProtection2016.toString)
+    .bind(Map("amendedPensionsTakenBefore" -> "", "amendedPensionsTakenBeforeAmt" -> "12345"))
+
+  val errorDoc: Document =
+    Jsoup.parse(view.apply(errorForm, IndividualProtection2016.toString, "open").body)
 
   "the AmendIP14PensionsTakenBeforeView" should {
-    val pensionsForm = AmendPensionsTakenBeforeForm
-      .amendPensionsTakenBeforeForm(IndividualProtection2016.toString)
-      .bind(Map("amendedPensionsTakenBefore" -> "yes", "amendedPensionsTakenBeforeAmt" -> "12345"))
-    lazy val view = app.injector.instanceOf[amendIP14PensionsTakenBefore]
-    lazy val doc =
-      Jsoup.parse(view.apply(pensionsForm, IndividualProtection2016.toString, "open").body)
-
-    val errorForm = AmendPensionsTakenBeforeForm
-      .amendPensionsTakenBeforeForm(IndividualProtection2016.toString)
-      .bind(Map("amendedPensionsTakenBefore" -> "", "amendedPensionsTakenBeforeAmt" -> "12345"))
-    lazy val errorView = app.injector.instanceOf[amendIP14PensionsTakenBefore]
-    lazy val errorDoc =
-      Jsoup.parse(errorView.apply(errorForm, IndividualProtection2016.toString, "open").body)
-
-    lazy val form = doc.select("form")
-
     "have the correct title" in {
       doc.title() shouldBe plaPensionsTakenBeforeTitle
     }
@@ -57,11 +59,13 @@ class AmendIP14PensionsTakenBeforeViewSpec
     }
 
     "have a valid form" in {
-      form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.AmendsPensionTakenBeforeController
-        .submitAmendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "open")
+      val formElement: Elements = doc.select("form")
+
+      formElement.attr("method") shouldBe "POST"
+      formElement.attr("action") shouldBe controllers.routes.AmendsPensionTakenBeforeController
+        .submitAmendPensionsTakenBefore(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")
         .url
-      form.select("legend.govuk-visually-hidden").text() shouldBe plaPensionsTakenBeforeLegendText
+      formElement.select("legend.govuk-visually-hidden").text() shouldBe plaPensionsTakenBeforeLegendText
     }
 
     "have a pair of yes/no buttons" in {
@@ -83,7 +87,7 @@ class AmendIP14PensionsTakenBeforeViewSpec
     }
 
     "not have errors on valid pages" in {
-      pensionsForm.hasErrors shouldBe false
+      form.hasErrors shouldBe false
       doc.select(".govuk-error-message").text shouldBe ""
     }
   }

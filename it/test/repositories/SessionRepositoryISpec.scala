@@ -22,7 +22,7 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 import play.api.mvc.{AnyContent, Request}
 import play.api.test.{FakeRequest, Injecting}
 import play.api.{Application, Configuration}
@@ -42,11 +42,13 @@ class SessionRepositoryISpec
     with ScalaFutures
     with Injecting {
 
-  lazy val app: Application = new GuiceApplicationBuilder()
+  val app: Application = new GuiceApplicationBuilder()
     .configure("mongodb.uri" -> mongoUri)
     .build()
 
-  lazy val repository = new SessionRepository(mongoComponent, inject[Configuration], inject[TimestampSupport])
+  implicit val pensionsTakenModelFormat: OFormat[PensionsTakenModel] = Json.format[PensionsTakenModel]
+
+  val repository = new SessionRepository(mongoComponent, inject[Configuration], inject[TimestampSupport])
 
   val session1: String                      = UUID.randomUUID.toString
   val session2: String                      = UUID.randomUUID.toString
@@ -61,15 +63,15 @@ class SessionRepositoryISpec
 
   "putInSession" must {
     "successfully store data" in {
-      val res = repository.putInSession(testAnswerKey, testAnswer)(PensionsTakenModel.format, userRequest, global)
+      val res = repository.putInSession(testAnswerKey, testAnswer)(pensionsTakenModelFormat, userRequest, global)
 
       res.futureValue shouldBe testCacheMap
     }
 
     "successfully overwrite existing data" in {
-      repository.putInSession(testAnswerKey, testOldAnswer)(PensionsTakenModel.format, userRequest, global).futureValue
+      repository.putInSession(testAnswerKey, testOldAnswer)(pensionsTakenModelFormat, userRequest, global).futureValue
 
-      val res = repository.putInSession(testAnswerKey, testAnswer)(PensionsTakenModel.format, userRequest, global)
+      val res = repository.putInSession(testAnswerKey, testAnswer)(pensionsTakenModelFormat, userRequest, global)
 
       res.futureValue shouldBe testCacheMap
     }
@@ -78,21 +80,21 @@ class SessionRepositoryISpec
   "getFromSession" must {
     "return None when no data for this session exists" in {
       repository
-        .putInSession(testAnswerKey, testAnswer)(PensionsTakenModel.format, otherUserRequest, global)
+        .putInSession(testAnswerKey, testAnswer)(pensionsTakenModelFormat, otherUserRequest, global)
         .futureValue
 
-      val res = repository.getFromSession(testAnswerKey)(PensionsTakenModel.format, userRequest)
+      val res = repository.getFromSession(testAnswerKey)(pensionsTakenModelFormat, userRequest)
 
       res.futureValue shouldBe None
     }
 
     "successfully return existing data" in {
       repository
-        .putInSession(testAnswerKey, testAnswer)(PensionsTakenModel.format, otherUserRequest, global)
+        .putInSession(testAnswerKey, testAnswer)(pensionsTakenModelFormat, otherUserRequest, global)
         .futureValue
-      repository.putInSession(testAnswerKey, testAnswer)(PensionsTakenModel.format, userRequest, global).futureValue
+      repository.putInSession(testAnswerKey, testAnswer)(pensionsTakenModelFormat, userRequest, global).futureValue
 
-      val res = repository.getFromSession(testAnswerKey)(PensionsTakenModel.format, userRequest)
+      val res = repository.getFromSession(testAnswerKey)(pensionsTakenModelFormat, userRequest)
 
       res.futureValue shouldBe Some(testAnswer)
     }
@@ -101,17 +103,17 @@ class SessionRepositoryISpec
   "clearSession" must {
     "successfully remove session of a user" in {
       repository
-        .putInSession(testAnswerKey, testAnswer)(PensionsTakenModel.format, otherUserRequest, global)
+        .putInSession(testAnswerKey, testAnswer)(pensionsTakenModelFormat, otherUserRequest, global)
         .futureValue
-      repository.putInSession(testAnswerKey, testAnswer)(PensionsTakenModel.format, userRequest, global).futureValue
+      repository.putInSession(testAnswerKey, testAnswer)(pensionsTakenModelFormat, userRequest, global).futureValue
 
       repository.clearSession(userRequest).futureValue
 
       repository
-        .getFromSession[PensionsTakenModel](testAnswerKey)(PensionsTakenModel.format, userRequest)
+        .getFromSession[PensionsTakenModel](testAnswerKey)(pensionsTakenModelFormat, userRequest)
         .futureValue shouldBe None
       repository
-        .getFromSession[PensionsTakenModel](testAnswerKey)(PensionsTakenModel.format, otherUserRequest)
+        .getFromSession[PensionsTakenModel](testAnswerKey)(pensionsTakenModelFormat, otherUserRequest)
         .futureValue shouldBe Some(testAnswer)
     }
   }

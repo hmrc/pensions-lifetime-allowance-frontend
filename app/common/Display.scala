@@ -16,16 +16,17 @@
 
 package common
 
-import java.text.DecimalFormat
-import java.time.format.DateTimeFormatter
-import java.time.LocalDateTime
 import play.api.i18n.{Lang, Messages}
+
+import java.text.DecimalFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 case class MoneyPounds(value: BigDecimal, decimalPlaces: Int = 2, roundUp: Boolean = false) {
 
-  def isNegative = value < 0
+  def isNegative: Boolean = value < 0
 
-  def quantity =
+  def quantity: String =
     s"%,.${decimalPlaces}f".format(
       value
         .setScale(decimalPlaces, if (roundUp) BigDecimal.RoundingMode.CEILING else BigDecimal.RoundingMode.FLOOR)
@@ -45,22 +46,21 @@ object Display {
     } else str
   }
 
+  private val englishDateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
+
   def dateDisplayString(date: LocalDateTime)(implicit lang: Lang, messages: Messages): String =
     if (lang.language == "cy") {
-      val dateFormat = DateTimeFormatter.ofPattern("d MMMM yyyy")
-      date.format(dateFormat)
       val monthNum       = date.getMonthValue
       val welshFormatter = DateTimeFormatter.ofPattern(s"""d '${messages(s"pla.month.$monthNum")}' yyyy""")
       date.format(welshFormatter)
     } else {
-      val dateFormat = DateTimeFormatter.ofPattern("d MMMM yyyy")
-      date.format(dateFormat)
+      date.format(englishDateFormatter)
     }
 
-  def timeDisplayString(dateTime: LocalDateTime): String = {
-    val timeFormat = DateTimeFormatter.ofPattern("h:mma")
-    dateTime.format(timeFormat).toLowerCase
-  }
+  private val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("h:mma")
+
+  def timeDisplayString(dateTime: LocalDateTime): String =
+    dateTime.format(timeFormatter).toLowerCase
 
   def currencyInputDisplayFormat(amt: BigDecimal): BigDecimal = {
     def df(n: BigDecimal): String = new DecimalFormat("0.00").format(n).replace(".00", "")

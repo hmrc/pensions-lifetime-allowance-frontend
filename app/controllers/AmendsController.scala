@@ -18,10 +18,10 @@ package controllers
 
 import auth.AuthFunction
 import common._
-import config.FrontendAppConfig
 import connectors.PlaConnectorError.{ConflictResponseError, IncorrectResponseBodyError, LockedResponseError}
-import connectors.{CitizenDetailsConnector, PLAConnector, PlaConnectorError, PlaConnectorV2}
-import constructors.{AmendsGAConstructor, DisplayConstructors}
+import connectors.{CitizenDetailsConnector, PlaConnector, PlaConnectorError}
+import constructors.AmendsGAConstructor
+import constructors.display.DisplayConstructors
 import models.amendModels._
 import models.cache.CacheMap
 import models.{AmendResponseModel, PersonalDetailsModel, ProtectionModel, TransformedReadResponseModel}
@@ -39,20 +39,16 @@ import scala.concurrent.{ExecutionContext, Future}
 class AmendsController @Inject() (
     sessionCacheService: SessionCacheService,
     citizenDetailsConnector: CitizenDetailsConnector,
-    plaConnector: PLAConnector,
-    plaConnectorV2: PlaConnectorV2,
+    plaConnector: PlaConnector,
     displayConstructors: DisplayConstructors,
     mcc: MessagesControllerComponents,
     authFunction: AuthFunction,
     manualCorrespondenceNeeded: views.html.pages.result.manualCorrespondenceNeeded,
-    noNotificationId: views.html.pages.fallback.noNotificationId,
     technicalError: views.html.pages.fallback.technicalError,
-    outcomeActive: views.html.pages.amends.outcomeActive,
-    outcomeInactive: views.html.pages.amends.outcomeInactive,
-    outcomeAmended: views.html.pages.amends.outcomeAmended,
-    outcomeNoNotificationId: views.html.pages.amends.outcomeNoNotificationId,
+    amendOutcome: views.html.pages.amends.amendOutcome,
+    amendOutcomeNoNotificationId: views.html.pages.amends.amendOutcomeNoNotificationId,
     amendSummary: views.html.pages.amends.amendSummary
-)(implicit appConfig: FrontendAppConfig, ec: ExecutionContext)
+)(implicit ec: ExecutionContext)
     extends FrontendController(mcc)
     with I18nSupport
     with Logging
@@ -60,6 +56,7 @@ class AmendsController @Inject() (
 
   def amendsSummary(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
     implicit val lang: Lang = mcc.messagesApi.preferred(request).lang
+
     authFunction.genericAuthWithNino("existingProtections") { nino =>
       val protectionKey = Strings.protectionCacheKey(protectionType, status)
       sessionCacheService.fetchAndGetFormData[AmendProtectionModel](protectionKey).map {
@@ -126,13 +123,9 @@ class AmendsController @Inject() (
   private def sendAmendProtectionRequest(nino: String, protection: ProtectionModel)(
       implicit hc: HeaderCarrier
   ): Future[Either[PlaConnectorError, AmendResponseModel]] =
-    if (appConfig.hipMigrationEnabled) {
-      plaConnectorV2
-        .amendProtection(nino, protection)
-        .map(_.map(AmendResponseModel.from(_, protection.psaCheckReference)))
-    } else {
-      plaConnector.amendProtection(nino, protection).map(_.map(AmendResponseModel(_)))
-    }
+    plaConnector
+      .amendProtection(nino, protection)
+      .map(_.map(AmendResponseModel.from(_, protection.psaCheckReference)))
 
   private def saveAndRedirectToDisplay(amendResponseModel: AmendResponseModel)(
       implicit request: Request[AnyContent]
@@ -159,6 +152,8 @@ class AmendsController @Inject() (
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       nino: String
   )(implicit request: Request[AnyContent]): Future[Result] = {
+    implicit val lang: Lang = mcc.messagesApi.preferred(request).lang
+
     if (modelGA.isEmpty) {
       logger.warn(s"Unable to retrieve amendsGAModel from cache for user nino :$nino")
     }
@@ -167,41 +162,25 @@ class AmendsController @Inject() (
       .map { model =>
         model.protection.notificationId match {
           case None =>
-            if (appConfig.hipMigrationEnabled) {
-              val displayModel =
-                displayConstructors.createAmendResultDisplayModelNoNotificationId(model, personalDetailsModelOpt, nino)
+            val displayModel =
+              displayConstructors.createAmendOutcomeDisplayModelNoNotificationId(model, personalDetailsModelOpt, nino)
 
-              Future.successful(Ok(outcomeNoNotificationId(displayModel)))
-            } else {
-              logger.warn(s"No notification ID found in the AmendResponseModel for user with nino $nino")
-              Future.successful(InternalServerError(noNotificationId()).withHeaders(CACHE_CONTROL -> "no-cache"))
-            }
+            Future.successful(Ok(amendOutcomeNoNotificationId(displayModel)))
           case Some(notificationId) =>
-            if (Constants.amendmentCodesList.contains(notificationId)) {
-              createProtectionModel(notificationId, model, nino).map {
+            createProtectionModel(notificationId, model, nino).map {
 
-                case Some(protectionModel) =>
-                  sessionCacheService.saveFormData[ProtectionModel]("openProtection", protectionModel.protection)
-                  val displayModel =
-                    displayConstructors.createAmendResultDisplayModel(protectionModel, personalDetailsModelOpt, nino)
-                  Ok(outcomeAmended(displayModel))
+              case Some(protectionModel) =>
+                sessionCacheService.saveFormData[ProtectionModel]("openProtection", protectionModel.protection)
+                val displayModel =
+                  displayConstructors.createAmendOutcomeDisplayModel(protectionModel, personalDetailsModelOpt, nino)
+                Ok(amendOutcome(displayModel))
 
-                case None =>
-                  logger.warn(
-                    s"Unable to retrieve fixed protection model from API GET endpoint for user with nino :$nino"
-                  )
-                  buildTechnicalError(technicalError)
+              case None =>
+                logger.warn(
+                  s"Unable to retrieve fixed protection model from API GET endpoint for user with nino :$nino"
+                )
+                buildTechnicalError(technicalError)
 
-              }
-            } else if (Constants.activeAmendmentCodes.contains(notificationId)) {
-              sessionCacheService.saveFormData[ProtectionModel]("openProtection", model.protection)
-              val displayModel =
-                displayConstructors.createActiveAmendResponseDisplayModel(model, personalDetailsModelOpt, nino)
-              Future.successful(Ok(outcomeActive(displayModel, modelGA, appConfig)))
-
-            } else {
-              val displayModel = displayConstructors.createInactiveAmendResponseDisplayModel(model)
-              Future.successful(Ok(outcomeInactive(displayModel, modelGA)))
             }
         }
       }
@@ -239,11 +218,7 @@ class AmendsController @Inject() (
   private def fetchProtections(
       nino: String
   )(implicit hc: HeaderCarrier): Future[Either[PlaConnectorError, TransformedReadResponseModel]] =
-    if (appConfig.hipMigrationEnabled) {
-      plaConnectorV2.readProtections(nino).map(_.map(TransformedReadResponseModel.from))
-    } else {
-      plaConnector.readProtections(nino).map(_.map(TransformedReadResponseModel.from))
-    }
+    plaConnector.readProtections(nino).map(_.map(TransformedReadResponseModel.from))
 
   private def filterActiveFixedProtection2016(model: TransformedReadResponseModel): Option[ProtectionModel] = {
     val fixedProtectionType = model.activeProtection.filter(_.isFixedProtection2016)

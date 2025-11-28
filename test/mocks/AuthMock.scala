@@ -29,7 +29,7 @@ import scala.concurrent.Future
 trait AuthMock extends MockitoSugar {
   this: MockitoSugar =>
 
-  val mockAuthConnector = mock[PlayAuthConnector]
+  val mockAuthConnector: PlayAuthConnector = mock[PlayAuthConnector]
 
   def mockAuthRetrieval[A](retrieval: Retrieval[A], returnValue: A): OngoingStubbing[Future[A]] =
     when(mockAuthConnector.authorise[A](any(), ArgumentMatchers.eq(retrieval))(any(), any()))

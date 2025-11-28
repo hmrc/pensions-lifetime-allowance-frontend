@@ -19,20 +19,21 @@ package views.pages.amends
 import common.Strings
 import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
 import org.jsoup.Jsoup
-import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
-import testHelpers.ViewSpecHelpers.ip2016.RemovePsoDetailsViewMessages
+import org.jsoup.nodes.Document
+import org.jsoup.select.Elements
+import testHelpers.CommonViewSpecHelper
+import testHelpers.messages.amends.RemovePsoDetailsViewMessages
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.removePsoDebits
 
 class RemovePsoDebitsViewSpec extends CommonViewSpecHelper with RemovePsoDetailsViewMessages {
 
-  implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
+  implicit val formWithCSRF: FormWithCSRF = inject[FormWithCSRF]
+
+  val view: removePsoDebits = inject[removePsoDebits]
+  val doc: Document         = Jsoup.parse(view.apply(IndividualProtection2016.toString, "open").body)
 
   "the RemovePsoDetailsView" should {
-    lazy val view = app.injector.instanceOf[removePsoDebits]
-    lazy val doc  = Jsoup.parse(view.apply(IndividualProtection2016.toString, "open").body)
-    lazy val form = doc.select("form")
-
     "have the correct title" in {
       doc.title() shouldBe plaPsoDetailsTitleNew
     }
@@ -46,9 +47,11 @@ class RemovePsoDebitsViewSpec extends CommonViewSpecHelper with RemovePsoDetails
     }
 
     "have a valid form" in {
-      form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.AmendsRemovePensionSharingOrderController
-        .submitRemovePso(Strings.ProtectionTypeURL.IndividualProtection2016, "open")
+      val formElement: Elements = doc.select("form")
+
+      formElement.attr("method") shouldBe "POST"
+      formElement.attr("action") shouldBe controllers.routes.AmendsRemovePensionSharingOrderController
+        .submitRemovePso(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")
         .url
     }
 

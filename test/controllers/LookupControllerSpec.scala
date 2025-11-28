@@ -41,9 +41,9 @@ class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with 
   private val sessionCacheService: SessionCacheService = mock[SessionCacheService]
 
   private val mockMCC: MessagesControllerComponents =
-    fakeApplication().injector.instanceOf[MessagesControllerComponents]
+    inject[MessagesControllerComponents]
 
-  private val mockActionWithSessionId: ActionWithSessionId = fakeApplication().injector.instanceOf[ActionWithSessionId]
+  private val mockActionWithSessionId: ActionWithSessionId = inject[ActionWithSessionId]
 
   private val psa_lookup_not_found_results: psa_lookup_not_found_results = mock[psa_lookup_not_found_results]
   private val pla_protection_guidance: pla_protection_guidance           = mock[pla_protection_guidance]
@@ -51,7 +51,7 @@ class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with 
   private val withdrawnPSALookupJourney: withdrawnPSALookupJourney       = mock[withdrawnPSALookupJourney]
 
   private implicit val appConfig: FrontendAppConfig = mock[FrontendAppConfig]
-  private implicit val ec: ExecutionContext         = fakeApplication().injector.instanceOf[ExecutionContext]
+  private implicit val ec: ExecutionContext         = inject[ExecutionContext]
 
   private val controller = new LookupController(
     sessionCacheService,

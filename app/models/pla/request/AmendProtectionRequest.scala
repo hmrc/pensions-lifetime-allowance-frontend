@@ -16,9 +16,9 @@
 
 package models.pla.request
 
-import models.{PensionDebit, ProtectionModel}
 import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionRequestStatus}
-import play.api.libs.json.{Format, Json}
+import models.{PensionDebit, ProtectionModel}
+import play.api.libs.json.{Json, Writes}
 
 case class AmendProtectionRequest(
     lifetimeAllowanceSequenceNumber: Int,
@@ -41,7 +41,7 @@ case class AmendProtectionRequest(
 )
 
 object AmendProtectionRequest {
-  implicit val format: Format[AmendProtectionRequest] = Json.format[AmendProtectionRequest]
+  implicit val writes: Writes[AmendProtectionRequest] = Json.writes[AmendProtectionRequest]
 
   def from(protectionModel: ProtectionModel): AmendProtectionRequest = {
 

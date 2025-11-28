@@ -17,16 +17,15 @@
 package controllers
 
 import auth.AuthFunction
-import config.FrontendAppConfig
 import connectors.CitizenDetailsConnector
-import constructors.DisplayConstructors
+import constructors.display.DisplayConstructors
 import models.ProtectionModel
 import play.api.Logging
 import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
 import services.SessionCacheService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import views.html.pages.result.resultPrint
+import views.html.pages.result.printProtection
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -35,18 +34,15 @@ class PrintController @Inject() (
     sessionCacheService: SessionCacheService,
     citizenDetailsConnector: CitizenDetailsConnector,
     displayConstructors: DisplayConstructors,
-    resultPrintView: resultPrint,
+    printProtectionView: printProtection,
     mcc: MessagesControllerComponents,
     authFunction: AuthFunction
-)(implicit appConfig: FrontendAppConfig, ec: ExecutionContext)
+)(implicit val ec: ExecutionContext)
     extends FrontendController(mcc)
     with I18nSupport
     with Logging {
 
-  private lazy val postSignInRedirectUrl = appConfig.existingProtectionsUrl
-
   val printView: Action[AnyContent] = Action.async { implicit request =>
-    implicit val lang: Lang = mcc.messagesApi.preferred(request).lang
     authFunction.genericAuthWithNino("existingProtections") { nino =>
       for {
         protectionModel <- sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection")
@@ -58,16 +54,19 @@ class PrintController @Inject() (
   private def routePrintView(
       protectionModel: Option[ProtectionModel],
       nino: String
-  )(implicit request: Request[AnyContent], lang: Lang): Future[Result] =
+  )(implicit request: Request[AnyContent]): Future[Result] = {
+    implicit val lang: Lang = mcc.messagesApi.preferred(request).lang
+
     protectionModel match {
       case Some(model) =>
         citizenDetailsConnector.getPersonDetails(nino).map { personalDetailsModel =>
           val displayModel = displayConstructors.createPrintDisplayModel(personalDetailsModel, model, nino)
-          Ok(resultPrintView(displayModel))
+          Ok(printProtectionView(displayModel))
         }
       case _ =>
         logger.warn(s"Forced redirect to PrintView for $nino")
         Future.successful(Redirect(routes.ReadProtectionsController.currentProtections))
     }
+  }
 
 }

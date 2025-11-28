@@ -21,7 +21,8 @@ import models.amendModels.AmendPensionsTakenBetweenModel
 import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Lang
-import testHelpers.{CommonErrorMessages, FakeApplication}
+import testHelpers.FakeApplication
+import testHelpers.messages.CommonErrorMessages
 
 class AmendPensionsTakenBetweenFormSpec extends FakeApplication with CommonErrorMessages with MockitoSugar {
   implicit val lang: Lang = mock[Lang]

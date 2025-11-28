@@ -16,9 +16,8 @@
 
 package testdata
 
-import enums.ApplicationType
 import models.amendModels.AmendsGAModel
-import models._
+import models.display.{AmendOutcomeDisplayModel, AmendPrintDisplayModel}
 
 object AmendProtectionOutcomeViewsTestData {
 
@@ -30,55 +29,6 @@ object AmendProtectionOutcomeViewsTestData {
     between = Some("between"),
     overseas = Some("overseas"),
     pso = Some("pso")
-  )
-
-  val amendsActiveResultModelIP16: ActiveAmendResultDisplayModel = ActiveAmendResultDisplayModel(
-    firstName = "Jim",
-    surname = "Davis",
-    nino = "nino",
-    protectionType = ApplicationType.IP2016,
-    notificationId = "44",
-    protectedAmount = "£1,350,000.45",
-    details = Some(
-      ProtectionDetailsDisplayModel(
-        protectionReference = "protectionRef",
-        psaReference = "psaRef",
-        applicationDate = Some("14 June 2017")
-      )
-    )
-  )
-
-  val amendsActiveResultModelIP16WithNoneProtectionReference: ActiveAmendResultDisplayModel =
-    ActiveAmendResultDisplayModel(
-      firstName = "Jim",
-      surname = "Davis",
-      nino = "nino",
-      protectionType = ApplicationType.IP2016,
-      notificationId = "44",
-      protectedAmount = "£1,350,000.45",
-      details = Some(
-        ProtectionDetailsDisplayModel(
-          protectionReference = "None",
-          psaReference = "psaRef",
-          applicationDate = Some("14 June 2017")
-        )
-      )
-    )
-
-  val amendsActiveResultModelIP14: ActiveAmendResultDisplayModel = ActiveAmendResultDisplayModel(
-    firstName = "Jim",
-    surname = "Davis",
-    nino = "nino",
-    protectionType = ApplicationType.IP2014,
-    notificationId = "33",
-    protectedAmount = "£1,350,000.11",
-    details = Some(
-      ProtectionDetailsDisplayModel(
-        protectionReference = "protectionRef",
-        psaReference = "psaRef",
-        applicationDate = Some("14 June 2017")
-      )
-    )
   )
 
   val printDisplayModelIP14: AmendPrintDisplayModel = AmendPrintDisplayModel(
@@ -95,7 +45,7 @@ object AmendProtectionOutcomeViewsTestData {
     certificateTime = Some("3:14pm")
   )
 
-  val amendResultDisplayModelIP14: AmendResultDisplayModel = AmendResultDisplayModel(
+  val amendResultDisplayModelIP14: AmendOutcomeDisplayModel = AmendOutcomeDisplayModel(
     notificationId = 15,
     protectedAmount = protectedAmountIP14Str,
     details = Some(printDisplayModelIP14)

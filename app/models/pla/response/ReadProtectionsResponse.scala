@@ -16,7 +16,7 @@
 
 package models.pla.response
 
-import play.api.libs.json.{Format, Json}
+import play.api.libs.json.{Json, Reads}
 
 case class ReadProtectionsResponse(
     pensionSchemeAdministratorCheckReference: String,
@@ -24,7 +24,7 @@ case class ReadProtectionsResponse(
 )
 
 object ReadProtectionsResponse {
-  implicit val format: Format[ReadProtectionsResponse] = Json.format[ReadProtectionsResponse]
+  implicit val reads: Reads[ReadProtectionsResponse] = Json.reads[ReadProtectionsResponse]
 }
 
 case class ProtectionRecordsList(
@@ -33,7 +33,7 @@ case class ProtectionRecordsList(
 )
 
 object ProtectionRecordsList {
-  implicit val format: Format[ProtectionRecordsList] = Json.format[ProtectionRecordsList]
+  implicit val reads: Reads[ProtectionRecordsList] = Json.reads[ProtectionRecordsList]
 }
 
 case class ProtectionRecord(
@@ -60,5 +60,5 @@ case class ProtectionRecord(
 )
 
 object ProtectionRecord {
-  implicit val format: Format[ProtectionRecord] = Json.format[ProtectionRecord]
+  implicit val reads: Reads[ProtectionRecord] = Json.reads[ProtectionRecord]
 }

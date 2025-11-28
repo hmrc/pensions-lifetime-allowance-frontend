@@ -47,7 +47,7 @@ trait WiremockHelper {
 
   def resetWiremock() = WireMock.reset()
 
-  lazy val ws = app.injector.instanceOf(classOf[WSClient])
+  val ws = app.injector.instanceOf[WSClient]
 
   def stubGet(url: String, status: Integer, body: String) =
     stubFor(

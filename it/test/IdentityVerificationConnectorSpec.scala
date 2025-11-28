@@ -31,10 +31,9 @@ class IdentityVerificationConnectorSpec extends IntegrationBaseSpec with MockedA
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  lazy val missingJourneyId = "1234aa56-7a8a-901a-23aa-aa4a56a78aa9"
+  val missingJourneyId = "1234aa56-7a8a-901a-23aa-aa4a56a78aa9"
 
-  lazy val identityVerificationConnector: IdentityVerificationConnector =
-    app.injector.instanceOf[IdentityVerificationConnector]
+  val identityVerificationConnector: IdentityVerificationConnector = app.injector.instanceOf[IdentityVerificationConnector]
 
   "IdentityVerificationConnector" should {
     "throw an UpstreamErrorResponse with a statusCode of NOT_FOUND" when {

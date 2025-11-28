@@ -16,24 +16,10 @@
 
 package common
 
-import enums.ApplicationType
-import models.ProtectionModel
-import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionRequestStatus}
 import models.pla.response.{ProtectionStatus, ProtectionType}
+import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionRequestStatus}
 
 object Strings {
-
-  implicit class StringImprovements(val s: String) {
-    import scala.util.control.Exception._
-    def toIntOpt = catching(classOf[NumberFormatException]).opt(s.toInt)
-  }
-
-  def nameString(name: String)(implicit protectionType: ApplicationType.Value): String =
-    protectionType match {
-      case ApplicationType.FP2016 => "fp16" + name.capitalize
-      case ApplicationType.IP2014 => "ip14" + name.capitalize
-      case _                      => name
-    }
 
   def protectionCacheKey(protectionType: String, status: String): String =
     protectionCacheKey(Some(protectionType), Some(status))
@@ -49,15 +35,15 @@ object Strings {
 
     modelProtectionType
       .flatMap(AmendProtectionLifetimeAllowanceType.tryFrom) match {
-      case Some(IndividualProtection2014)    => ProtectionTypeURL.IndividualProtection2014
-      case Some(IndividualProtection2016)    => ProtectionTypeURL.IndividualProtection2016
-      case Some(IndividualProtection2014LTA) => ProtectionTypeURL.IndividualProtection2014LTA
-      case Some(IndividualProtection2016LTA) => ProtectionTypeURL.IndividualProtection2016LTA
+      case Some(IndividualProtection2014)    => ProtectionTypeUrl.IndividualProtection2014
+      case Some(IndividualProtection2016)    => ProtectionTypeUrl.IndividualProtection2016
+      case Some(IndividualProtection2014LTA) => ProtectionTypeUrl.IndividualProtection2014LTA
+      case Some(IndividualProtection2016LTA) => ProtectionTypeUrl.IndividualProtection2016LTA
       case _                                 => "notRecorded"
     }
   }
 
-  object ProtectionTypeURL {
+  object ProtectionTypeUrl {
     val IndividualProtection2014: String    = "individual-protection-2014"
     val IndividualProtection2016: String    = "individual-protection-2016"
     val IndividualProtection2014LTA: String = "individual-protection-2014-lta"
@@ -71,13 +57,13 @@ object Strings {
     import AmendProtectionRequestStatus._
 
     modelStatus.flatMap(AmendProtectionRequestStatus.tryFrom) match {
-      case Some(Open)    => StatusURL.Open
-      case Some(Dormant) => StatusURL.Dormant
+      case Some(Open)    => StatusUrl.Open
+      case Some(Dormant) => StatusUrl.Dormant
       case _             => "notRecorded"
     }
   }
 
-  object StatusURL {
+  object StatusUrl {
     val Open: String    = "open"
     val Dormant: String = "dormant"
   }

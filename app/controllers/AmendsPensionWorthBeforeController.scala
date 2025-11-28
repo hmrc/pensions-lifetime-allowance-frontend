@@ -18,7 +18,7 @@ package controllers
 
 import auth.AuthFunction
 import common._
-import config.{FrontendAppConfig, PlaContext}
+import config.FrontendAppConfig
 import forms.AmendPensionsWorthBeforeForm.amendPensionsWorthBeforeForm
 import models.amendModels._
 import models.pla.AmendProtectionLifetimeAllowanceType
@@ -39,12 +39,11 @@ class AmendsPensionWorthBeforeController @Inject() (
     mcc: MessagesControllerComponents,
     authFunction: AuthFunction,
     technicalError: views.html.pages.fallback.technicalError,
-    amendPensionsWorthBefore: pages.amends.amendPensionsWorthBefore,
+    amendIP16PensionsWorthBefore: pages.amends.amendIP16PensionsWorthBefore,
     amendIP14PensionsWorthBefore: pages.amends.amendIP14PensionsWorthBefore
 )(
     implicit val appConfig: FrontendAppConfig,
     val formWithCSRF: FormWithCSRF,
-    val plaContext: PlaContext,
     val ec: ExecutionContext
 ) extends FrontendController(mcc)
     with AmendControllerCacheHelper
@@ -64,7 +63,7 @@ class AmendsPensionWorthBeforeController @Inject() (
                   protectionType match {
                     case IndividualProtection2016 | IndividualProtection2016LTA =>
                       Ok(
-                        amendPensionsWorthBefore(
+                        amendIP16PensionsWorthBefore(
                           amendPensionsWorthBeforeForm(protectionType.toString).fill(
                             AmendPensionsWorthBeforeModel(
                               Some(
@@ -121,7 +120,7 @@ class AmendsPensionWorthBeforeController @Inject() (
                   protectionType match {
                     case IndividualProtection2016 | IndividualProtection2016LTA =>
                       Future
-                        .successful(BadRequest(amendPensionsWorthBefore(errors, protectionType.toString, status)))
+                        .successful(BadRequest(amendIP16PensionsWorthBefore(errors, protectionType.toString, status)))
                     case IndividualProtection2014 | IndividualProtection2014LTA =>
                       Future.successful(
                         BadRequest(amendIP14PensionsWorthBefore(errors, protectionType.toString, status))

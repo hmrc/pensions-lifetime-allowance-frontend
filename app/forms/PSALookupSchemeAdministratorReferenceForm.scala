@@ -32,7 +32,7 @@ object PSALookupSchemeAdministratorReferenceForm {
 
   private val psaRefRegex = """^(?i)PSA[0-9]{8}[A-Z]$""".r
 
-  def psaRefConstraint(implicit messagesProvider: MessagesProvider): Constraint[String] =
+  private def psaRefConstraint(implicit messagesProvider: MessagesProvider): Constraint[String] =
     Constraint("constraints.psarefcheck") { psaRef =>
       val errors = psaRef match {
         case ""            => Seq(ValidationError(Messages("psa.lookup.form.psaref.required")))

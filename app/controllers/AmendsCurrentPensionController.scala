@@ -18,7 +18,7 @@ package controllers
 
 import auth.AuthFunction
 import common._
-import config.{FrontendAppConfig, PlaContext}
+import config.FrontendAppConfig
 import forms.AmendCurrentPensionForm._
 import models.amendModels._
 import models.pla.AmendProtectionLifetimeAllowanceType
@@ -39,12 +39,11 @@ class AmendsCurrentPensionController @Inject() (
     mcc: MessagesControllerComponents,
     authFunction: AuthFunction,
     technicalError: views.html.pages.fallback.technicalError,
-    amendCurrentPensions: pages.amends.amendCurrentPensions,
+    amendIP16CurrentPensions: pages.amends.amendIP16CurrentPensions,
     amendIP14CurrentPensions: pages.amends.amendIP14CurrentPensions
 )(
     implicit val appConfig: FrontendAppConfig,
     val formWithCSRF: FormWithCSRF,
-    val plaContext: PlaContext,
     val ec: ExecutionContext
 ) extends FrontendController(mcc)
     with AmendControllerCacheHelper
@@ -64,7 +63,7 @@ class AmendsCurrentPensionController @Inject() (
                   protectionType match {
                     case IndividualProtection2016 | IndividualProtection2016LTA =>
                       Ok(
-                        amendCurrentPensions(
+                        amendIP16CurrentPensions(
                           amendCurrentPensionForm(protectionType.toString).fill(
                             AmendCurrentPensionModel(
                               Some(
@@ -119,7 +118,7 @@ class AmendsCurrentPensionController @Inject() (
                 errors =>
                   protectionType match {
                     case IndividualProtection2016 | IndividualProtection2016LTA =>
-                      Future.successful(BadRequest(amendCurrentPensions(errors, protectionType.toString, status)))
+                      Future.successful(BadRequest(amendIP16CurrentPensions(errors, protectionType.toString, status)))
                     case IndividualProtection2014 | IndividualProtection2014LTA =>
                       Future.successful(BadRequest(amendIP14CurrentPensions(errors, protectionType.toString, status)))
                   },

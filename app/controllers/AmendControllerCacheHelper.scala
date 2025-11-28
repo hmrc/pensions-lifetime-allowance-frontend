@@ -17,14 +17,13 @@
 package controllers
 
 import common.Strings
-import models.ProtectionModel
+import models.amendModels._
 import models.cache.CacheMap
 import play.api.mvc.Results.Redirect
-import services.SessionCacheService
-import models.amendModels._
 import play.api.mvc.{MessagesRequest, Result}
+import services.SessionCacheService
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 trait AmendControllerCacheHelper {
 

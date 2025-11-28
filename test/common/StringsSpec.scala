@@ -16,33 +16,13 @@
 
 package common
 
-import enums.ApplicationType
-import models.ProtectionModel
-import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionRequestStatus}
+import models.pla.AmendProtectionLifetimeAllowanceType
 import models.pla.response.{ProtectionStatus, ProtectionType}
 import org.scalatest.OptionValues
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
 
 class StringsSpec extends AnyWordSpecLike with Matchers with OptionValues {
-
-  "nameString" should {
-
-    "correctly create an IP14 cache name string" in {
-      implicit val protectionType = ApplicationType.IP2014
-      Strings.nameString("testString") shouldBe "ip14TestString"
-    }
-
-    "leave an IP16 cache name string unchanged" in {
-      implicit val protectionType = ApplicationType.IP2016
-      Strings.nameString("testString") shouldBe "testString"
-    }
-
-    "correctly create an FP16 cache name string" in {
-      implicit val protectionType = ApplicationType.FP2016
-      Strings.nameString("testString") shouldBe "fp16TestString"
-    }
-  }
 
   "cache key" should {
     "correctly generate the cache key" when {
@@ -136,8 +116,8 @@ class StringsSpec extends AnyWordSpecLike with Matchers with OptionValues {
   }
 
   "protectionTypeUrlString" should {
-    "Populate the protection type URL string" when {
-      import Strings.{ProtectionTypeURL => urlString}
+    "Populate the protection type Url string" when {
+      import Strings.{ProtectionTypeUrl => urlString}
       import AmendProtectionLifetimeAllowanceType._
 
       val testCases = Seq(
@@ -155,7 +135,7 @@ class StringsSpec extends AnyWordSpecLike with Matchers with OptionValues {
         }
       }
 
-      "Populate the protection type URL string with notRecorded" when {
+      "Populate the protection type Url string with notRecorded" when {
         "the protection type is an unknown value" in {
           Strings.protectionTypeUrlString(Some("unknown protection type")) shouldBe "notRecorded"
         }

@@ -18,38 +18,41 @@ package views.pages.amends
 
 import common.Strings
 import forms.AmendPensionsUsedBetweenForm
+import models.amendModels.AmendPensionsUsedBetweenModel
 import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
 import org.jsoup.Jsoup
-import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
-import testHelpers.ViewSpecHelpers.amends.AmendIP14PensionsTakenBetweenViewSpecMessages
-import testHelpers.ViewSpecHelpers.ip2016.PensionsUsedBetweenViewMessages
+import org.jsoup.nodes.Document
+import org.jsoup.select.Elements
+import play.api.data.Form
+import testHelpers.CommonViewSpecHelper
+import testHelpers.messages.amends.{AmendIP14PensionsTakenBetweenViewMessages, AmendIP16PensionsUsedBetweenViewMessages}
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.amendIP14PensionsUsedBetween
 
 class AmendIP14PensionsUsedBetweenViewSpec
     extends CommonViewSpecHelper
-    with AmendIP14PensionsTakenBetweenViewSpecMessages
-    with PensionsUsedBetweenViewMessages {
+    with AmendIP14PensionsTakenBetweenViewMessages
+    with AmendIP16PensionsUsedBetweenViewMessages {
 
-  implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
+  implicit val formWithCSRF: FormWithCSRF = inject[FormWithCSRF]
+
+  val view: amendIP14PensionsUsedBetween = inject[amendIP14PensionsUsedBetween]
+
+  val form: Form[AmendPensionsUsedBetweenModel] = AmendPensionsUsedBetweenForm
+    .amendPensionsUsedBetweenForm(IndividualProtection2016.toString)
+    .bind(Map("amendedPensionsUsedBetweenAmt" -> "12345"))
+
+  val doc: Document = Jsoup.parse(view.apply(form, IndividualProtection2016.toString, "open").body)
+
+  val errorForm: Form[AmendPensionsUsedBetweenModel] = AmendPensionsUsedBetweenForm
+    .amendPensionsUsedBetweenForm(IndividualProtection2016.toString)
+    .bind(Map.empty[String, String])
+
+  val errorDoc: Document = Jsoup.parse(view.apply(errorForm, IndividualProtection2016.toString, "open").body)
 
   "the AmendIP14PensionsUsedBetweenView" should {
-    val pensionsForm = AmendPensionsUsedBetweenForm
-      .amendPensionsUsedBetweenForm(IndividualProtection2016.toString)
-      .bind(Map("amendedPensionsUsedBetweenAmt" -> "12345"))
-    lazy val view = app.injector.instanceOf[amendIP14PensionsUsedBetween]
-    lazy val doc  = Jsoup.parse(view.apply(pensionsForm, IndividualProtection2016.toString, "open").body)
-
-    val errorForm = AmendPensionsUsedBetweenForm
-      .amendPensionsUsedBetweenForm(IndividualProtection2016.toString)
-      .bind(Map.empty[String, String])
-    lazy val errorView = app.injector.instanceOf[amendIP14PensionsUsedBetween]
-    lazy val errorDoc  = Jsoup.parse(errorView.apply(errorForm, IndividualProtection2016.toString, "open").body)
-
-    lazy val form = doc.select("form")
-
     "have the correct title" in {
-      doc.title() shouldBe s"$plaPensionsUsedBetweenHeader - Check your pension protections - GOV.UK"
+      doc.title() shouldBe s"$plaPensionsUsedBetweenHeader - Check your pension protections and enhancements - GOV.UK"
     }
 
     "have the correct and properly formatted header" in {
@@ -88,9 +91,11 @@ class AmendIP14PensionsUsedBetweenViewSpec
     }
 
     "have a valid form" in {
-      form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.AmendsPensionUsedBetweenController
-        .submitAmendPensionsUsedBetween(Strings.ProtectionTypeURL.IndividualProtection2016, "open")
+      val formElement: Elements = doc.select("form")
+
+      formElement.attr("method") shouldBe "POST"
+      formElement.attr("action") shouldBe controllers.routes.AmendsPensionUsedBetweenController
+        .submitAmendPensionsUsedBetween(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")
         .url
     }
 
@@ -112,7 +117,7 @@ class AmendIP14PensionsUsedBetweenViewSpec
     }
 
     "not have errors on valid pages" in {
-      pensionsForm.hasErrors shouldBe false
+      form.hasErrors shouldBe false
       doc.select(".govuk-error-message").text shouldBe ""
     }
   }

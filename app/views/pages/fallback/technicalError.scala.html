@@ -23,7 +23,7 @@
 @restartTarget = @{
     pType match {
         case "existingProtections" => controllers.routes.ReadProtectionsController.currentProtections
-        case _ => controllers.routes.WithdrawnController.showWithdrawn2016()
+        case _ => controllers.routes.ApplicationClosedController.showApplicationClosed2016()
     }
 }
 

@@ -27,7 +27,6 @@ trait AppConfig {
   val citizenAuthHost: Option[String]
   val excludeCopeTab: Boolean
   val identityVerification: Boolean
-  val hipMigrationEnabled: Boolean
   val psalookupjourneyShutterEnabled: Boolean
   val confirmFPUrl: String
   val ipStartUrl: String
@@ -61,14 +60,14 @@ class FrontendAppConfig @Inject() (
   private def loadConfig(key: String) =
     configuration.getOptional[String](key).getOrElse(throw new Exception(s"Missing key: $key"))
 
-  lazy val signOutUrl = "/check-your-pension-protections-and-enhancements/sign-out"
+  val signOutUrl = "/check-your-pension-protections-and-enhancements/sign-out"
 
-  lazy val psaLookupWithdrawLinkUrl: String = configuration.get[String]("psa.lookup.withdrawLink.url")
+  val psaLookupWithdrawLinkUrl: String = configuration.get[String]("psa.lookup.withdrawLink.url")
 
-  lazy val urBannerLink =
+  val urBannerLink =
     "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=PLA_success&utm_source=Survey_Banner&utm_medium=other&t=HMRC&id=113"
 
-  override lazy val ssoUrl: Option[String] = configuration.getOptional[String](s"portal.ssoUrl")
+  override val ssoUrl: Option[String] = configuration.getOptional[String](s"portal.ssoUrl")
 
   override val excludeCopeTab: Boolean =
     configuration.getOptional[Boolean](s"microservice.services.exclusions.copetab").getOrElse(true)
@@ -76,24 +75,24 @@ class FrontendAppConfig @Inject() (
   override val identityVerification: Boolean =
     configuration.getOptional[Boolean]("microservice.services.features.identityVerification").getOrElse(false)
 
-  override val hipMigrationEnabled: Boolean =
-    configuration.getOptional[Boolean]("microservice.services.features.hip-migration").getOrElse(false)
-
   override val psalookupjourneyShutterEnabled: Boolean =
     configuration
       .getOptional[Boolean]("microservice.services.features.psa-lookup-journeyShutterEnabled")
       .getOrElse(false)
 
-  override lazy val citizenAuthHost        = configuration.getOptional[String]("citizen-auth.host")
-  override lazy val confirmFPUrl           = configuration.getOptional[String]("confirmFP.url").getOrElse("")
-  override lazy val ipStartUrl             = configuration.getOptional[String]("ipStart.url").getOrElse("")
-  override lazy val ip14StartUrl           = configuration.getOptional[String]("ip14Start.url").getOrElse("")
-  override lazy val existingProtectionsUrl = configuration.getOptional[String]("existingProtections.url").getOrElse("")
-  override lazy val ptaFrontendUrl         = configuration.getOptional[String]("pta-frontend.url").getOrElse("")
+  override val citizenAuthHost: Option[String] = configuration.getOptional[String]("citizen-auth.host")
+  override val confirmFPUrl: String            = configuration.getOptional[String]("confirmFP.url").getOrElse("")
+  override val ipStartUrl: String              = configuration.getOptional[String]("ipStart.url").getOrElse("")
+  override val ip14StartUrl: String            = configuration.getOptional[String]("ip14Start.url").getOrElse("")
 
-  override lazy val notAuthorisedRedirectUrl = servicesConfig.getString("not-authorised-callback.url")
+  override val existingProtectionsUrl: String =
+    configuration.getOptional[String]("existingProtections.url").getOrElse("")
 
-  override lazy val sessionMissingUpliftUrlPrefix =
+  override val ptaFrontendUrl: String = configuration.getOptional[String]("pta-frontend.url").getOrElse("")
+
+  override val notAuthorisedRedirectUrl: String = servicesConfig.getString("not-authorised-callback.url")
+
+  override val sessionMissingUpliftUrlPrefix: Option[String] =
     configuration.getOptional[String]("login-missing-session.url.prefix")
 
   override val ivUpliftUrl: String =
@@ -107,7 +106,7 @@ class FrontendAppConfig @Inject() (
   override val invalidStatusMetric: String  = servicesConfig.getString("invalid-protection-status")
   override val notFoundStatusMetric: String = servicesConfig.getString("not-found-protection-status")
 
-  override lazy val appName: String = loadConfig("appName")
+  override val appName: String = loadConfig("appName")
 
   override def accessibilityFrontendUrl(implicit requestHeader: RequestHeader): String =
     accessibilityStatementConfig.url.getOrElse("")

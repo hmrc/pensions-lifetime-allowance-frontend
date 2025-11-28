@@ -24,7 +24,7 @@ import testHelpers.FakeApplication
 
 class RedirectControllerSpec extends FakeApplication with MockitoSugar {
 
-  private val mcc = fakeApplication().injector.instanceOf[MessagesControllerComponents]
+  private val mcc = inject[MessagesControllerComponents]
 
   private val redirectController = new RedirectController(mcc)
 

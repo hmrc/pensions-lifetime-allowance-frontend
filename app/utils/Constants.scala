@@ -21,18 +21,16 @@ import java.time.LocalDate
 object Constants {
 
   val npsMaxCurrency: Double    = 1000000000
-  val minIP14PSODate: LocalDate = LocalDate.of(2014, 4, 5)
-  val minIP16PSODate: LocalDate = LocalDate.of(2016, 4, 5)
+  val minIP14PsoDate: LocalDate = LocalDate.of(2014, 4, 5)
+  val minIP16PsoDate: LocalDate = LocalDate.of(2016, 4, 5)
 
   val fpProtectedAmount = 1250000.0
-
-  val inactiveSuccessCodes = List(5, 6, 7, 13, 14, 15, 16, 24, 30, 31, 32, 40, 41, 42, 43)
-
-  val activeAmendmentCodes = List(33, 34, 44)
 
   val amendmentCodesList = List(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14)
 
   val fixedProtectionNotificationIds = List(7, 14)
 
-  val withdrawnNotificationIds = List(6, 7, 13, 14)
+  val withdrawnNotificationIds                         = List(6, 7, 13, 14)
+  val dormantNotificationIds: List[Int]                = List(2, 3, 4, 9, 10, 11, 12)
+  val withdrawnNotificationIdsShowingStatus: List[Int] = List(6, 13)
 }

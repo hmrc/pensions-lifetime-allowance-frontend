@@ -10,48 +10,48 @@ GET         /not-authorised                                                     
 GET         /sign-out                                                                     @controllers.AccountController.signOut
 
 ## Apply IP 14 ##
-GET         /apply-for-ip14-pensions-taken                                                @controllers.WithdrawnController.showWithdrawn2014()
+GET         /apply-for-ip14-pensions-taken                                                @controllers.ApplicationClosedController.showApplicationClosed2014()
 
-GET         /apply-for-ip14-pensions-taken-before                                         @controllers.WithdrawnController.showWithdrawn2014()
+GET         /apply-for-ip14-pensions-taken-before                                         @controllers.ApplicationClosedController.showApplicationClosed2014()
 
-GET         /apply-for-ip14-pensions-taken-between                                        @controllers.WithdrawnController.showWithdrawn2014()
+GET         /apply-for-ip14-pensions-taken-between                                        @controllers.ApplicationClosedController.showApplicationClosed2014()
 
-GET         /apply-for-ip14-overseas-pensions                                             @controllers.WithdrawnController.showWithdrawn2014()
+GET         /apply-for-ip14-overseas-pensions                                             @controllers.ApplicationClosedController.showApplicationClosed2014()
 
-GET         /apply-for-ip14-current-pensions                                              @controllers.WithdrawnController.showWithdrawn2014()
+GET         /apply-for-ip14-current-pensions                                              @controllers.ApplicationClosedController.showApplicationClosed2014()
 
-GET         /apply-for-ip14-pension-sharing-orders                                        @controllers.WithdrawnController.showWithdrawn2014()
+GET         /apply-for-ip14-pension-sharing-orders                                        @controllers.ApplicationClosedController.showApplicationClosed2014()
 
-GET         /apply-for-ip14-pension-sharing-order-details                                 @controllers.WithdrawnController.showWithdrawn2014()
+GET         /apply-for-ip14-pension-sharing-order-details                                 @controllers.ApplicationClosedController.showApplicationClosed2014()
 
-GET         /apply-for-ip14-remove-pension-sharing-order-details                          @controllers.WithdrawnController.showWithdrawn2014()
+GET         /apply-for-ip14-remove-pension-sharing-order-details                          @controllers.ApplicationClosedController.showApplicationClosed2014()
 
-GET         /apply-for-ip14-submit-your-application                                       @controllers.WithdrawnController.showWithdrawn2014()
+GET         /apply-for-ip14-submit-your-application                                       @controllers.ApplicationClosedController.showApplicationClosed2014()
 
 ## Apply IP 16 ##
-GET         /apply-for-ip16-pensions-taken                                                @controllers.WithdrawnController.showWithdrawn2016()
+GET         /apply-for-ip16-pensions-taken                                                @controllers.ApplicationClosedController.showApplicationClosed2016()
 
-GET         /apply-for-ip16-pensions-taken-before                                         @controllers.WithdrawnController.showWithdrawn2016()
+GET         /apply-for-ip16-pensions-taken-before                                         @controllers.ApplicationClosedController.showApplicationClosed2016()
 
-GET         /apply-for-ip16-pensions-worth-before                                         @controllers.WithdrawnController.showWithdrawn2016()
+GET         /apply-for-ip16-pensions-worth-before                                         @controllers.ApplicationClosedController.showApplicationClosed2016()
 
-GET         /apply-for-ip16-pensions-taken-between                                        @controllers.WithdrawnController.showWithdrawn2016()
+GET         /apply-for-ip16-pensions-taken-between                                        @controllers.ApplicationClosedController.showApplicationClosed2016()
 
-GET         /apply-for-ip16-pensions-used-between                                         @controllers.WithdrawnController.showWithdrawn2016()
+GET         /apply-for-ip16-pensions-used-between                                         @controllers.ApplicationClosedController.showApplicationClosed2016()
 
-GET         /apply-for-ip16-overseas-pensions                                             @controllers.WithdrawnController.showWithdrawn2016()
+GET         /apply-for-ip16-overseas-pensions                                             @controllers.ApplicationClosedController.showApplicationClosed2016()
 
-GET         /apply-for-ip16-current-pensions                                              @controllers.WithdrawnController.showWithdrawn2016()
+GET         /apply-for-ip16-current-pensions                                              @controllers.ApplicationClosedController.showApplicationClosed2016()
 
-GET         /apply-for-ip16-pension-sharing-orders                                        @controllers.WithdrawnController.showWithdrawn2016()
+GET         /apply-for-ip16-pension-sharing-orders                                        @controllers.ApplicationClosedController.showApplicationClosed2016()
 
-GET         /apply-for-ip16-pension-sharing-order-details                                 @controllers.WithdrawnController.showWithdrawn2016()
+GET         /apply-for-ip16-pension-sharing-order-details                                 @controllers.ApplicationClosedController.showApplicationClosed2016()
 
-GET         /apply-for-ip16-remove-pension-sharing-order-details                          @controllers.WithdrawnController.showWithdrawn2016()
+GET         /apply-for-ip16-remove-pension-sharing-order-details                          @controllers.ApplicationClosedController.showApplicationClosed2016()
 
-GET         /apply-for-ip16-submit-your-application                                       @controllers.WithdrawnController.showWithdrawn2016()
+GET         /apply-for-ip16-submit-your-application                                       @controllers.ApplicationClosedController.showApplicationClosed2016()
 
-## Result ##
+## Existing protections ##
 GET         /existing-protections                                                         @controllers.ReadProtectionsController.currentProtections
 GET         /print-protection                                                             @controllers.PrintController.printView
 
@@ -84,7 +84,7 @@ POST        /amend-protection/submit-amendment/:protectionType/:status          
 GET         /amend-protection/amendment-outcome                                           @controllers.AmendsController.amendmentOutcome
 GET         /amend-protection/:protectionType/:status                                     @controllers.AmendsController.amendsSummary(protectionType, status)
 
-#PSA Lookup routes
+## PSA Lookup routes ##
 GET         /psalookup/protection-notification-number                                     @controllers.LookupProtectionNotificationController.displayProtectionNotificationNoForm
 POST        /psalookup/protection-notification-number                                     @controllers.LookupProtectionNotificationController.submitProtectionNotificationNoForm
 

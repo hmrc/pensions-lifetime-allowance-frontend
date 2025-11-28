@@ -14,11 +14,11 @@
  * limitations under the License.
  *@
 
-@import play.api.i18n._
-@import models.ExistingProtectionDisplayModel
-@import config.FrontendAppConfig
-@import views.HeaderContent
 @import common.Strings
+@import config.FrontendAppConfig
+@import models.display.ExistingProtectionDisplayModel
+@import play.api.i18n._
+@import views.HeaderContent
 @import views.html.playHelpers.templates.existingProtections.protectionDetails
 
 @this(appConfig: FrontendAppConfig)
@@ -45,13 +45,13 @@
 <dl class="govuk-summary-list">
 
     @protection.protectedAmount.map { protectedAmount =>
-        @protectionDetails(Messages(HeaderContent.getProtectedLifetimeAllowance(appConfig)), protectedAmount, "activeProtectedAmount", Some(changeLink))
+        @protectionDetails(Messages(HeaderContent.getProtectedLifetimeAllowance), protectedAmount, "activeProtectedAmount", Some(changeLink))
     }
 
-    @protectionDetails(Messages(HeaderContent.getProtectionNotificatioNumber(appConfig)), protection.protectionReference, "activeProtectionReference")
+    @protectionDetails(Messages(HeaderContent.getProtectionNotificationNumber), protection.protectionReference, "activeProtectionReference")
 
     @protection.psaCheckReference.map { checkRef =>
-        @protectionDetails(Messages(HeaderContent.getSchemeAdministratorReference(appConfig)), checkRef, "activePSACheckRef")
+        @protectionDetails(Messages(HeaderContent.getSchemeAdministratorReference), checkRef, "activePSACheckRef")
     }
 
     @protection.certificateDate.map{ certificateDate =>

@@ -17,13 +17,15 @@
 package views.pages.amends
 
 import common.Strings
-import forms.AmendPSODetailsForm
+import forms.AmendPsoDetailsForm
+import models.amendModels.AmendPsoDetailsModel
 import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
 import org.jsoup.Jsoup
-import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
-import testHelpers.CommonErrorMessages
-import testHelpers.ViewSpecHelpers.CommonMessages
-import testHelpers.ViewSpecHelpers.ip2016.PsoDetailsViewMessages
+import org.jsoup.nodes.Document
+import play.api.data.Form
+import testHelpers.CommonViewSpecHelper
+import testHelpers.messages.amends.PsoDetailsViewMessages
+import testHelpers.messages.{CommonErrorMessages, CommonMessages}
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.amendPsoDetails
 
@@ -33,42 +35,40 @@ class AmendPsoDetailsViewSpec
     with CommonErrorMessages
     with CommonMessages {
 
-  implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
+  implicit val formWithCSRF: FormWithCSRF = inject[FormWithCSRF]
+
+  val view: amendPsoDetails = inject[amendPsoDetails]
+
+  val form: Form[AmendPsoDetailsModel] = AmendPsoDetailsForm
+    .amendPsoDetailsForm("")
+    .bind(
+      Map(
+        "pso.day"   -> "1",
+        "pso.month" -> "2",
+        "pso.year"  -> "2017",
+        "psoAmt"    -> "12345"
+      )
+    )
+
+  val doc: Document = Jsoup.parse(view(form, IndividualProtection2016.toString, "open", existingPso = true).body)
+
+  val errorForm: Form[AmendPsoDetailsModel] = AmendPsoDetailsForm
+    .amendPsoDetailsForm("")
+    .bind(
+      Map(
+        "pso.day"   -> "",
+        "pso.month" -> "",
+        "pso.year"  -> "",
+        "psoAmt"    -> "a"
+      )
+    )
+
+  val errorDoc: Document =
+    Jsoup.parse(view.apply(errorForm, IndividualProtection2016.toString, "", existingPso = false).body)
+
+  val pageTitle = s"$plaPsoDetailsTitle - $plaBaseAppName - GOV.UK"
 
   "the AmendPsoDetailsView" should {
-    val pensionsForm = AmendPSODetailsForm
-      .amendPsoDetailsForm("")
-      .bind(
-        Map(
-          "pso.day"   -> "1",
-          "pso.month" -> "2",
-          "pso.year"  -> "2017",
-          "psoAmt"    -> "12345"
-        )
-      )
-
-    lazy val view = app.injector.instanceOf[amendPsoDetails]
-    lazy val doc =
-      Jsoup.parse(view(pensionsForm, IndividualProtection2016.toString, "open", true).body)
-
-    lazy val errorForm = AmendPSODetailsForm
-      .amendPsoDetailsForm("")
-      .bind(
-        Map(
-          "pso.day"   -> "",
-          "pso.month" -> "",
-          "pso.year"  -> "",
-          "psoAmt"    -> "a"
-        )
-      )
-
-    lazy val errorView = app.injector.instanceOf[amendPsoDetails]
-    lazy val errorDoc =
-      Jsoup.parse(errorView.apply(errorForm, IndividualProtection2016.toString, "", false).body)
-    lazy val pageTitle = s"$plaPsoDetailsTitle - $plaBaseAppName - GOV.UK"
-
-    lazy val form = doc.select("form")
-
     "have the correct title" in {
       doc.title() shouldBe pageTitle
     }
@@ -95,9 +95,11 @@ class AmendPsoDetailsViewSpec
     }
 
     "have a valid form" in {
-      form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.AmendsPensionSharingOrderController
-        .submitAmendPsoDetails(Strings.ProtectionTypeURL.IndividualProtection2016, "open", true)
+      val formElement = doc.select("form")
+
+      formElement.attr("method") shouldBe "POST"
+      formElement.attr("action") shouldBe controllers.routes.AmendsPensionSharingOrderController
+        .submitAmendPsoDetails(Strings.ProtectionTypeUrl.IndividualProtection2016, "open", existingPSO = true)
         .url
     }
 
@@ -119,7 +121,7 @@ class AmendPsoDetailsViewSpec
     }
 
     "not have errors on valid pages" in {
-      pensionsForm.hasErrors shouldBe false
+      form.hasErrors shouldBe false
       doc.select(".govuk-error-summary__list li").eq(0).text shouldBe ""
       doc.select(".govuk-error-summary__list li").eq(1).text shouldBe ""
       doc.select(".govuk-error-summary__list li").eq(2).text shouldBe ""

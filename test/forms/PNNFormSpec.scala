@@ -18,17 +18,18 @@ package forms
 
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.data.{Form, FormError}
-import play.api.i18n.{Lang, Messages, MessagesImpl, MessagesProvider}
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl, MessagesProvider}
 import play.api.libs.json.Json
 import play.api.mvc.MessagesControllerComponents
-import testHelpers.{CommonErrorMessages, FakeApplication}
+import testHelpers.FakeApplication
+import testHelpers.messages.CommonErrorMessages
 
 import java.util.Locale
 
 class PNNFormSpec extends FakeApplication with CommonErrorMessages with MockitoSugar {
 
-  val mcc                                        = app.injector.instanceOf[MessagesControllerComponents]
-  val messagesApi                                = mcc.messagesApi
+  val mcc: MessagesControllerComponents          = inject[MessagesControllerComponents]
+  val messagesApi: MessagesApi                   = mcc.messagesApi
   implicit val messageProvider: MessagesProvider = MessagesImpl(Lang(Locale.ENGLISH), messagesApi)
   private val form                               = PSALookupProtectionNotificationNoForm.pnnForm(messageProvider)
 

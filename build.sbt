@@ -1,9 +1,6 @@
 import uk.gov.hmrc.DefaultBuildSettings.{defaultSettings, itSettings, scalaSettings}
 import sbt.*
-import uk.gov.hmrc.*
-import DefaultBuildSettings.*
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
-import uk.gov.hmrc.versioning.SbtGitVersioning
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
 val appName = "pensions-lifetime-allowance-frontend"
@@ -24,10 +21,13 @@ lazy val scoverageSettings = {
     ScoverageKeys.coverageExcludedPackages := "<empty>;Reverse.*;.*AuthService.*;models\\.data\\..*;views.html.*;uk.gov.hmrc.BuildInfo;app.*;prod.*;config.*;models.*",
     ScoverageKeys.coverageExcludedFiles    := ".*/Routes.*;.*/RoutesPrefix.*;.*/PdfGeneratorConnector.*;",
     ScoverageKeys.coverageMinimumStmtTotal := 90,
-    ScoverageKeys.coverageFailOnMinimum    := false,
+    ScoverageKeys.coverageFailOnMinimum    := true,
     ScoverageKeys.coverageHighlighting     := true,
-    scalacOptions += "-Wconf:cat=unused-imports&src=html/.*:s",
-    scalacOptions += "-Wconf:cat=unused-imports&src=routes/.*:s"
+    scalacOptions ++= Seq(
+      "-Wconf:cat=unused-imports&src=html/.*:s",
+      "-Wconf:cat=unused-imports&src=routes/.*:s",
+      "-Wconf:cat=unused&src=routes/.*:s"
+    )
   )
 }
 
@@ -43,7 +43,7 @@ lazy val root = Project(appName, file("."))
     Test / parallelExecution        := false,
     Test / fork                     := false,
     retrieveManaged                 := true,
-    update / evictionWarningOptions := EvictionWarningOptions.default.withWarnScalaVersionEviction(false)
+    (update / evictionWarningOptions).withRank(KeyRanks.Invisible) := EvictionWarningOptions.default.withWarnScalaVersionEviction(false)
     // Use the silencer plugin to suppress warnings from unused imports in compiled twirl templates
   )
   .settings(

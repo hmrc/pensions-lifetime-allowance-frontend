@@ -33,7 +33,7 @@ object PSALookupProtectionNotificationNoForm {
   private val npsRefRegex  = """^(?i)(IP14|FP14|IP16|FP16)[0-9]{10}[ABCDEFGHJKLMNPRSTXYZ]$""".r
   private val tpssRefRegex = """^(?i)[1-9A][0-9]{6}[ABCDEFHXJKLMNYPQRSTZW]$""".r
 
-  def ltaRefConstraint(implicit messagesProvider: MessagesProvider): Constraint[String] =
+  private def ltaRefConstraint(implicit messagesProvider: MessagesProvider): Constraint[String] =
     Constraint("constraints.ltarefcheck") { ltaRef =>
       val errors = ltaRef match {
         case ""             => Seq(ValidationError(Messages("psa.lookup.form.pnn.required")))

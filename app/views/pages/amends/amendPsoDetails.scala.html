@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import models.amendModels.AmendPSODetailsModel
+@import models.amendModels.AmendPsoDetailsModel
 @import play.api.data._
 @import common.Strings
 
@@ -27,7 +27,7 @@
     submitButton: playHelpers.templates.submitButton
 )
 
-@(psoDetailsForm: Form[AmendPSODetailsModel], protectionType: String, status: String, existingPSO: Boolean)(implicit request: Request[_], messages: Messages)
+@(psoDetailsForm: Form[AmendPsoDetailsModel], protectionType: String, status: String, existingPso: Boolean)(implicit request: Request[_], messages: Messages)
 
 @title = @{
     if(psoDetailsForm.errors.nonEmpty){
@@ -45,7 +45,7 @@
 
     <h1 class="govuk-heading-xl">@Messages("pla.psoDetails.title")</h1>
 
-    @form(action = routes.AmendsPensionSharingOrderController.submitAmendPsoDetails(Strings.protectionTypeUrlString(Some(protectionType)), status, existingPSO)) {
+    @form(action = routes.AmendsPensionSharingOrderController.submitAmendPsoDetails(Strings.protectionTypeUrlString(Some(protectionType)), status, existingPso)) {
 
         @formInlineDateInput(
             content = Messages("pla.psoDetails.dateQuestionText"),
@@ -64,7 +64,7 @@
         )
 
         @submitButton(
-            submitText = if(existingPSO) Messages("pla.base.update") else Messages("pla.base.add")
+            submitText = if(existingPso) Messages("pla.base.update") else Messages("pla.base.add")
         )
 
     }

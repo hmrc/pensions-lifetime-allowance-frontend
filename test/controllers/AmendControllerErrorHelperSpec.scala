@@ -37,7 +37,7 @@ class AmendControllerErrorHelperSpec
     with I18nSupport {
 
   private val messagesControllerComponents: MessagesControllerComponents =
-    fakeApplication().injector.instanceOf[MessagesControllerComponents]
+    inject[MessagesControllerComponents]
 
   override val messagesApi: MessagesApi = messagesControllerComponents.messagesApi
 

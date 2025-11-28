@@ -22,14 +22,13 @@ import play.api.mvc.RequestHeader
 
 object MockConfig extends AppConfig {
 
-  val NoConfiguration = null
+  val NoConfiguration: Null = null
 
   override def accessibilityFrontendUrl(implicit requestHeader: RequestHeader): String = "_"
   override val ssoUrl: Option[String]                                                  = None
   override val citizenAuthHost: Option[String]                                         = None
   override val excludeCopeTab: Boolean                                                 = false
   override val identityVerification: Boolean                                           = true
-  override val hipMigrationEnabled: Boolean                                            = true
   override val psalookupjourneyShutterEnabled: Boolean                                 = true
   override val confirmFPUrl: String                                                    = "/pla/apply-for-fp16"
   override val ipStartUrl: String                            = "/pla/apply-for-ip16-pensions-taken"

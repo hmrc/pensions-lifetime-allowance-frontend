@@ -17,7 +17,7 @@
 package controllers
 
 import config.FrontendAppConfig
-import connectors.PLAConnector
+import connectors.PsaLookupConnector
 import forms.PSALookupProtectionNotificationNoForm
 import models.{PSALookupRequest, PSALookupResult}
 import play.api.data.Form
@@ -35,7 +35,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class LookupProtectionNotificationController @Inject() (
     sessionCacheService: SessionCacheService,
-    plaConnector: PLAConnector,
+    plaConnector: PsaLookupConnector,
     actionWithSessionId: ActionWithSessionId,
     mcc: MessagesControllerComponents,
     psa_lookup_protection_notification_no_form: psa_lookup_protection_notification_no_form,

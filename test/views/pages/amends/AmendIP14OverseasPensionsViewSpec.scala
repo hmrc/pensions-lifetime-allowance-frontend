@@ -18,31 +18,36 @@ package views.pages.amends
 
 import common.Strings
 import forms.AmendOverseasPensionsForm
+import models.amendModels.AmendOverseasPensionsModel
 import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
 import org.jsoup.Jsoup
-import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
-import testHelpers.ViewSpecHelpers.amends.AmendIP14OverseasPensionsViewSpecMessages
+import org.jsoup.nodes.Document
+import org.jsoup.select.Elements
+import play.api.data.Form
+import testHelpers.CommonViewSpecHelper
+import testHelpers.messages.amends.AmendIP14OverseasPensionsViewMessages
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.amendIP14OverseasPensions
 
-class AmendIP14OverseasPensionsViewSpec extends CommonViewSpecHelper with AmendIP14OverseasPensionsViewSpecMessages {
+class AmendIP14OverseasPensionsViewSpec extends CommonViewSpecHelper with AmendIP14OverseasPensionsViewMessages {
 
-  implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
+  implicit val formWithCSRF: FormWithCSRF = inject[FormWithCSRF]
+
+  val view: amendIP14OverseasPensions = inject[amendIP14OverseasPensions]
+
+  val form: Form[AmendOverseasPensionsModel] = AmendOverseasPensionsForm
+    .amendOverseasPensionsForm(IndividualProtection2016.toString)
+    .bind(Map("amendedOverseasPensions" -> "yes", "amendedOverseasPensionsAmt" -> "1234"))
+
+  val doc: Document = Jsoup.parse(view.apply(form, IndividualProtection2016.toString, "open").body)
+
+  val errorForm: Form[AmendOverseasPensionsModel] = AmendOverseasPensionsForm
+    .amendOverseasPensionsForm(IndividualProtection2016.toString)
+    .bind(Map("amendedOverseasPensions" -> "", "amendedOverseasPensionsAmt" -> "1234"))
+
+  val errorDoc: Document = Jsoup.parse(view.apply(errorForm, IndividualProtection2016.toString, "open").body)
 
   "the AmendIP14OverseasPensionsView" should {
-    val oPensionsForm = AmendOverseasPensionsForm
-      .amendOverseasPensionsForm(IndividualProtection2016.toString)
-      .bind(Map("amendedOverseasPensions" -> "yes", "amendedOverseasPensionsAmt" -> "1234"))
-    lazy val view = app.injector.instanceOf[amendIP14OverseasPensions]
-    lazy val doc  = Jsoup.parse(view.apply(oPensionsForm, IndividualProtection2016.toString, "open").body)
-
-    val errorForm = AmendOverseasPensionsForm
-      .amendOverseasPensionsForm(IndividualProtection2016.toString)
-      .bind(Map("amendedOverseasPensions" -> "", "amendedOverseasPensionsAmt" -> "1234"))
-    lazy val errorView = app.injector.instanceOf[amendIP14OverseasPensions]
-    lazy val errorDoc  = Jsoup.parse(errorView.apply(errorForm, IndividualProtection2016.toString, "open").body)
-
-    lazy val form = doc.select("form")
     "have the correct title" in {
       doc.title() shouldBe plaOverseasPensionsTitleNew
     }
@@ -67,11 +72,13 @@ class AmendIP14OverseasPensionsViewSpec extends CommonViewSpecHelper with AmendI
     }
 
     "have a valid form" in {
-      form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.AmendsOverseasPensionController
-        .submitAmendOverseasPensions(Strings.ProtectionTypeURL.IndividualProtection2016, "open")
+      val formElement: Elements = doc.select("form")
+
+      formElement.attr("method") shouldBe "POST"
+      formElement.attr("action") shouldBe controllers.routes.AmendsOverseasPensionController
+        .submitAmendOverseasPensions(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")
         .url
-      form.select("legend.govuk-visually-hidden").text() shouldBe plaIP14OverseasPensionsLegendText
+      formElement.select("legend.govuk-visually-hidden").text() shouldBe plaIP14OverseasPensionsLegendText
     }
 
     "have a £ symbol present" in {
@@ -90,7 +97,7 @@ class AmendIP14OverseasPensionsViewSpec extends CommonViewSpecHelper with AmendI
     }
 
     "not have errors on valid pages" in {
-      oPensionsForm.hasErrors shouldBe false
+      form.hasErrors shouldBe false
       doc.select(".govuk-error-message").text shouldBe ""
     }
 

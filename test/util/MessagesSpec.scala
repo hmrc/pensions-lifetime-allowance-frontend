@@ -52,14 +52,23 @@ class MessagesSpec extends AnyWordSpecLike with Matchers with OptionValues {
     }
   }
 
-  private def parseMessages(filename: String): Map[String, String] =
+  private def parseMessages(filename: String): Map[String, String] = {
+    val messagesContents = {
+      val source = Source.fromFile(filename)
+      val string = source.mkString
+      source.close()
+      string
+    }
     Messages.parse(
-      new MessageSource { override def read: String = Source.fromFile(filename).mkString },
+      new MessageSource {
+        override def read: String = messagesContents
+      },
       filename
     ) match {
       case Right(messages) => messages
       case Left(e)         => throw e
     }
+  }
 
   private def countMessagesWithArgs(messages: Map[String, String]) = messages.values.filter(_.contains("{0}"))
 

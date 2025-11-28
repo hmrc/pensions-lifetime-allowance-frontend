@@ -18,20 +18,20 @@ package testHelpers
 
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
-import connectors.PLAConnector
+import connectors.PsaLookupConnector
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.{Configuration, Environment}
 import services.SessionCacheService
 
 trait TestConfigHelper extends FakeApplication with MockitoSugar {
 
-  val config                            = mock[Configuration]
-  val env                               = mock[Environment]
-  implicit lazy val system: ActorSystem = ActorSystem("test")
-  implicit val mat: Materializer        = mock[Materializer]
+  val config: Configuration        = mock[Configuration]
+  val env: Environment             = mock[Environment]
+  implicit val system: ActorSystem = ActorSystem("test")
+  implicit val mat: Materializer   = mock[Materializer]
 }
 
 trait TestControllerHelper extends MockitoSugar with TestConfigHelper {
-  val sessionCacheService = mock[SessionCacheService]
-  val plaConnector        = mock[PLAConnector]
+  val sessionCacheService: SessionCacheService = mock[SessionCacheService]
+  val plaConnector: PsaLookupConnector         = mock[PsaLookupConnector]
 }

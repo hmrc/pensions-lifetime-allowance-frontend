@@ -18,7 +18,7 @@ package controllers
 
 import auth.AuthFunction
 import common._
-import config.{FrontendAppConfig, PlaContext}
+import config.FrontendAppConfig
 import forms.AmendPensionsTakenBetweenForm._
 import models.amendModels._
 import models.pla.AmendProtectionLifetimeAllowanceType
@@ -39,12 +39,11 @@ class AmendsPensionTakenBetweenController @Inject() (
     mcc: MessagesControllerComponents,
     authFunction: AuthFunction,
     technicalError: views.html.pages.fallback.technicalError,
-    amendPensionsTakenBetween: pages.amends.amendPensionsTakenBetween,
+    amendIP16PensionsTakenBetween: pages.amends.amendIP16PensionsTakenBetween,
     amendIP14PensionsTakenBetween: pages.amends.amendIP14PensionsTakenBetween
 )(
     implicit val appConfig: FrontendAppConfig,
     val formWithCSRF: FormWithCSRF,
-    val plaContext: PlaContext,
     val ec: ExecutionContext
 ) extends FrontendController(mcc)
     with AmendControllerCacheHelper
@@ -67,7 +66,7 @@ class AmendsPensionTakenBetweenController @Inject() (
                   protectionType match {
                     case IndividualProtection2016 | IndividualProtection2016LTA =>
                       Ok(
-                        amendPensionsTakenBetween(
+                        amendIP16PensionsTakenBetween(
                           amendPensionsTakenBetweenForm(protectionType.toString)
                             .fill(AmendPensionsTakenBetweenModel(yesNoValue)),
                           protectionType.toString,
@@ -110,7 +109,7 @@ class AmendsPensionTakenBetweenController @Inject() (
                   protectionType match {
                     case IndividualProtection2016 | IndividualProtection2016LTA =>
                       Future.successful(
-                        BadRequest(amendPensionsTakenBetween(errors, protectionType.toString, status))
+                        BadRequest(amendIP16PensionsTakenBetween(errors, protectionType.toString, status))
                       )
                     case IndividualProtection2014 | IndividualProtection2014LTA =>
                       Future.successful(

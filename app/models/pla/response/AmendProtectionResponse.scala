@@ -17,7 +17,7 @@
 package models.pla.response
 
 import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionResponseStatus}
-import play.api.libs.json.{Format, Json}
+import play.api.libs.json.{Json, Reads}
 
 case class AmendProtectionResponse(
     lifetimeAllowanceIdentifier: Long,
@@ -41,5 +41,5 @@ case class AmendProtectionResponse(
 )
 
 object AmendProtectionResponse {
-  implicit val format: Format[AmendProtectionResponse] = Json.format[AmendProtectionResponse]
+  implicit val reads: Reads[AmendProtectionResponse] = Json.reads[AmendProtectionResponse]
 }

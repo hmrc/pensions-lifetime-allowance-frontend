@@ -16,17 +16,13 @@
 
 package common
 
-import java.text.SimpleDateFormat
-
-import enums.ApplicationType
-import models._
-import play.api.data.{FieldMapping, FormError}
 import play.api.data.Forms.of
 import play.api.data.format.Formatter
-import models.cache.CacheMap
 import play.api.data.validation.{Constraint, Invalid, Valid}
+import play.api.data.{FieldMapping, FormError}
 import utils.Constants.npsMaxCurrency
 
+import java.time.LocalDate
 import scala.util.{Failure, Success, Try}
 
 object Validation {
@@ -43,14 +39,6 @@ object Validation {
       case _                              => true
     }
 
-  def checkIfValidBigDecimal(value: String): Boolean = {
-    val output = Try(BigDecimal(value))
-    output match {
-      case Success(result) => true
-      case Failure(_)      => false
-    }
-  }
-
   def isLessThanMax(amount: BigDecimal): Boolean =
     amount <= npsMaxCurrency
 
@@ -58,50 +46,9 @@ object Validation {
     amount < target
 
   def isValidDate(day: Int, month: Int, year: Int): Boolean =
-    try {
-      val fmt = new SimpleDateFormat("dd/MM/yyyy")
-      fmt.setLenient(false)
-      fmt.parse(s"$day/$month/$year")
-      true
-    } catch {
-      case e: Exception => false
-    }
+    Try(LocalDate.of(year, month, day)).map(_ => true).getOrElse(false)
 
-  def validIPData(data: CacheMap)(implicit protectionType: ApplicationType.Value): Boolean = {
-    import Strings.nameString
-    val pensionsTakenModel: Option[PensionsTakenModel] = data.getEntry[PensionsTakenModel](nameString("pensionsTaken"))
-
-    val pensionsTakenBeforeModel  = data.getEntry[PensionsTakenBeforeModel](nameString("pensionsTakenBefore"))
-    val pensionsTakenBetweenModel = data.getEntry[PensionsTakenBetweenModel](nameString("pensionsTakenBetween"))
-    val overseasPensionsModel     = data.getEntry[OverseasPensionsModel](nameString("overseasPensions"))
-    val currentPensionsModel      = data.getEntry[CurrentPensionsModel](nameString("currentPensions"))
-
-    val pensionDebitsModel = data.getEntry[PensionDebitsModel](nameString("pensionDebits"))
-
-    def validPensionData(): Boolean =
-      if (pensionsTakenModel.isEmpty || overseasPensionsModel.isEmpty || currentPensionsModel.isEmpty) false
-      else {
-        if (pensionsTakenModel.get.pensionsTaken.get == "yes") {
-          pensionsTakenBeforeModel.isDefined && pensionsTakenBetweenModel.isDefined
-        } else true
-      }
-
-    def validPSOData(): Boolean =
-      if (pensionDebitsModel.isEmpty) false
-      else {
-        if (pensionDebitsModel.get.pensionDebits.get == "no") true
-        else {
-          !invalidPSODetails()
-        }
-      }
-
-    def invalidPSODetails(): Boolean =
-      data.getEntry[PSODetailsModel](nameString(s"psoDetails")).isEmpty
-
-    validPensionData() && validPSOData()
-  }
-
-  val mandatoryCheck: String => Boolean = input => input.trim != ""
+  def mandatoryCheck: String => Boolean = input => input.trim != ""
 
   val yesNoCheck: String => Boolean = {
     case "yes" => true
@@ -113,14 +60,14 @@ object Validation {
   def newText(errorKey: String = "error.required", optional: Boolean = false): FieldMapping[String] =
     of(stringFormatter(errorKey, optional))
 
-  def stringFormatter(errorKey: String, optional: Boolean = false): Formatter[String] = new Formatter[String] {
+  private def stringFormatter(errorKey: String, optional: Boolean): Formatter[String] = new Formatter[String] {
 
     def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] =
       data.get(key) match {
-        case None                                               => Left(Seq(FormError(key, errorKey)))
-        case Some(x) if x.trim.length == 0 && optional == false => Left(Seq(FormError(key, errorKey)))
-        case Some(x) if x.trim.length == 0 && optional == true  => Right(x.trim)
-        case Some(s)                                            => Right(s.trim)
+        case None                                   => Left(Seq(FormError(key, errorKey)))
+        case Some(x) if x.trim.isEmpty && !optional => Left(Seq(FormError(key, errorKey)))
+        case Some(x) if x.trim.isEmpty && optional  => Right(x.trim)
+        case Some(s)                                => Right(s.trim)
       }
 
     def unbind(key: String, value: String): Map[String, String] =
@@ -162,7 +109,7 @@ object Validation {
       case (false, Failure(_)) => true
     }
 
-  def tryBigDecimalWithoutComma(input: String): Boolean =
+  private def tryBigDecimalWithoutComma(input: String): Boolean =
     Try(BigDecimal(input.trim().replaceAll(",", ""))) match {
       case Success(_) => true
       case Failure(_) => false

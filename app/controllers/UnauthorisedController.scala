@@ -16,7 +16,6 @@
 
 package controllers
 
-import config.{FrontendAppConfig, PlaContext}
 import connectors.IdentityVerificationConnector
 import enums.IdentityVerificationResult
 import play.api.{Application, Logging}
@@ -38,15 +37,13 @@ class UnauthorisedController @Inject() (
     unauthorised: views.html.pages.ivFailure.unauthorised,
     timeout: views.html.pages.timeout
 )(
-    implicit val appConfig: FrontendAppConfig,
-    implicit val plaContext: PlaContext,
     implicit val application: Application,
     implicit val ec: ExecutionContext
 ) extends FrontendController(mcc)
     with I18nSupport
     with Logging {
 
-  val issuesKey = "previous-technical-issues"
+  private val issuesKey = "previous-technical-issues"
 
   def showNotAuthorised(journeyId: Option[String]): Action[AnyContent] = Action.async { implicit request =>
     val result: Future[Result] = journeyId
@@ -59,7 +56,7 @@ class UnauthorisedController @Inject() (
               sessionCacheService.fetchAndGetFormData[Boolean](issuesKey).flatMap {
                 case Some(true) => Future.successful(Ok(technicalIssue()))
                 case _ =>
-                  sessionCacheService.saveFormData(issuesKey, true).map(map => InternalServerError(technicalIssue()))
+                  sessionCacheService.saveFormData(issuesKey, true).map(_ => InternalServerError(technicalIssue()))
               }
             case IdentityVerificationResult.LockedOut => Future.successful(Unauthorized(lockedOut()))
             case IdentityVerificationResult.Timeout =>
