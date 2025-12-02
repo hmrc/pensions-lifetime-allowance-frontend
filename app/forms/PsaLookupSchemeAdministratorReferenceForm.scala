@@ -21,7 +21,7 @@ import play.api.data.Forms._
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.api.i18n.{Messages, MessagesProvider}
 
-object PSALookupSchemeAdministratorReferenceForm {
+object PsaLookupSchemeAdministratorReferenceForm {
 
   def psaRefForm(implicit messagesProvider: MessagesProvider): Form[String] =
     Form(

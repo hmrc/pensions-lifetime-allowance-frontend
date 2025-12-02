@@ -16,7 +16,7 @@
 
 package constructors.display
 
-import common.{Dates, Display, Helpers, Strings}
+import common.{Display, Helpers}
 import models.display.{
   ExistingInactiveProtectionsByType,
   ExistingInactiveProtectionsDisplayModel,
@@ -60,7 +60,7 @@ object ExistingProtectionsDisplayModelConstructor {
       protections: Seq[ProtectionModel]
   )(implicit lang: Lang, messages: Messages): ExistingInactiveProtectionsByType = {
     val grouped = protections
-      .filter(_.status.contains(status.toString))
+      .filter(_.status == status)
       .map(createExistingProtectionDisplayModel)
       .groupBy(_.protectionType)
       .toSeq
@@ -72,36 +72,35 @@ object ExistingProtectionsDisplayModelConstructor {
       model: ProtectionModel
   )(implicit lang: Lang, messages: Messages): ExistingProtectionDisplayModel = {
 
-    val status              = Strings.statusString(model.status)
-    val protectionType      = Strings.protectionTypeString(model.protectionType)
+    val status              = model.status
+    val protectionType      = model.protectionType
     val protectionReference = model.protectionReference.getOrElse(Messages("pla.protection.protectionReference"))
 
     val protectedAmount =
       model.protectedAmount.map(protectedAmount => Display.currencyDisplayString(BigDecimal(protectedAmount)))
 
-    val (certificateDate, certificateTime) = createDateAndTimeDisplayStrings(model.certificateDate)
+    val certificateDate = model.certificateDate.map(date => Display.dateDisplayString(date))
+    val certificateTime = model.certificateTime.map(time => Display.timeDisplayString(time))
 
     val strippedPsaRef = model.psaCheckReference.map {
       _.stripPrefix(""""""").stripSuffix(""""""")
     }
 
-    val withdrawnDate =
-      model.withdrawnDate.map(wDate => Display.dateDisplayString(Dates.constructDateTimeFromAPIString(wDate)))
     val amendCall = Helpers.createAmendCallIfRequired(model)
 
-    val factor = model.hipFields.enhancementFactor
+    val factor = model.enhancementFactor
       .filter(_ => shouldDisplayFactor(protectionType))
       .map(factor => Display.factorDisplayString(factor))
 
-    val enhancementFactor = model.hipFields.enhancementFactor
+    val enhancementFactor = model.enhancementFactor
       .filter(_ => shouldDisplayEnhancementFactor(protectionType))
       .map(factor => Display.factorDisplayString(factor))
 
-    val lumpSumAmount = model.hipFields.lumpSumAmount
+    val lumpSumAmount = model.lumpSumAmount
       .filter(_ => shouldDisplayLumpSumAmount(protectionType))
-      .map(lumpSumAmount => Display.currencyDisplayString(BigDecimal(lumpSumAmount)))
+      .map(lumpSumAmount => Display.currencyDisplayString(lumpSumAmount))
 
-    val lumpSumPercentage = model.hipFields.lumpSumPercentage
+    val lumpSumPercentage = model.lumpSumPercentage
       .filter(_ => shouldDisplayLumpSumPercentage(protectionType))
       .map(lumpSumPercentage => Display.percentageDisplayString(lumpSumPercentage))
 
@@ -114,7 +113,6 @@ object ExistingProtectionsDisplayModelConstructor {
       protectedAmount = protectedAmount,
       certificateDate = certificateDate,
       certificateTime = certificateTime,
-      withdrawnDate = withdrawnDate,
       lumpSumAmount = lumpSumAmount,
       lumpSumPercentage = lumpSumPercentage,
       enhancementFactor = enhancementFactor,
@@ -122,48 +120,33 @@ object ExistingProtectionsDisplayModelConstructor {
     )
   }
 
-  def shouldDisplayLumpSumPercentage(protectionType: String): Boolean =
-    ProtectionType.tryFrom(protectionType) match {
-      case Some(ProtectionType.EnhancedProtection)    => true
-      case Some(ProtectionType.EnhancedProtectionLTA) => true
-      case _                                          => false
+  def shouldDisplayLumpSumPercentage(protectionType: ProtectionType): Boolean =
+    protectionType match {
+      case ProtectionType.EnhancedProtection    => true
+      case ProtectionType.EnhancedProtectionLTA => true
+      case _                                    => false
     }
 
-  def shouldDisplayLumpSumAmount(protectionType: String): Boolean =
-    ProtectionType.tryFrom(protectionType) match {
-      case Some(ProtectionType.PrimaryProtection)    => true
-      case Some(ProtectionType.PrimaryProtectionLTA) => true
-      case _                                         => false
+  def shouldDisplayLumpSumAmount(protectionType: ProtectionType): Boolean =
+    protectionType match {
+      case ProtectionType.PrimaryProtection    => true
+      case ProtectionType.PrimaryProtectionLTA => true
+      case _                                   => false
     }
 
-  def shouldDisplayEnhancementFactor(protectionType: String): Boolean =
-    ProtectionType.tryFrom(protectionType) match {
-      case Some(ProtectionType.PensionCreditRights)          => true
-      case Some(ProtectionType.InternationalEnhancementS221) => true
-      case Some(ProtectionType.InternationalEnhancementS224) => true
-      case _                                                 => false
+  def shouldDisplayEnhancementFactor(protectionType: ProtectionType): Boolean =
+    protectionType match {
+      case ProtectionType.PensionCreditRights          => true
+      case ProtectionType.InternationalEnhancementS221 => true
+      case ProtectionType.InternationalEnhancementS224 => true
+      case _                                           => false
     }
 
-  def shouldDisplayFactor(protectionType: String): Boolean =
-    ProtectionType.tryFrom(protectionType) match {
-      case Some(ProtectionType.PrimaryProtection)    => true
-      case Some(ProtectionType.PrimaryProtectionLTA) => true
-      case _                                         => false
+  def shouldDisplayFactor(protectionType: ProtectionType): Boolean =
+    protectionType match {
+      case ProtectionType.PrimaryProtection    => true
+      case ProtectionType.PrimaryProtectionLTA => true
+      case _                                   => false
     }
-
-  def createDateAndTimeDisplayStrings(
-      certificateDate: Option[String]
-  )(implicit lang: Lang, messages: Messages): (Option[String], Option[String]) =
-    certificateDate
-      .map { dateString =>
-        val dateTime = Dates.constructDateTimeFromAPIString(dateString)
-
-        val certificateDate = Display.dateDisplayString(dateTime)
-
-        val certificateTime = Display.timeDisplayString(dateTime)
-
-        (Some(certificateDate), Some(certificateTime))
-      }
-      .getOrElse((None, None))
 
 }

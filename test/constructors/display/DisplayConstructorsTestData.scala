@@ -41,7 +41,7 @@ trait DisplayConstructorsTestData extends FakeApplication {
 
   val tstProtection: ProtectionModel = ProtectionModel(
     psaCheckReference = Some("psaRef"),
-    protectionID = Some(100001),
+    identifier = Some(100001),
     protectionType = Some(IndividualProtection2016.toString),
     status = Some(Open.toString),
     protectedAmount = Some(1100000.34),
@@ -54,7 +54,7 @@ trait DisplayConstructorsTestData extends FakeApplication {
 
   val tstWithPsoProtection: ProtectionModel = ProtectionModel(
     psaCheckReference = Some("psaRef"),
-    protectionID = Some(100001),
+    identifier = Some(100001),
     protectionType = Some(IndividualProtection2016.toString),
     status = Some(Open.toString),
     protectedAmount = Some(1100000.34),
@@ -257,7 +257,7 @@ trait DisplayConstructorsTestData extends FakeApplication {
 
   val tstProtectionModel = ProtectionModel(
     psaCheckReference = Some(tstPSACheckRef),
-    protectionID = Some(12345),
+    identifier = Some(12345),
     protectionType = Some(IndividualProtection2014.toString),
     status = Some(Open.toString),
     certificateDate = Some("2016-04-17T15:14:00"),

@@ -24,14 +24,22 @@ import constructors.AmendsGAConstructor
 import constructors.display.DisplayConstructors
 import models.amendModels._
 import models.cache.CacheMap
-import models.{AmendResponseModel, PersonalDetailsModel, ProtectionModel, TransformedReadResponseModel}
+import models.pla.AmendableProtectionType
+import models.pla.request.AmendProtectionRequestStatus
+import models.{
+  AmendedProtectionModel,
+  NotificationId,
+  PersonalDetailsModel,
+  ProtectionModel,
+  TransformedReadResponseModel
+}
 import play.api.Logging
 import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
 import services.SessionCacheService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import utils.Constants
+import utils.NotificationIds
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -54,7 +62,10 @@ class AmendsController @Inject() (
     with Logging
     with AmendControllerErrorHelper {
 
-  def amendsSummary(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
+  def amendsSummary(
+      protectionType: AmendableProtectionType,
+      status: AmendProtectionRequestStatus
+  ): Action[AnyContent] = Action.async { implicit request =>
     implicit val lang: Lang = mcc.messagesApi.preferred(request).lang
 
     authFunction.genericAuthWithNino("existingProtections") { nino =>
@@ -75,7 +86,10 @@ class AmendsController @Inject() (
     }
   }
 
-  def amendProtection(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
+  def amendProtection(
+      protectionType: AmendableProtectionType,
+      status: AmendProtectionRequestStatus
+  ): Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithNino("existingProtections") { nino =>
       for {
         protectionAmendment <- fetchProtectionAmendment(protectionType, status)
@@ -85,7 +99,7 @@ class AmendsController @Inject() (
 
         result <- response match {
 
-          case Right(amendResponseModel: AmendResponseModel) =>
+          case Right(amendResponseModel: AmendedProtectionModel) =>
             saveAndRedirectToDisplay(amendResponseModel)
 
           case Left(LockedResponseError) =>
@@ -104,7 +118,10 @@ class AmendsController @Inject() (
     }
   }
 
-  private def fetchProtectionAmendment(protectionType: String, status: String)(
+  private def fetchProtectionAmendment(
+      protectionType: AmendableProtectionType,
+      status: AmendProtectionRequestStatus
+  )(
       implicit request: Request[AnyContent]
   ): Future[Option[AmendProtectionModel]] =
     sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.protectionCacheKey(protectionType, status))
@@ -122,22 +139,22 @@ class AmendsController @Inject() (
 
   private def sendAmendProtectionRequest(nino: String, protection: ProtectionModel)(
       implicit hc: HeaderCarrier
-  ): Future[Either[PlaConnectorError, AmendResponseModel]] =
+  ): Future[Either[PlaConnectorError, AmendedProtectionModel]] =
     plaConnector
       .amendProtection(nino, protection)
-      .map(_.map(AmendResponseModel.from(_, protection.psaCheckReference)))
+      .map(_.map(AmendedProtectionModel.from(_, protection.psaCheckReference)))
 
-  private def saveAndRedirectToDisplay(amendResponseModel: AmendResponseModel)(
+  private def saveAndRedirectToDisplay(amendResponseModel: AmendedProtectionModel)(
       implicit request: Request[AnyContent]
   ): Future[Result] =
-    sessionCacheService.saveFormData[AmendResponseModel]("amendResponseModel", amendResponseModel).map { _ =>
+    sessionCacheService.saveFormData[AmendedProtectionModel]("amendResponseModel", amendResponseModel).map { _ =>
       Redirect(routes.AmendsController.amendmentOutcome)
     }
 
   def amendmentOutcome: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithNino("existingProtections") { nino =>
       for {
-        modelAR                 <- sessionCacheService.fetchAndGetFormData[AmendResponseModel]("amendResponseModel")
+        modelAR                 <- sessionCacheService.fetchAndGetFormData[AmendedProtectionModel]("amendResponseModel")
         modelGA                 <- sessionCacheService.fetchAndGetFormData[AmendsGAModel]("AmendsGA")
         personalDetailsModelOpt <- citizenDetailsConnector.getPersonDetails(nino)
 
@@ -147,7 +164,7 @@ class AmendsController @Inject() (
   }
 
   private def amendmentOutcomeResult(
-      modelAR: Option[AmendResponseModel],
+      modelAR: Option[AmendedProtectionModel],
       modelGA: Option[AmendsGAModel],
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       nino: String
@@ -160,7 +177,7 @@ class AmendsController @Inject() (
 
     modelAR
       .map { model =>
-        model.protection.notificationId match {
+        model.notificationIdentifier match {
           case None =>
             val displayModel =
               displayConstructors.createAmendOutcomeDisplayModelNoNotificationId(model, personalDetailsModelOpt, nino)
@@ -170,7 +187,7 @@ class AmendsController @Inject() (
             createProtectionModel(notificationId, model, nino).map {
 
               case Some(protectionModel) =>
-                sessionCacheService.saveFormData[ProtectionModel]("openProtection", protectionModel.protection)
+                sessionCacheService.saveFormData[ProtectionModel]("openProtection", protectionModel.toProtectionModel)
                 val displayModel =
                   displayConstructors.createAmendOutcomeDisplayModel(protectionModel, personalDetailsModelOpt, nino)
                 Ok(amendOutcome(displayModel))
@@ -193,41 +210,29 @@ class AmendsController @Inject() (
   }
 
   private def createProtectionModel(
-      notificationId: Int,
-      model: AmendResponseModel,
+      notificationId: NotificationId,
+      model: AmendedProtectionModel,
       nino: String
-  )(implicit request: Request[AnyContent]): Future[Option[AmendResponseModel]] =
-    if (Constants.fixedProtectionNotificationIds.contains(notificationId)) {
-      createFixedAndIndividualProtectionModel(notificationId, nino)
+  )(implicit request: Request[AnyContent]): Future[Option[AmendedProtectionModel]] =
+    if (NotificationIds.showingFixedProtection2016Details.contains(notificationId)) {
+      createCombinedFixedAndIndividualProtectionModel(model, nino)
     } else {
       Future.successful(Some(model))
     }
 
-  private def createFixedAndIndividualProtectionModel(
-      notificationId: Int,
+  private def createCombinedFixedAndIndividualProtectionModel(
+      amendedProtectionModel: AmendedProtectionModel,
       nino: String
-  )(implicit request: Request[AnyContent]): Future[Option[AmendResponseModel]] =
+  )(implicit request: Request[AnyContent]): Future[Option[AmendedProtectionModel]] =
     for {
-      fixedProtectionOpt <- fetchProtections(nino).map(_.toOption.flatMap(filterActiveFixedProtection2016))
-
-      res = fixedProtectionOpt.map { fixedProtection =>
-        AmendResponseModel(fixedProtection.copy(notificationId = Some(notificationId)))
-      }
-    } yield res
+      protections <- fetchProtections(nino)
+      activeProtection = protections.toOption.flatMap(_.activeProtection)
+      combinedModel    = activeProtection.flatMap(amendedProtectionModel.combineWithFixedProtection2016)
+    } yield combinedModel
 
   private def fetchProtections(
       nino: String
   )(implicit hc: HeaderCarrier): Future[Either[PlaConnectorError, TransformedReadResponseModel]] =
     plaConnector.readProtections(nino).map(_.map(TransformedReadResponseModel.from))
-
-  private def filterActiveFixedProtection2016(model: TransformedReadResponseModel): Option[ProtectionModel] = {
-    val fixedProtectionType = model.activeProtection.filter(_.isFixedProtection2016)
-    if (fixedProtectionType.isEmpty) {
-      logger.warn("There is no active Fixed Protection 2016")
-      None
-    } else {
-      fixedProtectionType
-    }
-  }
 
 }

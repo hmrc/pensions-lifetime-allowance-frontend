@@ -19,7 +19,7 @@ package views.pages.amends
 import common.Strings
 import forms.AmendPensionsTakenBetweenForm
 import models.amendModels.AmendPensionsTakenBetweenModel
-import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
+import models.pla.AmendableProtectionType.IndividualProtection2016
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements

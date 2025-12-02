@@ -18,7 +18,7 @@ package views.pages.amends
 
 import forms.AmendPensionsWorthBeforeForm
 import models.amendModels.AmendPensionsWorthBeforeModel
-import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
+import models.pla.AmendableProtectionType.IndividualProtection2016
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatestplus.mockito.MockitoSugar

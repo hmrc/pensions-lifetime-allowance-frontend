@@ -24,9 +24,6 @@ import play.api.i18n.Messages
 
 trait AmendControllerErrorHelper {
 
-  def unknownProtectionType(protectionTypeString: String, when: String): String =
-    s"Unknown amendable protection type $protectionTypeString $when"
-
   def couldNotRetrieveModelForNino(nino: String, when: String): String =
     s"Could not retrieve amend protection model for user with nino $nino $when"
 

@@ -80,7 +80,7 @@ class PlaConnector @Inject() (
       nino: String,
       protection: ProtectionModel
   )(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[Either[PlaConnectorError, AmendProtectionResponse]] = {
-    val id = protection.protectionID.getOrElse(
+    val id = protection.identifier.getOrElse(
       throw Exceptions.RequiredValueNotDefinedForNinoException("amendProtection", "protectionID", nino)
     )
     val requestBody = AmendProtectionRequest.from(protection)

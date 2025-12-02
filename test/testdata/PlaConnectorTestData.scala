@@ -16,9 +16,9 @@
 
 package testdata
 
-import models.pla.request.AmendProtectionRequest
-import models.pla.response.{AmendProtectionResponse, ReadProtectionsResponse}
-import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionRequestStatus, AmendProtectionResponseStatus}
+import models.pla.request.{AmendProtectionRequest, AmendProtectionRequestStatus}
+import models.pla.response.{AmendProtectionResponse, AmendProtectionResponseStatus, ReadProtectionsResponse}
+import models.pla.AmendableProtectionType
 
 object PlaConnectorTestData {
 
@@ -34,7 +34,7 @@ object PlaConnectorTestData {
 
   val amendProtectionRequest: AmendProtectionRequest = AmendProtectionRequest(
     lifetimeAllowanceSequenceNumber = lifetimeAllowanceSequenceNumber,
-    lifetimeAllowanceType = AmendProtectionLifetimeAllowanceType.IndividualProtection2014,
+    lifetimeAllowanceType = AmendableProtectionType.IndividualProtection2014,
     certificateDate = Some("2025-07-15"),
     certificateTime = Some("174312"),
     status = AmendProtectionRequestStatus.Dormant,
@@ -55,7 +55,7 @@ object PlaConnectorTestData {
   val amendProtectionResponse: AmendProtectionResponse = AmendProtectionResponse(
     lifetimeAllowanceIdentifier = lifetimeAllowanceIdentifier,
     lifetimeAllowanceSequenceNumber = lifetimeAllowanceSequenceNumber + 1,
-    lifetimeAllowanceType = AmendProtectionLifetimeAllowanceType.IndividualProtection2014,
+    lifetimeAllowanceType = AmendableProtectionType.IndividualProtection2014,
     certificateDate = Some("2025-07-15"),
     certificateTime = Some("174312"),
     status = AmendProtectionResponseStatus.Dormant,

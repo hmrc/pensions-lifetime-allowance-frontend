@@ -25,8 +25,8 @@ import connectors.PlaConnectorError.{
   UnexpectedResponseError
 }
 import models.ProtectionModel
-import models.pla.response.ReadProtectionsResponse
-import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionResponseStatus}
+import models.pla.response.{AmendProtectionResponseStatus, ReadProtectionsResponse}
+import models.pla.AmendableProtectionType
 import org.scalatest.concurrent.ScalaFutures
 import play.api.http.Status.CONFLICT
 import play.api.libs.json.Json
@@ -52,8 +52,8 @@ class PlaConnectorISpec extends IntegrationBaseSpec with ScalaFutures {
 
     val amendProtectionInputProtectionModel: ProtectionModel = ProtectionModel(
       psaCheckReference = None,
-      protectionID = Some(lifetimeAllowanceIdentifier),
-      version = Some(lifetimeAllowanceSequenceNumber),
+      identifier = Some(lifetimeAllowanceIdentifier),
+      sequence = Some(lifetimeAllowanceSequenceNumber),
       protectionType = Some("IP2014"),
       certificateDate = Some("2025-07-15T174312"),
       status = Some("dormant"),
@@ -75,7 +75,7 @@ class PlaConnectorISpec extends IntegrationBaseSpec with ScalaFutures {
       s"""{
          |    "lifetimeAllowanceIdentifier": $lifetimeAllowanceIdentifier,
          |    "lifetimeAllowanceSequenceNumber": ${lifetimeAllowanceSequenceNumber + 1},
-         |    "lifetimeAllowanceType": "${AmendProtectionLifetimeAllowanceType.IndividualProtection2014.jsonValue}",
+         |    "lifetimeAllowanceType": "${AmendableProtectionType.IndividualProtection2014.jsonValue}",
          |    "certificateDate": "2025-07-15",
          |    "certificateTime": "174312",
          |    "status": "${AmendProtectionResponseStatus.Dormant.jsonValue}",
@@ -125,7 +125,7 @@ class PlaConnectorISpec extends IntegrationBaseSpec with ScalaFutures {
     "it is passed a protection with a missing Protection ID" should {
       "throw a RequiredValueNotDefinedForNinoException and return a GenericPlaConnectorError" in
         (the[Exceptions.RequiredValueNotDefinedForNinoException] thrownBy {
-          connector.amendProtection(testNino, amendProtectionInputProtectionModel.copy(protectionID = None)).futureValue
+          connector.amendProtection(testNino, amendProtectionInputProtectionModel.copy(identifier = None)).futureValue
         } should have).message(s"Value not found for protectionID in amendProtection with nino: $testNino")
     }
 

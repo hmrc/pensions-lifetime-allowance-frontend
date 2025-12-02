@@ -19,6 +19,8 @@ package controllers
 import common.Strings
 import models.amendModels._
 import models.cache.CacheMap
+import models.pla.AmendableProtectionType
+import models.pla.request.AmendProtectionRequestStatus
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{MessagesRequest, Result}
 import services.SessionCacheService
@@ -29,26 +31,34 @@ trait AmendControllerCacheHelper {
 
   val sessionCacheService: SessionCacheService
 
-  private def cacheKey(protectionType: String, status: String): String =
+  private def cacheKey(
+      protectionType: AmendableProtectionType,
+      status: AmendProtectionRequestStatus
+  ): String =
     Strings.protectionCacheKey(protectionType, status)
 
-  def fetchAmendProtectionModel(protectionType: String, status: String)(
+  def fetchAmendProtectionModel(
+      protectionType: AmendableProtectionType,
+      status: AmendProtectionRequestStatus
+  )(
       implicit request: MessagesRequest[_]
   ): Future[Option[AmendProtectionModel]] =
     sessionCacheService.fetchAndGetFormData[AmendProtectionModel](cacheKey(protectionType, status))
 
-  def saveAmendProtectionModel(protectionType: String, status: String, amendModel: AmendProtectionModel)(
+  def saveAmendProtectionModel(
+      protectionType: AmendableProtectionType,
+      status: AmendProtectionRequestStatus,
+      amendModel: AmendProtectionModel
+  )(
       implicit request: MessagesRequest[_]
   ): Future[CacheMap] =
     sessionCacheService
       .saveFormData[AmendProtectionModel](cacheKey(protectionType, status), amendModel)
 
-  def redirectToSummary(amendModel: AmendProtectionModel): Result = {
-    val updatedProtectionType =
-      Strings.protectionTypeUrlString(amendModel.updatedProtection.protectionType).toLowerCase
-    val updatedStatus = Strings.statusString(amendModel.updatedProtection.status).toLowerCase
-
-    Redirect(routes.AmendsController.amendsSummary(updatedProtectionType, updatedStatus))
-  }
+  def redirectToSummary(
+      protectionType: AmendableProtectionType,
+      status: AmendProtectionRequestStatus
+  ): Result =
+    Redirect(routes.AmendsController.amendsSummary(protectionType, status))
 
 }

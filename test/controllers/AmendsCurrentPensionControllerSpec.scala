@@ -22,7 +22,7 @@ import config._
 import mocks.AuthMock
 import models._
 import models.amendModels._
-import models.pla.AmendProtectionLifetimeAllowanceType._
+import models.pla.AmendableProtectionType._
 import models.pla.response.ProtectionStatus.Dormant
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
@@ -128,7 +128,7 @@ class AmendsCurrentPensionControllerSpec
     preADayPensionInPayment = Some(2000.00),
     postADayBenefitCrystallisationEvents = Some(2000.00),
     notificationId = Some(12),
-    protectionID = Some(12345),
+    identifier = Some(12345),
     protectionType = Some(IndividualProtection2014.toString),
     status = Some(Dormant.toString),
     certificateDate = Some("2016-04-17"),
@@ -146,7 +146,7 @@ class AmendsCurrentPensionControllerSpec
     preADayPensionInPayment = Some(2000.00),
     postADayBenefitCrystallisationEvents = Some(2000.00),
     notificationId = Some(12),
-    protectionID = Some(12345),
+    identifier = Some(12345),
     protectionType = Some(IndividualProtection2014LTA.toString),
     status = Some(Dormant.toString),
     certificateDate = Some("2016-04-17"),

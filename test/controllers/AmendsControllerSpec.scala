@@ -30,8 +30,14 @@ import models.cache.CacheMap
 import models.display.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel}
 import models.pla.response.ProtectionStatus.{Dormant, Open}
 import models.pla.response.ProtectionType.{FixedProtection2016, IndividualProtection2014, IndividualProtection2016}
-import models.pla.response.{AmendProtectionResponse, ProtectionRecord, ProtectionRecordsList, ReadProtectionsResponse}
-import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionResponseStatus}
+import models.pla.response.{
+  AmendProtectionResponse,
+  AmendProtectionResponseStatus,
+  ProtectionRecord,
+  ProtectionRecordsList,
+  ReadProtectionsResponse
+}
+import models.pla.AmendableProtectionType
 import models.{AmendResponseModel, Person, PersonalDetailsModel, ProtectionModel}
 import org.mockito.ArgumentMatchers.{any, anyString, eq => eqTo}
 import org.mockito.Mockito._
@@ -137,7 +143,7 @@ class AmendsControllerSpec
     preADayPensionInPayment = Some(2000.00),
     postADayBenefitCrystallisationEvents = Some(2000.00),
     notificationId = Some(12),
-    protectionID = Some(12345),
+    identifier = Some(12345),
     protectionType = Some(IndividualProtection2014.toString),
     status = Some(Dormant.toString),
     certificateDate = Some("2016-04-17"),
@@ -299,7 +305,7 @@ class AmendsControllerSpec
         val response = AmendProtectionResponse(
           lifetimeAllowanceIdentifier = 1,
           lifetimeAllowanceSequenceNumber = 1,
-          lifetimeAllowanceType = AmendProtectionLifetimeAllowanceType.IndividualProtection2014,
+          lifetimeAllowanceType = AmendableProtectionType.IndividualProtection2014,
           certificateDate = Some("2025-10-28"),
           certificateTime = Some("093820"),
           status = AmendProtectionResponseStatus.Open,

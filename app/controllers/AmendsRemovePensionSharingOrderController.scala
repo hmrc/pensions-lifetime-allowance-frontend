@@ -20,6 +20,8 @@ import auth.AuthFunction
 import common._
 import config.FrontendAppConfig
 import models.amendModels._
+import models.pla.AmendableProtectionType
+import models.pla.request.AmendProtectionRequestStatus
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc._
@@ -47,7 +49,10 @@ class AmendsRemovePensionSharingOrderController @Inject() (
     with I18nSupport
     with Logging {
 
-  def removePso(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
+  def removePso(
+      protectionType: AmendableProtectionType,
+      status: AmendProtectionRequestStatus
+  ): Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithNino("existingProtections") { nino =>
       fetchAmendProtectionModel(protectionType, status)
         .map {
@@ -60,20 +65,23 @@ class AmendsRemovePensionSharingOrderController @Inject() (
     }
   }
 
-  def submitRemovePso(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
+  def submitRemovePso(
+      protectionType: AmendableProtectionType,
+      status: AmendProtectionRequestStatus
+  ): Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithNino("existingProtections") { nino =>
       fetchAmendProtectionModel(protectionType, status)
         .flatMap {
           case Some(model) =>
             val updated = model.updatedProtection.copy(
-              pensionDebits = None,
-              pensionDebitStartDate = None,
-              pensionDebitEnteredAmount = None
+              pensionDebit = None
             )
             val updatedTotal   = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
             val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
 
-            saveAmendProtectionModel(protectionType, status, amendProtModel).map(_ => redirectToSummary(amendProtModel))
+            saveAmendProtectionModel(protectionType, status, amendProtModel).map(_ =>
+              redirectToSummary(protectionType, status)
+            )
 
           case None =>
             logger.warn(couldNotRetrieveModelForNino(nino, "when submitting a removal of a pension debit"))

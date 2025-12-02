@@ -24,7 +24,7 @@ import constructors.display.DisplayConstructors
 import mocks.AuthMock
 import models._
 import models.amendModels._
-import models.pla.AmendProtectionLifetimeAllowanceType._
+import models.pla.AmendableProtectionType._
 import models.pla.response.ProtectionStatus.Dormant
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
@@ -156,7 +156,7 @@ class AmendsOverseasPensionControllerSpec
     preADayPensionInPayment = Some(2000.00),
     postADayBenefitCrystallisationEvents = Some(2000.00),
     notificationId = Some(12),
-    protectionID = Some(12345),
+    identifier = Some(12345),
     protectionType = Some(IndividualProtection2016.toString),
     status = Some(Dormant.toString),
     certificateDate = Some("2016-04-17"),
@@ -174,7 +174,7 @@ class AmendsOverseasPensionControllerSpec
     preADayPensionInPayment = Some(2000.00),
     postADayBenefitCrystallisationEvents = Some(2000.00),
     notificationId = Some(12),
-    protectionID = Some(12345),
+    identifier = Some(12345),
     protectionType = Some(IndividualProtection2016LTA.toString),
     status = Some(Dormant.toString),
     certificateDate = Some("2016-04-17"),
@@ -192,7 +192,7 @@ class AmendsOverseasPensionControllerSpec
     preADayPensionInPayment = Some(2000.00),
     postADayBenefitCrystallisationEvents = Some(2000.00),
     notificationId = Some(12),
-    protectionID = Some(12345),
+    identifier = Some(12345),
     protectionType = Some(IndividualProtection2014.toString),
     status = Some(Dormant.toString),
     certificateDate = Some("2016-04-17"),
@@ -210,7 +210,7 @@ class AmendsOverseasPensionControllerSpec
     preADayPensionInPayment = Some(2000.00),
     postADayBenefitCrystallisationEvents = Some(2000.00),
     notificationId = Some(12),
-    protectionID = Some(12345),
+    identifier = Some(12345),
     protectionType = Some(IndividualProtection2014LTA.toString),
     status = Some(Dormant.toString),
     certificateDate = Some("2016-04-17"),
@@ -228,7 +228,7 @@ class AmendsOverseasPensionControllerSpec
     preADayPensionInPayment = Some(0.0),
     postADayBenefitCrystallisationEvents = Some(0.0),
     notificationId = Some(12),
-    protectionID = Some(12345),
+    identifier = Some(12345),
     protectionType = Some(IndividualProtection2016.toString),
     status = Some(Dormant.toString),
     certificateDate = Some("2016-04-17"),
@@ -246,7 +246,7 @@ class AmendsOverseasPensionControllerSpec
     preADayPensionInPayment = Some(0.0),
     postADayBenefitCrystallisationEvents = Some(0.0),
     notificationId = Some(12),
-    protectionID = Some(12345),
+    identifier = Some(12345),
     protectionType = Some(IndividualProtection2016LTA.toString),
     status = Some(Dormant.toString),
     certificateDate = Some("2016-04-17"),

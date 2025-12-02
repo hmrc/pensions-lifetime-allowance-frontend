@@ -16,15 +16,16 @@
 
 package models.pla.response
 
-import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionResponseStatus}
+import models.pla.AmendableProtectionType
+import models.{DateModel, NotificationId, TimeModel}
 import play.api.libs.json.{Json, Reads}
 
 case class AmendProtectionResponse(
     lifetimeAllowanceIdentifier: Long,
     lifetimeAllowanceSequenceNumber: Int,
-    lifetimeAllowanceType: AmendProtectionLifetimeAllowanceType,
-    certificateDate: Option[String],
-    certificateTime: Option[String],
+    lifetimeAllowanceType: AmendableProtectionType,
+    certificateDate: Option[DateModel],
+    certificateTime: Option[TimeModel],
     status: AmendProtectionResponseStatus,
     protectionReference: Option[String],
     relevantAmount: Int,
@@ -34,9 +35,9 @@ case class AmendProtectionResponse(
     nonUKRightsAmount: Int,
     pensionDebitAmount: Option[Int],
     pensionDebitEnteredAmount: Option[Int],
-    notificationIdentifier: Option[Int],
+    notificationIdentifier: Option[NotificationId],
     protectedAmount: Option[Int],
-    pensionDebitStartDate: Option[String],
+    pensionDebitStartDate: Option[DateModel],
     pensionDebitTotalAmount: Option[Int]
 )
 

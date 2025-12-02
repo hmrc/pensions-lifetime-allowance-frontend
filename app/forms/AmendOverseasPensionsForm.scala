@@ -22,11 +22,12 @@ import models.amendModels.AmendOverseasPensionsModel
 import play.api.data.Form
 import play.api.data.Forms._
 import common.Validation._
+import models.pla.AmendableProtectionType
 import utils.Constants.npsMaxCurrency
 
 object AmendOverseasPensionsForm extends CommonBinders {
 
-  def amendOverseasPensionsForm(protectionType: String) = Form(
+  def amendOverseasPensionsForm(protectionType: AmendableProtectionType) = Form(
     mapping(
       "amendedOverseasPensions" -> common.Validation
         .newText(s"pla.overseasPensions.errors.mandatoryError.$protectionType")

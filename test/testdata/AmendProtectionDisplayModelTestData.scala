@@ -68,8 +68,8 @@ object AmendProtectionDisplayModelTestData {
   )
 
   private val exampleAmendResponseProtectionModelIndividualProtection2014 = ProtectionModel(
-    protectionID = Some(1),
-    version = Some(1),
+    identifier = Some(1),
+    sequence = Some(1),
     psaCheckReference = Some(psaCheckReference),
     protectionType = Some(IndividualProtection2014.toString),
     certificateDate = Some("2015-07-14T151400"),
@@ -103,8 +103,8 @@ object AmendProtectionDisplayModelTestData {
   )
 
   private val exampleAmendResponseProtectionModelIndividualProtection2016 = ProtectionModel(
-    protectionID = Some(1),
-    version = Some(1),
+    identifier = Some(1),
+    sequence = Some(1),
     psaCheckReference = Some(psaCheckReference),
     protectionType = Some(IndividualProtection2016.toString),
     certificateDate = Some("2017-07-14T151400"),

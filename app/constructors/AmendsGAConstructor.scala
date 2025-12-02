@@ -32,7 +32,7 @@ object AmendsGAConstructor {
 
     val overseas: Option[String] = gaAction(updated.nonUKRights, original.nonUKRights)
 
-    val pso: Option[String] = if (updated.pensionDebits.isDefined) Some("addedPSO") else None
+    val pso: Option[String] = if (updated.pensionDebit.isDefined) Some("addedPSO") else None
     AmendsGAModel(current, before, between, overseas, pso)
   }
 

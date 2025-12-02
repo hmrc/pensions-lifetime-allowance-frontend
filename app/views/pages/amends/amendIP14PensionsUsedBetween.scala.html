@@ -15,7 +15,9 @@
  *@
 
 @import models.amendModels.AmendPensionsUsedBetweenModel
-@import common.{Links, Strings}
+@import common.{Links}
+@import models.pla.AmendableProtectionType
+@import models.pla.request.AmendProtectionRequestStatus
 
 @this(
     layout: Layout,
@@ -26,7 +28,11 @@
     submitButton: playHelpers.templates.submitButton
 )
 
-@(amendPensionsUsedBetweenForm: Form[AmendPensionsUsedBetweenModel], protectionType: String, status: String)(implicit request: Request[_], messages: Messages)
+@(
+    amendPensionsUsedBetweenForm: Form[AmendPensionsUsedBetweenModel],
+    protectionType: AmendableProtectionType,
+    status: AmendProtectionRequestStatus
+)(implicit request: Request[_], messages: Messages)
 
 @helpTextAccordionContent = {
     <p class="govuk-body">@Messages("pla.ip14PensionsTakenBetween.para.2")</p>
@@ -66,7 +72,7 @@
     @errorSummary(amendPensionsUsedBetweenForm.errors, Some("amendedPensionsUsedBetweenAmt"))
     <h1 class="govuk-heading-xl">@Messages("pla.pensionsUsedBetween.question")</h1>
     <p class="govuk-body govuk-!-margin-top-4">@Messages("pla.pensionsUsedBetween.para.1")</p>
-    @form(action = routes.AmendsPensionUsedBetweenController.submitAmendPensionsUsedBetween(Strings.protectionTypeUrlString(Some(protectionType)), status)) {
+    @form(action = routes.AmendsPensionUsedBetweenController.submitAmendPensionsUsedBetween(protectionType, status)) {
         @helpTextAccordion(
             id = "ip14-amend-pensions-used-between-help",
             summaryText = Messages("pla.pensionsUsedBetween.help"),

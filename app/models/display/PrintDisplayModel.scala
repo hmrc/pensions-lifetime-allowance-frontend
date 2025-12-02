@@ -16,14 +16,14 @@
 
 package models.display
 
-import models.pla.response.ProtectionType
+import models.pla.response.{ProtectionStatus, ProtectionType}
 
 case class PrintDisplayModel(
     firstName: String,
     surname: String,
     nino: String,
-    protectionType: String,
-    status: String,
+    protectionType: ProtectionType,
+    status: ProtectionStatus,
     psaCheckReference: String,
     protectionReference: String,
     protectedAmount: Option[String],
@@ -35,15 +35,6 @@ case class PrintDisplayModel(
     factor: Option[String] = None
 ) {
 
-  def isFixedProtection2016: Boolean = {
-    val fp2016Str = "FP2016"
-    val fixedProtection2016Types = Set(
-      fp2016Str.toLowerCase,
-      ProtectionType.FixedProtection2016.toString.toLowerCase,
-      ProtectionType.FixedProtection2016LTA.toString.toLowerCase
-    )
-
-    fixedProtection2016Types.contains(protectionType.toLowerCase)
-  }
+  def isFixedProtection2016: Boolean = protectionType.isFixedProtection2016
 
 }

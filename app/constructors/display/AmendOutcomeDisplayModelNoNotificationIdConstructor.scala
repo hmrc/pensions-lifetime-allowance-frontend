@@ -18,36 +18,30 @@ package constructors.display
 
 import common.{Display, Exceptions}
 import models.display.AmendOutcomeDisplayModelNoNotificationId
-import models.{AmendResponseModel, PersonalDetailsModel}
+import models.{AmendedProtectionModel, PersonalDetailsModel}
 import play.api.i18n.{Lang, Messages}
 
 object AmendOutcomeDisplayModelNoNotificationIdConstructor {
 
   def createAmendOutcomeDisplayModelNoNotificationId(
-      model: AmendResponseModel,
+      model: AmendedProtectionModel,
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       nino: String
   )(implicit lang: Lang, messages: Messages): AmendOutcomeDisplayModelNoNotificationId = {
     val printDetails =
-      AmendPrintDisplayModelConstructor.createAmendPrintDisplayModel(personalDetailsModelOpt, model.protection, nino)
+      AmendPrintDisplayModelConstructor.createAmendPrintDisplayModel(personalDetailsModelOpt, model, nino)
 
-    val protectionType = model.protection.protectionType.getOrElse {
-      throw Exceptions.OptionNotDefinedException(
-        "createAmendResultDisplayModelNoNotificationId",
-        "protectionType",
-        "No protection type in response"
-      )
-    }
+    val protectionType = model.protectionType
 
-    val protectedAmount = model.protection.protectedAmount.getOrElse {
+    val protectedAmount = model.protectedAmount.getOrElse {
       throw Exceptions.OptionNotDefinedException(
         "createAmendResultDisplayModelNoNotificationId",
         "protectedAmount",
-        protectionType
+        protectionType.toString
       )
     }
 
-    val protectedAmountString = Display.currencyDisplayString(BigDecimal(protectedAmount))
+    val protectedAmountString = Display.currencyDisplayString(protectedAmount)
 
     AmendOutcomeDisplayModelNoNotificationId(
       protectedAmount = protectedAmountString,

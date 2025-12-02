@@ -17,40 +17,44 @@
 package constructors.display
 
 import models.display.AmendPrintDisplayModel
-import models.{PersonalDetailsModel, ProtectionModel}
+import models.{AmendedProtectionModel, NotificationId, PersonalDetailsModel}
 import play.api.i18n.{Lang, Messages}
-import utils.Constants
+import utils.NotificationIds
 
 object AmendPrintDisplayModelConstructor {
 
   def createAmendPrintDisplayModel(
       personalDetailsModelOpt: Option[PersonalDetailsModel],
-      protectionModel: ProtectionModel,
+      protectionModel: AmendedProtectionModel,
       nino: String
   )(implicit lang: Lang, messages: Messages): AmendPrintDisplayModel = {
     val printDisplayModel =
-      PrintDisplayModelConstructor.createPrintDisplayModel(personalDetailsModelOpt, protectionModel, nino)
+      PrintDisplayModelConstructor.createPrintDisplayModel(
+        personalDetailsModelOpt,
+        protectionModel.toProtectionModel,
+        nino
+      )
 
     val protectionReference = Some(printDisplayModel.protectionReference).filter(_ =>
-      shouldDisplayProtectionReference(protectionModel.notificationId)
+      shouldDisplayProtectionReference(protectionModel.notificationIdentifier)
     )
 
     val fixedProtectionReference = Some(printDisplayModel.protectionReference).filter(_ =>
-      shouldDisplayFixedProtectionReference(protectionModel.notificationId)
+      shouldDisplayFixedProtectionReference(protectionModel.notificationIdentifier)
     )
 
     val psaCheckReference = Some(printDisplayModel.psaCheckReference).filter(_ =>
-      shouldDisplayPsaCheckReference(protectionModel.notificationId)
+      shouldDisplayPsaCheckReference(protectionModel.notificationIdentifier)
     )
 
     val status =
-      Some(printDisplayModel.status).filter(_ => shouldDisplayStatus(protectionModel.notificationId))
+      Some(printDisplayModel.status).filter(_ => shouldDisplayStatus(protectionModel.notificationIdentifier))
 
     AmendPrintDisplayModel(
       firstName = printDisplayModel.firstName,
       surname = printDisplayModel.surname,
       nino = printDisplayModel.nino,
-      protectionType = printDisplayModel.protectionType,
+      protectionType = protectionModel.protectionType,
       status = status,
       psaCheckReference = psaCheckReference,
       protectionReference = protectionReference,
@@ -61,27 +65,25 @@ object AmendPrintDisplayModelConstructor {
     )
   }
 
-  def shouldDisplayProtectionReference(notificationId: Option[Int]): Boolean = notificationId match {
-    case Some(1) | Some(5) | Some(8) => true
-    case _                           => false
+  def shouldDisplayProtectionReference(notificationId: Option[NotificationId]): Boolean = notificationId match {
+    case Some(notificationId) => NotificationIds.showingProtectionReference.contains(notificationId)
+    case None                 => false
   }
 
-  def shouldDisplayFixedProtectionReference(notificationId: Option[Int]): Boolean =
+  def shouldDisplayFixedProtectionReference(notificationId: Option[NotificationId]): Boolean =
     notificationId match {
-      case Some(7) | Some(14) => true
-      case _                  => false
+      case Some(notificationId) => NotificationIds.showingFixedProtection2016Details.contains(notificationId)
+      case None                 => false
     }
 
-  def shouldDisplayPsaCheckReference(notificationId: Option[Int]): Boolean = notificationId match {
-    case Some(1) | Some(5) | Some(8) => true
-    case _                           => false
+  def shouldDisplayPsaCheckReference(notificationId: Option[NotificationId]): Boolean = notificationId match {
+    case Some(notificationId) => NotificationIds.showingPsaCheckReference.contains(notificationId)
+    case None                 => false
   }
 
-  def shouldDisplayStatus(notificationId: Option[Int]): Boolean = notificationId match {
-    case None                                                                                             => true
-    case Some(notificationId) if Constants.dormantNotificationIds.contains(notificationId)                => true
-    case Some(notificationId) if Constants.withdrawnNotificationIdsShowingStatus.contains(notificationId) => true
-    case _                                                                                                => false
+  def shouldDisplayStatus(notificationId: Option[NotificationId]): Boolean = notificationId match {
+    case Some(notificationId) => NotificationIds.showingStatus.contains(notificationId)
+    case None                 => true
   }
 
 }

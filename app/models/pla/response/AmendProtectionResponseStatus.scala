@@ -14,18 +14,21 @@
  * limitations under the License.
  */
 
-package models.pla
+package models.pla.response
 
 import utils.{Enumerable, EnumerableInstance}
 
-sealed abstract class AmendProtectionResponseStatus(name: String, override val jsonValue: String)
-    extends EnumerableInstance(name)
+sealed abstract class AmendProtectionResponseStatus(
+    name: String,
+    override val jsonValue: String,
+    val toProtectionStatus: ProtectionStatus
+) extends EnumerableInstance(name) {}
 
 object AmendProtectionResponseStatus extends Enumerable.Implicits {
 
-  case object Open      extends AmendProtectionResponseStatus("Open", "OPEN")
-  case object Dormant   extends AmendProtectionResponseStatus("Dormant", "DORMANT")
-  case object Withdrawn extends AmendProtectionResponseStatus("Withdrawn", "WITHDRAWN")
+  case object Open      extends AmendProtectionResponseStatus("Open", "OPEN", ProtectionStatus.Open)
+  case object Dormant   extends AmendProtectionResponseStatus("Dormant", "DORMANT", ProtectionStatus.Dormant)
+  case object Withdrawn extends AmendProtectionResponseStatus("Withdrawn", "WITHDRAWN", ProtectionStatus.Withdrawn)
 
   private val allValues: Seq[AmendProtectionResponseStatus] =
     Seq(Open, Dormant, Withdrawn)

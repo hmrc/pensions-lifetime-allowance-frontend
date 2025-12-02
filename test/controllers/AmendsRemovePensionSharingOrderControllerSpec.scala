@@ -106,7 +106,7 @@ class AmendsRemovePensionSharingOrderControllerSpec
     preADayPensionInPayment = Some(2000.00),
     postADayBenefitCrystallisationEvents = Some(2000.00),
     notificationId = Some(12),
-    protectionID = Some(12345),
+    identifier = Some(12345),
     protectionType = Some("IndividualProtection2016"),
     status = Some(Dormant.toString),
     certificateDate = Some("2016-04-17"),
@@ -126,7 +126,7 @@ class AmendsRemovePensionSharingOrderControllerSpec
 
     val testProtectionSinglePsoList = ProtectionModel(
       psaCheckReference = Some("psaRef"),
-      protectionID = Some(1234),
+      identifier = Some(1234),
       pensionDebits = Some(List(PensionDebitModel("2016-12-23", 1000.0)))
     )
 
@@ -211,7 +211,7 @@ class AmendsRemovePensionSharingOrderControllerSpec
         preADayPensionInPayment = Some(2000.00),
         postADayBenefitCrystallisationEvents = Some(2000.00),
         notificationId = Some(12),
-        protectionID = Some(12345),
+        identifier = Some(12345),
         protectionType = Some("IndividualProtection2016"),
         status = Some(Open.toString),
         certificateDate = Some("2016-04-17"),

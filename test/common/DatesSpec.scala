@@ -16,7 +16,7 @@
 
 package common
 
-import common.Dates._
+import models.TimeModel._
 import testHelpers.FakeApplication
 
 import java.time.LocalDateTime

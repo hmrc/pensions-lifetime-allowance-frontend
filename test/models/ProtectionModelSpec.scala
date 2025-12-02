@@ -17,9 +17,10 @@
 package models
 
 import generators.ModelGenerators
-import models.pla.AmendProtectionLifetimeAllowanceType._
+import models.pla.AmendableProtectionType._
 import models.pla.response.ProtectionType
-import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionRequestStatus}
+import models.pla.AmendableProtectionType
+import models.pla.request.AmendProtectionRequestStatus
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -33,7 +34,7 @@ class ProtectionModelSpec extends AnyWordSpec with Matchers with ModelGenerators
       val amendableProtectionTypes = Seq(
         "ip2014",
         "ip2016"
-      ) ++ AmendProtectionLifetimeAllowanceType.values.map(_.toString)
+      ) ++ AmendableProtectionType.values.map(_.toString)
 
       val allAmendableCombinations = for {
         status         <- amendableStatuses
@@ -44,7 +45,7 @@ class ProtectionModelSpec extends AnyWordSpec with Matchers with ModelGenerators
         s"ProtectionModel contains status: '$status' and protectionType: '$protectionType''" in {
           val protectionModel = ProtectionModel(
             psaCheckReference = None,
-            protectionID = None,
+            identifier = None,
             status = Some(status),
             protectionType = Some(protectionType)
           )
@@ -83,7 +84,7 @@ class ProtectionModelSpec extends AnyWordSpec with Matchers with ModelGenerators
         s"ProtectionModel contains status: $status and protectionType: $protectionType" in {
           val protectionModel = ProtectionModel(
             psaCheckReference = None,
-            protectionID = None,
+            identifier = None,
             status = status,
             protectionType = protectionType
           )
@@ -106,7 +107,7 @@ class ProtectionModelSpec extends AnyWordSpec with Matchers with ModelGenerators
         s"ProtectionModel contains protectionType: '$protectionType'" in {
           val protectionModel = ProtectionModel(
             psaCheckReference = None,
-            protectionID = None,
+            identifier = None,
             status = Some("open"),
             protectionType = Some(protectionType)
           )
@@ -131,7 +132,7 @@ class ProtectionModelSpec extends AnyWordSpec with Matchers with ModelGenerators
         s"ProtectionModel contains protectionType: '$protectionType'" in {
           val protectionModel = ProtectionModel(
             psaCheckReference = None,
-            protectionID = None,
+            identifier = None,
             status = Some("open"),
             protectionType = Some(protectionType)
           )
@@ -155,11 +156,11 @@ class ProtectionModelSpec extends AnyWordSpec with Matchers with ModelGenerators
           )
 
           result.psaCheckReference shouldBe Some(readProtectionsResponse.pensionSchemeAdministratorCheckReference)
-          result.protectionID shouldBe Some(protectionRecord.identifier)
+          result.identifier shouldBe Some(protectionRecord.identifier)
           result.certificateDate shouldBe Some(
             s"${protectionRecord.certificateDate}T${protectionRecord.certificateTime}"
           )
-          result.version shouldBe Some(protectionRecord.sequenceNumber)
+          result.sequence shouldBe Some(protectionRecord.sequenceNumber)
           result.protectionType shouldBe Some(protectionRecord.`type`.toString)
           result.status shouldBe Some(protectionRecord.status.toString)
           result.protectedAmount shouldBe protectionRecord.protectedAmount.map(_.toDouble)

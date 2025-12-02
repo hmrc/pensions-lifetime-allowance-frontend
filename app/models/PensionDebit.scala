@@ -16,4 +16,10 @@
 
 package models
 
-case class PensionDebit(startDate: String, amount: Double)
+import play.api.libs.json.{Json, OFormat}
+
+case class PensionDebit(startDate: DateModel, amount: Double)
+
+object PensionDebit {
+  implicit val format: OFormat[PensionDebit] = Json.format[PensionDebit]
+}

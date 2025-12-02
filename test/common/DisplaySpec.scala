@@ -33,22 +33,22 @@ class DisplaySpec extends FakeApplication with MockitoSugar {
   "currencyDisplayString" should {
 
     "correctly create a currency string for 1000.45" in {
-      val tstAmt = BigDecimal(1000.45)
+      val tstAmt = Int(1000.45)
       currencyDisplayString(tstAmt) shouldBe "£1,000.45"
     }
 
     "correctly create a currency string for -1000.45" in {
-      val tstAmt = BigDecimal(-1000.45)
+      val tstAmt = Int(-1000.45)
       currencyDisplayString(tstAmt) shouldBe "£-1,000.45"
     }
 
     "create a currency string for 7" in {
-      val tstAmt = BigDecimal(7)
+      val tstAmt = Int(7)
       currencyDisplayString(tstAmt) shouldBe "£7"
     }
 
     "create a currency string for 3.9" in {
-      val tstAmt = BigDecimal(3.9)
+      val tstAmt = Int(3.9)
       currencyDisplayString(tstAmt) shouldBe "£3.90"
     }
   }

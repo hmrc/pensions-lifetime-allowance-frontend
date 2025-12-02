@@ -27,7 +27,7 @@ import models.{AmendResponseModel, PensionDebitModel, ProtectionModel}
 import models.amendModels._
 import models.cache.CacheMap
 import models.display.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel}
-import models.pla.AmendProtectionLifetimeAllowanceType._
+import models.pla.AmendableProtectionType._
 import models.pla.response.ProtectionStatus.Dormant
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
@@ -146,7 +146,7 @@ class AmendsPensionSharingOrderControllerSpec
     preADayPensionInPayment = Some(2000.00),
     postADayBenefitCrystallisationEvents = Some(2000.00),
     notificationId = Some(12),
-    protectionID = Some(12345),
+    identifier = Some(12345),
     protectionType = Some("IndividualProtection2016"),
     status = Some(Dormant.toString),
     certificateDate = Some("2016-04-17"),
@@ -164,7 +164,7 @@ class AmendsPensionSharingOrderControllerSpec
     preADayPensionInPayment = Some(2000.00),
     postADayBenefitCrystallisationEvents = Some(2000.00),
     notificationId = Some(12),
-    protectionID = Some(12345),
+    identifier = Some(12345),
     protectionType = Some("IndividualProtection2016LTA"),
     status = Some(Dormant.toString),
     certificateDate = Some("2016-04-17"),
@@ -182,7 +182,7 @@ class AmendsPensionSharingOrderControllerSpec
     preADayPensionInPayment = Some(2000.00),
     postADayBenefitCrystallisationEvents = Some(2000.00),
     notificationId = Some(12),
-    protectionID = Some(12345),
+    identifier = Some(12345),
     protectionType = Some(IndividualProtection2014.toString),
     status = Some(Dormant.toString),
     certificateDate = Some("2016-04-17"),
@@ -200,7 +200,7 @@ class AmendsPensionSharingOrderControllerSpec
     preADayPensionInPayment = Some(2000.00),
     postADayBenefitCrystallisationEvents = Some(2000.00),
     notificationId = Some(12),
-    protectionID = Some(12345),
+    identifier = Some(12345),
     protectionType = Some(IndividualProtection2014LTA.toString),
     status = Some(Dormant.toString),
     certificateDate = Some("2016-04-17"),
@@ -218,7 +218,7 @@ class AmendsPensionSharingOrderControllerSpec
     preADayPensionInPayment = Some(0.0),
     postADayBenefitCrystallisationEvents = Some(0.0),
     notificationId = Some(12),
-    protectionID = Some(12345),
+    identifier = Some(12345),
     protectionType = Some(IndividualProtection2016.toString),
     status = Some(Dormant.toString),
     certificateDate = Some("2016-04-17"),
@@ -231,7 +231,7 @@ class AmendsPensionSharingOrderControllerSpec
 
   val noNotificationIdProtection = ProtectionModel(
     psaCheckReference = Some("testPSARef"),
-    protectionID = Some(12345),
+    identifier = Some(12345),
     uncrystallisedRights = Some(100000.00),
     nonUKRights = Some(0.0),
     preADayPensionInPayment = Some(0.0),
@@ -300,7 +300,7 @@ class AmendsPensionSharingOrderControllerSpec
 
   val individualProtection2014ActiveAmendmentProtection = ProtectionModel(
     psaCheckReference = Some("psaRef"),
-    protectionID = Some(12345),
+    identifier = Some(12345),
     notificationId = Some(33)
   )
 
@@ -308,7 +308,7 @@ class AmendsPensionSharingOrderControllerSpec
 
   val individualProtection2016InactiveAmendmentProtection = ProtectionModel(
     psaCheckReference = Some("psaRef"),
-    protectionID = Some(12345),
+    identifier = Some(12345),
     notificationId = Some(43)
   )
 
@@ -322,25 +322,25 @@ class AmendsPensionSharingOrderControllerSpec
 
     val testProtectionNoPsoList = ProtectionModel(
       psaCheckReference = Some("psaRef"),
-      protectionID = Some(1234),
+      identifier = Some(1234),
       pensionDebits = None
     )
 
     val testProtectionEmptyPsoList = ProtectionModel(
       psaCheckReference = Some("psaRef"),
-      protectionID = Some(1234),
+      identifier = Some(1234),
       pensionDebits = Some(List.empty)
     )
 
     val testProtectionSinglePsoList = ProtectionModel(
       psaCheckReference = Some("psaRef"),
-      protectionID = Some(1234),
+      identifier = Some(1234),
       pensionDebits = Some(List(PensionDebitModel("2016-12-23T15:14:00", 1000.0)))
     )
 
     val testProtectionMultiplePsoList = ProtectionModel(
       psaCheckReference = Some("psaRef"),
-      protectionID = Some(1234),
+      identifier = Some(1234),
       pensionDebits =
         Some(List(PensionDebitModel("2016-12-23T15:14:00", 1000.0), PensionDebitModel("2016-12-27:15:12:00", 11322.75)))
     )

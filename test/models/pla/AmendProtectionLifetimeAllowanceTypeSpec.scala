@@ -16,24 +16,24 @@
 
 package models.pla
 
-import models.pla.AmendProtectionLifetimeAllowanceType._
+import models.pla.AmendableProtectionType._
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
-class AmendProtectionLifetimeAllowanceTypeSpec extends AnyWordSpec with Matchers {
+class AmendableProtectionTypeSpec extends AnyWordSpec with Matchers {
 
-  "AmendProtectionLifetimeAllowanceType on from" should {
+  "AmendableProtectionType on from" should {
 
-    "return correct AmendProtectionLifetimeAllowanceType" when {
+    "return correct AmendableProtectionType" when {
 
       val testScenarios = Seq(
         "IP2014" -> IndividualProtection2014,
         "IP2016" -> IndividualProtection2016
-      ) ++ AmendProtectionLifetimeAllowanceType.values.map(protectionType => protectionType.toString -> protectionType)
+      ) ++ AmendableProtectionType.values.map(protectionType => protectionType.toString -> protectionType)
 
       testScenarios.foreach { case (input, expectedType) =>
         s"provided with '$input' value" in {
-          AmendProtectionLifetimeAllowanceType.from(input) shouldBe expectedType
+          AmendableProtectionType.fromProtectionType(input) shouldBe expectedType
         }
       }
     }
@@ -66,9 +66,10 @@ class AmendProtectionLifetimeAllowanceTypeSpec extends AnyWordSpec with Matchers
 
       testValues.foreach { input =>
         s"provided with '$input' value" in {
-          val exc = the[IllegalArgumentException] thrownBy AmendProtectionLifetimeAllowanceType.from(input)
+          val exc =
+            the[IllegalArgumentException] thrownBy AmendableProtectionType.fromProtectionType(input)
 
-          exc.getMessage shouldBe s"Cannot create AmendProtectionLifetimeAllowanceType from String: $input"
+          exc.getMessage shouldBe s"Cannot create AmendableProtectionType from String: $input"
         }
       }
     }

@@ -21,7 +21,7 @@ import play.api.data.Forms._
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.api.i18n.{Messages, MessagesProvider}
 
-object PSALookupProtectionNotificationNoForm {
+object PsaLookupProtectionNotificationNoForm {
 
   def pnnForm(implicit messagesProvider: MessagesProvider): Form[String] =
     Form(

@@ -17,7 +17,7 @@
 package controllers
 
 import config.FrontendAppConfig
-import models.{PSALookupRequest, PSALookupResult}
+import models.{PsaLookupRequest, PsaLookupResult}
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import services.SessionCacheService
@@ -55,9 +55,9 @@ class LookupController @Inject() (
       Future.successful(Ok(withdrawnPSALookupJourney()))
     } else {
       sessionCacheService
-        .fetchAndGetFormData[PSALookupRequest](lookupRequestID)
+        .fetchAndGetFormData[PsaLookupRequest](lookupRequestID)
         .flatMap {
-          case Some(req @ PSALookupRequest(_, Some(_))) =>
+          case Some(req @ PsaLookupRequest(_, Some(_))) =>
             Future.successful(Ok(psa_lookup_not_found_results(req, buildTimestamp)))
           case _ =>
             Future.successful(
@@ -72,7 +72,7 @@ class LookupController @Inject() (
       Future.successful(Ok(withdrawnPSALookupJourney()))
     } else {
       sessionCacheService
-        .fetchAndGetFormData[PSALookupResult](lookupResultID)
+        .fetchAndGetFormData[PsaLookupResult](lookupResultID)
         .map {
           case Some(result) => Ok(psa_lookup_results(result, buildTimestamp))
           case None =>

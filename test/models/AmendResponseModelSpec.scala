@@ -16,7 +16,8 @@
 
 package models
 
-import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionResponseStatus}
+import models.pla.AmendableProtectionType
+import models.pla.response.AmendProtectionResponseStatus
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import testdata.PlaConnectorTestData._
@@ -29,9 +30,9 @@ class AmendResponseModelSpec extends AnyWordSpec with Matchers {
       val expectedResult = AmendResponseModel(
         ProtectionModel(
           psaCheckReference = Some("testPSARef"),
-          protectionID = Some(lifetimeAllowanceIdentifier),
-          version = Some(lifetimeAllowanceSequenceNumber + 1),
-          protectionType = Some(AmendProtectionLifetimeAllowanceType.IndividualProtection2014.toString),
+          identifier = Some(lifetimeAllowanceIdentifier),
+          sequence = Some(lifetimeAllowanceSequenceNumber + 1),
+          protectionType = Some(AmendableProtectionType.IndividualProtection2014.toString),
           certificateDate = Some("2025-07-15T174312"),
           status = Some(AmendProtectionResponseStatus.Dormant.toString),
           protectionReference = Some(protectionReference),

@@ -21,6 +21,7 @@ import enums.ApplicationStage
 import models.ProtectionModel
 import models.amendModels.AmendProtectionModel
 import models.display.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel}
+import models.pla.AmendableProtectionType
 import play.api.Logging
 import play.api.i18n.{Lang, Messages}
 import play.api.mvc.Call
@@ -36,13 +37,16 @@ object AmendDisplayModelConstructor extends Logging {
         model.updatedProtection.relevantAmount.getOrElse(0.0)
       )
     )
-    val protectionType = Strings.protectionTypeString(model.updatedProtection.protectionType)
+
+    val protectionType = AmendableProtectionType.fromProtectionType(
+      model.updatedProtection.protectionType
+    )
 
     val pcSections: Seq[AmendDisplaySectionModel] = createAmendPensionContributionSectionsFromProtection(
       model.updatedProtection
     )
 
-    val pensionDebitAdded = model.updatedProtection.pensionDebits.isDefined
+    val pensionDebitAdded = model.updatedProtection.pensionDebit.isDefined
 
     val psoSections: Seq[AmendDisplaySectionModel] = createCurrentPsoSection(model.updatedProtection).getOrElse(Seq())
 
@@ -62,30 +66,23 @@ object AmendDisplayModelConstructor extends Logging {
   private def createCurrentPsoSection(
       model: ProtectionModel
   )(implicit lang: Lang, messages: Messages): Option[Seq[AmendDisplaySectionModel]] =
-    model.pensionDebits.flatMap { psoList =>
-      if (psoList.length > 1) {
-        logger.warn("More than one PSO amendment was found in the protection model, where only one is permitted.")
-        None
-      } else {
-        val psoAmendCall  = Helpers.createAmendCall(model, ApplicationStage.CurrentPsos)
-        val psoRemoveCall = Helpers.createPsoRemoveCall(model)
-        psoList.headOption.map { debit =>
+    model.pensionDebit.map { pensionDebit =>
+      val psoAmendCall  = Helpers.createAmendCall(model, ApplicationStage.CurrentPsos)
+      val psoRemoveCall = Helpers.createPsoRemoveCall(model)
+      Seq(
+        AmendDisplaySectionModel(
+          "pensionDebits",
           Seq(
-            AmendDisplaySectionModel(
-              "pensionDebits",
-              Seq(
-                AmendDisplayRowModel(
-                  s"${ApplicationStage.CurrentPsos.toString}-psoDetails",
-                  changeLinkCall = Some(psoAmendCall),
-                  removeLinkCall = psoRemoveCall,
-                  Display.currencyDisplayString(BigDecimal(debit.amount)),
-                  Display.dateDisplayString(Dates.constructDateTimeFromAPIString(debit.startDate))
-                )
-              )
+            AmendDisplayRowModel(
+              s"${ApplicationStage.CurrentPsos.toString}-psoDetails",
+              changeLinkCall = psoAmendCall,
+              removeLinkCall = psoRemoveCall,
+              Display.currencyDisplayString(pensionDebit.amount),
+              Display.dateDisplayString(pensionDebit.startDate)
             )
           )
-        }
-      }
+        )
+      )
     }
 
   private[display] def modelsDiffer(modelA: ProtectionModel, modelB: ProtectionModel): Boolean =
@@ -223,7 +220,7 @@ object AmendDisplayModelConstructor extends Logging {
   )(implicit messages: Messages): AmendDisplaySectionModel = {
     val amendCall = Helpers.createAmendCall(protection, applicationStage)
 
-    createYesNoSection(applicationStage.toString, Some(amendCall), amountOption, displayYesNoOnly, displayAmountOnly)
+    createYesNoSection(applicationStage.toString, amendCall, amountOption, displayYesNoOnly, displayAmountOnly)
   }
 
   private def createNoChangeSection(
@@ -241,7 +238,7 @@ object AmendDisplayModelConstructor extends Logging {
       throw Exceptions.OptionNotDefinedException(
         "createCurrentPensionsSection",
         "currentPensions",
-        protection.protectionType.getOrElse("No protection type")
+        protection.protectionType.toString
       )
     )
     AmendDisplaySectionModel(
@@ -249,9 +246,9 @@ object AmendDisplayModelConstructor extends Logging {
       Seq(
         AmendDisplayRowModel(
           "Amt",
-          Some(amendCall),
+          amendCall,
           removeLinkCall = None,
-          Display.currencyDisplayString(BigDecimal(currentPensions))
+          Display.currencyDisplayString(currentPensions)
         )
       )
     )

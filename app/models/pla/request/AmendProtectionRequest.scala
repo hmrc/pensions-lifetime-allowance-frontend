@@ -16,15 +16,15 @@
 
 package models.pla.request
 
-import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionRequestStatus}
-import models.{PensionDebit, ProtectionModel}
+import models.pla.AmendableProtectionType
+import models.{DateModel, NotificationId, ProtectionModel, TimeModel}
 import play.api.libs.json.{Json, Writes}
 
 case class AmendProtectionRequest(
     lifetimeAllowanceSequenceNumber: Int,
-    lifetimeAllowanceType: AmendProtectionLifetimeAllowanceType,
-    certificateDate: Option[String],
-    certificateTime: Option[String],
+    lifetimeAllowanceType: AmendableProtectionType,
+    certificateDate: Option[DateModel],
+    certificateTime: Option[TimeModel],
     status: AmendProtectionRequestStatus,
     protectionReference: Option[String],
     relevantAmount: Int,
@@ -34,9 +34,9 @@ case class AmendProtectionRequest(
     nonUKRightsAmount: Int,
     pensionDebitAmount: Option[Int],
     pensionDebitEnteredAmount: Option[Int],
-    notificationIdentifier: Option[Int],
+    notificationIdentifier: Option[NotificationId],
     protectedAmount: Option[Int],
-    pensionDebitStartDate: Option[String],
+    pensionDebitStartDate: Option[DateModel],
     pensionDebitTotalAmount: Option[Int]
 )
 
@@ -49,49 +49,42 @@ object AmendProtectionRequest {
       s"Cannot create AmendProtectionRequest, because '$fieldName' field is empty in provided ProtectionModel"
 
     val lifetimeAllowanceSequenceNumber =
-      protectionModel.version.getOrElse(throw new IllegalArgumentException(errorMessage("version")))
-    val lifetimeAllowanceType = AmendProtectionLifetimeAllowanceType.from(
-      protectionModel.protectionType.getOrElse(throw new IllegalArgumentException(errorMessage("protectionType")))
-    )
-    val status = AmendProtectionRequestStatus.from(
-      protectionModel.status.getOrElse(throw new IllegalArgumentException(errorMessage("status")))
-    )
+      protectionModel.sequence.getOrElse(throw new IllegalArgumentException(errorMessage("version")))
+
+    val lifetimeAllowanceType = AmendableProtectionType.fromProtectionType(protectionModel.protectionType)
+    val status                = AmendProtectionRequestStatus.fromProtectionStatus(protectionModel.status)
+
     val relevantAmount =
-      protectionModel.relevantAmount.getOrElse(throw new IllegalArgumentException(errorMessage("relevantAmount"))).toInt
+      protectionModel.relevantAmount.getOrElse(throw new IllegalArgumentException(errorMessage("relevantAmount")))
     val preADayPensionInPayment =
       protectionModel.preADayPensionInPayment
         .getOrElse(throw new IllegalArgumentException(errorMessage("preADayPensionInPayment")))
-        .toInt
     val postADayBenefitCrystallisationEvents =
       protectionModel.postADayBenefitCrystallisationEvents
         .getOrElse(throw new IllegalArgumentException(errorMessage("postADayBenefitCrystallisationEvents")))
-        .toInt
     val uncrystallisedRights =
       protectionModel.uncrystallisedRights
         .getOrElse(throw new IllegalArgumentException(errorMessage("uncrystallisedRights")))
-        .toInt
     val nonUKRights =
-      protectionModel.nonUKRights.getOrElse(throw new IllegalArgumentException(errorMessage("nonUKRights"))).toInt
+      protectionModel.nonUKRights.getOrElse(throw new IllegalArgumentException(errorMessage("nonUKRights")))
 
-    val pensionDebit = extractPensionDebit(protectionModel)
+    val pensionDebitStartDate = protectionModel.pensionDebit.map(_.startDate)
 
-    val pensionDebitStartDate = pensionDebit.map(_.startDate)
-
-    val pensionDebitEnteredAmount = pensionDebit.map(_.amount)
+    val pensionDebitEnteredAmount = protectionModel.pensionDebit.map(_.amount)
 
     AmendProtectionRequest(
       lifetimeAllowanceSequenceNumber = lifetimeAllowanceSequenceNumber,
       lifetimeAllowanceType = lifetimeAllowanceType,
-      certificateDate = extractCertificateDate(protectionModel),
-      certificateTime = extractCertificateTime(protectionModel),
+      certificateDate = protectionModel.certificateDate,
+      certificateTime = protectionModel.certificateTime,
       status = status,
       protectionReference = protectionModel.protectionReference,
-      relevantAmount = relevantAmount,
-      preADayPensionInPaymentAmount = preADayPensionInPayment,
-      postADayBenefitCrystallisationEventAmount = postADayBenefitCrystallisationEvents,
-      uncrystallisedRightsAmount = uncrystallisedRights,
-      nonUKRightsAmount = nonUKRights,
-      pensionDebitAmount = protectionModel.pensionDebitAmount.map(_.toInt),
+      relevantAmount = relevantAmount.toInt,
+      preADayPensionInPaymentAmount = preADayPensionInPayment.toInt,
+      postADayBenefitCrystallisationEventAmount = postADayBenefitCrystallisationEvents.toInt,
+      uncrystallisedRightsAmount = uncrystallisedRights.toInt,
+      nonUKRightsAmount = nonUKRights.toInt,
+      pensionDebitAmount = None,
       pensionDebitEnteredAmount = pensionDebitEnteredAmount.map(_.toInt),
       notificationIdentifier = protectionModel.notificationId,
       protectedAmount = protectionModel.protectedAmount.map(_.toInt),
@@ -99,17 +92,5 @@ object AmendProtectionRequest {
       pensionDebitTotalAmount = protectionModel.pensionDebitTotalAmount.map(_.toInt)
     )
   }
-
-  private def extractCertificateDate(protectionModel: ProtectionModel): Option[String] =
-    protectionModel.certificateDate.map(_.split("T")(0))
-
-  private def extractCertificateTime(protectionModel: ProtectionModel): Option[String] =
-    protectionModel.certificateDate.map(_.split("T")(1)).map(_.split("\\.")(0)).map(_.replace(":", ""))
-
-  private def extractPensionDebit(protectionModel: ProtectionModel): Option[PensionDebit] =
-    (protectionModel.pensionDebitEnteredAmount, protectionModel.pensionDebitStartDate) match {
-      case (Some(enteredAmount), Some(startDate)) => Some(PensionDebit(startDate = startDate, amount = enteredAmount))
-      case _                                      => None
-    }
 
 }

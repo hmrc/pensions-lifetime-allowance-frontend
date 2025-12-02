@@ -16,6 +16,7 @@
 
 package models.pla
 
+import models.pla.request.AmendProtectionRequestStatus
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -34,7 +35,7 @@ class AmendProtectionRequestStatusSpec extends AnyWordSpec with Matchers {
 
       testScenarios.foreach { case (input, expectedStatus) =>
         s"provided with '$input' value" in {
-          AmendProtectionRequestStatus.from(input) shouldBe expectedStatus
+          AmendProtectionRequestStatus.fromProtectionStatus(input) shouldBe expectedStatus
         }
       }
     }
@@ -42,7 +43,7 @@ class AmendProtectionRequestStatusSpec extends AnyWordSpec with Matchers {
     "throw IllegalArgumentException" when
       Seq("Unknown", "Withdrawn", "Expired", "Unsuccessful", "Rejected").foreach { input =>
         s"provided with '$input' value" in {
-          val exc = the[IllegalArgumentException] thrownBy AmendProtectionRequestStatus.from(input)
+          val exc = the[IllegalArgumentException] thrownBy AmendProtectionRequestStatus.fromProtectionStatus(input)
 
           exc.getMessage shouldBe s"Cannot create AmendProtectionRequestStatus from String: $input"
         }

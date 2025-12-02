@@ -16,7 +16,8 @@
 
 @import models.amendModels.AmendPensionsTakenBetweenModel
 @import play.api.data._
-@import common.Strings
+@import models.pla.AmendableProtectionType
+@import models.pla.request.AmendProtectionRequestStatus
 
 @this(
     layout: Layout,
@@ -26,8 +27,11 @@
     submitButton: playHelpers.templates.submitButton
 )
 
-
-@(amendPensionsTakenBetweenForm: Form[AmendPensionsTakenBetweenModel], protectionType: String, status: String)(implicit request: Request[_], messages: Messages)
+@(
+    amendPensionsTakenBetweenForm: Form[AmendPensionsTakenBetweenModel],
+    protectionType: AmendableProtectionType,
+    status: AmendProtectionRequestStatus
+)(implicit request: Request[_], messages: Messages)
 
 @title = @{
     if(amendPensionsTakenBetweenForm.errors.nonEmpty){
@@ -45,7 +49,7 @@
 
     <h1 class="govuk-heading-l">@Messages("pla.pensionsTakenBetween.title")</h1>
 
-    @form(action = routes.AmendsPensionTakenBetweenController.submitAmendPensionsTakenBetween(Strings.protectionTypeUrlString(Some(protectionType)), status)) {
+    @form(action = routes.AmendsPensionTakenBetweenController.submitAmendPensionsTakenBetween(protectionType, status)) {
         @plaInputRadioGroup(
             legend = Messages("pla.pensionsTakenBetween.title"),
             legendClass = Some("govuk-visually-hidden"),

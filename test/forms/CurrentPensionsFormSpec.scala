@@ -18,7 +18,7 @@ package forms
 
 import forms.CurrentPensionsForm._
 import models.CurrentPensionsModel
-import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
+import models.pla.AmendableProtectionType.IndividualProtection2016
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Lang
 import testHelpers.FakeApplication

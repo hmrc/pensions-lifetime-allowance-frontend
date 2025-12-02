@@ -16,7 +16,7 @@
 
 package common
 
-import models.pla.AmendProtectionLifetimeAllowanceType
+import models.pla.AmendableProtectionType
 import models.pla.response.{ProtectionStatus, ProtectionType}
 import org.scalatest.OptionValues
 import org.scalatest.matchers.should.Matchers
@@ -118,7 +118,7 @@ class StringsSpec extends AnyWordSpecLike with Matchers with OptionValues {
   "protectionTypeUrlString" should {
     "Populate the protection type Url string" when {
       import Strings.{ProtectionTypeUrl => urlString}
-      import AmendProtectionLifetimeAllowanceType._
+      import AmendableProtectionType._
 
       val testCases = Seq(
         "IP2014"                             -> urlString.IndividualProtection2014,

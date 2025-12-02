@@ -28,7 +28,7 @@ class PrintDisplayModelConstructorSpec extends DisplayConstructorsTestData {
     val tstPersonalDetailsModel = PersonalDetailsModel(tstPerson)
     val tstProtectionModel = ProtectionModel(
       psaCheckReference = Some(tstPSACheckRef),
-      protectionID = Some(12345),
+      identifier = Some(12345),
       protectionType = Some(IndividualProtection2014.toString),
       status = Some(Open.toString),
       certificateDate = Some("2016-04-17T15:14:00"),

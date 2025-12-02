@@ -16,7 +16,9 @@
 
 @import models.amendModels.AmendCurrentPensionModel
 @import play.api.data._
-@import common.{Links, Strings}
+@import common.Links
+@import models.pla.AmendableProtectionType
+@import models.pla.request.AmendProtectionRequestStatus
 
 @this(
     layout: Layout,
@@ -27,7 +29,11 @@
     submitButton: playHelpers.templates.submitButton
 )
 
-@(amendCurrentPensionForm: Form[AmendCurrentPensionModel], protectionType: String, status: String)(implicit request: Request[_], messages: Messages)
+@(
+    amendCurrentPensionForm: Form[AmendCurrentPensionModel],
+    protectionType: AmendableProtectionType,
+    status: AmendProtectionRequestStatus
+)(implicit request: Request[_], messages: Messages)
 
 @helpTextAccordionContent = {
     <p class="govuk-body">@Messages("pla.currentPensions.hiddenTextPara")</p>
@@ -59,7 +65,7 @@
         helpTextAccordionContent
     )
 
-    @form(action = routes.AmendsCurrentPensionController.submitAmendCurrentPension(Strings.protectionTypeUrlString(Some(protectionType)), status)) {
+    @form(action = routes.AmendsCurrentPensionController.submitAmendCurrentPension(protectionType, status)) {
         @formInputMoney(
             field = amendCurrentPensionForm("amendedUKPensionAmt"),
             question = Messages("pla.currentPensions.title"),

@@ -16,7 +16,8 @@
 
 @import models.amendModels.AmendPsoDetailsModel
 @import play.api.data._
-@import common.Strings
+@import models.pla.AmendableProtectionType
+@import models.pla.request.AmendProtectionRequestStatus
 
 @this(
     layout: Layout,
@@ -27,7 +28,12 @@
     submitButton: playHelpers.templates.submitButton
 )
 
-@(psoDetailsForm: Form[AmendPsoDetailsModel], protectionType: String, status: String, existingPso: Boolean)(implicit request: Request[_], messages: Messages)
+@(
+    psoDetailsForm: Form[AmendPsoDetailsModel],
+    protectionType: AmendableProtectionType,
+    status: AmendProtectionRequestStatus,
+    existingPso: Boolean
+)(implicit request: Request[_], messages: Messages)
 
 @title = @{
     if(psoDetailsForm.errors.nonEmpty){
@@ -45,7 +51,7 @@
 
     <h1 class="govuk-heading-xl">@Messages("pla.psoDetails.title")</h1>
 
-    @form(action = routes.AmendsPensionSharingOrderController.submitAmendPsoDetails(Strings.protectionTypeUrlString(Some(protectionType)), status, existingPso)) {
+    @form(action = routes.AmendsPensionSharingOrderController.submitAmendPsoDetails(protectionType, status, existingPso)) {
 
         @formInlineDateInput(
             content = Messages("pla.psoDetails.dateQuestionText"),

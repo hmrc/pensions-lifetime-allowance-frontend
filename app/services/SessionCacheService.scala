@@ -17,7 +17,8 @@
 package services
 
 import models.cache.CacheMap
-import play.api.libs.json.Format
+import play.api.Logging
+import play.api.libs.json.{Json, Reads, Writes}
 import play.api.mvc.Request
 import repositories.SessionRepository
 import uk.gov.hmrc.mongo.cache.DataKey
@@ -28,13 +29,17 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class SessionCacheService @Inject() (sessionRepository: SessionRepository)(
     implicit executionContext: ExecutionContext
-) {
+) extends Logging {
 
-  def saveFormData[T](key: String, data: T)(implicit request: Request[_], formats: Format[T]): Future[CacheMap] =
+  def saveFormData[T](key: String, data: T)(implicit request: Request[_], formats: Writes[T]): Future[CacheMap] = {
+    logger.info(s"Saving $key as ${Json.toJson(data)}")
     sessionRepository.putInSession(DataKey(key), data)
+  }
 
-  def fetchAndGetFormData[T](key: String)(implicit request: Request[_], formats: Format[T]): Future[Option[T]] =
+  def fetchAndGetFormData[T](key: String)(implicit request: Request[_], formats: Reads[T]): Future[Option[T]] = {
+    logger.info(s"Fetching $key")
     sessionRepository.getFromSession[T](DataKey(key))
+  }
 
   def remove(implicit request: Request[_]): Future[Unit] =
     sessionRepository.clearSession

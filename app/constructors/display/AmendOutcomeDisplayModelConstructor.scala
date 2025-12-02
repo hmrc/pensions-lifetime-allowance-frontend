@@ -18,31 +18,31 @@ package constructors.display
 
 import common.{Display, Exceptions}
 import models.display.AmendOutcomeDisplayModel
-import models.{AmendResponseModel, PersonalDetailsModel}
+import models.pla.response.AmendProtectionResponseStatus.Withdrawn
+import models.{AmendedProtectionModel, NotificationId, PersonalDetailsModel}
 import play.api.i18n.{Lang, Messages}
-import utils.Constants
 
 object AmendOutcomeDisplayModelConstructor {
 
   def createAmendOutcomeDisplayModel(
-      model: AmendResponseModel,
+      model: AmendedProtectionModel,
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       nino: String
   )(implicit lang: Lang, messages: Messages): AmendOutcomeDisplayModel = {
     val printDetails =
-      AmendPrintDisplayModelConstructor.createAmendPrintDisplayModel(personalDetailsModelOpt, model.protection, nino)
+      AmendPrintDisplayModelConstructor.createAmendPrintDisplayModel(personalDetailsModelOpt, model, nino)
 
-    val notificationId = model.protection.notificationId.getOrElse(
+    val notificationId = model.notificationIdentifier.getOrElse(
       throw Exceptions.OptionNotDefinedException(
         "createAmendResultDisplayModel",
         "notificationId",
-        model.protection.protectionType.getOrElse("No protection type in response")
+        model.protectionType.toString
       )
     )
 
     val protectedAmount = extractProtectedAmount(notificationId, model)
 
-    val protectedAmountString = Display.currencyDisplayString(BigDecimal(protectedAmount))
+    val protectedAmountString = Display.currencyDisplayString(protectedAmount)
 
     AmendOutcomeDisplayModel(
       notificationId,
@@ -55,21 +55,15 @@ object AmendOutcomeDisplayModelConstructor {
     )
   }
 
-  private def extractProtectedAmount(notificationId: Int, model: AmendResponseModel): Double =
-    if (Constants.withdrawnNotificationIds.contains(notificationId)) {
-      model.protection.relevantAmount.getOrElse {
-        throw Exceptions.OptionNotDefinedException(
-          "createAmendResultDisplayModel",
-          "relevantAmount",
-          model.protection.protectionType.getOrElse("No protection type in response")
-        )
-      }
+  private def extractProtectedAmount(notificationId: NotificationId, model: AmendedProtectionModel): Int =
+    if (notificationId.status == Withdrawn) {
+      model.relevantAmount
     } else {
-      model.protection.protectedAmount.getOrElse {
+      model.protectedAmount.getOrElse {
         throw Exceptions.OptionNotDefinedException(
           "createAmendResultDisplayModel",
           "protectedAmount",
-          model.protection.protectionType.getOrElse("No protection type in response")
+          model.protectionType.toString
         )
       }
     }

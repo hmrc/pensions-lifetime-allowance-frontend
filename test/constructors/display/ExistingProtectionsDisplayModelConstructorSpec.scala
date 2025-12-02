@@ -36,7 +36,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
     "Create an ExistingProtectionsDisplayModel" in {
       val tstProtectionModelOpen = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
-        protectionID = Some(12345),
+        identifier = Some(12345),
         protectionType = Some(IndividualProtection2014.toString),
         status = Some(Open.toString),
         certificateDate = Some("2016-04-17T15:14:00"),
@@ -61,7 +61,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
 
       val tstProtectionModelDormant = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
-        protectionID = Some(12345),
+        identifier = Some(12345),
         protectionType = Some(IndividualProtection2014.toString),
         status = Some(Dormant.toString),
         certificateDate = None,
@@ -105,7 +105,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
     "Correctly order existing protections with the same status" in {
       val tstProtectionModelOpen = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
-        protectionID = Some(12345),
+        identifier = Some(12345),
         protectionType = Some(IndividualProtection2014.toString),
         status = Some(Open.toString),
         certificateDate = Some("2016-04-17T15:14:00"),
@@ -132,7 +132,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
 
       val tstProtectionModelDormantFP2014 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
-        protectionID = Some(12345),
+        identifier = Some(12345),
         protectionType = Some(FixedProtection2014.toString),
         status = Some(Dormant.toString),
         certificateDate = None,
@@ -153,7 +153,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
 
       val tstProtectionModelDormantFixed = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
-        protectionID = Some(12345),
+        identifier = Some(12345),
         protectionType = Some(FixedProtection.toString),
         status = Some(Dormant.toString),
         certificateDate = None,
@@ -174,7 +174,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
 
       val tstProtectionModelDormantEnhanced = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
-        protectionID = Some(12345),
+        identifier = Some(12345),
         protectionType = Some(EnhancedProtection.toString),
         status = Some(Dormant.toString),
         certificateDate = None,
@@ -195,7 +195,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
 
       val tstProtectionModelDormantPrimary = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
-        protectionID = Some(12345),
+        identifier = Some(12345),
         protectionType = Some(PrimaryProtection.toString),
         status = Some(Dormant.toString),
         certificateDate = None,
@@ -216,7 +216,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
 
       val tstProtectionModelDormantIP2016 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
-        protectionID = Some(12345),
+        identifier = Some(12345),
         protectionType = Some(IndividualProtection2016.toString),
         status = Some(Dormant.toString),
         certificateDate = None,
@@ -242,7 +242,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
 
       val tstProtectionModelDormantFP2016 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
-        protectionID = Some(12345),
+        identifier = Some(12345),
         protectionType = Some(FixedProtection2016.toString),
         status = Some(Dormant.toString),
         certificateDate = None,
@@ -263,7 +263,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
 
       val tstProtectionModelDormantIP2014 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
-        protectionID = Some(12345),
+        identifier = Some(12345),
         protectionType = Some(IndividualProtection2014.toString),
         status = Some(Dormant.toString),
         certificateDate = None,
@@ -344,7 +344,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
 
       val tstProtectionModelExpiredFP2014 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
-        protectionID = Some(12345),
+        identifier = Some(12345),
         protectionType = Some(FixedProtection2014.toString),
         status = Some(Expired.toString),
         certificateDate = None,
@@ -365,7 +365,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
 
       val tstProtectionModelExpiredFP2016 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
-        protectionID = Some(12345),
+        identifier = Some(12345),
         protectionType = Some(FixedProtection2016.toString),
         status = Some(Expired.toString),
         certificateDate = None,
@@ -386,7 +386,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
 
       val tstProtectionModelRejectedIP2014 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
-        protectionID = Some(12345),
+        identifier = Some(12345),
         protectionType = Some(IndividualProtection2014.toString),
         status = Some(Rejected.toString),
         certificateDate = None,
@@ -407,7 +407,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
 
       val tstProtectionModelUnsuccessfulIP2014 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
-        protectionID = Some(12345),
+        identifier = Some(12345),
         protectionType = Some(IndividualProtection2014.toString),
         status = Some(Unsuccessful.toString),
         certificateDate = None,
@@ -428,7 +428,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
 
       val tstProtectionModelWithdrawnPrimary = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
-        protectionID = Some(12345),
+        identifier = Some(12345),
         protectionType = Some(PrimaryProtection.toString),
         status = Some(Withdrawn.toString),
         certificateDate = None,
@@ -449,7 +449,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
 
       val tstProtectionModelWithdrawnIP2016 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
-        protectionID = Some(12345),
+        identifier = Some(12345),
         protectionType = Some(IndividualProtection2016.toString),
         status = Some(Withdrawn.toString),
         certificateDate = None,
@@ -470,7 +470,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
 
       val tstProtectionModelDormantFixed = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
-        protectionID = Some(12345),
+        identifier = Some(12345),
         protectionType = Some(FixedProtection.toString),
         status = Some(Dormant.toString),
         certificateDate = None,
@@ -491,7 +491,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
 
       val tstProtectionModelDormantEnhanced = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
-        protectionID = Some(12345),
+        identifier = Some(12345),
         protectionType = Some(EnhancedProtection.toString),
         status = Some(Dormant.toString),
         certificateDate = None,
@@ -584,7 +584,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
         s"protection type is $protectionType" in {
           val protectionModel = ProtectionModel(
             psaCheckReference = Some(tstPSACheckRef),
-            protectionID = Some(12345),
+            identifier = Some(12345),
             protectionType = Some(protectionType.toString),
             status = Some(Withdrawn.toString),
             certificateDate = Some("2016-04-17T15:14:00"),
@@ -633,7 +633,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
     "Handle an unknown protection type as notRecorded" in {
       val protectionModel = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
-        protectionID = Some(12345),
+        identifier = Some(12345),
         protectionType = Some("unknown protection type"),
         status = Some(Withdrawn.toString),
         certificateDate = Some("2016-04-17T15:14:00"),

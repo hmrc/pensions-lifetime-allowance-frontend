@@ -17,7 +17,7 @@
 package controllers
 
 import config.FrontendAppConfig
-import models.PSALookupRequest
+import models.PsaLookupRequest
 import models.cache.CacheMap
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{reset, verify, when}
@@ -79,7 +79,7 @@ class LookupSchemeAdministratorReferenceControllerSpec
     "psalookupjourneyShutterEnabled toggle is disabled" should {
       "return 200 with correct message on psaRef form" in {
         when(appConfig.psalookupjourneyShutterEnabled).thenReturn(false)
-        cacheFetchCondition[PSALookupRequest](None)
+        cacheFetchCondition[PsaLookupRequest](None)
 
         val result = controller.displaySchemeAdministratorReferenceForm(request)
 
@@ -119,7 +119,7 @@ class LookupSchemeAdministratorReferenceControllerSpec
 
       "submit psaRef form with valid data and redirect to pnn form" in {
         when(appConfig.psalookupjourneyShutterEnabled).thenReturn(false)
-        cacheSaveCondition[PSALookupRequest](mockCacheMap)
+        cacheSaveCondition[PsaLookupRequest](mockCacheMap)
 
         val request =
           FakeRequest().withSession(sessionId).withFormUrlEncodedBody(validPSARefForm: _*).withMethod("POST")

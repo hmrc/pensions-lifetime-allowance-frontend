@@ -96,21 +96,29 @@ class ReadProtectionsController @Inject() (
       .map(model => sessionCacheService.saveFormData[ProtectionModel]("openProtection", model).map(_ => true))
       .getOrElse(Future.successful(true))
 
+  def getAllProtections(model: TransformedReadResponseModel): Seq[ProtectionModel] =
+    model.inactiveProtections ++ model.activeProtection
+
   def saveAmendableProtections(model: TransformedReadResponseModel)(
       implicit request: Request[AnyContent]
-  ): Future[Seq[CacheMap]] =
-    Future.sequence(getAmendableProtections(model).map(saveProtection))
-
-  def getAmendableProtections(model: TransformedReadResponseModel): Seq[ProtectionModel] =
-    model.inactiveProtections.filter(_.isAmendable) ++
-      model.activeProtection.filter(_.isAmendable)
-
-  private def saveProtection(protection: ProtectionModel)(implicit request: Request[AnyContent]): Future[CacheMap] = {
-    val cacheKey = Strings.protectionCacheKey(protection.protectionType, protection.status)
-    sessionCacheService.saveFormData[AmendProtectionModel](
-      cacheKey,
-      AmendProtectionModel(protection, protection)
-    )
+  ): Future[Seq[CacheMap]] = {
+    val allProtections = getAllProtections(model)
+    val protections = allProtections.flatMap(saveIfAmendable)
+    Future.sequence(protections)
   }
+
+  def saveIfAmendable(protection: ProtectionModel)(
+    implicit request: Request[AnyContent]
+  ): Option[Future[CacheMap]] = {
+    protection.asAmendable.map { case (protectionType, status) =>
+      val cacheKey = Strings.protectionCacheKey(protectionType, status)
+
+      sessionCacheService.saveFormData[AmendProtectionModel](
+        cacheKey,
+        AmendProtectionModel(protection, protection)
+      )
+    }
+  }
+
 
 }

@@ -16,6 +16,16 @@
 
 package models
 
-case class PensionsWorthBeforeModel(pensionsWorthBeforeAmt: Option[BigDecimal]) extends AmountModel {
-  override def getAmount: Option[BigDecimal] = pensionsWorthBeforeAmt
+import play.api.libs.json.{Json, OFormat}
+
+case class PsaLookupResult(
+    pensionSchemeAdministratorCheckReference: String,
+    ltaType: Int,
+    psaCheckResult: Int,
+    protectedAmount: Option[BigDecimal],
+    protectionNotificationNumber: Option[String] = None
+)
+
+object PsaLookupResult {
+  implicit val format: OFormat[PsaLookupResult] = Json.format[PsaLookupResult]
 }
