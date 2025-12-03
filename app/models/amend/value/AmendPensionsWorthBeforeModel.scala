@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,6 @@
  * limitations under the License.
  */
 
-package models
+package models.amend.value
 
-import play.api.libs.json.{Json, OFormat}
-
-case class PensionDebit(startDate: DateModel, amount: Double)
-
-object PensionDebit {
-  implicit val format: OFormat[PensionDebit] = Json.format[PensionDebit]
-}
+case class AmendPensionsWorthBeforeModel(amendedPensionsTakenBeforeAmt: Option[BigDecimal]) extends AmendValueModel

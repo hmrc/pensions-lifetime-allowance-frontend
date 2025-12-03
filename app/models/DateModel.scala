@@ -33,9 +33,7 @@ object DateModel {
 
   private def serialiseDate(date: DateModel): String = date.date.format(dateFormat)
 
-  implicit val reads: Writes[DateModel] = date => JsString(serialiseDate(date))
-
-  implicit val writes: Reads[DateModel] = {
+  implicit val reads: Reads[DateModel] = {
     case JsString(dateString) =>
       parseDate(dateString) match {
         case Some(date) => JsSuccess(date)
@@ -44,6 +42,10 @@ object DateModel {
     case _ => JsError("date must be a string")
   }
 
-  implicit val format: Format[DateModel] = Format(writes, reads)
+  implicit val writes: Writes[DateModel] = date => JsString(serialiseDate(date))
+
+  implicit val format: Format[DateModel] = Format(reads, writes)
+
+  def of(year: Int, month: Int, day: Int): DateModel = DateModel(LocalDate.of(year, month, day))
 
 }

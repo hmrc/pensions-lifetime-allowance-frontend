@@ -25,9 +25,10 @@ import connectors.{CitizenDetailsConnector, PlaConnector}
 import constructors.display.DisplayConstructors
 import enums.ApplicationType
 import mocks.AuthMock
-import models.amendModels._
+import models.amend.{AmendProtectionModel, AmendsGAModel}
 import models.cache.CacheMap
 import models.display.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel}
+import models.pla.AmendableProtectionType
 import models.pla.response.ProtectionStatus.{Dormant, Open}
 import models.pla.response.ProtectionType.{FixedProtection2016, IndividualProtection2014, IndividualProtection2016}
 import models.pla.response.{
@@ -37,7 +38,6 @@ import models.pla.response.{
   ProtectionRecordsList,
   ReadProtectionsResponse
 }
-import models.pla.AmendableProtectionType
 import models.{AmendResponseModel, Person, PersonalDetailsModel, ProtectionModel}
 import org.mockito.ArgumentMatchers.{any, anyString, eq => eqTo}
 import org.mockito.Mockito._

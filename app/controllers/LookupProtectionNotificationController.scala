@@ -47,15 +47,11 @@ class LookupProtectionNotificationController @Inject() (
   private def pnnForm(implicit request: Request[AnyContent]): Form[String] =
     PsaLookupProtectionNotificationNoForm.pnnForm
 
-  private val lookupRequestID = "psa-lookup-request"
-  private val lookupResultID  = "psa-lookup-result"
-
   def displayProtectionNotificationNoForm: Action[AnyContent] = actionWithSessionId.async { implicit request =>
     if (appConfig.psalookupjourneyShutterEnabled) {
       Future.successful(Ok(withdrawnPSALookupJourney()))
     } else {
-      sessionCacheService
-        .fetchAndGetFormData[PsaLookupRequest](lookupRequestID)
+      sessionCacheService.fetchPsaLookupRequest
         .flatMap {
           case Some(_) => Future.successful(Ok(psa_lookup_protection_notification_no_form(pnnForm)))
           case _ =>
@@ -75,8 +71,7 @@ class LookupProtectionNotificationController @Inject() (
         .fold(
           formWithErrors => Future.successful(BadRequest(psa_lookup_protection_notification_no_form(formWithErrors))),
           validFormData =>
-            sessionCacheService
-              .fetchAndGetFormData[PsaLookupRequest](lookupRequestID)
+            sessionCacheService.fetchPsaLookupRequest
               .flatMap {
                 case Some(PsaLookupRequest(psaRef, _)) =>
                   val pnn = validFormData.toUpperCase
@@ -86,14 +81,14 @@ class LookupProtectionNotificationController @Inject() (
                       val resultData    = Json.fromJson[PsaLookupResult](result.json).get
                       val updatedResult = resultData.copy(protectionNotificationNumber = Some(pnn))
                       sessionCacheService
-                        .saveFormData[PsaLookupResult](lookupResultID, updatedResult)
+                        .savePsaLookupResult(updatedResult)
                         .map(_ => Redirect(routes.LookupController.displayLookupResults))
                     }
                     .recoverWith {
                       case r: UpstreamErrorResponse if r.statusCode == NOT_FOUND =>
                         val fullResult = PsaLookupRequest(psaRef, Some(pnn))
                         sessionCacheService
-                          .saveFormData[PsaLookupRequest](lookupRequestID, fullResult)
+                          .savePsaLookupRequest(fullResult)
                           .map(_ => Redirect(routes.LookupController.displayNotFoundResults))
                     }
                 case _ =>

@@ -16,8 +16,9 @@
 
 package models.pla.request
 
+import models.amend.AmendProtectionModel
 import models.pla.AmendableProtectionType
-import models.{DateModel, NotificationId, ProtectionModel, TimeModel}
+import models.{DateModel, NotificationId, TimeModel}
 import play.api.libs.json.{Json, Writes}
 
 case class AmendProtectionRequest(
@@ -43,34 +44,30 @@ case class AmendProtectionRequest(
 object AmendProtectionRequest {
   implicit val writes: Writes[AmendProtectionRequest] = Json.writes[AmendProtectionRequest]
 
-  def from(protectionModel: ProtectionModel): AmendProtectionRequest = {
+  def from(protectionModel: AmendProtectionModel): AmendProtectionRequest = {
+    val lifetimeAllowanceSequenceNumber = protectionModel.sequence
 
-    def errorMessage(fieldName: String): String =
-      s"Cannot create AmendProtectionRequest, because '$fieldName' field is empty in provided ProtectionModel"
-
-    val lifetimeAllowanceSequenceNumber =
-      protectionModel.sequence.getOrElse(throw new IllegalArgumentException(errorMessage("version")))
-
-    val lifetimeAllowanceType = AmendableProtectionType.fromProtectionType(protectionModel.protectionType)
-    val status                = AmendProtectionRequestStatus.fromProtectionStatus(protectionModel.status)
+    val lifetimeAllowanceType = protectionModel.protectionType
+    val status                = protectionModel.status
 
     val relevantAmount =
-      protectionModel.relevantAmount.getOrElse(throw new IllegalArgumentException(errorMessage("relevantAmount")))
+      protectionModel.updatedRelevantAmount
+
     val preADayPensionInPayment =
-      protectionModel.preADayPensionInPayment
-        .getOrElse(throw new IllegalArgumentException(errorMessage("preADayPensionInPayment")))
+      protectionModel.updated.preADayPensionInPayment.getOrElse[Double](0)
+
     val postADayBenefitCrystallisationEvents =
-      protectionModel.postADayBenefitCrystallisationEvents
-        .getOrElse(throw new IllegalArgumentException(errorMessage("postADayBenefitCrystallisationEvents")))
+      protectionModel.updated.postADayBenefitCrystallisationEvents.getOrElse[Double](0)
+
     val uncrystallisedRights =
-      protectionModel.uncrystallisedRights
-        .getOrElse(throw new IllegalArgumentException(errorMessage("uncrystallisedRights")))
+      protectionModel.updated.uncrystallisedRights
+
     val nonUKRights =
-      protectionModel.nonUKRights.getOrElse(throw new IllegalArgumentException(errorMessage("nonUKRights")))
+      protectionModel.updated.nonUKRights.getOrElse[Double](0)
 
-    val pensionDebitStartDate = protectionModel.pensionDebit.map(_.startDate)
+    val pensionDebitStartDate = protectionModel.updated.pensionDebit.map(_.startDate)
 
-    val pensionDebitEnteredAmount = protectionModel.pensionDebit.map(_.amount)
+    val pensionDebitEnteredAmount = protectionModel.updated.pensionDebit.map(_.amount)
 
     AmendProtectionRequest(
       lifetimeAllowanceSequenceNumber = lifetimeAllowanceSequenceNumber,
@@ -86,7 +83,7 @@ object AmendProtectionRequest {
       nonUKRightsAmount = nonUKRights.toInt,
       pensionDebitAmount = None,
       pensionDebitEnteredAmount = pensionDebitEnteredAmount.map(_.toInt),
-      notificationIdentifier = protectionModel.notificationId,
+      notificationIdentifier = None,
       protectedAmount = protectionModel.protectedAmount.map(_.toInt),
       pensionDebitStartDate = pensionDebitStartDate,
       pensionDebitTotalAmount = protectionModel.pensionDebitTotalAmount.map(_.toInt)

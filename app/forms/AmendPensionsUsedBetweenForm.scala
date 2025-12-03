@@ -16,10 +16,10 @@
 
 package forms
 
-import models.amendModels.AmendPensionsUsedBetweenModel
 import play.api.data.Forms._
 import play.api.data._
 import common.Validation._
+import models.amend.value.AmendPensionsUsedBetweenModel
 import models.pla.AmendableProtectionType
 
 object AmendPensionsUsedBetweenForm extends CommonBinders {

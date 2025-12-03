@@ -36,19 +36,21 @@ object AmendPrintDisplayModelConstructor {
       )
 
     val protectionReference = Some(printDisplayModel.protectionReference).filter(_ =>
-      shouldDisplayProtectionReference(protectionModel.notificationIdentifier)
+      shouldDisplayProtectionReference(protectionModel.notificationId)
     )
 
     val fixedProtectionReference = Some(printDisplayModel.protectionReference).filter(_ =>
-      shouldDisplayFixedProtectionReference(protectionModel.notificationIdentifier)
+      shouldDisplayFixedProtectionReference(protectionModel.notificationId)
     )
 
     val psaCheckReference = Some(printDisplayModel.psaCheckReference).filter(_ =>
-      shouldDisplayPsaCheckReference(protectionModel.notificationIdentifier)
+      shouldDisplayPsaCheckReference(protectionModel.notificationId)
     )
 
     val status =
-      Some(printDisplayModel.status).filter(_ => shouldDisplayStatus(protectionModel.notificationIdentifier))
+      Some(printDisplayModel.status)
+        .filter(_ => shouldDisplayStatus(protectionModel.notificationId))
+        .map(_ => protectionModel.status)
 
     AmendPrintDisplayModel(
       firstName = printDisplayModel.firstName,

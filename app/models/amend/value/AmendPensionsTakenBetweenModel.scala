@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-package models.amendModels
+package models.amend.value
 
-case class AmendOverseasPensionsModel(amendedOverseasPensions: String, amendedOverseasPensionsAmt: Option[BigDecimal])
-    extends AmendValueModel
+case class AmendPensionsTakenBetweenModel(amendedPensionsTakenBetween: String) extends AmendValueModel

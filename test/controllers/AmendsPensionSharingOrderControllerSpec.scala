@@ -23,8 +23,8 @@ import config._
 import connectors.PsaLookupConnector
 import constructors.display.DisplayConstructors
 import mocks.AuthMock
+import models.amend.{AmendProtectionModel, AmendPsoDetailsModel}
 import models.{AmendResponseModel, PensionDebitModel, ProtectionModel}
-import models.amendModels._
 import models.cache.CacheMap
 import models.display.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel}
 import models.pla.AmendableProtectionType._

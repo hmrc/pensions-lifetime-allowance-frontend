@@ -43,11 +43,10 @@ object PrintDisplayModelConstructor {
     val firstName = personalDetailsModel.person.firstName.toLowerCase.capitalize
     val surname   = personalDetailsModel.person.lastName.toLowerCase.capitalize
 
-    val protectionType = protectionModel.protectionType
-    val status         = protectionModel.status
-    val psaCheckReference = protectionModel.psaCheckReference.getOrElse {
-      throw Exceptions.RequiredValueNotDefinedException("createPrintDisplayModel", "psaCheckReference")
-    }
+    val protectionType    = protectionModel.protectionType
+    val status            = protectionModel.status
+    val psaCheckReference = protectionModel.psaCheckReference
+
     val protectionReference =
       protectionModel.protectionReference.getOrElse(Messages("pla.protection.protectionReference"))
 
@@ -57,8 +56,8 @@ object PrintDisplayModelConstructor {
       protectionModel.protectedAmount.map(amt => Display.currencyDisplayString(amt))
     }
 
-    val certificateDate = protectionModel.certificateDate.map(date => Display.dateDisplayString(date))
-    val certificateTime = protectionModel.certificateTime.map(time => Display.timeDisplayString(time))
+    val certificateDate = protectionModel.certificateDate.map(Display.dateDisplayString)
+    val certificateTime = protectionModel.certificateTime.map(Display.timeDisplayString)
 
     val lumpSumPercentage = protectionModel.lumpSumPercentage
       .filter(_ => shouldDisplayLumpSumPercentage(protectionType))

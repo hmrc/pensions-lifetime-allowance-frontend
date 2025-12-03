@@ -18,7 +18,7 @@ package forms
 
 import common.Validation._
 import forms.formatters.DateFormatter
-import models.amendModels.AmendPsoDetailsModel
+import models.amend.AmendPsoDetailsModel
 import models.pla.AmendableProtectionType
 import models.pla.AmendableProtectionType._
 import play.api.data.Forms._

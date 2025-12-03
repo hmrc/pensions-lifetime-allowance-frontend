@@ -16,7 +16,6 @@
 
 package models
 
-import models.pla.AmendedProtectionType
 import models.pla.response.{AmendProtectionResponse, AmendProtectionResponseStatus}
 import play.api.libs.json.{Format, Json}
 
@@ -33,19 +32,19 @@ case class AmendedProtectionModel(
     postADayBenefitCrystallisationEventAmount: Int,
     uncrystallisedRightsAmount: Int,
     nonUKRightsAmount: Int,
-    notificationIdentifier: Option[NotificationId],
+    notificationId: Option[NotificationId],
     protectedAmount: Option[Int],
     pensionDebitTotalAmount: Option[Int],
-    pensionDebit: Option[PensionDebit],
-    psaCheckReference: Option[String]
+    pensionDebit: Option[PensionDebitModel],
+    psaCheckReference: String
 ) {
 
   def toProtectionModel = ProtectionModel(
     psaCheckReference = psaCheckReference,
-    identifier = Some(identifier),
+    identifier = identifier,
     certificateDate = certificateDate,
     certificateTime = certificateTime,
-    sequence = Some(sequence),
+    sequence = sequence,
     protectionType = protectionType.toProtectionType,
     status = status.toProtectionStatus,
     protectedAmount = protectedAmount.map(_.toDouble),
@@ -56,7 +55,6 @@ case class AmendedProtectionModel(
     nonUKRights = Some(nonUKRightsAmount),
     pensionDebit = pensionDebit,
     pensionDebitTotalAmount = pensionDebitTotalAmount.map(_.toDouble),
-    notificationId = notificationIdentifier,
     protectionReference = protectionReference,
     lumpSumPercentage = None,
     lumpSumAmount = None,
@@ -83,9 +81,9 @@ object AmendedProtectionModel {
 
   implicit val format: Format[AmendedProtectionModel] = Json.format[AmendedProtectionModel]
 
-  def from(amendResponse: AmendProtectionResponse, psaCheckReference: Option[String]): AmendedProtectionModel = {
+  def from(amendResponse: AmendProtectionResponse, psaCheckReference: String): AmendedProtectionModel = {
     val pensionDebit = amendResponse.pensionDebitStartDate.zip(amendResponse.pensionDebitEnteredAmount).map {
-      case (startDate, enteredAmount) => PensionDebit(startDate, enteredAmount)
+      case (startDate, enteredAmount) => PensionDebitModel(startDate, enteredAmount)
     }
 
     AmendedProtectionModel(
@@ -101,7 +99,7 @@ object AmendedProtectionModel {
       postADayBenefitCrystallisationEventAmount = amendResponse.postADayBenefitCrystallisationEventAmount,
       uncrystallisedRightsAmount = amendResponse.uncrystallisedRightsAmount,
       nonUKRightsAmount = amendResponse.nonUKRightsAmount,
-      notificationIdentifier = amendResponse.notificationIdentifier,
+      notificationId = amendResponse.notificationIdentifier,
       protectedAmount = amendResponse.protectedAmount,
       pensionDebitTotalAmount = amendResponse.pensionDebitTotalAmount,
       pensionDebit = pensionDebit,

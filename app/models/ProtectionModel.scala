@@ -16,17 +16,17 @@
 
 package models
 
-import models.pla.response.{ProtectionRecord, ProtectionStatus, ProtectionType}
 import models.pla.AmendableProtectionType
+import models.pla.response.{ProtectionRecord, ProtectionStatus, ProtectionType}
 import models.pla.request.AmendProtectionRequestStatus
 import play.api.libs.json.{Json, OFormat}
 
 case class ProtectionModel(
-    psaCheckReference: Option[String],
-    identifier: Option[Long],
-    certificateDate: Option[DateModel] = None,
-    certificateTime: Option[TimeModel] = None,
-    sequence: Option[Int] = None,
+    psaCheckReference: String,
+    identifier: Long,
+    certificateDate: Option[DateModel],
+    certificateTime: Option[TimeModel],
+    sequence: Int,
     protectionType: ProtectionType,
     status: ProtectionStatus,
     protectedAmount: Option[Double] = None,
@@ -35,9 +35,8 @@ case class ProtectionModel(
     preADayPensionInPayment: Option[Double] = None,
     uncrystallisedRights: Option[Double] = None,
     nonUKRights: Option[Double] = None,
-    pensionDebit: Option[PensionDebit] = None,
+    pensionDebit: Option[PensionDebitModel] = None,
     pensionDebitTotalAmount: Option[Double] = None,
-    notificationId: Option[NotificationId] = None,
     protectionReference: Option[String] = None,
     lumpSumPercentage: Option[Int] = None,
     lumpSumAmount: Option[Int] = None,
@@ -71,15 +70,15 @@ object ProtectionModel {
 
   def apply(psaCheckReference: String, record: ProtectionRecord): ProtectionModel = {
     val pensionDebit = record.pensionDebitStartDate.zip(record.pensionDebitEnteredAmount).map {
-      case (startDate, enteredAmount) => PensionDebit(startDate, enteredAmount)
+      case (startDate, enteredAmount) => PensionDebitModel(startDate, enteredAmount)
     }
 
     ProtectionModel(
-      psaCheckReference = Some(psaCheckReference),
-      identifier = Some(record.identifier),
+      psaCheckReference = psaCheckReference,
+      identifier = record.identifier,
       certificateDate = Some(record.certificateDate),
       certificateTime = Some(record.certificateTime),
-      sequence = Some(record.sequenceNumber),
+      sequence = record.sequenceNumber,
       protectionType = record.`type`,
       status = record.status,
       protectedAmount = record.protectedAmount.map(_.toDouble),
@@ -90,7 +89,6 @@ object ProtectionModel {
       nonUKRights = record.nonUKRightsAmount.map(_.toDouble),
       pensionDebit = pensionDebit,
       pensionDebitTotalAmount = record.pensionDebitTotalAmount.map(_.toDouble),
-      notificationId = None,
       protectionReference = record.protectionReference,
       lumpSumPercentage = record.lumpSumPercentage,
       lumpSumAmount = record.lumpSumAmount,

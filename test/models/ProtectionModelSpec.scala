@@ -17,9 +17,9 @@
 package models
 
 import generators.ModelGenerators
+import models.pla.AmendableProtectionType
 import models.pla.AmendableProtectionType._
 import models.pla.response.ProtectionType
-import models.pla.AmendableProtectionType
 import models.pla.request.AmendProtectionRequestStatus
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec

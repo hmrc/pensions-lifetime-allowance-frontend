@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package models.pla
+package models
 
+import models.pla.AmendableProtectionType
 import models.pla.response.ProtectionType
 import utils.{Enumerable, EnumerableInstance}
 

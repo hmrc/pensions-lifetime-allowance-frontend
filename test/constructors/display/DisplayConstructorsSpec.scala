@@ -16,7 +16,7 @@
 
 package constructors.display
 
-import models.amendModels.AmendProtectionModel
+import models.amend.AmendProtectionModel
 import models.{PensionDebitModel, TransformedReadResponseModel}
 import play.api.i18n.{Lang, MessagesApi}
 

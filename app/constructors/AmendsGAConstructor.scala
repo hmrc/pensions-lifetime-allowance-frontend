@@ -16,12 +16,11 @@
 
 package constructors
 
-import models.ProtectionModel
-import models.amendModels.AmendsGAModel
+import models.amend.{AmendProtectionFields, AmendsGAModel}
 
 object AmendsGAConstructor {
 
-  def identifyAmendsChanges(updated: ProtectionModel, original: ProtectionModel): AmendsGAModel = {
+  def identifyAmendsChanges(updated: AmendProtectionFields, original: AmendProtectionFields): AmendsGAModel = {
     val current: Option[String] =
       if (updated.uncrystallisedRights != original.uncrystallisedRights) Some("UpdatedValue") else None
 

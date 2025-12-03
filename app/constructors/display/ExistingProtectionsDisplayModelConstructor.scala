@@ -79,14 +79,12 @@ object ExistingProtectionsDisplayModelConstructor {
     val protectedAmount =
       model.protectedAmount.map(protectedAmount => Display.currencyDisplayString(BigDecimal(protectedAmount)))
 
-    val certificateDate = model.certificateDate.map(date => Display.dateDisplayString(date))
-    val certificateTime = model.certificateTime.map(time => Display.timeDisplayString(time))
+    val certificateDate = model.certificateDate.map(Display.dateDisplayString)
+    val certificateTime = model.certificateTime.map(Display.timeDisplayString)
 
-    val strippedPsaRef = model.psaCheckReference.map {
-      _.stripPrefix(""""""").stripSuffix(""""""")
-    }
+    val strippedPsaRef = model.psaCheckReference.stripPrefix(""""""").stripSuffix(""""""")
 
-    val amendCall = Helpers.createAmendCallIfRequired(model)
+    val amendCall = Helpers.createAmendProtectionCallIfRequired(model)
 
     val factor = model.enhancementFactor
       .filter(_ => shouldDisplayFactor(protectionType))

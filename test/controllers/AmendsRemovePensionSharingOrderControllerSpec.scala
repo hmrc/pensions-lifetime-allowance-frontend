@@ -22,7 +22,7 @@ import config._
 import connectors.PsaLookupConnector
 import mocks.AuthMock
 import models._
-import models.amendModels._
+import models.amend.AmendProtectionModel
 import models.pla.response.ProtectionStatus.{Dormant, Open}
 import models.pla.response.ProtectionType.IndividualProtection2016
 import org.apache.pekko.actor.ActorSystem

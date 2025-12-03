@@ -20,7 +20,8 @@ import auth.AuthFunction
 import common._
 import config.FrontendAppConfig
 import forms.AmendPensionsTakenBeforeForm._
-import models.amendModels._
+import models.amend.AmendProtectionModel
+import models.amend.value.AmendPensionsTakenBeforeModel
 import models.pla.AmendableProtectionType
 import models.pla.AmendableProtectionType._
 import models.pla.request.AmendProtectionRequestStatus
@@ -47,7 +48,6 @@ class AmendsPensionTakenBeforeController @Inject() (
     val formWithCSRF: FormWithCSRF,
     val ec: ExecutionContext
 ) extends FrontendController(mcc)
-    with AmendControllerCacheHelper
     with AmendControllerErrorHelper
     with I18nSupport
     with Logging {
@@ -57,31 +57,19 @@ class AmendsPensionTakenBeforeController @Inject() (
       status: AmendProtectionRequestStatus
   ): Action[AnyContent] =
     Action.async { implicit request =>
-      authFunction.genericAuthWithNino("existingProtections") { nino =>
-        fetchAmendProtectionModel(protectionType, status)
+      authFunction.genericAuthWithNino { nino =>
+        sessionCacheService
+          .fetchAmendProtectionModel(protectionType, status)
           .map {
             case Some(data) =>
-              val yesNoValue =
-                if (data.updatedProtection.preADayPensionInPayment.getOrElse[Double](0) > 0) "yes" else "no"
+              val yesNoValue = if (data.updated.preADayPensionInPayment.getOrElse[Double](0) > 0) "yes" else "no"
+              val form = amendPensionsTakenBeforeForm(protectionType)
+                .fill(AmendPensionsTakenBeforeModel(yesNoValue))
               protectionType match {
                 case IndividualProtection2016 | IndividualProtection2016LTA =>
-                  Ok(
-                    amendIP16PensionsTakenBefore(
-                      amendPensionsTakenBeforeForm(protectionType)
-                        .fill(AmendPensionsTakenBeforeModel(yesNoValue)),
-                      protectionType,
-                      status
-                    )
-                  )
+                  Ok(amendIP16PensionsTakenBefore(form, protectionType, status))
                 case IndividualProtection2014 | IndividualProtection2014LTA =>
-                  Ok(
-                    amendIP14PensionsTakenBefore(
-                      amendPensionsTakenBeforeForm(protectionType)
-                        .fill(AmendPensionsTakenBeforeModel(yesNoValue)),
-                      protectionType,
-                      status
-                    )
-                  )
+                  Ok(amendIP14PensionsTakenBefore(form, protectionType, status))
               }
             case _ =>
               logger.warn(couldNotRetrieveModelForNino(nino, "when loading the amend pensionTakenBefore page"))
@@ -95,22 +83,20 @@ class AmendsPensionTakenBeforeController @Inject() (
       status: AmendProtectionRequestStatus
   ): Action[AnyContent] =
     Action.async { implicit request =>
-      authFunction.genericAuthWithNino("existingProtections") { nino =>
+      authFunction.genericAuthWithNino { nino =>
         amendPensionsTakenBeforeForm(protectionType)
           .bindFromRequest()
           .fold(
             errors =>
               protectionType match {
                 case IndividualProtection2016 | IndividualProtection2016LTA =>
-                  Future
-                    .successful(BadRequest(amendIP16PensionsTakenBefore(errors, protectionType, status)))
+                  Future.successful(BadRequest(amendIP16PensionsTakenBefore(errors, protectionType, status)))
                 case IndividualProtection2014 | IndividualProtection2014LTA =>
-                  Future.successful(
-                    BadRequest(amendIP14PensionsTakenBefore(errors, protectionType, status))
-                  )
+                  Future.successful(BadRequest(amendIP14PensionsTakenBefore(errors, protectionType, status)))
               },
             success =>
-              fetchAmendProtectionModel(protectionType, status)
+              sessionCacheService
+                .fetchAmendProtectionModel(protectionType, status)
                 .flatMap {
                   case Some(model) =>
                     success.amendedPensionsTakenBefore match {
@@ -125,12 +111,10 @@ class AmendsPensionTakenBeforeController @Inject() (
                           )
                         )
                       case "no" =>
-                        val updated        = model.updatedProtection.copy(preADayPensionInPayment = Some(0))
-                        val updatedTotal   = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
-                        val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
-
-                        saveAmendProtectionModel(protectionType, status, amendProtModel)
-                          .map(_ => redirectToSummary(protectionType, status))
+                        val updatedModel = model.withPreADayPensionInPayment(None)
+                        sessionCacheService
+                          .saveAmendProtectionModel(updatedModel)
+                          .map(_ => Redirect(routes.AmendsController.amendsSummary(protectionType, status)))
                     }
                   case _ =>
                     logger.warn(couldNotRetrieveModelForNino(nino, "after submitting amend pensions taken before"))

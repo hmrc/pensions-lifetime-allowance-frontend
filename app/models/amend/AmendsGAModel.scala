@@ -14,6 +14,18 @@
  * limitations under the License.
  */
 
-package models.amendModels
+package models.amend
 
-case class AmendPensionsUsedBetweenModel(amendedPensionsUsedBetweenAmt: Option[BigDecimal]) extends AmendValueModel
+import play.api.libs.json.{Json, OFormat}
+
+case class AmendsGAModel(
+    current: Option[String],
+    before: Option[String],
+    between: Option[String],
+    overseas: Option[String],
+    pso: Option[String]
+) {}
+
+object AmendsGAModel {
+  implicit val format: OFormat[AmendsGAModel] = Json.format[AmendsGAModel]
+}

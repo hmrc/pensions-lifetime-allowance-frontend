@@ -28,7 +28,7 @@ case class PrintDisplayModel(
     protectionReference: String,
     protectedAmount: Option[String],
     certificateDate: Option[String],
-    certificateTime: Option[String] = None,
+    certificateTime: Option[String],
     lumpSumPercentage: Option[String] = None,
     lumpSumAmount: Option[String] = None,
     enhancementFactor: Option[String] = None,

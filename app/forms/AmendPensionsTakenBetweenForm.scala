@@ -17,7 +17,7 @@
 package forms
 
 import common.Validation._
-import models.amendModels.AmendPensionsTakenBetweenModel
+import models.amend.value.AmendPensionsTakenBetweenModel
 import models.pla.AmendableProtectionType
 import play.api.data.Forms._
 import play.api.data._

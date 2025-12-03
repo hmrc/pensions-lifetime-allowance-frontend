@@ -27,18 +27,11 @@ object AmendOutcomeDisplayModelConstructor {
   def createAmendOutcomeDisplayModel(
       model: AmendedProtectionModel,
       personalDetailsModelOpt: Option[PersonalDetailsModel],
-      nino: String
+      nino: String,
+      notificationId: NotificationId
   )(implicit lang: Lang, messages: Messages): AmendOutcomeDisplayModel = {
     val printDetails =
       AmendPrintDisplayModelConstructor.createAmendPrintDisplayModel(personalDetailsModelOpt, model, nino)
-
-    val notificationId = model.notificationIdentifier.getOrElse(
-      throw Exceptions.OptionNotDefinedException(
-        "createAmendResultDisplayModel",
-        "notificationId",
-        model.protectionType.toString
-      )
-    )
 
     val protectedAmount = extractProtectedAmount(notificationId, model)
 

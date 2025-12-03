@@ -19,12 +19,4 @@ package common
 import models.pla.AmendableProtectionType
 import models.pla.request.AmendProtectionRequestStatus
 
-object Strings {
-
-  def protectionCacheKey(
-      protectionType: AmendableProtectionType,
-      status: AmendProtectionRequestStatus
-  ): String =
-    status.toString + protectionType.toString + "Amendment"
-
-}
+object Strings {}

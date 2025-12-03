@@ -23,7 +23,7 @@ import connectors.PsaLookupConnector
 import constructors.display.DisplayConstructors
 import mocks.AuthMock
 import models._
-import models.amendModels._
+import models.amend.AmendProtectionModel
 import models.pla.AmendableProtectionType._
 import models.pla.response.ProtectionStatus.Dormant
 import org.apache.pekko.actor.ActorSystem

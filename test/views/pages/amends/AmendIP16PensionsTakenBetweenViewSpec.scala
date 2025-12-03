@@ -18,7 +18,7 @@ package views.pages.amends
 
 import common.Strings
 import forms.AmendPensionsTakenBetweenForm
-import models.amendModels.AmendPensionsTakenBetweenModel
+import models.amend.value.AmendPensionsTakenBetweenModel
 import models.pla.AmendableProtectionType.IndividualProtection2016
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document

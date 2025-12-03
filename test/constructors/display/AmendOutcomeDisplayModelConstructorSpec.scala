@@ -17,7 +17,6 @@
 package constructors.display
 
 import common.Exceptions.OptionNotDefinedException
-import models.AmendResponseModel
 
 class AmendOutcomeDisplayModelConstructorSpec extends DisplayConstructorsTestData {
 

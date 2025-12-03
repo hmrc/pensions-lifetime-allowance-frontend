@@ -14,14 +14,6 @@
  * limitations under the License.
  */
 
-package models
+package models.amend.value
 
-trait YesNoModel {
-  def getYesNoValue: String
-}
-
-trait AmountModel {
-  def getAmount: Option[BigDecimal]
-}
-
-trait YesNoAmountModel extends YesNoModel with AmountModel
+case class AmendPensionsUsedBetweenModel(amendedPensionsUsedBetweenAmt: Option[BigDecimal]) extends AmendValueModel

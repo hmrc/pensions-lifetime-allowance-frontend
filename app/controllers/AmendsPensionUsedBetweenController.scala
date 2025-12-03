@@ -20,7 +20,8 @@ import auth.AuthFunction
 import common._
 import config.FrontendAppConfig
 import forms.AmendPensionsUsedBetweenForm._
-import models.amendModels._
+import models.amend.AmendProtectionModel
+import models.amend.value.AmendPensionsUsedBetweenModel
 import models.pla.AmendableProtectionType
 import models.pla.AmendableProtectionType._
 import models.pla.request.AmendProtectionRequestStatus
@@ -47,7 +48,6 @@ class AmendsPensionUsedBetweenController @Inject() (
     val formWithCSRF: FormWithCSRF,
     val ec: ExecutionContext
 ) extends FrontendController(mcc)
-    with AmendControllerCacheHelper
     with AmendControllerErrorHelper
     with I18nSupport
     with Logging {
@@ -57,43 +57,26 @@ class AmendsPensionUsedBetweenController @Inject() (
       status: AmendProtectionRequestStatus
   ): Action[AnyContent] =
     Action.async { implicit request =>
-      authFunction.genericAuthWithNino("existingProtections") { nino =>
-        fetchAmendProtectionModel(protectionType, status)
+      authFunction.genericAuthWithNino { nino =>
+        sessionCacheService
+          .fetchAmendProtectionModel(protectionType, status)
           .map {
             case Some(data) =>
+              val form =
+                amendPensionsUsedBetweenForm(protectionType).fill(
+                  AmendPensionsUsedBetweenModel(
+                    Some(
+                      Display.currencyInputDisplayFormat(
+                        data.updated.postADayBenefitCrystallisationEvents.getOrElse[Double](0)
+                      )
+                    )
+                  )
+                )
               protectionType match {
                 case IndividualProtection2016 | IndividualProtection2016LTA =>
-                  Ok(
-                    amendIP16PensionsUsedBetween(
-                      amendPensionsUsedBetweenForm(protectionType).fill(
-                        AmendPensionsUsedBetweenModel(
-                          Some(
-                            Display.currencyInputDisplayFormat(
-                              data.updatedProtection.postADayBenefitCrystallisationEvents.getOrElse[Double](0)
-                            )
-                          )
-                        )
-                      ),
-                      protectionType,
-                      status
-                    )
-                  )
+                  Ok(amendIP16PensionsUsedBetween(form, protectionType, status))
                 case IndividualProtection2014 | IndividualProtection2014LTA =>
-                  Ok(
-                    amendIP14PensionsUsedBetween(
-                      amendPensionsUsedBetweenForm(protectionType).fill(
-                        AmendPensionsUsedBetweenModel(
-                          Some(
-                            Display.currencyInputDisplayFormat(
-                              data.updatedProtection.postADayBenefitCrystallisationEvents.getOrElse[Double](0)
-                            )
-                          )
-                        )
-                      ),
-                      protectionType,
-                      status
-                    )
-                  )
+                  Ok(amendIP14PensionsUsedBetween(form, protectionType, status))
               }
             case _ =>
               logger.warn(couldNotRetrieveModelForNino(nino, "when loading the amend pensionsUsedBetween page"))
@@ -107,32 +90,28 @@ class AmendsPensionUsedBetweenController @Inject() (
       status: AmendProtectionRequestStatus
   ): Action[AnyContent] =
     Action.async { implicit request =>
-      authFunction.genericAuthWithNino("existingProtections") { nino =>
+      authFunction.genericAuthWithNino { nino =>
         amendPensionsUsedBetweenForm(protectionType)
           .bindFromRequest()
           .fold(
             errors =>
               protectionType match {
                 case IndividualProtection2016 | IndividualProtection2016LTA =>
-                  Future
-                    .successful(BadRequest(amendIP16PensionsUsedBetween(errors, protectionType, status)))
+                  Future.successful(BadRequest(amendIP16PensionsUsedBetween(errors, protectionType, status)))
                 case IndividualProtection2014 | IndividualProtection2014LTA =>
-                  Future.successful(
-                    BadRequest(amendIP14PensionsUsedBetween(errors, protectionType, status))
-                  )
+                  Future.successful(BadRequest(amendIP14PensionsUsedBetween(errors, protectionType, status)))
               },
             success =>
-              fetchAmendProtectionModel(protectionType, status)
+              sessionCacheService
+                .fetchAmendProtectionModel(protectionType, status)
                 .flatMap {
                   case Some(model) =>
                     val updatedAmount = success.amendedPensionsUsedBetweenAmt.get.toDouble
-                    val updated =
-                      model.updatedProtection.copy(postADayBenefitCrystallisationEvents = Some(updatedAmount))
-                    val updatedTotal   = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
-                    val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
+                    val updatedModel  = model.withPostADayBenefitCrystallisationEvents(Some(updatedAmount))
 
-                    saveAmendProtectionModel(protectionType, status, amendProtModel)
-                      .map(_ => redirectToSummary(protectionType, status))
+                    sessionCacheService
+                      .saveAmendProtectionModel(updatedModel)
+                      .map(_ => Redirect(routes.AmendsController.amendsSummary(protectionType, status)))
 
                   case _ =>
                     logger.warn(couldNotRetrieveModelForNino(nino, "after submitting amend pensions used between"))

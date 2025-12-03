@@ -16,8 +16,8 @@
 
 package forms
 
-import models.amendModels.AmendPensionsWorthBeforeModel
 import common.Validation._
+import models.amend.value.AmendPensionsWorthBeforeModel
 import models.pla.AmendableProtectionType
 import play.api.data.Form
 import play.api.data.Forms._

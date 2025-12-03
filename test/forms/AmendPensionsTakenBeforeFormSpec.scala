@@ -17,7 +17,7 @@
 package forms
 
 import forms.AmendPensionsTakenBeforeForm._
-import models.amendModels.AmendPensionsTakenBeforeModel
+import models.amend.value.AmendPensionsTakenBeforeModel
 import models.pla.AmendableProtectionType.IndividualProtection2016
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Lang

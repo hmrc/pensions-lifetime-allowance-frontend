@@ -43,9 +43,9 @@ class PrintController @Inject() (
     with Logging {
 
   val printView: Action[AnyContent] = Action.async { implicit request =>
-    authFunction.genericAuthWithNino("existingProtections") { nino =>
+    authFunction.genericAuthWithNino { nino =>
       for {
-        protectionModel <- sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection")
+        protectionModel <- sessionCacheService.fetchOpenProtection
         result          <- routePrintView(protectionModel, nino)
       } yield result
     }

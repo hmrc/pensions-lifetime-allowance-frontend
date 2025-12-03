@@ -16,9 +16,9 @@
 
 package models.display
 
-import models.NotificationId
-import models.pla.{AmendableProtectionType, AmendedProtectionType}
-import models.pla.response.ProtectionStatus
+import models.pla.AmendableProtectionType
+import models.{AmendedProtectionType, NotificationId}
+import models.pla.response.AmendProtectionResponseStatus
 import play.api.mvc.Call
 
 case class AmendPrintDisplayModel(
@@ -26,7 +26,7 @@ case class AmendPrintDisplayModel(
     surname: String,
     nino: String,
     protectionType: AmendedProtectionType,
-    status: Option[ProtectionStatus],
+    status: Option[AmendProtectionResponseStatus],
     psaCheckReference: Option[String],
     protectionReference: Option[String],
     fixedProtectionReference: Option[String],

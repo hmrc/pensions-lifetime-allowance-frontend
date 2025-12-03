@@ -25,8 +25,8 @@ import connectors.PlaConnectorError.{
   UnexpectedResponseError
 }
 import models.ProtectionModel
-import models.pla.response.{AmendProtectionResponseStatus, ReadProtectionsResponse}
 import models.pla.AmendableProtectionType
+import models.pla.response.{AmendProtectionResponseStatus, ReadProtectionsResponse}
 import org.scalatest.concurrent.ScalaFutures
 import play.api.http.Status.CONFLICT
 import play.api.libs.json.Json

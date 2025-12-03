@@ -16,9 +16,9 @@
 
 package testdata
 
+import models.pla.AmendableProtectionType
 import models.pla.request.{AmendProtectionRequest, AmendProtectionRequestStatus}
 import models.pla.response.{AmendProtectionResponse, AmendProtectionResponseStatus, ReadProtectionsResponse}
-import models.pla.AmendableProtectionType
 
 object PlaConnectorTestData {
 

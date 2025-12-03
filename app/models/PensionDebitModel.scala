@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-package models.amendModels
+package models
 
-import models.ProtectionModel
 import play.api.libs.json.{Json, OFormat}
 
-case class AmendProtectionModel(originalProtection: ProtectionModel, updatedProtection: ProtectionModel)
+case class PensionDebitModel(startDate: DateModel, amount: Double)
 
-object AmendProtectionModel {
-  implicit val format: OFormat[AmendProtectionModel] = Json.format[AmendProtectionModel]
+object PensionDebitModel {
+  implicit val format: OFormat[PensionDebitModel] = Json.format[PensionDebitModel]
 }
-
-trait AmendValueModel

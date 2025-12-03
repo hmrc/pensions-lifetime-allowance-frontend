@@ -49,9 +49,7 @@
 
     @protectionDetails(Messages(HeaderContent.getProtectionNotificationNumber), protection.protectionReference, "activeProtectionReference")
 
-    @protection.psaCheckReference.map { checkRef =>
-        @protectionDetails(Messages(HeaderContent.getSchemeAdministratorReference), checkRef, "activePSACheckRef")
-    }
+    @protectionDetails(Messages(HeaderContent.getSchemeAdministratorReference), protection.psaCheckReference, "activePSACheckRef")
 
     @protection.certificateDate.map{ certificateDate =>
         @protectionDetails(Messages("pla.existingProtections.applicationDate"), certificateDate, "activeCertificateDate")

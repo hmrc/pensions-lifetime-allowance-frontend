@@ -16,7 +16,7 @@
 
 package models.pla
 
-import models.pla.AmendableProtectionType._
+import AmendableProtectionType._
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 

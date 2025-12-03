@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,8 @@
  * limitations under the License.
  */
 
-package models.amendModels
+package models.amend
 
-import play.api.libs.json.{Json, OFormat}
+import java.time.LocalDate
 
-case class AmendsGAModel(
-    current: Option[String],
-    before: Option[String],
-    between: Option[String],
-    overseas: Option[String],
-    pso: Option[String]
-) {}
-
-object AmendsGAModel {
-  implicit val format: OFormat[AmendsGAModel] = Json.format[AmendsGAModel]
-}
+case class AmendPsoDetailsModel(pso: LocalDate, psoAmt: Option[BigDecimal]) {}

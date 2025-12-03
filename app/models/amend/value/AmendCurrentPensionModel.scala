@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-package models.amendModels
+package models.amend.value
 
-import java.time.LocalDate
-
-case class AmendPsoDetailsModel(pso: LocalDate, psoAmt: Option[BigDecimal]) {}
+case class AmendCurrentPensionModel(amendedUKPensionAmt: Option[BigDecimal]) extends AmendValueModel

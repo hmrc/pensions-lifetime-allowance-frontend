@@ -16,7 +16,6 @@
 
 package controllers
 
-import enums.ApplicationType
 import play.api.mvc.{Request, Result}
 import play.api.mvc.Results.InternalServerError
 import play.api.http.HeaderNames.CACHE_CONTROL
@@ -30,7 +29,7 @@ trait AmendControllerErrorHelper {
   def buildTechnicalError(
       technicalError: views.html.pages.fallback.technicalError
   )(implicit request: Request[_], messages: Messages): Result =
-    InternalServerError(technicalError(ApplicationType.existingProtections.toString))
+    InternalServerError(technicalError())
       .withHeaders(CACHE_CONTROL -> "no-cache")
 
 }

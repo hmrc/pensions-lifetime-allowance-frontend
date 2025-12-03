@@ -16,7 +16,7 @@
 
 package constructors
 
-import models.amendModels.AmendsGAModel
+import models.amend.AmendsGAModel
 import models.{PensionDebitModel, ProtectionModel}
 import testHelpers.FakeApplication
 

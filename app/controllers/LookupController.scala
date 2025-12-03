@@ -17,7 +17,7 @@
 package controllers
 
 import config.FrontendAppConfig
-import models.{PsaLookupRequest, PsaLookupResult}
+import models.PsaLookupRequest
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import services.SessionCacheService
@@ -47,15 +47,11 @@ class LookupController @Inject() (
     extends FrontendController(mcc)
     with I18nSupport {
 
-  private val lookupRequestID = "psa-lookup-request"
-  private val lookupResultID  = "psa-lookup-result"
-
   def displayNotFoundResults: Action[AnyContent] = actionWithSessionId.async { implicit request =>
     if (appConfig.psalookupjourneyShutterEnabled) {
       Future.successful(Ok(withdrawnPSALookupJourney()))
     } else {
-      sessionCacheService
-        .fetchAndGetFormData[PsaLookupRequest](lookupRequestID)
+      sessionCacheService.fetchPsaLookupRequest
         .flatMap {
           case Some(req @ PsaLookupRequest(_, Some(_))) =>
             Future.successful(Ok(psa_lookup_not_found_results(req, buildTimestamp)))
@@ -71,8 +67,7 @@ class LookupController @Inject() (
     if (appConfig.psalookupjourneyShutterEnabled) {
       Future.successful(Ok(withdrawnPSALookupJourney()))
     } else {
-      sessionCacheService
-        .fetchAndGetFormData[PsaLookupResult](lookupResultID)
+      sessionCacheService.fetchPsaLookupResult
         .map {
           case Some(result) => Ok(psa_lookup_results(result, buildTimestamp))
           case None =>

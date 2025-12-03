@@ -20,7 +20,8 @@ import auth.AuthFunction
 import common._
 import config.FrontendAppConfig
 import forms.AmendOverseasPensionsForm._
-import models.amendModels._
+import models.amend.AmendProtectionModel
+import models.amend.value.AmendOverseasPensionsModel
 import models.pla.AmendableProtectionType
 import models.pla.AmendableProtectionType._
 import models.pla.request.AmendProtectionRequestStatus
@@ -47,7 +48,6 @@ class AmendsOverseasPensionController @Inject() (
     val formWithCSRF: FormWithCSRF,
     val ec: ExecutionContext
 ) extends FrontendController(mcc)
-    with AmendControllerCacheHelper
     with AmendControllerErrorHelper
     with I18nSupport
     with Logging {
@@ -57,46 +57,25 @@ class AmendsOverseasPensionController @Inject() (
       status: AmendProtectionRequestStatus
   ): Action[AnyContent] =
     Action.async { implicit request =>
-      authFunction.genericAuthWithNino("existingProtections") { nino =>
-        fetchAmendProtectionModel(protectionType, status)
+      authFunction.genericAuthWithNino { nino =>
+        sessionCacheService
+          .fetchAmendProtectionModel(protectionType, status)
           .map {
-            case Some(data) =>
-              val yesNoValue = if (data.updatedProtection.nonUKRights.getOrElse[Double](0) > 0) "yes" else "no"
+            case Some(amendProtectionModel) =>
+              val nonUKRights = amendProtectionModel.updated.nonUKRights.getOrElse[Double](0)
+              val yesNoValue  = if (nonUKRights > 0) "yes" else "no"
+              val form =
+                amendOverseasPensionsForm(protectionType).fill(
+                  AmendOverseasPensionsModel(
+                    yesNoValue,
+                    Some(Display.currencyInputDisplayFormat(nonUKRights))
+                  )
+                )
               protectionType match {
                 case IndividualProtection2016 | IndividualProtection2016LTA =>
-                  Ok(
-                    amendIP16OverseasPensions(
-                      amendOverseasPensionsForm(protectionType).fill(
-                        AmendOverseasPensionsModel(
-                          yesNoValue,
-                          Some(
-                            Display.currencyInputDisplayFormat(
-                              data.updatedProtection.nonUKRights.getOrElse[Double](0)
-                            )
-                          )
-                        )
-                      ),
-                      protectionType,
-                      status
-                    )
-                  )
+                  Ok(amendIP16OverseasPensions(form, protectionType, status))
                 case IndividualProtection2014 | IndividualProtection2014LTA =>
-                  Ok(
-                    amendIP14OverseasPensions(
-                      amendOverseasPensionsForm(protectionType).fill(
-                        AmendOverseasPensionsModel(
-                          yesNoValue,
-                          Some(
-                            Display.currencyInputDisplayFormat(
-                              data.updatedProtection.nonUKRights.getOrElse[Double](0)
-                            )
-                          )
-                        )
-                      ),
-                      protectionType,
-                      status
-                    )
-                  )
+                  Ok(amendIP14OverseasPensions(form, protectionType, status))
               }
             case _ =>
               logger.warn(couldNotRetrieveModelForNino(nino, "when loading the amend overseasPension page"))
@@ -110,7 +89,7 @@ class AmendsOverseasPensionController @Inject() (
       status: AmendProtectionRequestStatus
   ): Action[AnyContent] =
     Action.async { implicit request =>
-      authFunction.genericAuthWithNino("existingProtections") { nino =>
+      authFunction.genericAuthWithNino { nino =>
         amendOverseasPensionsForm(protectionType)
           .bindFromRequest()
           .fold(
@@ -121,20 +100,20 @@ class AmendsOverseasPensionController @Inject() (
                 case IndividualProtection2014 | IndividualProtection2014LTA =>
                   Future.successful(BadRequest(amendIP14OverseasPensions(errors, protectionType, status)))
               },
-            success =>
-              fetchAmendProtectionModel(protectionType, status)
+            amendOverseasPensionsModel =>
+              sessionCacheService
+                .fetchAmendProtectionModel(protectionType, status)
                 .flatMap {
                   case Some(model) =>
-                    val updatedAmount = success.amendedOverseasPensions match {
-                      case "yes" => success.amendedOverseasPensionsAmt.get.toDouble
-                      case "no"  => 0.asInstanceOf[Double]
+                    val updatedAmount = amendOverseasPensionsModel.amendedOverseasPensions match {
+                      case "yes" => Some(amendOverseasPensionsModel.amendedOverseasPensionsAmt.get.toDouble)
+                      case "no"  => None
                     }
-                    val updated        = model.updatedProtection.copy(nonUKRights = Some(updatedAmount))
-                    val updatedTotal   = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
-                    val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
+                    val updatedModel = model.withNonUKRights(updatedAmount)
 
-                    saveAmendProtectionModel(protectionType, status, amendProtModel)
-                      .map(_ => redirectToSummary(protectionType, status))
+                    sessionCacheService
+                      .saveAmendProtectionModel(updatedModel)
+                      .map(_ => Redirect(routes.AmendsController.amendsSummary(protectionType, status)))
 
                   case _ =>
                     logger.warn(couldNotRetrieveModelForNino(nino, "after submitting amend pensions taken before"))

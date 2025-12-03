@@ -16,8 +16,6 @@
 
 package common
 
-import models.pla.AmendableProtectionType
-import models.pla.response.{ProtectionStatus, ProtectionType}
 import org.scalatest.OptionValues
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
@@ -26,122 +24,23 @@ class StringsSpec extends AnyWordSpecLike with Matchers with OptionValues {
 
   "cache key" should {
     "correctly generate the cache key" when {
+      import models.pla.AmendableProtectionType._
+      import models.pla.request.AmendProtectionRequestStatus._
+
       val testValues = Seq(
-        ("ip2014", "open")                         -> "OpenIndividualProtection2014Amendment",
-        ("IndividualProtection2014", "Open")       -> "OpenIndividualProtection2014Amendment",
-        ("ip2016", "dormant")                      -> "DormantIndividualProtection2016Amendment",
-        ("IndividualProtection2016", "Dormant")    -> "DormantIndividualProtection2016Amendment",
-        ("IndividualProtection2014LTA", "Dormant") -> "DormantIndividualProtection2014LTAAmendment",
-        ("IndividualProtection2016LTA", "Open")    -> "OpenIndividualProtection2016LTAAmendment"
+        (IndividualProtection2014, Open)       -> "OpenIndividualProtection2014Amendment",
+        (IndividualProtection2014, Dormant)    -> "DormantIndividualProtection2014Amendment",
+        (IndividualProtection2016, Open)       -> "OpenIndividualProtection2016Amendment",
+        (IndividualProtection2016, Dormant)    -> "DormantIndividualProtection2016Amendment",
+        (IndividualProtection2014LTA, Open)    -> "OpenIndividualProtection2014LTAAmendment",
+        (IndividualProtection2014LTA, Dormant) -> "DormantIndividualProtection2014LTAAmendment",
+        (IndividualProtection2016LTA, Open)    -> "OpenIndividualProtection2016LTAAmendment",
+        (IndividualProtection2016LTA, Dormant) -> "DormantIndividualProtection2016LTAAmendment"
       )
 
       testValues.foreach { case ((protectionType, status), expected) =>
         s"protection type is $protectionType and status is $status" in {
           Strings.protectionCacheKey(protectionType, status) shouldBe expected
-        }
-      }
-    }
-  }
-
-  "statusString" should {
-    import ProtectionStatus._
-
-    "Populate the protection status string" when {
-      "the protection is open" in {
-        Strings.statusString(Some(Open.toString)) shouldBe Open.toString
-      }
-      "the protection is dormant" in {
-        Strings.statusString(Some(Dormant.toString)) shouldBe Dormant.toString
-      }
-      "the protection is withdrawn" in {
-        Strings.statusString(Some(Withdrawn.toString)) shouldBe Withdrawn.toString
-      }
-      "the protection is expired" in {
-        Strings.statusString(Some(Expired.toString)) shouldBe Expired.toString
-      }
-      "the protection is unsuccessful" in {
-        Strings.statusString(Some(Unsuccessful.toString)) shouldBe Unsuccessful.toString
-      }
-      "the protection is rejected" in {
-        Strings.statusString(Some(Rejected.toString)) shouldBe Rejected.toString
-      }
-      "there is no status recorded" in {
-        Strings.statusString(None) shouldBe "notRecorded"
-      }
-    }
-  }
-
-  "protectionTypeString" should {
-    "Populate the protection type string" when {
-      import ProtectionType._
-
-      "the protection is FP2016" in {
-        Strings.protectionTypeString(Some("FP2016")) shouldBe FixedProtection2016.toString
-      }
-      "the protection is IP2014" in {
-        Strings.protectionTypeString(Some("IP2014")) shouldBe IndividualProtection2014.toString
-      }
-      "the protection is IP2016" in {
-        Strings.protectionTypeString(Some("IP2016")) shouldBe IndividualProtection2016.toString
-      }
-      "the protection is primary" in {
-        Strings.protectionTypeString(Some("Primary")) shouldBe PrimaryProtection.toString
-      }
-      "the protection is enhanced" in {
-        Strings.protectionTypeString(Some("Enhanced")) shouldBe EnhancedProtection.toString
-      }
-      "the protection is fixed" in {
-        Strings.protectionTypeString(Some("Fixed")) shouldBe FixedProtection.toString
-      }
-      "the protection is FP2014" in {
-        Strings.protectionTypeString(Some("FP2014")) shouldBe FixedProtection2014.toString
-      }
-
-      ProtectionType.values.foreach(protectionType =>
-        s"the protection is $protectionType" in {
-          Strings.protectionTypeString(Some(protectionType.toString)) shouldBe protectionType.toString
-        }
-      )
-    }
-
-    "Populate the protection type string with notRecorded" when {
-      "the protection type is an unknown value" in {
-        Strings.protectionTypeString(Some("unknown protection type")) shouldBe "notRecorded"
-      }
-
-      "the protection type is missing" in {
-        Strings.protectionTypeString(None) shouldBe "notRecorded"
-      }
-    }
-  }
-
-  "protectionTypeUrlString" should {
-    "Populate the protection type Url string" when {
-      import Strings.{ProtectionTypeUrl => urlString}
-      import AmendableProtectionType._
-
-      val testCases = Seq(
-        "IP2014"                             -> urlString.IndividualProtection2014,
-        "IP2016"                             -> urlString.IndividualProtection2016,
-        IndividualProtection2014.toString    -> urlString.IndividualProtection2014,
-        IndividualProtection2016.toString    -> urlString.IndividualProtection2016,
-        IndividualProtection2014LTA.toString -> urlString.IndividualProtection2014LTA,
-        IndividualProtection2016LTA.toString -> urlString.IndividualProtection2016LTA
-      )
-
-      testCases.foreach { case (protectionType, urlString) =>
-        s"the protection type is $protectionType" in {
-          Strings.protectionTypeUrlString(Some(protectionType)) shouldBe urlString
-        }
-      }
-
-      "Populate the protection type Url string with notRecorded" when {
-        "the protection type is an unknown value" in {
-          Strings.protectionTypeUrlString(Some("unknown protection type")) shouldBe "notRecorded"
-        }
-
-        "the protection type is missing" in {
-          Strings.protectionTypeUrlString(None) shouldBe "notRecorded"
         }
       }
     }

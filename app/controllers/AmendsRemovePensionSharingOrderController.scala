@@ -19,7 +19,7 @@ package controllers
 import auth.AuthFunction
 import common._
 import config.FrontendAppConfig
-import models.amendModels._
+import models.amend.AmendProtectionModel
 import models.pla.AmendableProtectionType
 import models.pla.request.AmendProtectionRequestStatus
 import play.api.Logging
@@ -44,7 +44,6 @@ class AmendsRemovePensionSharingOrderController @Inject() (
     val formWithCSRF: FormWithCSRF,
     val ec: ExecutionContext
 ) extends FrontendController(mcc)
-    with AmendControllerCacheHelper
     with AmendControllerErrorHelper
     with I18nSupport
     with Logging {
@@ -53,8 +52,9 @@ class AmendsRemovePensionSharingOrderController @Inject() (
       protectionType: AmendableProtectionType,
       status: AmendProtectionRequestStatus
   ): Action[AnyContent] = Action.async { implicit request =>
-    authFunction.genericAuthWithNino("existingProtections") { nino =>
-      fetchAmendProtectionModel(protectionType, status)
+    authFunction.genericAuthWithNino { nino =>
+      sessionCacheService
+        .fetchAmendProtectionModel(protectionType, status)
         .map {
           case Some(_) =>
             Ok(removePsoDebits(protectionType, status))
@@ -69,19 +69,16 @@ class AmendsRemovePensionSharingOrderController @Inject() (
       protectionType: AmendableProtectionType,
       status: AmendProtectionRequestStatus
   ): Action[AnyContent] = Action.async { implicit request =>
-    authFunction.genericAuthWithNino("existingProtections") { nino =>
-      fetchAmendProtectionModel(protectionType, status)
+    authFunction.genericAuthWithNino { nino =>
+      sessionCacheService
+        .fetchAmendProtectionModel(protectionType, status)
         .flatMap {
           case Some(model) =>
-            val updated = model.updatedProtection.copy(
-              pensionDebit = None
-            )
-            val updatedTotal   = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
-            val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
+            val updatedModel = model.withPensionDebit(None)
 
-            saveAmendProtectionModel(protectionType, status, amendProtModel).map(_ =>
-              redirectToSummary(protectionType, status)
-            )
+            sessionCacheService
+              .saveAmendProtectionModel(updatedModel)
+              .map(_ => Redirect(routes.AmendsController.amendsSummary(protectionType, status)))
 
           case None =>
             logger.warn(couldNotRetrieveModelForNino(nino, "when submitting a removal of a pension debit"))

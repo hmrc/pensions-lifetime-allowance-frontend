@@ -17,7 +17,7 @@
 package forms
 
 import forms.AmendPensionsUsedBetweenForm._
-import models.amendModels.AmendPensionsUsedBetweenModel
+import models.amend.value.AmendPensionsUsedBetweenModel
 import models.pla.AmendableProtectionType.IndividualProtection2016
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Lang

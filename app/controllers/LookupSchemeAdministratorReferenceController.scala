@@ -43,14 +43,11 @@ class LookupSchemeAdministratorReferenceController @Inject() (
   private def psaRefForm(implicit request: Request[AnyContent]): Form[String] =
     PsaLookupSchemeAdministratorReferenceForm.psaRefForm
 
-  private val lookupRequestID = "psa-lookup-request"
-
   def displaySchemeAdministratorReferenceForm: Action[AnyContent] = actionWithSessionId.async { implicit request =>
     if (appConfig.psalookupjourneyShutterEnabled) {
       Future.successful(Ok(withdrawnPSALookupJourney()))
     } else {
-      sessionCacheService
-        .fetchAndGetFormData[PsaLookupRequest](lookupRequestID)
+      sessionCacheService.fetchPsaLookupRequest
         .flatMap {
           case Some(PsaLookupRequest(psaRef, _)) =>
             Future.successful(Ok(psa_lookup_scheme_admin_ref_form(psaRefForm.fill(psaRef))))
@@ -69,7 +66,7 @@ class LookupSchemeAdministratorReferenceController @Inject() (
           formWithErrors => Future.successful(BadRequest(psa_lookup_scheme_admin_ref_form(formWithErrors))),
           validFormData =>
             sessionCacheService
-              .saveFormData[PsaLookupRequest](lookupRequestID, PsaLookupRequest(validFormData))
+              .savePsaLookupRequest(PsaLookupRequest(validFormData))
               .map(_ => Redirect(routes.LookupProtectionNotificationController.displayProtectionNotificationNoForm))
         )
     }

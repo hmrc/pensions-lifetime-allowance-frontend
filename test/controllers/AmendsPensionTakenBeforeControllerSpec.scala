@@ -20,8 +20,8 @@ import auth.{AuthFunction, AuthFunctionImpl}
 import common.Strings
 import config._
 import mocks.AuthMock
+import models.amend.AmendProtectionModel
 import models.{PensionsTakenBeforeModel, ProtectionModel}
-import models.amendModels._
 import models.display.{AmendDisplayRowModel, AmendDisplaySectionModel}
 import models.pla.response.ProtectionStatus.Dormant
 import org.apache.pekko.actor.ActorSystem

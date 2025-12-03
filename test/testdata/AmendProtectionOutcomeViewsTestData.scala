@@ -16,7 +16,7 @@
 
 package testdata
 
-import models.amendModels.AmendsGAModel
+import models.amend.AmendsGAModel
 import models.display.{AmendOutcomeDisplayModel, AmendPrintDisplayModel}
 
 object AmendProtectionOutcomeViewsTestData {

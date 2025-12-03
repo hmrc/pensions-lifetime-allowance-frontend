@@ -46,4 +46,6 @@ object TimeModel {
 
   implicit val format: Format[TimeModel] = Format(reads, writes)
 
+  def of(hour: Int, minute: Int, second: Int): TimeModel = TimeModel(LocalTime.of(hour, minute, second))
+
 }

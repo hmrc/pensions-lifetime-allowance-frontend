@@ -16,12 +16,12 @@
 
 package constructors.display
 
-import common.Strings
-import models.amendModels.AmendProtectionModel
+import models.amend.AmendProtectionModel
 import models.display.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel}
-import models.pla.response.ProtectionStatus.Open
-import models.pla.response.ProtectionType.IndividualProtection2016
-import models.{PensionDebitModel, ProtectionModel}
+import models.pla.AmendableProtectionType
+import models.pla.request.AmendProtectionRequestStatus
+import models.pla.response.{ProtectionStatus, ProtectionType}
+import models.{DateModel, PensionDebitModel, ProtectionModel}
 
 class AmendDisplayModelConstructorSpec extends DisplayConstructorsTestData {
 
@@ -29,7 +29,7 @@ class AmendDisplayModelConstructorSpec extends DisplayConstructorsTestData {
     "correctly transform an AmendProtectionModel into an AmendDisplayModel without Psos" in {
 
       AmendDisplayModelConstructor.createAmendDisplayModel(tstNoPsoAmendProtectionModel) shouldBe AmendDisplayModel(
-        protectionType = IndividualProtection2016.toString,
+        protectionType = AmendableProtectionType.IndividualProtection2016,
         amended = false,
         pensionContributionSections = tstPensionContributionNoPsoDisplaySections,
         psoAdded = false,
@@ -40,7 +40,7 @@ class AmendDisplayModelConstructorSpec extends DisplayConstructorsTestData {
 
     "correctly transform an AmendProtectionModel into an AmendDisplayModel with PSOs" in {
       AmendDisplayModelConstructor.createAmendDisplayModel(tstWithPsoAmendProtectionModel) shouldBe AmendDisplayModel(
-        protectionType = IndividualProtection2016.toString,
+        protectionType = AmendableProtectionType.IndividualProtection2016,
         amended = false,
         pensionContributionSections = tstPensionContributionPsoDisplaySections,
         psoAdded = false,
@@ -51,7 +51,7 @@ class AmendDisplayModelConstructorSpec extends DisplayConstructorsTestData {
 
     "return no current PSO's when not supplied with an amountOption" in {
       AmendDisplayModelConstructor.createAmendDisplayModel(tstWithPsoAmendProtectionModel) shouldBe AmendDisplayModel(
-        protectionType = IndividualProtection2016.toString,
+        protectionType = AmendableProtectionType.IndividualProtection2016,
         amended = false,
         pensionContributionSections = tstPensionContributionPsoDisplaySections,
         psoAdded = false,
@@ -64,8 +64,8 @@ class AmendDisplayModelConstructorSpec extends DisplayConstructorsTestData {
       val tstNoPsoAmountProtection = ProtectionModel(
         psaCheckReference = Some("psaRef"),
         identifier = Some(100001),
-        protectionType = Some(IndividualProtection2016.toString),
-        status = Some(Open.toString),
+        protectionType = ProtectionType.IndividualProtection2016,
+        status = ProtectionStatus.Open,
         protectedAmount = Some(1100000.34),
         relevantAmount = Some(1100000.34),
         preADayPensionInPayment = None,
@@ -78,7 +78,7 @@ class AmendDisplayModelConstructorSpec extends DisplayConstructorsTestData {
       val amendModel = AmendProtectionModel(tstNoPsoAmountProtection, tstNoPsoAmountProtection)
 
       AmendDisplayModelConstructor.createAmendDisplayModel(amendModel) shouldBe AmendDisplayModel(
-        protectionType = IndividualProtection2016.toString,
+        protectionType = AmendableProtectionType.IndividualProtection2016,
         amended = false,
         pensionContributionSections = tstPensionContributionNoPsoDisplaySections,
         psoAdded = false,
@@ -91,13 +91,13 @@ class AmendDisplayModelConstructorSpec extends DisplayConstructorsTestData {
       val tstNewPsoAmountProtection = ProtectionModel(
         psaCheckReference = Some("psaRef"),
         identifier = Some(100001),
-        protectionType = Some(IndividualProtection2016.toString),
-        status = Some(Open.toString),
+        protectionType = ProtectionType.IndividualProtection2016,
+        status = ProtectionStatus.Open,
         protectedAmount = Some(1100000.34),
         relevantAmount = Some(1100000.34),
         preADayPensionInPayment = None,
         postADayBenefitCrystallisationEvents = None,
-        pensionDebits = Some(List(PensionDebitModel("2017-03-02T15:14:00", 1000.0))),
+        pensionDebit = Some(PensionDebitModel(DateModel.of(2017, 3, 2), 1000.0)),
         pensionDebitTotalAmount = Some(0.0),
         nonUKRights = Some(100000.0),
         uncrystallisedRights = Some(1000000.34)
@@ -113,14 +113,14 @@ class AmendDisplayModelConstructorSpec extends DisplayConstructorsTestData {
               "CurrentPsos-psoDetails",
               changeLinkCall = Some(
                 controllers.routes.AmendsPensionSharingOrderController.amendPsoDetails(
-                  Strings.ProtectionTypeUrl.IndividualProtection2016,
-                  Strings.StatusUrl.Open
+                  AmendableProtectionType.IndividualProtection2016,
+                  AmendProtectionRequestStatus.Open
                 )
               ),
               removeLinkCall = Some(
                 controllers.routes.AmendsRemovePensionSharingOrderController.removePso(
-                  Strings.ProtectionTypeUrl.IndividualProtection2016,
-                  Strings.StatusUrl.Open
+                  AmendableProtectionType.IndividualProtection2016,
+                  AmendProtectionRequestStatus.Open
                 )
               ),
               "£1,000",
@@ -131,7 +131,7 @@ class AmendDisplayModelConstructorSpec extends DisplayConstructorsTestData {
       )
 
       AmendDisplayModelConstructor.createAmendDisplayModel(amendModel) shouldBe AmendDisplayModel(
-        protectionType = IndividualProtection2016.toString,
+        protectionType = AmendableProtectionType.IndividualProtection2016,
         amended = false,
         pensionContributionSections = tstPensionContributionNoPsoDisplaySections,
         psoAdded = true,
@@ -140,43 +140,15 @@ class AmendDisplayModelConstructorSpec extends DisplayConstructorsTestData {
       )
 
     }
-
-    "should not create a display section for current PSO's if there is more than one pension debit in the model" in {
-      val tstNewPsoAmountProtection = ProtectionModel(
-        psaCheckReference = Some("psaRef"),
-        identifier = Some(100001),
-        protectionType = Some(IndividualProtection2016.toString),
-        status = Some(Open.toString),
-        protectedAmount = Some(1000000.34),
-        relevantAmount = Some(1000000.34),
-        preADayPensionInPayment = None,
-        postADayBenefitCrystallisationEvents = None,
-        pensionDebits = Some(
-          List(PensionDebitModel("2017-03-02T15:14:00", 1000.0), PensionDebitModel("2017-03-02T15:12:00", 2000.0))
-        ),
-        pensionDebitTotalAmount = Some(0.0),
-        nonUKRights = Some(100000.0),
-        uncrystallisedRights = Some(1000000.34)
-      )
-
-      val amendModel = AmendProtectionModel(tstNewPsoAmountProtection, tstNewPsoAmountProtection)
-
-      AmendDisplayModelConstructor.createAmendDisplayModel(amendModel) shouldBe AmendDisplayModel(
-        protectionType = IndividualProtection2016.toString,
-        amended = false,
-        pensionContributionSections = tstPensionContributionNoPsoDisplaySections,
-        psoAdded = true,
-        psoSections = tstNoPsoDisplaySections,
-        totalAmount = "£1,000,000.34"
-      )
-
-    }
   }
 
   "modelsDiffer" should {
 
     "return false for the same model" in {
-      val tstModel = ProtectionModel(psaCheckReference = Some("psaRef"), identifier = Some(10000))
+      val tstModel = ProtectionModel(
+        psaCheckReference = Some("psaRef"),
+        identifier = Some(10000)
+      )
       AmendDisplayModelConstructor.modelsDiffer(tstModel, tstModel) shouldBe false
     }
 
