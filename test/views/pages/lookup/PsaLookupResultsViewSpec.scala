@@ -199,7 +199,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
           }
 
           "has the correct second element" in {
-            row.select("dd").text() shouldBe protectionTypeFP2016Text
+            row.select("dd").text() shouldBe protectionTypeFixedProtection2016Text
           }
         }
 
@@ -229,7 +229,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
       }
     }
 
-    "provided with a valid result of IP2014" should {
+    "provided with a valid result of IndividualProtection2014" should {
       val psaLookupResults = PsaLookupResult("reference", 2, 1, None, None)
       val doc              = Jsoup.parse(view.apply(psaLookupResults, "timestamp").body)
 
@@ -259,7 +259,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
           }
 
           "has the correct second element" in {
-            row.select("dd").text() shouldBe protectionTypeIP2014Text
+            row.select("dd").text() shouldBe protectionTypeIndividualProtection2014Text
           }
         }
 
@@ -289,7 +289,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
       }
     }
 
-    "provided with a valid result of IP2016 with a value" should {
+    "provided with a valid result of IndividualProtection2016 with a value" should {
       val psaLookupResults = PsaLookupResult("reference", 3, 1, Some(2), None)
       val doc              = Jsoup.parse(view.apply(psaLookupResults, "timestamp").body)
 
@@ -319,7 +319,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
           }
 
           "has the correct second element" in {
-            row.select("dd").text() shouldBe protectionTypeIP2016Text
+            row.select("dd").text() shouldBe protectionTypeIndividualProtection2016Text
           }
         }
 
@@ -427,7 +427,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
           }
 
           "has the correct second element" in {
-            row.select("dd").text() shouldBe protectionTypeFP2012Text
+            row.select("dd").text() shouldBe protectionTypeFixedProtection2012Text
           }
         }
       }
@@ -451,7 +451,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
           }
 
           "has the correct second element" in {
-            row.select("dd").text() shouldBe protectionTypeFP2014Text
+            row.select("dd").text() shouldBe protectionTypeFixedProtection2014Text
           }
         }
       }

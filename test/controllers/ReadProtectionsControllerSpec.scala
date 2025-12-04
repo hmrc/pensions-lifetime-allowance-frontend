@@ -23,7 +23,8 @@ import connectors.PlaConnector
 import constructors.display.DisplayConstructors
 import generators.ModelGenerators
 import mocks.AuthMock
-import models.{ProtectionModel, TransformedReadResponseModel}
+import models.amend.AmendProtectionModel
+import models.{DateModel, ProtectionModel, TimeModel, TransformedReadResponseModel}
 import models.cache.CacheMap
 import models.pla.response.ProtectionStatus.{Dormant, Rejected}
 import models.pla.response.ProtectionType.IndividualProtection2016
@@ -102,8 +103,12 @@ class ReadProtectionsControllerSpec
 
   val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
 
-  override def beforeEach(): Unit =
+  override def beforeEach(): Unit = {
     reset(mockAppConfig)
+    reset(mockPlaConnector)
+    reset(mockDisplayConstructors)
+    reset(mockSessionCacheService)
+  }
 
   val authFunction: AuthFunction = new AuthFunction {
     override implicit val appConfig: FrontendAppConfig   = mockAppConfig
@@ -128,43 +133,49 @@ class ReadProtectionsControllerSpec
     executionContext
   )
 
-  val ip2016Protection = ProtectionModel(
-    psaCheckReference = Some("testPSARef"),
+  val individualProtection2016 = ProtectionModel(
+    psaCheckReference = "testPSARef",
+    identifier = 12345,
+    sequence = 1,
+    protectionType = IndividualProtection2016,
+    status = Dormant,
+    certificateDate = Some(DateModel.of(2016, 9, 4)),
+    certificateTime = Some(TimeModel.of(9, 0, 19)),
     uncrystallisedRights = Some(100000.00),
     nonUKRights = Some(2000.00),
     preADayPensionInPayment = Some(2000.00),
     postADayBenefitCrystallisationEvents = Some(2000.00),
-    notificationId = Some(12),
-    identifier = Some(12345),
-    protectionType = Some(IndividualProtection2016.toString),
-    status = Some(Dormant.toString),
-    certificateDate = Some("2016-09-04T09:00:19.157"),
     protectedAmount = Some(1250000),
     protectionReference = Some("PSA123456")
   )
+
+  val individualProtection2016AmendModel: AmendProtectionModel =
+    AmendProtectionModel.tryFromProtection(individualProtection2016).get
 
   val nonAmendableProtection = ProtectionModel(
-    psaCheckReference = Some("testPSARef"),
+    psaCheckReference = "testPSARef",
+    identifier = 12345,
+    sequence = 1,
+    protectionType = IndividualProtection2016,
+    status = Rejected,
+    certificateDate = Some(DateModel.of(2016, 9, 4)),
+    certificateTime = Some(TimeModel.of(9, 0, 19)),
     uncrystallisedRights = Some(100000.00),
     nonUKRights = Some(2000.00),
     preADayPensionInPayment = Some(2000.00),
     postADayBenefitCrystallisationEvents = Some(2000.00),
-    notificationId = Some(12),
-    identifier = Some(12345),
-    protectionType = Some(IndividualProtection2016.toString),
-    status = Some(Rejected.toString),
-    certificateDate = Some("2016-09-04T09:00:19.157"),
     protectedAmount = Some(1250000),
     protectionReference = Some("PSA123456")
   )
 
-  def mockCacheSave: OngoingStubbing[Future[CacheMap]] =
-    when(mockSessionCacheService.saveFormData(any(), any())(any(), any()))
-      .thenReturn(Future(mockCacheMap))
+  def mockCacheSave(): OngoingStubbing[Future[CacheMap]] = {
+    when(mockSessionCacheService.saveOpenProtection(any())(any())).thenReturn(Future(mockCacheMap))
+    when(mockSessionCacheService.saveAmendProtectionModel(any())(any())).thenReturn(Future(mockCacheMap))
+  }
 
   "Calling saveActiveProtection" should {
 
-    "return true" when {
+    "return None" when {
 
       "provided with no protection model" in {
         when(mockPlaConnector.readProtections(any())(any(), any()))
@@ -173,77 +184,77 @@ class ReadProtectionsControllerSpec
           .thenReturn(testExistingProtectionsDisplayModel)
 
         await(controller.saveActiveProtection(None)(fakeRequest)) shouldBe true
+        verify(mockSessionCacheService, times(0)).saveOpenProtection(any())(any())
       }
+    }
+
+    "return Some" when {
 
       "provided with a protection model" in {
         when(mockPlaConnector.readProtections(any())(any(), any()))
           .thenReturn(Future.successful(Right(readProtectionsResponse)))
         when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
           .thenReturn(testExistingProtectionsDisplayModel)
-        when(mockSessionCacheService.saveFormData(any(), any())(any(), any()))
-          .thenReturn(Future.successful(mock[CacheMap]))
+        mockCacheSave()
 
-        await(controller.saveActiveProtection(Some(ip2016Protection))(fakeRequest)) shouldBe true
+        await(controller.saveActiveProtection(Some(individualProtection2016))(fakeRequest)) shouldBe defined
+        verify(mockSessionCacheService).saveOpenProtection(eqTo(individualProtection2016))(any())
       }
     }
   }
 
-  "Calling getAmendableProtection" should {
-
+  "Calling getAllProtections" should {
     "return an empty sequence if no protections exist" in {
-      when(mockPlaConnector.readProtections(any())(any(), any()))
-        .thenReturn(Future.successful(Right(readProtectionsResponse)))
-      when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
-        .thenReturn(testExistingProtectionsDisplayModel)
-      val model = TransformedReadResponseModel(None, Seq())
+      val model = TransformedReadResponseModel(None, Seq.empty)
 
-      controller.getAmendableProtections(model) shouldBe Seq()
+      controller.getAllProtections(model) shouldBe empty
     }
 
-    "return an empty sequence if no protections are amendable" in {
-      when(mockPlaConnector.readProtections(any())(any(), any()))
-        .thenReturn(Future.successful(Right(readProtectionsResponse)))
-      when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
-        .thenReturn(testExistingProtectionsDisplayModel)
-      val model =
-        TransformedReadResponseModel(Some(nonAmendableProtection), Seq(nonAmendableProtection, nonAmendableProtection))
+    "return active protection if only protection" in {
+      val model = TransformedReadResponseModel(Some(individualProtection2016), Seq.empty)
 
-      controller.getAmendableProtections(model) shouldBe Seq()
+      val result = controller.getAllProtections(model)
+
+      (result should have).length(1)
+      result.head shouldBe individualProtection2016
     }
 
-    "return a single element if only the active protection is amendable" in {
-      when(mockPlaConnector.readProtections(any())(any(), any()))
-        .thenReturn(Future.successful(Right(readProtectionsResponse)))
-      when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
-        .thenReturn(testExistingProtectionsDisplayModel)
-      val model =
-        TransformedReadResponseModel(Some(ip2016Protection), Seq(nonAmendableProtection, nonAmendableProtection))
+    "return inactive protections if only inactive protections" in {
+      val model = TransformedReadResponseModel(None, Seq(nonAmendableProtection, nonAmendableProtection))
 
-      controller.getAmendableProtections(model) shouldBe Seq(ip2016Protection)
+      val result = controller.getAllProtections(model)
+
+      (result should have).length(2)
+      result.head shouldBe nonAmendableProtection
+      result(1) shouldBe nonAmendableProtection
     }
 
-    "return all inactive elements if only they are amendable" in {
-      when(mockPlaConnector.readProtections(any())(any(), any()))
-        .thenReturn(Future.successful(Right(readProtectionsResponse)))
-      when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
-        .thenReturn(testExistingProtectionsDisplayModel)
-      val model = TransformedReadResponseModel(Some(nonAmendableProtection), Seq(ip2016Protection, ip2016Protection))
+    "return both active and inactive protections if both present" in {
+      val model = TransformedReadResponseModel(Some(individualProtection2016), Seq(nonAmendableProtection))
 
-      controller.getAmendableProtections(model) shouldBe Seq(ip2016Protection, ip2016Protection)
-    }
+      val result = controller.getAllProtections(model)
 
-    "return all elements if they are all amendable" in {
-      when(mockPlaConnector.readProtections(any())(any(), any()))
-        .thenReturn(Future.successful(Right(readProtectionsResponse)))
-      when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
-        .thenReturn(testExistingProtectionsDisplayModel)
-      val model = TransformedReadResponseModel(Some(ip2016Protection), Seq(ip2016Protection, ip2016Protection))
-
-      controller.getAmendableProtections(model) shouldBe Seq(ip2016Protection, ip2016Protection, ip2016Protection)
+      (result should have).length(2)
+      result.head shouldBe individualProtection2016
+      result(1) shouldBe nonAmendableProtection
     }
   }
 
-  "Calling saveAmendableProtection" should {
+  "Calling saveIfAmendable" should {
+    "return None if protection not amendable" in {
+      controller.saveIfAmendable(nonAmendableProtection)(fakeRequest) shouldBe None
+    }
+
+    "save protection if protection is amendable, returning Some" in {
+      when(mockSessionCacheService.saveAmendProtectionModel(any())(any())).thenReturn(Future.successful(mockCacheMap))
+
+      controller.saveIfAmendable(individualProtection2016)(fakeRequest) shouldBe defined
+
+      verify(mockSessionCacheService).saveAmendProtectionModel(eqTo(individualProtection2016AmendModel))(any())
+    }
+  }
+
+  "Calling saveAmendableProtections" should {
 
     "return an empty sequence if no protections exist" in {
       when(mockPlaConnector.readProtections(any())(any(), any()))
@@ -251,7 +262,7 @@ class ReadProtectionsControllerSpec
       when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
         .thenReturn(testExistingProtectionsDisplayModel)
       val model = TransformedReadResponseModel(None, Seq())
-      mockCacheSave
+      mockCacheSave()
 
       await(controller.saveAmendableProtections(model)(fakeRequest)) shouldBe Seq()
     }
@@ -263,7 +274,7 @@ class ReadProtectionsControllerSpec
         .thenReturn(testExistingProtectionsDisplayModel)
       val model =
         TransformedReadResponseModel(Some(nonAmendableProtection), Seq(nonAmendableProtection, nonAmendableProtection))
-      mockCacheSave
+      mockCacheSave()
 
       await(controller.saveAmendableProtections(model)(fakeRequest)) shouldBe Seq()
     }
@@ -274,8 +285,11 @@ class ReadProtectionsControllerSpec
       when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
         .thenReturn(testExistingProtectionsDisplayModel)
       val model =
-        TransformedReadResponseModel(Some(ip2016Protection), Seq(nonAmendableProtection, nonAmendableProtection))
-      mockCacheSave
+        TransformedReadResponseModel(
+          Some(individualProtection2016),
+          Seq(nonAmendableProtection, nonAmendableProtection)
+        )
+      mockCacheSave()
 
       await(controller.saveAmendableProtections(model)(fakeRequest)) shouldBe Seq(mockCacheMap)
     }
@@ -285,8 +299,11 @@ class ReadProtectionsControllerSpec
         .thenReturn(Future.successful(Right(readProtectionsResponse)))
       when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
         .thenReturn(testExistingProtectionsDisplayModel)
-      val model = TransformedReadResponseModel(Some(nonAmendableProtection), Seq(ip2016Protection, ip2016Protection))
-      mockCacheSave
+      val model = TransformedReadResponseModel(
+        Some(nonAmendableProtection),
+        Seq(individualProtection2016, individualProtection2016)
+      )
+      mockCacheSave()
 
       await(controller.saveAmendableProtections(model)(fakeRequest)) shouldBe Seq(mockCacheMap, mockCacheMap)
     }
@@ -296,8 +313,11 @@ class ReadProtectionsControllerSpec
         .thenReturn(Future.successful(Right(readProtectionsResponse)))
       when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
         .thenReturn(testExistingProtectionsDisplayModel)
-      val model = TransformedReadResponseModel(Some(ip2016Protection), Seq(ip2016Protection, ip2016Protection))
-      mockCacheSave
+      val model = TransformedReadResponseModel(
+        Some(individualProtection2016),
+        Seq(individualProtection2016, individualProtection2016)
+      )
+      mockCacheSave()
 
       await(controller.saveAmendableProtections(model)(fakeRequest)) shouldBe Seq(
         mockCacheMap,
@@ -332,7 +352,7 @@ class ReadProtectionsControllerSpec
         val result: Future[Result] = controller.currentProtections(fakeRequest)
 
         status(result) shouldBe 500
-        await(result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
+        await(result).header.headers(CACHE_CONTROL) shouldBe "no-cache"
       }
     }
 
@@ -360,7 +380,7 @@ class ReadProtectionsControllerSpec
         val result: Future[Result] = controller.currentProtections(fakeRequest)
 
         status(result) shouldBe 500
-        await(result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
+        await(result).header.headers(CACHE_CONTROL) shouldBe "no-cache"
       }
     }
 

@@ -16,12 +16,16 @@
 
 package views.pages.existingProtections
 
+import models.pla.response.ProtectionType.{IndividualProtection2014, IndividualProtection2016}
 import models.display.{
   ExistingInactiveProtectionsByType,
   ExistingInactiveProtectionsDisplayModel,
   ExistingProtectionDisplayModel,
   ExistingProtectionsDisplayModel
 }
+import models.pla.AmendableProtectionType
+import models.pla.request.AmendProtectionRequestStatus
+import models.pla.response.ProtectionStatus.{Dormant, Open}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages
@@ -37,34 +41,39 @@ class ExistingProtectionsViewSpec extends CommonViewSpecHelper with ExistingProt
   val tstPSACheckRef = "PSA33456789"
 
   val protectionModel = ExistingProtectionDisplayModel(
-    "IP2016",
-    "active",
-    Some(Call("", "", "")),
-    Some(tstPSACheckRef),
-    "protectionReference",
-    Some("250.00"),
-    Some("")
+    protectionType = IndividualProtection2016,
+    status = Open,
+    amendCall = Some(Call("", "", "")),
+    psaCheckReference = tstPSACheckRef,
+    protectionReference = "protectionReference",
+    protectedAmount = Some("250.00"),
+    certificateDate = Some(""),
+    certificateTime = Some("")
   )
 
   val protectionModel2 = ExistingProtectionDisplayModel(
-    "IP2014",
-    "dormant",
-    Some(Call("", "", "")),
-    Some(""),
-    "protectionReference",
-    Some(""),
-    Some("")
+    protectionType = IndividualProtection2014,
+    status = Dormant,
+    amendCall = Some(Call("", "", "")),
+    psaCheckReference = "",
+    protectionReference = "protectionReference",
+    protectedAmount = Some(""),
+    certificateDate = Some(""),
+    certificateTime = Some("")
   )
 
   val tstProtectionDisplayModelDormant1 = ExistingProtectionDisplayModel(
-    "IP2014",
-    "dormant",
-    Some(controllers.routes.AmendsController.amendsSummary("fp2016", "dormant")),
-    Some(tstPSACheckRef),
-    Messages("pla.protection.protectionReference"),
-    Some("100.00"),
-    Some(""),
-    None
+    protectionType = IndividualProtection2014,
+    status = Dormant,
+    amendCall = Some(
+      controllers.routes.AmendsController
+        .amendsSummary(AmendableProtectionType.IndividualProtection2014, AmendProtectionRequestStatus.Dormant)
+    ),
+    psaCheckReference = tstPSACheckRef,
+    protectionReference = Messages("pla.protection.protectionReference"),
+    protectedAmount = Some("100.00"),
+    certificateDate = Some(""),
+    certificateTime = None
   )
 
   val modelOnlyActive = ExistingProtectionsDisplayModel(
@@ -79,7 +88,7 @@ class ExistingProtectionsViewSpec extends CommonViewSpecHelper with ExistingProt
     inactiveProtections = ExistingInactiveProtectionsDisplayModel(
       dormantProtections = ExistingInactiveProtectionsByType(
         Seq(
-          "IP2014" -> List(
+          IndividualProtection2014 -> List(
             tstProtectionDisplayModelDormant1
           )
         )
@@ -98,7 +107,7 @@ class ExistingProtectionsViewSpec extends CommonViewSpecHelper with ExistingProt
     inactiveProtections = ExistingInactiveProtectionsDisplayModel(
       dormantProtections = ExistingInactiveProtectionsByType(
         Seq(
-          "IP2014" -> List(
+          IndividualProtection2014 -> List(
             tstProtectionDisplayModelDormant1
           )
         )

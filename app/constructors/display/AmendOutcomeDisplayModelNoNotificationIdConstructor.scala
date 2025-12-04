@@ -18,13 +18,13 @@ package constructors.display
 
 import common.{Display, Exceptions}
 import models.display.AmendOutcomeDisplayModelNoNotificationId
-import models.{AmendedProtectionModel, PersonalDetailsModel}
+import models.{AmendResponseModel, PersonalDetailsModel}
 import play.api.i18n.{Lang, Messages}
 
 object AmendOutcomeDisplayModelNoNotificationIdConstructor {
 
   def createAmendOutcomeDisplayModelNoNotificationId(
-      model: AmendedProtectionModel,
+      model: AmendResponseModel,
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       nino: String
   )(implicit lang: Lang, messages: Messages): AmendOutcomeDisplayModelNoNotificationId = {
@@ -35,7 +35,7 @@ object AmendOutcomeDisplayModelNoNotificationIdConstructor {
 
     val protectedAmount = model.protectedAmount.getOrElse {
       throw Exceptions.OptionNotDefinedException(
-        "createAmendResultDisplayModelNoNotificationId",
+        "createamendOutcomeDisplayModelNoNotificationId",
         "protectedAmount",
         protectionType.toString
       )

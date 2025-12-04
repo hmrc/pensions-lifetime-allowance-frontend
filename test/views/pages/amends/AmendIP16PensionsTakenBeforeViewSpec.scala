@@ -16,10 +16,10 @@
 
 package views.pages.amends
 
-import common.Strings
 import forms.AmendPensionsTakenBeforeForm
 import models.amend.value.AmendPensionsTakenBeforeModel
 import models.pla.AmendableProtectionType.IndividualProtection2016
+import models.pla.request.AmendProtectionRequestStatus.Open
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.data.Form
@@ -35,16 +35,16 @@ class AmendIP16PensionsTakenBeforeViewSpec extends CommonViewSpecHelper with Ame
   val view: amendIP16PensionsTakenBefore = inject[amendIP16PensionsTakenBefore]
 
   val form: Form[AmendPensionsTakenBeforeModel] = AmendPensionsTakenBeforeForm
-    .amendPensionsTakenBeforeForm(IndividualProtection2016.toString)
+    .amendPensionsTakenBeforeForm(IndividualProtection2016)
     .bind(Map("amendedPensionsTakenBefore" -> "yes", "amendedPensionsTakenBeforeAmt" -> "12345"))
 
-  val doc: Document = Jsoup.parse(view.apply(form, IndividualProtection2016.toString, "open").body)
+  val doc: Document = Jsoup.parse(view.apply(form, IndividualProtection2016, Open).body)
 
   val errorForm: Form[AmendPensionsTakenBeforeModel] = AmendPensionsTakenBeforeForm
-    .amendPensionsTakenBeforeForm(IndividualProtection2016.toString)
+    .amendPensionsTakenBeforeForm(IndividualProtection2016)
     .bind(Map("amendedPensionsTakenBefore" -> "", "amendedPensionsTakenBeforeAmt" -> "12345"))
 
-  val errorDoc: Document = Jsoup.parse(view.apply(errorForm, IndividualProtection2016.toString, "open").body)
+  val errorDoc: Document = Jsoup.parse(view.apply(errorForm, IndividualProtection2016, Open).body)
 
   "the AmendPensionsTakenBeforeView" should {
     "have the correct title" in {
@@ -60,7 +60,7 @@ class AmendIP16PensionsTakenBeforeViewSpec extends CommonViewSpecHelper with Ame
 
       formElement.attr("method") shouldBe "POST"
       formElement.attr("action") shouldBe controllers.routes.AmendsPensionTakenBeforeController
-        .submitAmendPensionsTakenBefore(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")
+        .submitAmendPensionsTakenBefore(IndividualProtection2016, Open)
         .url
     }
 

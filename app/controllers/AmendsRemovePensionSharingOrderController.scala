@@ -17,9 +17,7 @@
 package controllers
 
 import auth.AuthFunction
-import common._
 import config.FrontendAppConfig
-import models.amend.AmendProtectionModel
 import models.pla.AmendableProtectionType
 import models.pla.request.AmendProtectionRequestStatus
 import play.api.Logging

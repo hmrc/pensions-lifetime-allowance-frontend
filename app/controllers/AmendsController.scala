@@ -25,7 +25,7 @@ import models.amend.{AmendProtectionModel, AmendsGAModel}
 import models.cache.CacheMap
 import models.pla.AmendableProtectionType
 import models.pla.request.AmendProtectionRequestStatus
-import models.{AmendedProtectionModel, NotificationId, PersonalDetailsModel, TransformedReadResponseModel}
+import models.{AmendResponseModel, NotificationId, PersonalDetailsModel, TransformedReadResponseModel}
 import play.api.Logging
 import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
@@ -91,7 +91,7 @@ class AmendsController @Inject() (
 
         result <- response match {
 
-          case Right(amendResponseModel: AmendedProtectionModel) =>
+          case Right(amendResponseModel: AmendResponseModel) =>
             saveAndRedirectToDisplay(amendResponseModel)
 
           case Left(LockedResponseError) =>
@@ -122,22 +122,22 @@ class AmendsController @Inject() (
 
   private def sendAmendProtectionRequest(nino: String, protection: AmendProtectionModel)(
       implicit hc: HeaderCarrier
-  ): Future[Either[PlaConnectorError, AmendedProtectionModel]] =
+  ): Future[Either[PlaConnectorError, AmendResponseModel]] =
     plaConnector
       .amendProtection(nino, protection)
-      .map(_.map(AmendedProtectionModel.from(_, protection.psaCheckReference)))
+      .map(_.map(AmendResponseModel.from(_, protection.psaCheckReference)))
 
-  private def saveAndRedirectToDisplay(amendResponseModel: AmendedProtectionModel)(
+  private def saveAndRedirectToDisplay(amendResponseModel: AmendResponseModel)(
       implicit request: Request[AnyContent]
   ): Future[Result] =
-    sessionCacheService.saveAmendedProtectionModel(amendResponseModel).map { _ =>
+    sessionCacheService.saveAmendResponseModel(amendResponseModel).map { _ =>
       Redirect(routes.AmendsController.amendmentOutcome)
     }
 
   def amendmentOutcome: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithNino { nino =>
       for {
-        modelAR                 <- sessionCacheService.fetchAmendedProtectionModel
+        modelAR                 <- sessionCacheService.fetchAmendResponseModel
         modelGA                 <- sessionCacheService.fetchAmendsGAModel
         personalDetailsModelOpt <- citizenDetailsConnector.getPersonDetails(nino)
 
@@ -147,7 +147,7 @@ class AmendsController @Inject() (
   }
 
   private def amendmentOutcomeResult(
-      modelAR: Option[AmendedProtectionModel],
+      modelAR: Option[AmendResponseModel],
       modelGA: Option[AmendsGAModel],
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       nino: String
@@ -199,9 +199,9 @@ class AmendsController @Inject() (
 
   private def createProtectionModel(
       notificationId: NotificationId,
-      model: AmendedProtectionModel,
+      model: AmendResponseModel,
       nino: String
-  )(implicit request: Request[AnyContent]): Future[Option[AmendedProtectionModel]] =
+  )(implicit request: Request[AnyContent]): Future[Option[AmendResponseModel]] =
     if (NotificationIds.showingFixedProtection2016Details.contains(notificationId)) {
       createCombinedFixedAndIndividualProtectionModel(model, nino)
     } else {
@@ -209,13 +209,13 @@ class AmendsController @Inject() (
     }
 
   private def createCombinedFixedAndIndividualProtectionModel(
-      amendedProtectionModel: AmendedProtectionModel,
+      amendResponseModel: AmendResponseModel,
       nino: String
-  )(implicit request: Request[AnyContent]): Future[Option[AmendedProtectionModel]] =
+  )(implicit request: Request[AnyContent]): Future[Option[AmendResponseModel]] =
     for {
       protections <- fetchProtections(nino)
       activeProtection = protections.toOption.flatMap(_.activeProtection)
-      combinedModel    = activeProtection.flatMap(amendedProtectionModel.combineWithFixedProtection2016)
+      combinedModel    = activeProtection.flatMap(amendResponseModel.combineWithFixedProtection2016)
     } yield combinedModel
 
   private def fetchProtections(

@@ -70,4 +70,22 @@ object NotificationId {
   implicit val writes: Writes[NotificationId] = notificationIdentifier => JsNumber(notificationIdentifier.toInt)
 
   implicit val format: Format[NotificationId] = Format(reads, writes)
+
+  val values: List[NotificationId] = List(
+    NotificationId1,
+    NotificationId2,
+    NotificationId3,
+    NotificationId4,
+    NotificationId5,
+    NotificationId6,
+    NotificationId7,
+    NotificationId8,
+    NotificationId9,
+    NotificationId10,
+    NotificationId11,
+    NotificationId12,
+    NotificationId13,
+    NotificationId14
+  )
+
 }

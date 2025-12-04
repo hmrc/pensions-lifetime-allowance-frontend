@@ -104,7 +104,8 @@ class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with 
       "there is data in session cache" should {
         "return 200 with psa_lookup_not_found_results view" in {
           when(appConfig.psalookupjourneyShutterEnabled).thenReturn(false)
-          cacheFetchCondition[PsaLookupRequest](Some(Json.fromJson[PsaLookupRequest](psaRequestJson).get))
+          when(sessionCacheService.fetchPsaLookupRequest(any()))
+            .thenReturn(Future.successful(Some(Json.fromJson[PsaLookupRequest](psaRequestJson).get)))
 
           val result = controller.displayNotFoundResults.apply(request)
 
@@ -117,7 +118,7 @@ class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with 
       "there is NO data in session cache" should {
         "return 303 Redirect" in {
           when(appConfig.psalookupjourneyShutterEnabled).thenReturn(false)
-          cacheFetchCondition[PsaLookupRequest](None)
+          when(sessionCacheService.fetchPsaLookupRequest(any())).thenReturn(Future.successful(None))
 
           val result = controller.displayNotFoundResults.apply(request)
 
@@ -148,7 +149,8 @@ class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with 
       "there is data in session cache" should {
         "return 200 with psa_lookup_results" in {
           when(appConfig.psalookupjourneyShutterEnabled).thenReturn(false)
-          cacheFetchCondition[PsaLookupResult](Some(Json.fromJson[PsaLookupResult](plaReturnJson).get))
+          when(sessionCacheService.fetchPsaLookupResult(any()))
+            .thenReturn(Future.successful(Some(Json.fromJson[PsaLookupResult](plaReturnJson).get)))
 
           val result = controller.displayLookupResults.apply(request)
 
@@ -161,7 +163,7 @@ class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with 
       "there is NO data in session cache" should {
         "return 303 Redirect" in {
           when(appConfig.psalookupjourneyShutterEnabled).thenReturn(false)
-          cacheFetchCondition[PsaLookupResult](None)
+          when(sessionCacheService.fetchPsaLookupResult(any())).thenReturn(Future.successful(None))
 
           val result = controller.displayLookupResults.apply(request)
 
@@ -237,9 +239,5 @@ class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with 
       }
     }
   }
-
-  def cacheFetchCondition[T](data: Option[T]): Unit =
-    when(sessionCacheService.fetchAndGetFormData[T](any())(any(), any()))
-      .thenReturn(Future.successful(data))
 
 }

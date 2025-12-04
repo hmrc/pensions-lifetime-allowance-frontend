@@ -17,13 +17,20 @@
 package constructors.display
 
 import enums.ApplicationStage
-import models.NotificationId.NotificationId1
 import models.amend.AmendProtectionModel
 import models.display.{AmendDisplayRowModel, AmendDisplaySectionModel, AmendPrintDisplayModel}
 import models.pla.AmendableProtectionType
 import models.pla.request.AmendProtectionRequestStatus
-import models.pla.response.{ProtectionStatus, ProtectionType}
-import models.{AmendedProtectionType, DateModel, Person, PersonalDetailsModel, ProtectionModel, TimeModel}
+import models.pla.response.{AmendProtectionResponseStatus, ProtectionStatus, ProtectionType}
+import models.{
+  AmendResponseModel,
+  AmendedProtectionType,
+  DateModel,
+  PensionDebitModel,
+  Person,
+  PersonalDetailsModel,
+  ProtectionModel
+}
 import org.scalatestplus.mockito.MockitoSugar.mock
 import play.api.i18n.{Lang, Messages}
 import play.api.mvc.{AnyContentAsEmpty, MessagesControllerComponents}
@@ -38,39 +45,27 @@ trait DisplayConstructorsTestData extends FakeApplication {
   implicit val mockMessage: Messages =
     inject[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
 
-  val tstPSACheckRef = "PSA33456789"
+  val tstPsaCheckRef = "PSA33456789"
 
-  val tstProtection: ProtectionModel = ProtectionModel(
-    psaCheckReference = Some("psaRef"),
-    identifier = Some(100001),
+  val tstProtectionModel: ProtectionModel = ProtectionModel(
+    psaCheckReference = tstPsaCheckRef,
+    identifier = 100001,
+    sequence = 1,
     protectionType = ProtectionType.IndividualProtection2016,
     status = ProtectionStatus.Open,
-    protectedAmount = Some(1100000.34),
-    relevantAmount = Some(1100000.34),
-    preADayPensionInPayment = None,
-    postADayBenefitCrystallisationEvents = None,
-    nonUKRights = Some(100000.0),
-    uncrystallisedRights = Some(1000000.34)
+    certificateDate = None,
+    certificateTime = None
   )
 
-  val tstWithPsoProtection: ProtectionModel = ProtectionModel(
-    psaCheckReference = Some("psaRef"),
-    identifier = Some(100001),
-    protectionType = ProtectionType.IndividualProtection2016,
-    status = ProtectionStatus.Open,
-    protectedAmount = Some(1100000.34),
-    relevantAmount = Some(1100000.34),
-    preADayPensionInPayment = None,
-    postADayBenefitCrystallisationEvents = None,
-    pensionDebitTotalAmount = Some(1000.00),
-    nonUKRights = Some(100000.0),
-    uncrystallisedRights = Some(1000000.34)
-  )
-
-  val tstNoPsoAmendProtectionModel: AmendProtectionModel = AmendProtectionModel(tstProtection, tstProtection)
+  val tstNoPsoAmendProtectionModel: AmendProtectionModel =
+    AmendProtectionModel.tryFromProtection(tstProtectionModel).get
 
   val tstWithPsoAmendProtectionModel: AmendProtectionModel =
-    AmendProtectionModel(tstWithPsoProtection, tstWithPsoProtection)
+    tstNoPsoAmendProtectionModel.withPensionDebit(Some(PensionDebitModel(DateModel.of(2017, 3, 2), 1000)))
+
+  val tstWithExistingPsoAmendProtectionModel: AmendProtectionModel = tstNoPsoAmendProtectionModel.copy(
+    pensionDebitTotalAmount = Some(1000)
+  )
 
   val tstPensionContributionNoPsoDisplaySections: Seq[AmendDisplaySectionModel] = Seq(
     AmendDisplaySectionModel(
@@ -253,22 +248,27 @@ trait DisplayConstructorsTestData extends FakeApplication {
     )
   )
 
-  val tstPerson               = Person(firstName = "Testy", lastName = "McTestface")
-  val tstPersonalDetailsModel = PersonalDetailsModel(tstPerson)
-
-  val tstProtectionModel = ProtectionModel(
-    psaCheckReference = Some(tstPSACheckRef),
-    identifier = Some(12345),
-    protectionType = ProtectionType.IndividualProtection2014,
-    status = ProtectionStatus.Open,
-    certificateDate = Some(DateModel.of(2016, 4, 17)),
-    certificateTime = Some(TimeModel.of(15, 14, 0)),
-    protectedAmount = Some(1250000),
-    protectionReference = Some("PSA123456"),
-    notificationId = Some(NotificationId1)
-  )
-
   val tstNino = "testNino"
+
+  val amendResponseModel = AmendResponseModel(
+    identifier = 1,
+    sequence = 1,
+    protectionType = AmendedProtectionType.IndividualProtection2014,
+    status = AmendProtectionResponseStatus.Open,
+    certificateDate = None,
+    certificateTime = None,
+    protectionReference = None,
+    psaCheckReference = tstPsaCheckRef,
+    relevantAmount = 1_250_000,
+    preADayPensionInPaymentAmount = 375_000,
+    postADayBenefitCrystallisationEventAmount = 375_000,
+    uncrystallisedRightsAmount = 375_000,
+    nonUKRightsAmount = 375_000,
+    notificationId = None,
+    protectedAmount = Some(1_250_000),
+    pensionDebitTotalAmount = Some(0),
+    pensionDebit = None
+  )
 
   val expectedAmendPrintDisplayModel = AmendPrintDisplayModel(
     firstName = "Testy",
@@ -276,12 +276,15 @@ trait DisplayConstructorsTestData extends FakeApplication {
     nino = tstNino,
     protectionType = AmendedProtectionType.IndividualProtection2014,
     status = None,
-    psaCheckReference = Some(tstPSACheckRef),
+    psaCheckReference = Some(tstPsaCheckRef),
     protectionReference = Some("PSA123456"),
     fixedProtectionReference = None,
     protectedAmount = Some("£1,250,000"),
     certificateDate = Some("17 April 2016"),
     certificateTime = Some("3:14pm")
   )
+
+  val tstPerson               = Person(firstName = "Testy", lastName = "McTestface")
+  val tstPersonalDetailsModel = PersonalDetailsModel(tstPerson)
 
 }

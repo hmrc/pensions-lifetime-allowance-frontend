@@ -16,6 +16,8 @@
 
 package testdata
 
+import models.NotificationId.NotificationId3
+import models.{DateModel, TimeModel}
 import models.pla.AmendableProtectionType
 import models.pla.request.{AmendProtectionRequest, AmendProtectionRequestStatus}
 import models.pla.response.{AmendProtectionResponse, AmendProtectionResponseStatus, ReadProtectionsResponse}
@@ -35,8 +37,8 @@ object PlaConnectorTestData {
   val amendProtectionRequest: AmendProtectionRequest = AmendProtectionRequest(
     lifetimeAllowanceSequenceNumber = lifetimeAllowanceSequenceNumber,
     lifetimeAllowanceType = AmendableProtectionType.IndividualProtection2014,
-    certificateDate = Some("2025-07-15"),
-    certificateTime = Some("174312"),
+    certificateDate = Some(DateModel.of(2025, 7, 15)),
+    certificateTime = Some(TimeModel.of(17, 43, 12)),
     status = AmendProtectionRequestStatus.Dormant,
     protectionReference = Some(protectionReference),
     relevantAmount = 105000,
@@ -46,9 +48,9 @@ object PlaConnectorTestData {
     nonUKRightsAmount = 0,
     pensionDebitAmount = Some(25000),
     pensionDebitEnteredAmount = Some(25000),
-    notificationIdentifier = Some(3),
+    notificationIdentifier = Some(NotificationId3),
     protectedAmount = Some(120000),
-    pensionDebitStartDate = Some("2026-07-09"),
+    pensionDebitStartDate = Some(DateModel.of(2026, 7, 9)),
     pensionDebitTotalAmount = Some(40000)
   )
 
@@ -56,8 +58,8 @@ object PlaConnectorTestData {
     lifetimeAllowanceIdentifier = lifetimeAllowanceIdentifier,
     lifetimeAllowanceSequenceNumber = lifetimeAllowanceSequenceNumber + 1,
     lifetimeAllowanceType = AmendableProtectionType.IndividualProtection2014,
-    certificateDate = Some("2025-07-15"),
-    certificateTime = Some("174312"),
+    certificateDate = Some(DateModel.of(2025, 7, 15)),
+    certificateTime = Some(TimeModel.of(17, 43, 12)),
     status = AmendProtectionResponseStatus.Dormant,
     protectionReference = Some(protectionReference),
     relevantAmount = 105000,
@@ -67,9 +69,9 @@ object PlaConnectorTestData {
     nonUKRightsAmount = 0,
     pensionDebitAmount = Some(25000),
     pensionDebitEnteredAmount = Some(25000),
-    notificationIdentifier = Some(3),
+    notificationIdentifier = Some(NotificationId3),
     protectedAmount = Some(120000),
-    pensionDebitStartDate = Some("2026-07-09"),
+    pensionDebitStartDate = Some(DateModel.of(2026, 7, 9)),
     pensionDebitTotalAmount = Some(40000)
   )
 

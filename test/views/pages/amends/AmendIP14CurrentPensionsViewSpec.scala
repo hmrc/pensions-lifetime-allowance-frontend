@@ -16,10 +16,10 @@
 
 package views.pages.amends
 
-import common.Strings
 import forms.AmendCurrentPensionForm
 import models.amend.value.AmendCurrentPensionModel
 import models.pla.AmendableProtectionType.IndividualProtection2016
+import models.pla.request.AmendProtectionRequestStatus.Open
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
@@ -37,16 +37,16 @@ class AmendIP14CurrentPensionsViewSpec extends CommonViewSpecHelper with AmendIP
 
   val form: Form[AmendCurrentPensionModel] =
     AmendCurrentPensionForm
-      .amendCurrentPensionForm(IndividualProtection2016.toString)
+      .amendCurrentPensionForm(IndividualProtection2016)
       .bind(Map("amendedUKPensionAmt" -> "12000"))
 
-  val doc: Document = Jsoup.parse(view.apply(form, IndividualProtection2016.toString, "open").body)
+  val doc: Document = Jsoup.parse(view.apply(form, IndividualProtection2016, Open).body)
 
   val errorForm: Form[AmendCurrentPensionModel] = AmendCurrentPensionForm
-    .amendCurrentPensionForm(IndividualProtection2016.toString)
+    .amendCurrentPensionForm(IndividualProtection2016)
     .bind(Map("amendedUKPensionAmt" -> "a"))
 
-  val errorDoc: Document = Jsoup.parse(view.apply(errorForm, IndividualProtection2016.toString, "open").body)
+  val errorDoc: Document = Jsoup.parse(view.apply(errorForm, IndividualProtection2016, Open).body)
 
   "the AmendIP14CurrentPensionsView" should {
 
@@ -84,7 +84,7 @@ class AmendIP14CurrentPensionsViewSpec extends CommonViewSpecHelper with AmendIP
 
       formElement.attr("method") shouldBe "POST"
       formElement.attr("action") shouldBe controllers.routes.AmendsCurrentPensionController
-        .submitAmendCurrentPension(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")
+        .submitAmendCurrentPension(IndividualProtection2016, Open)
         .url
       doc.getElementsByClass("govuk-visually-hidden").eq(1).text() shouldBe plaIp14CurrentPensionsTitle
     }

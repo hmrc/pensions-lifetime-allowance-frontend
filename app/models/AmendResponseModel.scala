@@ -19,14 +19,15 @@ package models
 import models.pla.response.{AmendProtectionResponse, AmendProtectionResponseStatus}
 import play.api.libs.json.{Format, Json}
 
-case class AmendedProtectionModel(
+case class AmendResponseModel(
     identifier: Long,
     sequence: Int,
+    status: AmendProtectionResponseStatus,
     protectionType: AmendedProtectionType,
     certificateDate: Option[DateModel],
     certificateTime: Option[TimeModel],
-    status: AmendProtectionResponseStatus,
     protectionReference: Option[String],
+    psaCheckReference: String,
     relevantAmount: Int,
     preADayPensionInPaymentAmount: Int,
     postADayBenefitCrystallisationEventAmount: Int,
@@ -35,8 +36,7 @@ case class AmendedProtectionModel(
     notificationId: Option[NotificationId],
     protectedAmount: Option[Int],
     pensionDebitTotalAmount: Option[Int],
-    pensionDebit: Option[PensionDebitModel],
-    psaCheckReference: String
+    pensionDebit: Option[PensionDebitModel]
 ) {
 
   def toProtectionModel = ProtectionModel(
@@ -61,12 +61,12 @@ case class AmendedProtectionModel(
     enhancementFactor = None
   )
 
-  def combineWithFixedProtection2016(protectionModel: ProtectionModel): Option[AmendedProtectionModel] =
+  def combineWithFixedProtection2016(protectionModel: ProtectionModel): Option[AmendResponseModel] =
     AmendedProtectionType.tryFrom(protectionModel.protectionType) match {
-      case Some(protectionType) if protectionType.isFixedProtection2016 =>
+      case Some(amendedProtectionType) if amendedProtectionType.isFixedProtection2016 =>
         Some(
           copy(
-            protectionType = protectionType,
+            protectionType = amendedProtectionType,
             protectionReference = protectionModel.protectionReference,
             certificateDate = protectionModel.certificateDate,
             certificateTime = protectionModel.certificateTime
@@ -77,16 +77,16 @@ case class AmendedProtectionModel(
 
 }
 
-object AmendedProtectionModel {
+object AmendResponseModel {
 
-  implicit val format: Format[AmendedProtectionModel] = Json.format[AmendedProtectionModel]
+  implicit val format: Format[AmendResponseModel] = Json.format[AmendResponseModel]
 
-  def from(amendResponse: AmendProtectionResponse, psaCheckReference: String): AmendedProtectionModel = {
+  def from(amendResponse: AmendProtectionResponse, psaCheckReference: String): AmendResponseModel = {
     val pensionDebit = amendResponse.pensionDebitStartDate.zip(amendResponse.pensionDebitEnteredAmount).map {
       case (startDate, enteredAmount) => PensionDebitModel(startDate, enteredAmount)
     }
 
-    AmendedProtectionModel(
+    AmendResponseModel(
       identifier = amendResponse.lifetimeAllowanceIdentifier,
       sequence = amendResponse.lifetimeAllowanceSequenceNumber,
       protectionType = AmendedProtectionType.from(amendResponse.lifetimeAllowanceType),

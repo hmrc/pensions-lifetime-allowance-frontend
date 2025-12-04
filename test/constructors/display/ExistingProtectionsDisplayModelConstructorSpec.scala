@@ -16,17 +16,18 @@
 
 package constructors.display
 
-import common.Strings
-import models.{ProtectionModel, TransformedReadResponseModel}
 import models.display.{
   ExistingInactiveProtectionsByType,
   ExistingInactiveProtectionsDisplayModel,
   ExistingProtectionDisplayModel,
   ExistingProtectionsDisplayModel
 }
+import models.pla.AmendableProtectionType
+import models.pla.request.AmendProtectionRequestStatus
 import models.pla.response.ProtectionStatus._
 import models.pla.response.ProtectionType
 import models.pla.response.ProtectionType._
+import models.{DateModel, ProtectionModel, TimeModel, TransformedReadResponseModel}
 import play.api.i18n.Messages
 
 class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructorsTestData {
@@ -35,24 +36,26 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
 
     "Create an ExistingProtectionsDisplayModel" in {
       val tstProtectionModelOpen = ProtectionModel(
-        psaCheckReference = Some(tstPSACheckRef),
-        identifier = Some(12345),
-        protectionType = Some(IndividualProtection2014.toString),
-        status = Some(Open.toString),
-        certificateDate = Some("2016-04-17T15:14:00"),
+        psaCheckReference = tstPsaCheckRef,
+        identifier = 12345,
+        sequence = 1,
+        protectionType = IndividualProtection2014,
+        status = Open,
+        certificateDate = Some(DateModel.of(2017, 4, 17)),
+        certificateTime = Some(TimeModel.of(15, 14, 0)),
         protectedAmount = Some(1250000),
         protectionReference = Some("PSA123456")
       )
       val tstExistingProtectionDisplayModelOpen = ExistingProtectionDisplayModel(
-        protectionType = IndividualProtection2014.toString,
-        status = Open.toString,
+        protectionType = IndividualProtection2014,
+        status = Open,
         amendCall = Some(
           controllers.routes.AmendsController.amendsSummary(
-            Strings.ProtectionTypeUrl.IndividualProtection2014,
-            Strings.StatusUrl.Open
+            AmendableProtectionType.IndividualProtection2014,
+            AmendProtectionRequestStatus.Open
           )
         ),
-        psaCheckReference = Some(tstPSACheckRef),
+        psaCheckReference = tstPsaCheckRef,
         protectionReference = "PSA123456",
         protectedAmount = Some("£1,250,000"),
         certificateDate = Some("17 April 2016"),
@@ -60,35 +63,38 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
       )
 
       val tstProtectionModelDormant = ProtectionModel(
-        psaCheckReference = Some(tstPSACheckRef),
-        identifier = Some(12345),
-        protectionType = Some(IndividualProtection2014.toString),
-        status = Some(Dormant.toString),
+        psaCheckReference = tstPsaCheckRef,
+        identifier = 12345,
+        sequence = 1,
+        protectionType = IndividualProtection2014,
+        status = Dormant,
         certificateDate = None,
-        protectedAmount = None,
-        protectionReference = None
+        certificateTime = None
       )
+
       val tstExistingProtectionDisplayModelDormant = ExistingProtectionDisplayModel(
-        protectionType = IndividualProtection2014.toString,
-        status = Dormant.toString,
+        protectionType = IndividualProtection2014,
+        status = Dormant,
         amendCall = Some(
           controllers.routes.AmendsController.amendsSummary(
-            Strings.ProtectionTypeUrl.IndividualProtection2014,
-            Strings.StatusUrl.Dormant
+            AmendableProtectionType.IndividualProtection2014,
+            AmendProtectionRequestStatus.Dormant
           )
         ),
-        psaCheckReference = Some(tstPSACheckRef),
+        psaCheckReference = tstPsaCheckRef,
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
-        certificateDate = None
+        certificateDate = None,
+        certificateTime = None
       )
+
       val tstTransformedReadResponseModel =
         TransformedReadResponseModel(Some(tstProtectionModelOpen), List(tstProtectionModelDormant))
       val tstExistingProtectionsDisplayModel = ExistingProtectionsDisplayModel(
         activeProtection = Some(tstExistingProtectionDisplayModelOpen),
         inactiveProtections = ExistingInactiveProtectionsDisplayModel(
           dormantProtections = ExistingInactiveProtectionsByType(
-            Seq(IndividualProtection2014.toString -> List(tstExistingProtectionDisplayModelDormant))
+            Seq(IndividualProtection2014 -> List(tstExistingProtectionDisplayModelDormant))
           ),
           withdrawnProtections = ExistingInactiveProtectionsByType.empty,
           unsuccessfulProtections = ExistingInactiveProtectionsByType.empty,
@@ -104,187 +110,196 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
 
     "Correctly order existing protections with the same status" in {
       val tstProtectionModelOpen = ProtectionModel(
-        psaCheckReference = Some(tstPSACheckRef),
-        identifier = Some(12345),
-        protectionType = Some(IndividualProtection2014.toString),
-        status = Some(Open.toString),
-        certificateDate = Some("2016-04-17T15:14:00"),
+        psaCheckReference = tstPsaCheckRef,
+        identifier = 12345,
+        sequence = 1,
+        protectionType = IndividualProtection2014,
+        status = Open,
+        certificateDate = Some(DateModel.of(2016, 4, 17)),
+        certificateTime = Some(TimeModel.of(15, 14, 0)),
         protectedAmount = Some(1250000),
-        protectionReference = Some("PSA123456"),
-        withdrawnDate = None
+        protectionReference = Some("PSA123456")
       )
       val tstProtectionDisplayModelOpen = ExistingProtectionDisplayModel(
-        protectionType = IndividualProtection2014.toString,
-        status = Open.toString,
+        protectionType = IndividualProtection2014,
+        status = Open,
         amendCall = Some(
           controllers.routes.AmendsController.amendsSummary(
-            Strings.ProtectionTypeUrl.IndividualProtection2014,
-            Strings.StatusUrl.Open
+            AmendableProtectionType.IndividualProtection2014,
+            AmendProtectionRequestStatus.Open
           )
         ),
-        psaCheckReference = Some(tstPSACheckRef),
+        psaCheckReference = tstPsaCheckRef,
         protectionReference = "PSA123456",
         protectedAmount = Some("£1,250,000"),
         certificateDate = Some("17 April 2016"),
-        certificateTime = Some("3:14pm"),
-        withdrawnDate = None
+        certificateTime = Some("3:14pm")
       )
 
       val tstProtectionModelDormantFP2014 = ProtectionModel(
-        psaCheckReference = Some(tstPSACheckRef),
-        identifier = Some(12345),
-        protectionType = Some(FixedProtection2014.toString),
-        status = Some(Dormant.toString),
+        psaCheckReference = tstPsaCheckRef,
+        identifier = 12345,
+        sequence = 1,
+        protectionType = FixedProtection2014,
+        status = Dormant,
         certificateDate = None,
+        certificateTime = None,
         protectedAmount = None,
-        protectionReference = None,
-        withdrawnDate = None
+        protectionReference = None
       )
       val tstProtectionDisplayModelDormantFP2014 = ExistingProtectionDisplayModel(
-        protectionType = FixedProtection2014.toString,
-        status = Dormant.toString,
+        protectionType = FixedProtection2014,
+        status = Dormant,
         amendCall = None,
-        psaCheckReference = Some(tstPSACheckRef),
+        psaCheckReference = tstPsaCheckRef,
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
         certificateDate = None,
-        withdrawnDate = None
+        certificateTime = None
       )
 
       val tstProtectionModelDormantFixed = ProtectionModel(
-        psaCheckReference = Some(tstPSACheckRef),
-        identifier = Some(12345),
-        protectionType = Some(FixedProtection.toString),
-        status = Some(Dormant.toString),
+        psaCheckReference = tstPsaCheckRef,
+        identifier = 12345,
+        sequence = 1,
+        protectionType = FixedProtection,
+        status = Dormant,
         certificateDate = None,
+        certificateTime = None,
         protectedAmount = None,
-        protectionReference = None,
-        withdrawnDate = None
+        protectionReference = None
       )
+
       val tstProtectionDisplayModelDormantFixed = ExistingProtectionDisplayModel(
-        protectionType = FixedProtection.toString,
-        status = Dormant.toString,
+        protectionType = FixedProtection,
+        status = Dormant,
         amendCall = None,
-        psaCheckReference = Some(tstPSACheckRef),
+        psaCheckReference = tstPsaCheckRef,
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
         certificateDate = None,
-        withdrawnDate = None
+        certificateTime = None
       )
 
       val tstProtectionModelDormantEnhanced = ProtectionModel(
-        psaCheckReference = Some(tstPSACheckRef),
-        identifier = Some(12345),
-        protectionType = Some(EnhancedProtection.toString),
-        status = Some(Dormant.toString),
+        psaCheckReference = tstPsaCheckRef,
+        identifier = 12345,
+        sequence = 1,
+        protectionType = EnhancedProtection,
+        status = Dormant,
         certificateDate = None,
+        certificateTime = None,
         protectedAmount = None,
-        protectionReference = None,
-        withdrawnDate = None
+        protectionReference = None
       )
       val tstProtectionDisplayModelDormantEnhanced = ExistingProtectionDisplayModel(
-        protectionType = EnhancedProtection.toString,
-        status = Dormant.toString,
+        protectionType = EnhancedProtection,
+        status = Dormant,
         amendCall = None,
-        psaCheckReference = Some(tstPSACheckRef),
+        psaCheckReference = tstPsaCheckRef,
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
         certificateDate = None,
-        withdrawnDate = None
+        certificateTime = None
       )
 
       val tstProtectionModelDormantPrimary = ProtectionModel(
-        psaCheckReference = Some(tstPSACheckRef),
-        identifier = Some(12345),
-        protectionType = Some(PrimaryProtection.toString),
-        status = Some(Dormant.toString),
+        psaCheckReference = tstPsaCheckRef,
+        identifier = 12345,
+        sequence = 1,
+        protectionType = PrimaryProtection,
+        status = Dormant,
         certificateDate = None,
+        certificateTime = None,
         protectedAmount = None,
-        protectionReference = None,
-        withdrawnDate = None
+        protectionReference = None
       )
       val tstProtectionDisplayModelDormantPrimary = ExistingProtectionDisplayModel(
-        protectionType = PrimaryProtection.toString,
-        status = Dormant.toString,
+        protectionType = PrimaryProtection,
+        status = Dormant,
         amendCall = None,
-        psaCheckReference = Some(tstPSACheckRef),
+        psaCheckReference = tstPsaCheckRef,
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
         certificateDate = None,
-        withdrawnDate = None
+        certificateTime = None
       )
 
       val tstProtectionModelDormantIP2016 = ProtectionModel(
-        psaCheckReference = Some(tstPSACheckRef),
-        identifier = Some(12345),
-        protectionType = Some(IndividualProtection2016.toString),
-        status = Some(Dormant.toString),
+        psaCheckReference = tstPsaCheckRef,
+        identifier = 12345,
+        sequence = 1,
+        protectionType = IndividualProtection2016,
+        status = Dormant,
         certificateDate = None,
+        certificateTime = None,
         protectedAmount = None,
-        protectionReference = None,
-        withdrawnDate = None
+        protectionReference = None
       )
       val tstProtectionDisplayModelDormantIP2016 = ExistingProtectionDisplayModel(
-        protectionType = IndividualProtection2016.toString,
-        status = Dormant.toString,
+        protectionType = IndividualProtection2016,
+        status = Dormant,
         amendCall = Some(
           controllers.routes.AmendsController.amendsSummary(
-            Strings.ProtectionTypeUrl.IndividualProtection2016,
-            Strings.StatusUrl.Dormant
+            AmendableProtectionType.IndividualProtection2016,
+            AmendProtectionRequestStatus.Dormant
           )
         ),
-        psaCheckReference = Some(tstPSACheckRef),
+        psaCheckReference = tstPsaCheckRef,
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
         certificateDate = None,
-        withdrawnDate = None
+        certificateTime = None
       )
 
       val tstProtectionModelDormantFP2016 = ProtectionModel(
-        psaCheckReference = Some(tstPSACheckRef),
-        identifier = Some(12345),
-        protectionType = Some(FixedProtection2016.toString),
-        status = Some(Dormant.toString),
+        psaCheckReference = tstPsaCheckRef,
+        identifier = 12345,
+        sequence = 1,
+        protectionType = FixedProtection2016,
+        status = Dormant,
         certificateDate = None,
+        certificateTime = None,
         protectedAmount = None,
-        protectionReference = None,
-        withdrawnDate = None
+        protectionReference = None
       )
       val tstProtectionDisplayModelDormantFP2016 = ExistingProtectionDisplayModel(
-        protectionType = FixedProtection2016.toString,
-        status = Dormant.toString,
+        protectionType = FixedProtection2016,
+        status = Dormant,
         amendCall = None,
-        psaCheckReference = Some(tstPSACheckRef),
+        psaCheckReference = tstPsaCheckRef,
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
         certificateDate = None,
-        withdrawnDate = None
+        certificateTime = None
       )
 
       val tstProtectionModelDormantIP2014 = ProtectionModel(
-        psaCheckReference = Some(tstPSACheckRef),
-        identifier = Some(12345),
-        protectionType = Some(IndividualProtection2014.toString),
-        status = Some(Dormant.toString),
+        psaCheckReference = tstPsaCheckRef,
+        identifier = 12345,
+        sequence = 1,
+        protectionType = IndividualProtection2014,
+        status = Dormant,
         certificateDate = None,
+        certificateTime = None,
         protectedAmount = None,
-        protectionReference = None,
-        withdrawnDate = None
+        protectionReference = None
       )
+
       val tstProtectionDisplayModelDormantIP2014 = ExistingProtectionDisplayModel(
-        protectionType = IndividualProtection2014.toString,
-        status = Dormant.toString,
+        protectionType = IndividualProtection2014,
+        status = Dormant,
         amendCall = Some(
           controllers.routes.AmendsController.amendsSummary(
-            Strings.ProtectionTypeUrl.IndividualProtection2014,
-            Strings.StatusUrl.Dormant
+            AmendableProtectionType.IndividualProtection2014,
+            AmendProtectionRequestStatus.Dormant
           )
         ),
-        psaCheckReference = Some(tstPSACheckRef),
+        psaCheckReference = tstPsaCheckRef,
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
         certificateDate = None,
-        withdrawnDate = None
+        certificateTime = None
       )
 
       val tstExistingProtectionModel = TransformedReadResponseModel(
@@ -305,25 +320,25 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
         inactiveProtections = ExistingInactiveProtectionsDisplayModel(
           dormantProtections = ExistingInactiveProtectionsByType(
             Seq(
-              IndividualProtection2016.toString -> List(
+              IndividualProtection2016 -> List(
                 tstProtectionDisplayModelDormantIP2016
               ),
-              IndividualProtection2014.toString -> List(
+              IndividualProtection2014 -> List(
                 tstProtectionDisplayModelDormantIP2014
               ),
-              FixedProtection2016.toString -> List(
+              FixedProtection2016 -> List(
                 tstProtectionDisplayModelDormantFP2016
               ),
-              FixedProtection2014.toString -> List(
+              FixedProtection2014 -> List(
                 tstProtectionDisplayModelDormantFP2014
               ),
-              PrimaryProtection.toString -> List(
+              PrimaryProtection -> List(
                 tstProtectionDisplayModelDormantPrimary
               ),
-              EnhancedProtection.toString -> List(
+              EnhancedProtection -> List(
                 tstProtectionDisplayModelDormantEnhanced
               ),
-              FixedProtection.toString -> List(
+              FixedProtection -> List(
                 tstProtectionDisplayModelDormantFixed
               )
             )
@@ -343,171 +358,179 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
     "Correctly order existing protections with a variety of statuses" in {
 
       val tstProtectionModelExpiredFP2014 = ProtectionModel(
-        psaCheckReference = Some(tstPSACheckRef),
-        identifier = Some(12345),
-        protectionType = Some(FixedProtection2014.toString),
-        status = Some(Expired.toString),
+        psaCheckReference = tstPsaCheckRef,
+        identifier = 12345,
+        sequence = 1,
+        protectionType = FixedProtection2014,
+        status = Expired,
         certificateDate = None,
+        certificateTime = None,
         protectedAmount = None,
-        protectionReference = None,
-        withdrawnDate = None
+        protectionReference = None
       )
       val tstProtectionDisplayModelExpiredFP2014 = ExistingProtectionDisplayModel(
-        protectionType = FixedProtection2014.toString,
-        status = Expired.toString,
+        protectionType = FixedProtection2014,
+        status = Expired,
         amendCall = None,
-        psaCheckReference = Some(tstPSACheckRef),
+        psaCheckReference = tstPsaCheckRef,
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
         certificateDate = None,
-        withdrawnDate = None
+        certificateTime = None
       )
 
       val tstProtectionModelExpiredFP2016 = ProtectionModel(
-        psaCheckReference = Some(tstPSACheckRef),
-        identifier = Some(12345),
-        protectionType = Some(FixedProtection2016.toString),
-        status = Some(Expired.toString),
+        psaCheckReference = tstPsaCheckRef,
+        identifier = 12345,
+        sequence = 1,
+        protectionType = FixedProtection2016,
+        status = Expired,
         certificateDate = None,
+        certificateTime = None,
         protectedAmount = None,
-        protectionReference = None,
-        withdrawnDate = None
+        protectionReference = None
       )
       val tstProtectionDisplayModelExpiredFP2016 = ExistingProtectionDisplayModel(
-        protectionType = FixedProtection2016.toString,
-        status = Expired.toString,
+        protectionType = FixedProtection2016,
+        status = Expired,
         amendCall = None,
-        psaCheckReference = Some(tstPSACheckRef),
+        psaCheckReference = tstPsaCheckRef,
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
         certificateDate = None,
-        withdrawnDate = None
+        certificateTime = None
       )
 
       val tstProtectionModelRejectedIP2014 = ProtectionModel(
-        psaCheckReference = Some(tstPSACheckRef),
-        identifier = Some(12345),
-        protectionType = Some(IndividualProtection2014.toString),
-        status = Some(Rejected.toString),
+        psaCheckReference = tstPsaCheckRef,
+        identifier = 12345,
+        sequence = 1,
+        protectionType = IndividualProtection2014,
+        status = Rejected,
         certificateDate = None,
+        certificateTime = None,
         protectedAmount = None,
-        protectionReference = None,
-        withdrawnDate = None
+        protectionReference = None
       )
       val tstProtectionDisplayModelRejectedIP2014 = ExistingProtectionDisplayModel(
-        protectionType = IndividualProtection2014.toString,
-        status = Rejected.toString,
+        protectionType = IndividualProtection2014,
+        status = Rejected,
         amendCall = None,
-        psaCheckReference = Some(tstPSACheckRef),
+        psaCheckReference = tstPsaCheckRef,
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
         certificateDate = None,
-        withdrawnDate = None
+        certificateTime = None
       )
 
       val tstProtectionModelUnsuccessfulIP2014 = ProtectionModel(
-        psaCheckReference = Some(tstPSACheckRef),
-        identifier = Some(12345),
-        protectionType = Some(IndividualProtection2014.toString),
-        status = Some(Unsuccessful.toString),
+        psaCheckReference = tstPsaCheckRef,
+        identifier = 12345,
+        sequence = 1,
+        protectionType = IndividualProtection2014,
+        status = Unsuccessful,
         certificateDate = None,
+        certificateTime = None,
         protectedAmount = None,
-        protectionReference = None,
-        withdrawnDate = None
+        protectionReference = None
       )
       val tstProtectionDisplayModelUnsuccessfulIP2014 = ExistingProtectionDisplayModel(
-        protectionType = IndividualProtection2014.toString,
-        status = Unsuccessful.toString,
+        protectionType = IndividualProtection2014,
+        status = Unsuccessful,
         amendCall = None,
-        psaCheckReference = Some(tstPSACheckRef),
+        psaCheckReference = tstPsaCheckRef,
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
         certificateDate = None,
-        withdrawnDate = None
+        certificateTime = None
       )
 
       val tstProtectionModelWithdrawnPrimary = ProtectionModel(
-        psaCheckReference = Some(tstPSACheckRef),
-        identifier = Some(12345),
-        protectionType = Some(PrimaryProtection.toString),
-        status = Some(Withdrawn.toString),
+        psaCheckReference = tstPsaCheckRef,
+        identifier = 12345,
+        sequence = 1,
+        protectionType = PrimaryProtection,
+        status = Withdrawn,
         certificateDate = None,
+        certificateTime = None,
         protectedAmount = None,
-        protectionReference = None,
-        withdrawnDate = None
+        protectionReference = None
       )
       val tstProtectionDisplayModelWithdrawnPrimary = ExistingProtectionDisplayModel(
-        protectionType = PrimaryProtection.toString,
-        status = Withdrawn.toString,
+        protectionType = PrimaryProtection,
+        status = Withdrawn,
         amendCall = None,
-        psaCheckReference = Some(tstPSACheckRef),
+        psaCheckReference = tstPsaCheckRef,
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
         certificateDate = None,
-        withdrawnDate = None
+        certificateTime = None
       )
 
       val tstProtectionModelWithdrawnIP2016 = ProtectionModel(
-        psaCheckReference = Some(tstPSACheckRef),
-        identifier = Some(12345),
-        protectionType = Some(IndividualProtection2016.toString),
-        status = Some(Withdrawn.toString),
+        psaCheckReference = tstPsaCheckRef,
+        identifier = 12345,
+        sequence = 1,
+        protectionType = IndividualProtection2016,
+        status = Withdrawn,
         certificateDate = None,
+        certificateTime = None,
         protectedAmount = None,
-        protectionReference = None,
-        withdrawnDate = None
+        protectionReference = None
       )
       val tstProtectionDisplayModelWithdrawnIP2016 = ExistingProtectionDisplayModel(
-        protectionType = IndividualProtection2016.toString,
-        status = Withdrawn.toString,
+        protectionType = IndividualProtection2016,
+        status = Withdrawn,
         amendCall = None,
-        psaCheckReference = Some(tstPSACheckRef),
+        psaCheckReference = tstPsaCheckRef,
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
         certificateDate = None,
-        withdrawnDate = None
+        certificateTime = None
       )
 
       val tstProtectionModelDormantFixed = ProtectionModel(
-        psaCheckReference = Some(tstPSACheckRef),
-        identifier = Some(12345),
-        protectionType = Some(FixedProtection.toString),
-        status = Some(Dormant.toString),
+        psaCheckReference = tstPsaCheckRef,
+        identifier = 12345,
+        sequence = 1,
+        protectionType = FixedProtection,
+        status = Dormant,
         certificateDate = None,
+        certificateTime = None,
         protectedAmount = None,
-        protectionReference = None,
-        withdrawnDate = None
+        protectionReference = None
       )
       val tstProtectionDisplayModelDormantFixed = ExistingProtectionDisplayModel(
-        protectionType = FixedProtection.toString,
-        status = Dormant.toString,
+        protectionType = FixedProtection,
+        status = Dormant,
         amendCall = None,
-        psaCheckReference = Some(tstPSACheckRef),
+        psaCheckReference = tstPsaCheckRef,
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
         certificateDate = None,
-        withdrawnDate = None
+        certificateTime = None
       )
 
       val tstProtectionModelDormantEnhanced = ProtectionModel(
-        psaCheckReference = Some(tstPSACheckRef),
-        identifier = Some(12345),
-        protectionType = Some(EnhancedProtection.toString),
-        status = Some(Dormant.toString),
+        psaCheckReference = tstPsaCheckRef,
+        identifier = 12345,
+        sequence = 1,
+        protectionType = EnhancedProtection,
+        status = Dormant,
         certificateDate = None,
+        certificateTime = None,
         protectedAmount = None,
-        protectionReference = None,
-        withdrawnDate = None
+        protectionReference = None
       )
       val tstProtectionDisplayModelDormantEnhanced = ExistingProtectionDisplayModel(
-        protectionType = EnhancedProtection.toString,
-        status = Dormant.toString,
+        protectionType = EnhancedProtection,
+        status = Dormant,
         amendCall = None,
-        psaCheckReference = Some(tstPSACheckRef),
+        psaCheckReference = tstPsaCheckRef,
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
         certificateDate = None,
-        withdrawnDate = None
+        certificateTime = None
       )
 
       val tstExistingProtectionModel = TransformedReadResponseModel(
@@ -529,44 +552,44 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
         inactiveProtections = ExistingInactiveProtectionsDisplayModel(
           dormantProtections = ExistingInactiveProtectionsByType(
             Seq(
-              EnhancedProtection.toString -> List(
+              EnhancedProtection -> List(
                 tstProtectionDisplayModelDormantEnhanced
               ),
-              FixedProtection.toString -> List(
+              FixedProtection -> List(
                 tstProtectionDisplayModelDormantFixed
               )
             )
           ),
           withdrawnProtections = ExistingInactiveProtectionsByType(
             Seq(
-              IndividualProtection2016.toString -> List(
+              IndividualProtection2016 -> List(
                 tstProtectionDisplayModelWithdrawnIP2016
               ),
-              PrimaryProtection.toString -> List(
+              PrimaryProtection -> List(
                 tstProtectionDisplayModelWithdrawnPrimary
               )
             )
           ),
           unsuccessfulProtections = ExistingInactiveProtectionsByType(
             Seq(
-              IndividualProtection2014.toString -> List(
+              IndividualProtection2014 -> List(
                 tstProtectionDisplayModelUnsuccessfulIP2014
               )
             )
           ),
           rejectedProtections = ExistingInactiveProtectionsByType(
             Seq(
-              IndividualProtection2014.toString -> List(
+              IndividualProtection2014 -> List(
                 tstProtectionDisplayModelRejectedIP2014
               )
             )
           ),
           expiredProtections = ExistingInactiveProtectionsByType(
             Seq(
-              FixedProtection2016.toString -> List(
+              FixedProtection2016 -> List(
                 tstProtectionDisplayModelExpiredFP2016
               ),
-              FixedProtection2014.toString -> List(
+              FixedProtection2014 -> List(
                 tstProtectionDisplayModelExpiredFP2014
               )
             )
@@ -583,14 +606,15 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
       ProtectionType.values.foreach(protectionType =>
         s"protection type is $protectionType" in {
           val protectionModel = ProtectionModel(
-            psaCheckReference = Some(tstPSACheckRef),
-            identifier = Some(12345),
-            protectionType = Some(protectionType.toString),
-            status = Some(Withdrawn.toString),
-            certificateDate = Some("2016-04-17T15:14:00"),
+            psaCheckReference = tstPsaCheckRef,
+            identifier = 12345,
+            sequence = 1,
+            protectionType = protectionType,
+            status = Withdrawn,
+            certificateDate = Some(DateModel.of(2016, 4, 17)),
+            certificateTime = Some(TimeModel.of(15, 14, 0)),
             protectedAmount = Some(1250000),
-            protectionReference = Some("PSA654321"),
-            notificationId = Some(1)
+            protectionReference = Some("PSA654321")
           )
 
           val transformedReadResponseModel = TransformedReadResponseModel(
@@ -599,10 +623,10 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
           )
 
           val existingProtectionDisplayModel = ExistingProtectionDisplayModel(
-            protectionType = protectionType.toString,
-            status = Withdrawn.toString,
+            protectionType = protectionType,
+            status = Withdrawn,
             amendCall = None,
-            psaCheckReference = Some(tstPSACheckRef),
+            psaCheckReference = tstPsaCheckRef,
             protectionReference = "PSA654321",
             protectedAmount = Some("£1,250,000"),
             certificateDate = Some("17 April 2016"),
@@ -615,7 +639,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
               dormantProtections = ExistingInactiveProtectionsByType.empty,
               withdrawnProtections = ExistingInactiveProtectionsByType(
                 Seq(
-                  protectionType.toString -> Seq(existingProtectionDisplayModel)
+                  protectionType -> Seq(existingProtectionDisplayModel)
                 )
               ),
               unsuccessfulProtections = ExistingInactiveProtectionsByType.empty,
@@ -630,54 +654,6 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
         }
       )
 
-    "Handle an unknown protection type as notRecorded" in {
-      val protectionModel = ProtectionModel(
-        psaCheckReference = Some(tstPSACheckRef),
-        identifier = Some(12345),
-        protectionType = Some("unknown protection type"),
-        status = Some(Withdrawn.toString),
-        certificateDate = Some("2016-04-17T15:14:00"),
-        protectedAmount = Some(1250000),
-        protectionReference = Some("PSA654321"),
-        notificationId = Some(1)
-      )
-
-      val transformedReadResponseModel = TransformedReadResponseModel(
-        activeProtection = None,
-        inactiveProtections = Seq(protectionModel)
-      )
-
-      val existingProtectionDisplayModel = ExistingProtectionDisplayModel(
-        protectionType = "notRecorded",
-        status = Withdrawn.toString,
-        amendCall = None,
-        psaCheckReference = Some(tstPSACheckRef),
-        protectionReference = "PSA654321",
-        protectedAmount = Some("£1,250,000"),
-        certificateDate = Some("17 April 2016"),
-        certificateTime = Some("3:14pm")
-      )
-
-      val existingProtectionsDisplayModel = ExistingProtectionsDisplayModel(
-        activeProtection = None,
-        inactiveProtections = ExistingInactiveProtectionsDisplayModel(
-          dormantProtections = ExistingInactiveProtectionsByType.empty,
-          withdrawnProtections = ExistingInactiveProtectionsByType(
-            Seq(
-              "notRecorded" -> Seq(existingProtectionDisplayModel)
-            )
-          ),
-          unsuccessfulProtections = ExistingInactiveProtectionsByType.empty,
-          rejectedProtections = ExistingInactiveProtectionsByType.empty,
-          expiredProtections = ExistingInactiveProtectionsByType.empty
-        )
-      )
-
-      ExistingProtectionsDisplayModelConstructor.createExistingProtectionsDisplayModel(
-        transformedReadResponseModel
-      ) shouldBe existingProtectionsDisplayModel
-    }
-
   }
 
   "shouldDisplayLumpSumAmount" should {
@@ -685,7 +661,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
       val types = Seq(
         PrimaryProtection,
         PrimaryProtectionLTA
-      ).map(_.toString)
+      )
 
       types.foreach(protectionType =>
         s"the protection type is $protectionType" in {
@@ -711,7 +687,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
         InternationalEnhancementS221,
         InternationalEnhancementS224,
         PensionCreditRights
-      ).map(_.toString)
+      )
 
       types.foreach(protectionType =>
         s"the protection type is $protectionType" in {
@@ -727,7 +703,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
       val types = Seq(
         EnhancedProtection,
         EnhancedProtectionLTA
-      ).map(_.toString)
+      )
 
       types.foreach(protectionType =>
         s"the protection type is $protectionType" in {
@@ -753,7 +729,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
         InternationalEnhancementS221,
         InternationalEnhancementS224,
         PensionCreditRights
-      ).map(_.toString)
+      )
 
       types.foreach(protectionType =>
         s"the protection type is $protectionType" in {
@@ -770,7 +746,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
         PensionCreditRights,
         InternationalEnhancementS221,
         InternationalEnhancementS224
-      ).map(_.toString)
+      )
 
       types.foreach(protectionType =>
         s"the protection type is $protectionType" in {
@@ -795,7 +771,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
         IndividualProtection2016LTA,
         PrimaryProtection,
         PrimaryProtectionLTA
-      ).map(_.toString)
+      )
 
       types.foreach(protectionType =>
         s"the protection type is $protectionType" in {
@@ -811,7 +787,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
       val types = Seq(
         PrimaryProtection,
         PrimaryProtectionLTA
-      ).map(_.toString)
+      )
 
       types.foreach(protectionType =>
         s"the protection type is $protectionType" in {
@@ -837,7 +813,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
         InternationalEnhancementS221,
         InternationalEnhancementS224,
         PensionCreditRights
-      ).map(_.toString)
+      )
 
       types.foreach(protectionType =>
         s"the protection type is $protectionType" in {

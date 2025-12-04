@@ -26,7 +26,7 @@ import models.AmendedProtectionType.{
   IndividualProtection2016LTA
 }
 import models.pla.response.AmendProtectionResponseStatus.{Dormant, Open, Withdrawn}
-import models.{AmendedProtectionModel, DateModel, Person, PersonalDetailsModel, TimeModel}
+import models.{AmendResponseModel, DateModel, Person, PersonalDetailsModel, TimeModel}
 
 object AmendProtectionDisplayModelTestData {
   val psaCheckReference = "psaRef"
@@ -68,10 +68,10 @@ object AmendProtectionDisplayModelTestData {
     certificateTime = Some("3:14pm")
   )
 
-  private val exampleAmendedProtectionModelIndividualProtection2014 = AmendedProtectionModel(
+  private val exampleAmendResponseModelIndividualProtection2014 = AmendResponseModel(
     identifier = 1,
     sequence = 1,
-    psaCheckReference = Some(psaCheckReference),
+    psaCheckReference = psaCheckReference,
     protectionType = IndividualProtection2014,
     status = Dormant,
     certificateDate = Some(DateModel.of(2015, 7, 14)),
@@ -102,10 +102,10 @@ object AmendProtectionDisplayModelTestData {
     certificateTime = Some("3:14pm")
   )
 
-  private val exampleAmendedProtectionModelIndividualProtection2016 = AmendedProtectionModel(
+  private val exampleAmendResponseModelIndividualProtection2016 = AmendResponseModel(
     identifier = 1,
     sequence = 1,
-    psaCheckReference = Some(psaCheckReference),
+    psaCheckReference = psaCheckReference,
     protectionType = IndividualProtection2016,
     status = Dormant,
     certificateDate = Some(DateModel.of(2017, 7, 14)),
@@ -122,8 +122,8 @@ object AmendProtectionDisplayModelTestData {
     pensionDebit = None
   )
 
-  val amendedProtectionModelNoNotificationIdIndividualProtection2014 =
-    exampleAmendedProtectionModelIndividualProtection2014.copy(
+  val amendResponseModelNoNotificationIdIndividualProtection2014: AmendResponseModel =
+    exampleAmendResponseModelIndividualProtection2014.copy(
       relevantAmount = 1_500_001,
       protectedAmount = Some(1_500_000),
       uncrystallisedRightsAmount = 375_004,
@@ -138,13 +138,13 @@ object AmendProtectionDisplayModelTestData {
       status = Some(Open)
     )
 
-  val amendResultDisplayModelNoNotificationIdIndividualProtection2014 = AmendOutcomeDisplayModelNoNotificationId(
+  val amendOutcomeDisplayModelNoNotificationIdIndividualProtection2014 = AmendOutcomeDisplayModelNoNotificationId(
     protectionType = IndividualProtection2014,
     protectedAmount = protectedAmountIndividualProtection2014Max,
     details = Some(amendPrintDisplayModelNoNotificationIdIndividualProtection2014)
   )
 
-  val amendResultDisplayModelNoNotificationIdIndividualProtection2014LTA = AmendOutcomeDisplayModelNoNotificationId(
+  val amendOutcomeDisplayModelNoNotificationIdIndividualProtection2014LTA = AmendOutcomeDisplayModelNoNotificationId(
     protectionType = IndividualProtection2014LTA,
     protectedAmount = protectedAmountIndividualProtection2014Max,
     details = Some(
@@ -154,8 +154,8 @@ object AmendProtectionDisplayModelTestData {
     )
   )
 
-  val amendedProtectionModelNoNotificationIdIndividualProtection2016 =
-    exampleAmendedProtectionModelIndividualProtection2016.copy(
+  val amendResponseModelNoNotificationIdIndividualProtection2016: AmendResponseModel =
+    exampleAmendResponseModelIndividualProtection2016.copy(
       relevantAmount = 1_250_001,
       protectedAmount = Some(1_250_000),
       uncrystallisedRightsAmount = 312_504,
@@ -170,13 +170,13 @@ object AmendProtectionDisplayModelTestData {
       status = Some(Open)
     )
 
-  val amendResultDisplayModelNoNotificationIdIndividualProtection2016 = AmendOutcomeDisplayModelNoNotificationId(
+  val amendOutcomeDisplayModelNoNotificationIdIndividualProtection2016 = AmendOutcomeDisplayModelNoNotificationId(
     protectionType = IndividualProtection2016,
     protectedAmount = protectedAmountIndividualProtection2016Max,
     details = Some(amendPrintDisplayModelNoNotificationIdIndividualProtection2016)
   )
 
-  val amendResultDisplayModelNoNotificationIdIndividualProtection2016LTA = AmendOutcomeDisplayModelNoNotificationId(
+  val amendOutcomeDisplayModelNoNotificationIdIndividualProtection2016LTA = AmendOutcomeDisplayModelNoNotificationId(
     protectionType = IndividualProtection2016LTA,
     protectedAmount = protectedAmountIndividualProtection2016Max,
     details = Some(
@@ -186,7 +186,7 @@ object AmendProtectionDisplayModelTestData {
     )
   )
 
-  val amendedProtectionModelNotification1 = exampleAmendedProtectionModelIndividualProtection2014.copy(
+  val amendResponseModelNotification1: AmendResponseModel = exampleAmendResponseModelIndividualProtection2014.copy(
     notificationId = Some(NotificationId1),
     status = Open
   )
@@ -196,13 +196,13 @@ object AmendProtectionDisplayModelTestData {
       status = None
     )
 
-  val amendResultDisplayModelNotification1 = AmendOutcomeDisplayModel(
+  val amendOutcomeDisplayModelNotification1 = AmendOutcomeDisplayModel(
     notificationId = NotificationId1,
     protectedAmount = protectedAmountIndividualProtection2014InRange,
     details = Some(amendPrintDisplayModelNotification1)
   )
 
-  val amendedProtectionModelNotification2 = exampleAmendedProtectionModelIndividualProtection2014.copy(
+  val amendResponseModelNotification2: AmendResponseModel = exampleAmendResponseModelIndividualProtection2014.copy(
     notificationId = Some(NotificationId2)
   )
 
@@ -212,13 +212,13 @@ object AmendProtectionDisplayModelTestData {
       protectionReference = None
     )
 
-  val amendResultDisplayModelNotification2 = AmendOutcomeDisplayModel(
+  val amendOutcomeDisplayModelNotification2 = AmendOutcomeDisplayModel(
     notificationId = NotificationId2,
     protectedAmount = protectedAmountIndividualProtection2014InRange,
     details = Some(amendPrintDisplayModelNotification2)
   )
 
-  val amendedProtectionModelNotification3 = exampleAmendedProtectionModelIndividualProtection2014.copy(
+  val amendResponseModelNotification3: AmendResponseModel = exampleAmendResponseModelIndividualProtection2014.copy(
     notificationId = Some(NotificationId3)
   )
 
@@ -228,13 +228,13 @@ object AmendProtectionDisplayModelTestData {
       protectionReference = None
     )
 
-  val amendResultDisplayModelNotification3 = AmendOutcomeDisplayModel(
+  val amendOutcomeDisplayModelNotification3 = AmendOutcomeDisplayModel(
     notificationId = NotificationId3,
     protectedAmount = protectedAmountIndividualProtection2014InRange,
     details = Some(amendPrintDisplayModelNotification3)
   )
 
-  val amendedProtectionModelNotification4 = exampleAmendedProtectionModelIndividualProtection2014.copy(
+  val amendResponseModelNotification4: AmendResponseModel = exampleAmendResponseModelIndividualProtection2014.copy(
     notificationId = Some(NotificationId4)
   )
 
@@ -244,13 +244,13 @@ object AmendProtectionDisplayModelTestData {
       protectionReference = None
     )
 
-  val amendResultDisplayModelNotification4 = AmendOutcomeDisplayModel(
+  val amendOutcomeDisplayModelNotification4 = AmendOutcomeDisplayModel(
     notificationId = NotificationId4,
     protectedAmount = protectedAmountIndividualProtection2014InRange,
     details = Some(amendPrintDisplayModelNotification4)
   )
 
-  val amendedProtectionModelNotification5 = exampleAmendedProtectionModelIndividualProtection2014.copy(
+  val amendResponseModelNotification5: AmendResponseModel = exampleAmendResponseModelIndividualProtection2014.copy(
     notificationId = Some(NotificationId5),
     status = Open
   )
@@ -260,13 +260,13 @@ object AmendProtectionDisplayModelTestData {
       status = None
     )
 
-  val amendResultDisplayModelNotification5 = AmendOutcomeDisplayModel(
+  val amendOutcomeDisplayModelNotification5 = AmendOutcomeDisplayModel(
     notificationId = NotificationId5,
     protectedAmount = protectedAmountIndividualProtection2014InRange,
     details = Some(amendPrintDisplayModelNotification5)
   )
 
-  val amendedProtectionModelNotification6 = exampleAmendedProtectionModelIndividualProtection2014.copy(
+  val amendResponseModelNotification6: AmendResponseModel = exampleAmendResponseModelIndividualProtection2014.copy(
     notificationId = Some(NotificationId6),
     status = Withdrawn,
     protectedAmount = Some(0),
@@ -282,13 +282,13 @@ object AmendProtectionDisplayModelTestData {
       protectedAmount = Some(protectedAmountIndividualProtection2014Below)
     )
 
-  val amendResultDisplayModelNotification6 = AmendOutcomeDisplayModel(
+  val amendOutcomeDisplayModelNotification6 = AmendOutcomeDisplayModel(
     notificationId = NotificationId6,
     protectedAmount = protectedAmountIndividualProtection2014Below,
     details = Some(amendPrintDisplayModelNotification6)
   )
 
-  val amendedProtectionModelNotification7 = exampleAmendedProtectionModelIndividualProtection2014.copy(
+  val amendResponseModelNotification7: AmendResponseModel = exampleAmendResponseModelIndividualProtection2014.copy(
     notificationId = Some(NotificationId7),
     protectionType = FixedProtection2016,
     status = Withdrawn,
@@ -308,13 +308,13 @@ object AmendProtectionDisplayModelTestData {
       fixedProtectionReference = Some(protectionReferenceFixedProtection2016)
     )
 
-  val amendResultDisplayModelNotification7 = AmendOutcomeDisplayModel(
+  val amendOutcomeDisplayModelNotification7 = AmendOutcomeDisplayModel(
     notificationId = NotificationId7,
     protectedAmount = protectedAmountIndividualProtection2014Below,
     details = Some(amendPrintDisplayModelNotification7)
   )
 
-  val amendedProtectionModelNotification8 = exampleAmendedProtectionModelIndividualProtection2016.copy(
+  val amendResponseModelNotification8: AmendResponseModel = exampleAmendResponseModelIndividualProtection2016.copy(
     notificationId = Some(NotificationId8)
   )
 
@@ -323,13 +323,13 @@ object AmendProtectionDisplayModelTestData {
       status = None
     )
 
-  val amendResultDisplayModelNotification8 = AmendOutcomeDisplayModel(
+  val amendOutcomeDisplayModelNotification8 = AmendOutcomeDisplayModel(
     notificationId = NotificationId8,
     protectedAmount = protectedAmountIndividualProtection2016InRange,
     details = Some(amendPrintDisplayModelNotification8)
   )
 
-  val amendedProtectionModelNotification9 = exampleAmendedProtectionModelIndividualProtection2016.copy(
+  val amendResponseModelNotification9: AmendResponseModel = exampleAmendResponseModelIndividualProtection2016.copy(
     notificationId = Some(NotificationId9)
   )
 
@@ -339,13 +339,13 @@ object AmendProtectionDisplayModelTestData {
       psaCheckReference = None
     )
 
-  val amendResultDisplayModelNotification9 = AmendOutcomeDisplayModel(
+  val amendOutcomeDisplayModelNotification9 = AmendOutcomeDisplayModel(
     notificationId = NotificationId9,
     protectedAmount = protectedAmountIndividualProtection2016InRange,
     details = Some(amendPrintDisplayModelNotification9)
   )
 
-  val amendedProtectionModelNotification10 = exampleAmendedProtectionModelIndividualProtection2016.copy(
+  val amendResponseModelNotification10: AmendResponseModel = exampleAmendResponseModelIndividualProtection2016.copy(
     notificationId = Some(NotificationId10)
   )
 
@@ -355,13 +355,13 @@ object AmendProtectionDisplayModelTestData {
       psaCheckReference = None
     )
 
-  val amendResultDisplayModelNotification10 = AmendOutcomeDisplayModel(
+  val amendOutcomeDisplayModelNotification10 = AmendOutcomeDisplayModel(
     notificationId = NotificationId10,
     protectedAmount = protectedAmountIndividualProtection2016InRange,
     details = Some(amendPrintDisplayModelNotification10)
   )
 
-  val amendedProtectionModelNotification11 = exampleAmendedProtectionModelIndividualProtection2016.copy(
+  val amendResponseModelNotification11: AmendResponseModel = exampleAmendResponseModelIndividualProtection2016.copy(
     notificationId = Some(NotificationId11)
   )
 
@@ -371,13 +371,13 @@ object AmendProtectionDisplayModelTestData {
       psaCheckReference = None
     )
 
-  val amendResultDisplayModelNotification11 = AmendOutcomeDisplayModel(
+  val amendOutcomeDisplayModelNotification11 = AmendOutcomeDisplayModel(
     notificationId = NotificationId11,
     protectedAmount = protectedAmountIndividualProtection2016InRange,
     details = Some(amendPrintDisplayModelNotification11)
   )
 
-  val amendedProtectionModelNotification12 = exampleAmendedProtectionModelIndividualProtection2016.copy(
+  val amendResponseModelNotification12: AmendResponseModel = exampleAmendResponseModelIndividualProtection2016.copy(
     notificationId = Some(NotificationId12)
   )
 
@@ -387,13 +387,13 @@ object AmendProtectionDisplayModelTestData {
       psaCheckReference = None
     )
 
-  val amendResultDisplayModelNotification12 = AmendOutcomeDisplayModel(
+  val amendOutcomeDisplayModelNotification12 = AmendOutcomeDisplayModel(
     notificationId = NotificationId12,
     protectedAmount = protectedAmountIndividualProtection2016InRange,
     details = Some(amendPrintDisplayModelNotification12)
   )
 
-  val amendedProtectionModelNotification13 = exampleAmendedProtectionModelIndividualProtection2016.copy(
+  val amendResponseModelNotification13: AmendResponseModel = exampleAmendResponseModelIndividualProtection2016.copy(
     notificationId = Some(NotificationId13),
     status = Withdrawn,
     protectedAmount = Some(0),
@@ -409,13 +409,13 @@ object AmendProtectionDisplayModelTestData {
       protectedAmount = Some(protectedAmountIndividualProtection2016Below)
     )
 
-  val amendResultDisplayModelNotification13 = AmendOutcomeDisplayModel(
+  val amendOutcomeDisplayModelNotification13 = AmendOutcomeDisplayModel(
     notificationId = NotificationId13,
     protectedAmount = protectedAmountIndividualProtection2016Below,
     details = Some(amendPrintDisplayModelNotification13)
   )
 
-  val amendedProtectionModelNotification14 = exampleAmendedProtectionModelIndividualProtection2016.copy(
+  val amendResponseModelNotification14: AmendResponseModel = exampleAmendResponseModelIndividualProtection2016.copy(
     notificationId = Some(NotificationId14),
     protectionType = FixedProtection2016,
     status = Withdrawn,
@@ -435,7 +435,7 @@ object AmendProtectionDisplayModelTestData {
       fixedProtectionReference = Some(protectionReferenceFixedProtection2016)
     )
 
-  val amendResultDisplayModelNotification14 = AmendOutcomeDisplayModel(
+  val amendOutcomeDisplayModelNotification14 = AmendOutcomeDisplayModel(
     notificationId = NotificationId14,
     protectedAmount = protectedAmountIndividualProtection2016Below,
     details = Some(amendPrintDisplayModelNotification14)

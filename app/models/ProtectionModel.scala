@@ -24,11 +24,11 @@ import play.api.libs.json.{Json, OFormat}
 case class ProtectionModel(
     psaCheckReference: String,
     identifier: Long,
-    certificateDate: Option[DateModel],
-    certificateTime: Option[TimeModel],
     sequence: Int,
     protectionType: ProtectionType,
     status: ProtectionStatus,
+    certificateDate: Option[DateModel],
+    certificateTime: Option[TimeModel],
     protectedAmount: Option[Double] = None,
     relevantAmount: Option[Double] = None,
     postADayBenefitCrystallisationEvents: Option[Double] = None,

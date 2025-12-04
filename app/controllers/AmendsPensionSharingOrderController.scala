@@ -20,7 +20,7 @@ import auth.AuthFunction
 import common._
 import config.FrontendAppConfig
 import forms.AmendPsoDetailsForm._
-import models.amend.{AmendProtectionModel, AmendPsoDetailsModel}
+import models.amend.AmendPsoDetailsModel
 import models.pla.AmendableProtectionType
 import models.pla.request.AmendProtectionRequestStatus
 import models.{DateModel, PensionDebitModel}

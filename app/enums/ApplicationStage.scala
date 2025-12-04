@@ -28,17 +28,4 @@ object ApplicationStage extends Enumeration {
   val PreviousPsos         = Value
   val CurrentPsos          = Value
 
-  def fromString(applicationStage: String): Option[Value] =
-    applicationStage.toLowerCase match {
-      case "pensionstakenbefore"  => Some(PensionsTakenBefore)
-      case "pensionsworthbefore"  => Some(PensionsWorthBefore)
-      case "pensionstakenbetween" => Some(PensionsTakenBetween)
-      case "pensionsusedbetween"  => Some(PensionsUsedBetween)
-      case "overseaspensions"     => Some(OverseasPensions)
-      case "currentpensions"      => Some(CurrentPensions)
-      case "previouspsos"         => Some(PreviousPsos)
-      case "currentpsos"          => Some(CurrentPsos)
-      case _                      => None
-    }
-
 }

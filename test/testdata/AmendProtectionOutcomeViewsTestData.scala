@@ -16,8 +16,11 @@
 
 package testdata
 
+import models.AmendedProtectionType.IndividualProtection2014
+import models.NotificationId.NotificationId1
 import models.amend.AmendsGAModel
 import models.display.{AmendOutcomeDisplayModel, AmendPrintDisplayModel}
+import models.pla.response.AmendProtectionResponseStatus.Dormant
 
 object AmendProtectionOutcomeViewsTestData {
 
@@ -35,8 +38,8 @@ object AmendProtectionOutcomeViewsTestData {
     firstName = "Jim",
     surname = "Davis",
     nino = "nino",
-    protectionType = "IP2014",
-    status = Some("Dormant"),
+    protectionType = IndividualProtection2014,
+    status = Some(Dormant),
     psaCheckReference = Some("psaRef"),
     protectionReference = Some("IP14XXXXXX"),
     fixedProtectionReference = None,
@@ -46,7 +49,7 @@ object AmendProtectionOutcomeViewsTestData {
   )
 
   val amendResultDisplayModelIP14: AmendOutcomeDisplayModel = AmendOutcomeDisplayModel(
-    notificationId = 15,
+    notificationId = NotificationId1,
     protectedAmount = protectedAmountIP14Str,
     details = Some(printDisplayModelIP14)
   )

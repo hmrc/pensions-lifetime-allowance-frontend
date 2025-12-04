@@ -33,14 +33,6 @@ object AmendProtectionRequestStatus extends Enumerable.Implicits {
   implicit val toEnumerable: Enumerable[AmendProtectionRequestStatus] =
     Enumerable(values.map(v => v.jsonValue -> v): _*)
 
-  def fromProtectionStatus(protectionStatus: ProtectionStatus): AmendProtectionRequestStatus =
-    tryFromProtectionStatus(protectionStatus)
-      .getOrElse(
-        throw new IllegalArgumentException(
-          s"Cannot create AmendProtectionRequestStatus from ProtectionStatus: $protectionStatus"
-        )
-      )
-
   def tryFromProtectionStatus(protectionStatus: ProtectionStatus): Option[AmendProtectionRequestStatus] =
     protectionStatus match {
       case ProtectionStatus.Open    => Some(Open)

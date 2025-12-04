@@ -19,6 +19,7 @@ package views.pages.amends
 import forms.AmendPensionsUsedBetweenForm
 import models.amend.value.AmendPensionsUsedBetweenModel
 import models.pla.AmendableProtectionType.IndividualProtection2016
+import models.pla.request.AmendProtectionRequestStatus.Open
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.data.Form
@@ -37,10 +38,10 @@ class AmendIP16PensionsUsedBetweenViewSpec
   val view: amendIP16PensionsUsedBetween = inject[amendIP16PensionsUsedBetween]
 
   val form: Form[AmendPensionsUsedBetweenModel] = AmendPensionsUsedBetweenForm
-    .amendPensionsUsedBetweenForm(IndividualProtection2016.toString)
+    .amendPensionsUsedBetweenForm(IndividualProtection2016)
     .bind(Map("amendedPensionsUsedBetween" -> "yes", "amendedPensionsUsedBetweenAmt" -> "12345"))
 
-  val doc: Document = Jsoup.parse(view.apply(form, IndividualProtection2016.toString, "open").body)
+  val doc: Document = Jsoup.parse(view.apply(form, IndividualProtection2016, Open).body)
 
   "the AmendPensionsUsedBetweenView" should {
     "have the correct title" in {

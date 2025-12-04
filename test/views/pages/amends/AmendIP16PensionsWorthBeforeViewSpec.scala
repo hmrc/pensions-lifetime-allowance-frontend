@@ -19,6 +19,7 @@ package views.pages.amends
 import forms.AmendPensionsWorthBeforeForm
 import models.amend.value.AmendPensionsWorthBeforeModel
 import models.pla.AmendableProtectionType.IndividualProtection2016
+import models.pla.request.AmendProtectionRequestStatus.Open
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.data.Form
@@ -34,11 +35,11 @@ class AmendIP16PensionsWorthBeforeViewSpec extends CommonViewSpecHelper with Ame
   val view: amendIP16PensionsWorthBefore = inject[amendIP16PensionsWorthBefore]
 
   val form: Form[AmendPensionsWorthBeforeModel] = AmendPensionsWorthBeforeForm
-    .amendPensionsWorthBeforeForm(IndividualProtection2016.toString)
+    .amendPensionsWorthBeforeForm(IndividualProtection2016)
     .bind(Map("amendedPensionsWorthBefore" -> "yes", "amendedPensionsTakenBeforeAmt" -> "12345"))
 
   val doc: Document =
-    Jsoup.parse(view.apply(form, IndividualProtection2016.toString, "open").body)
+    Jsoup.parse(view.apply(form, IndividualProtection2016, Open).body)
 
   "the AmendPensionsWorthBeforeView" should {
     "have the correct title" in {

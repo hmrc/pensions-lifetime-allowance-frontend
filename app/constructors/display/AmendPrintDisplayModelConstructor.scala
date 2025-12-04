@@ -17,7 +17,7 @@
 package constructors.display
 
 import models.display.AmendPrintDisplayModel
-import models.{AmendedProtectionModel, NotificationId, PersonalDetailsModel}
+import models.{AmendResponseModel, NotificationId, PersonalDetailsModel}
 import play.api.i18n.{Lang, Messages}
 import utils.NotificationIds
 
@@ -25,7 +25,7 @@ object AmendPrintDisplayModelConstructor {
 
   def createAmendPrintDisplayModel(
       personalDetailsModelOpt: Option[PersonalDetailsModel],
-      protectionModel: AmendedProtectionModel,
+      protectionModel: AmendResponseModel,
       nino: String
   )(implicit lang: Lang, messages: Messages): AmendPrintDisplayModel = {
     val printDisplayModel =

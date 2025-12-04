@@ -17,19 +17,20 @@
 package controllers
 
 import auth.{AuthFunction, AuthFunctionImpl}
-import common.Strings
 import config._
 import connectors.PsaLookupConnector
 import mocks.AuthMock
 import models._
 import models.amend.AmendProtectionModel
-import models.pla.response.ProtectionStatus.{Dormant, Open}
+import models.pla.AmendableProtectionType
+import models.pla.request.AmendProtectionRequestStatus
+import models.pla.response.ProtectionStatus.Dormant
 import models.pla.response.ProtectionType.IndividualProtection2016
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.mockito.ArgumentMatchers.{any, anyString, eq => eqTo}
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
@@ -51,7 +52,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class AmendsRemovePensionSharingOrderControllerSpec
     extends FakeApplication
     with MockitoSugar
-    with SessionCacheTestHelper
+    with MockSessionCacheService
     with BeforeAndAfterEach
     with AuthMock
     with I18nSupport {
@@ -70,12 +71,13 @@ class AmendsRemovePensionSharingOrderControllerSpec
   implicit val formWithCSRF: FormWithCSRF       = inject[FormWithCSRF]
   implicit val ec: ExecutionContext             = inject[ExecutionContext]
 
-  val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
-  val mockPlaConnector: PsaLookupConnector         = mock[PsaLookupConnector]
-  val mockAuthFunction: AuthFunction               = mock[AuthFunction]
-  val technicalErrorView: technicalError           = inject[technicalError]
-  val removePsoDebitsView: removePsoDebits         = inject[removePsoDebits]
-  val mockEnv: Environment                         = mock[Environment]
+  override val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
+
+  val mockPlaConnector: PsaLookupConnector = mock[PsaLookupConnector]
+  val mockAuthFunction: AuthFunction       = mock[AuthFunction]
+  val technicalErrorView: technicalError   = inject[technicalError]
+  val removePsoDebitsView: removePsoDebits = inject[removePsoDebits]
+  val mockEnv: Environment                 = mock[Environment]
 
   override def beforeEach(): Unit = {
     reset(mockSessionCacheService)
@@ -99,53 +101,53 @@ class AmendsRemovePensionSharingOrderControllerSpec
     removePsoDebitsView
   )
 
-  val individualProtection2016Protection = ProtectionModel(
-    psaCheckReference = Some("testPSARef"),
+  val individualProtection2016 = ProtectionModel(
+    psaCheckReference = "testPSARef",
+    identifier = 12345,
+    sequence = 1,
+    protectionType = IndividualProtection2016,
+    status = Dormant,
+    certificateDate = Some(DateModel.of(2016, 4, 17)),
+    certificateTime = Some(TimeModel.of(14, 24, 8)),
     uncrystallisedRights = Some(100000.00),
     nonUKRights = Some(2000.00),
     preADayPensionInPayment = Some(2000.00),
     postADayBenefitCrystallisationEvents = Some(2000.00),
-    notificationId = Some(12),
-    identifier = Some(12345),
-    protectionType = Some("IndividualProtection2016"),
-    status = Some(Dormant.toString),
-    certificateDate = Some("2016-04-17"),
     protectedAmount = Some(1250000),
     relevantAmount = Some(106000),
     protectionReference = Some("PSA123456")
   )
 
-  val testAmendIndividualProtection2016ProtectionModel =
-    AmendProtectionModel(individualProtection2016Protection, individualProtection2016Protection)
+  val amendIndividualProtection2016: AmendProtectionModel =
+    AmendProtectionModel.tryFromProtection(individualProtection2016).get
 
-  def cacheFetchCondition[T](data: Option[T]): Unit =
-    when(mockSessionCacheService.fetchAndGetFormData[T](anyString())(any(), any()))
-      .thenReturn(Future.successful(data))
+  val pensionDebit = PensionDebitModel(DateModel.of(2016, 12, 23), 1000.0)
+
+  val amendIndividualProtection2016WithPso: AmendProtectionModel =
+    amendIndividualProtection2016.withPensionDebit(Some(pensionDebit))
 
   "Removing a recently added PSO" when {
 
-    val testProtectionSinglePsoList = ProtectionModel(
-      psaCheckReference = Some("psaRef"),
-      identifier = Some(1234),
-      pensionDebits = Some(List(PensionDebitModel("2016-12-23", 1000.0)))
-    )
-
     "there is no amend protection model fetched from cache" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](None)
+      mockFetchAmendProtectionModel(any(), any())(None)
 
       val result: Future[Result] =
-        controller.removePso(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")(fakeRequest)
+        controller.removePso(AmendableProtectionType.IndividualProtection2016, AmendProtectionRequestStatus.Open)(
+          fakeRequest
+        )
 
       status(result) shouldBe 500
     }
 
     "show the technical error page for existing protections" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](None)
+      mockFetchAmendProtectionModel(any(), any())(None)
 
       val result: Future[Result] =
-        controller.removePso(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")(fakeRequest)
+        controller.removePso(AmendableProtectionType.IndividualProtection2016, AmendProtectionRequestStatus.Open)(
+          fakeRequest
+        )
       val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
 
       jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
@@ -156,34 +158,42 @@ class AmendsRemovePensionSharingOrderControllerSpec
 
     "have the correct cache control" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](None)
+      mockFetchAmendProtectionModel(any(), any())(None)
 
       val result: Result =
-        await(controller.removePso(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")(fakeRequest))
+        await(
+          controller.removePso(AmendableProtectionType.IndividualProtection2016, AmendProtectionRequestStatus.Open)(
+            fakeRequest
+          )
+        )
 
       result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
     }
 
     "a valid amend protection model is fetched from cache" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](
-        Some(AmendProtectionModel(testProtectionSinglePsoList, testProtectionSinglePsoList))
+      mockFetchAmendProtectionModel(any(), any())(
+        Some(amendIndividualProtection2016WithPso)
       )
 
       val result: Future[Result] =
-        controller.removePso(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")(fakeRequest)
+        controller.removePso(AmendableProtectionType.IndividualProtection2016, AmendProtectionRequestStatus.Open)(
+          fakeRequest
+        )
 
       status(result) shouldBe 200
     }
 
     "show the remove pso page with correct details" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](
-        Some(AmendProtectionModel(testProtectionSinglePsoList, testProtectionSinglePsoList))
+      mockFetchAmendProtectionModel(any(), any())(
+        Some(amendIndividualProtection2016WithPso)
       )
 
       val result: Future[Result] =
-        controller.removePso(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")(fakeRequest)
+        controller.removePso(AmendableProtectionType.IndividualProtection2016, AmendProtectionRequestStatus.Open)(
+          fakeRequest
+        )
 
       val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
 
@@ -192,10 +202,10 @@ class AmendsRemovePensionSharingOrderControllerSpec
 
     "return 500 if the an amend protection model could not be retrieved from cache" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](None)
+      mockFetchAmendProtectionModel(any(), any())(None)
 
       val result = FakeRequests.authorisedPost(
-        controller.removePso(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")
+        controller.removePso(AmendableProtectionType.IndividualProtection2016, AmendProtectionRequestStatus.Open)
       )
 
       status(result) shouldEqual 500
@@ -204,80 +214,41 @@ class AmendsRemovePensionSharingOrderControllerSpec
 
   "Choosing remove with a valid amend protection model" should {
     "return 303 redirecting to amendment summary" in {
-      val individualProtection2016Protection = ProtectionModel(
-        psaCheckReference = Some("testPSARef"),
-        uncrystallisedRights = Some(100000.00),
-        nonUKRights = Some(2000.00),
-        preADayPensionInPayment = Some(2000.00),
-        postADayBenefitCrystallisationEvents = Some(2000.00),
-        notificationId = Some(12),
-        identifier = Some(12345),
-        protectionType = Some("IndividualProtection2016"),
-        status = Some(Open.toString),
-        certificateDate = Some("2016-04-17"),
-        pensionDebits = Some(List(PensionDebitModel("2016-12-23", 1000.0))),
-        protectedAmount = Some(1250000),
-        protectionReference = Some("PSA123456")
-      )
-
-      val testAmendIndividualProtection2016ProtectionModel =
-        AmendProtectionModel(individualProtection2016Protection, individualProtection2016Protection)
-
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016ProtectionModel))
-      cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
+      mockFetchAmendProtectionModel(any(), any())(Some(amendIndividualProtection2016))
+      mockSaveAmendProtectionModel()
 
       val result = FakeRequests.authorisedPost(
-        controller.submitRemovePso(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")
+        controller.submitRemovePso(AmendableProtectionType.IndividualProtection2016, AmendProtectionRequestStatus.Open)
       )
 
-      status(result) shouldBe 303
+      status(result) shouldBe SEE_OTHER
+
       redirectLocation(result) shouldBe Some(
         routes.AmendsController
           .amendsSummary(
-            Strings.ProtectionTypeUrl.IndividualProtection2016,
-            Strings.StatusUrl.Open
+            AmendableProtectionType.IndividualProtection2016,
+            AmendProtectionRequestStatus.Open
           )
-          .toString
+          .url
       )
 
     }
 
     "remove the pension sharing order from the cached amend model" in {
-      val pensionDebitStartDate     = "2016-12-23"
-      val pensionDebitEnteredAmount = 1_000
-
-      val testProtection: ProtectionModel = individualProtection2016Protection.copy(
-        pensionDebits =
-          Some(List(PensionDebitModel(startDate = pensionDebitStartDate, amount = pensionDebitEnteredAmount))),
-        pensionDebitStartDate = Some(pensionDebitStartDate),
-        pensionDebitEnteredAmount = Some(pensionDebitEnteredAmount)
-      )
-
-      val testAmendProtectionModel = AmendProtectionModel(testProtection, testProtection)
-
-      val updatedTestProtection: ProtectionModel = testProtection.copy(
-        pensionDebits = None,
-        pensionDebitStartDate = None,
-        pensionDebitEnteredAmount = None
-      )
-
-      val updatedAmendProtectionModel = AmendProtectionModel(testProtection, updatedTestProtection)
-
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](Some(testAmendProtectionModel))
-      cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
+      mockFetchAmendProtectionModel(any(), any())(Some(amendIndividualProtection2016WithPso))
+      mockSaveAmendProtectionModel()
 
       val result = FakeRequests.authorisedPost(
-        controller.submitRemovePso(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")
+        controller.submitRemovePso(AmendableProtectionType.IndividualProtection2016, AmendProtectionRequestStatus.Open)
       )
 
       status(result) shouldBe SEE_OTHER
 
-      verify(mockSessionCacheService).saveFormData[AmendProtectionModel](
-        eqTo(Strings.protectionCacheKey(IndividualProtection2016.toString, Open.toString)),
-        eqTo(updatedAmendProtectionModel)
-      )(any(), eqTo(AmendProtectionModel.format))
+      verify(mockSessionCacheService).saveAmendProtectionModel(
+        eqTo(amendIndividualProtection2016)
+      )(any())
     }
   }
 

@@ -72,12 +72,12 @@ class ReadProtectionsController @Inject() (
     }
   }
 
-  private def fetchProtections(
+  private[controllers] def fetchProtections(
       nino: String
   )(implicit hc: HeaderCarrier): Future[Either[PlaConnectorError, TransformedReadResponseModel]] =
     plaConnector.readProtections(nino).map(_.map(TransformedReadResponseModel.from))
 
-  private def saveAndDisplayExistingProtections(
+  private[controllers] def saveAndDisplayExistingProtections(
       transformedReadResponseModel: TransformedReadResponseModel
   )(implicit request: Request[AnyContent], lang: Lang): Future[Result] =
     for {
@@ -87,17 +87,15 @@ class ReadProtectionsController @Inject() (
       displayModel = displayConstructors.createExistingProtectionsDisplayModel(transformedReadResponseModel)
     } yield Ok(existingProtections(displayModel))
 
-  private def saveActiveProtection(
+  private[controllers] def saveActiveProtection(
       activeModel: Option[ProtectionModel]
-  )(implicit request: Request[AnyContent]): Future[Boolean] =
-    activeModel
-      .map(model => sessionCacheService.saveOpenProtection(model).map(_ => true))
-      .getOrElse(Future.successful(true))
+  )(implicit request: Request[AnyContent]): Future[Option[CacheMap]] =
+    activeModel.map(sessionCacheService.saveOpenProtection) match {
+      case Some(future) => future.map(Some.apply)
+      case None         => Future.successful(None)
+    }
 
-  private def getAllProtections(model: TransformedReadResponseModel): Seq[ProtectionModel] =
-    model.inactiveProtections ++ model.activeProtection
-
-  private def saveAmendableProtections(model: TransformedReadResponseModel)(
+  private[controllers] def saveAmendableProtections(model: TransformedReadResponseModel)(
       implicit request: Request[AnyContent]
   ): Future[Seq[CacheMap]] = {
     val allProtections = getAllProtections(model)
@@ -105,7 +103,10 @@ class ReadProtectionsController @Inject() (
     Future.sequence(protections)
   }
 
-  private def saveIfAmendable(protection: ProtectionModel)(
+  private[controllers] def getAllProtections(model: TransformedReadResponseModel): Seq[ProtectionModel] =
+    model.activeProtection.toSeq ++ model.inactiveProtections
+
+  private[controllers] def saveIfAmendable(protection: ProtectionModel)(
       implicit request: Request[AnyContent]
   ): Option[Future[CacheMap]] =
     AmendProtectionModel.tryFromProtection(protection).map(sessionCacheService.saveAmendProtectionModel)

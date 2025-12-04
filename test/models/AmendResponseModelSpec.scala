@@ -16,7 +16,7 @@
 
 package models
 
-import models.pla.AmendableProtectionType
+import models.NotificationId.NotificationId3
 import models.pla.response.AmendProtectionResponseStatus
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
@@ -28,29 +28,26 @@ class AmendResponseModelSpec extends AnyWordSpec with Matchers {
 
     "return correct AmendResponseModel" in {
       val expectedResult = AmendResponseModel(
-        ProtectionModel(
-          psaCheckReference = Some("testPSARef"),
-          identifier = Some(lifetimeAllowanceIdentifier),
-          sequence = Some(lifetimeAllowanceSequenceNumber + 1),
-          protectionType = Some(AmendableProtectionType.IndividualProtection2014.toString),
-          certificateDate = Some("2025-07-15T174312"),
-          status = Some(AmendProtectionResponseStatus.Dormant.toString),
-          protectionReference = Some(protectionReference),
-          relevantAmount = Some(105000),
-          preADayPensionInPayment = Some(1500.00),
-          postADayBenefitCrystallisationEvents = Some(2500.00),
-          uncrystallisedRights = Some(75500.00),
-          nonUKRights = Some(0.00),
-          pensionDebitAmount = Some(25000),
-          pensionDebitEnteredAmount = Some(25000),
-          notificationId = Some(3),
-          protectedAmount = Some(120000),
-          pensionDebitStartDate = Some("2026-07-09"),
-          pensionDebitTotalAmount = Some(40000)
-        )
+        psaCheckReference = "testPSARef",
+        identifier = lifetimeAllowanceIdentifier,
+        sequence = lifetimeAllowanceSequenceNumber + 1,
+        protectionType = AmendedProtectionType.IndividualProtection2014,
+        certificateDate = Some(DateModel.of(2025, 7, 15)),
+        certificateTime = Some(TimeModel.of(17, 43, 12)),
+        status = AmendProtectionResponseStatus.Dormant,
+        protectionReference = Some(protectionReference),
+        relevantAmount = 105000,
+        preADayPensionInPaymentAmount = 1500,
+        postADayBenefitCrystallisationEventAmount = 2500,
+        uncrystallisedRightsAmount = 75500,
+        nonUKRightsAmount = 0,
+        pensionDebit = Some(PensionDebitModel(DateModel.of(2026, 7, 9), 2500)),
+        notificationId = Some(NotificationId3),
+        protectedAmount = Some(120000),
+        pensionDebitTotalAmount = Some(40000)
       )
 
-      AmendResponseModel.from(amendProtectionResponse, Some("testPSARef")) shouldBe expectedResult
+      AmendResponseModel.from(amendProtectionResponse, "testPSARef") shouldBe expectedResult
     }
   }
 

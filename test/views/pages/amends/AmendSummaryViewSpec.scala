@@ -16,9 +16,9 @@
 
 package views.pages.amends
 
-import common.Strings
 import models.pla.AmendableProtectionType.IndividualProtection2016
 import models.display.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel}
+import models.pla.request.AmendProtectionRequestStatus.Open
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
@@ -36,7 +36,7 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewMes
           "YesNo",
           Some(
             controllers.routes.AmendsPensionTakenBeforeController
-              .amendPensionsTakenBefore(Strings.ProtectionTypeUrl.IndividualProtection2016, "active")
+              .amendPensionsTakenBefore(IndividualProtection2016, Open)
           ),
           None,
           "Yes"
@@ -45,7 +45,7 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewMes
           "Amt",
           Some(
             controllers.routes.AmendsPensionTakenBeforeController
-              .amendPensionsTakenBefore(Strings.ProtectionTypeUrl.IndividualProtection2016, "active")
+              .amendPensionsTakenBefore(IndividualProtection2016, Open)
           ),
           None,
           "£100,000"
@@ -59,7 +59,7 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewMes
           "YesNo",
           Some(
             controllers.routes.AmendsPensionTakenBetweenController
-              .amendPensionsTakenBetween(Strings.ProtectionTypeUrl.IndividualProtection2016, "active")
+              .amendPensionsTakenBetween(IndividualProtection2016, Open)
           ),
           None,
           "Yes"
@@ -68,7 +68,7 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewMes
           "Amt",
           Some(
             controllers.routes.AmendsPensionTakenBetweenController
-              .amendPensionsTakenBetween(Strings.ProtectionTypeUrl.IndividualProtection2016, "active")
+              .amendPensionsTakenBetween(IndividualProtection2016, Open)
           ),
           None,
           "£100,000"
@@ -82,7 +82,7 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewMes
           "YesNo",
           Some(
             controllers.routes.AmendsOverseasPensionController
-              .amendOverseasPensions(Strings.ProtectionTypeUrl.IndividualProtection2016, "active")
+              .amendOverseasPensions(IndividualProtection2016, Open)
           ),
           None,
           "Yes"
@@ -91,7 +91,7 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewMes
           "Amt",
           Some(
             controllers.routes.AmendsOverseasPensionController
-              .amendOverseasPensions(Strings.ProtectionTypeUrl.IndividualProtection2016, "active")
+              .amendOverseasPensions(IndividualProtection2016, Open)
           ),
           None,
           "£100,000"
@@ -105,7 +105,7 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewMes
           "Amt",
           Some(
             controllers.routes.AmendsCurrentPensionController
-              .amendCurrentPensions(Strings.ProtectionTypeUrl.IndividualProtection2016, "active")
+              .amendCurrentPensions(IndividualProtection2016, Open)
           ),
           None,
           "£1,000,000.34"
@@ -129,11 +129,11 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewMes
           "CurrentPsos-psoDetails",
           Some(
             controllers.routes.AmendsPensionSharingOrderController
-              .amendPsoDetails(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")
+              .amendPsoDetails(IndividualProtection2016, Open)
           ),
           Some(
             controllers.routes.AmendsRemovePensionSharingOrderController
-              .removePso(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")
+              .removePso(IndividualProtection2016, Open)
           ),
           "£123456",
           "2 March 2017"
@@ -143,7 +143,7 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewMes
   )
 
   val amendDisplayModel = AmendDisplayModel(
-    protectionType = "IP2016",
+    protectionType = IndividualProtection2016,
     amended = true,
     pensionContributionSections = tstPensionContributionPsoDisplaySections,
     psoAdded = true,
@@ -152,7 +152,7 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewMes
   )
 
   val amendDisplayModelWithoutPso = AmendDisplayModel(
-    protectionType = "IP2016",
+    protectionType = IndividualProtection2016,
     amended = false,
     pensionContributionSections = tstPensionContributionPsoDisplaySections,
     psoAdded = false,
@@ -163,10 +163,10 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewMes
   def view: amendSummary = inject[amendSummary]
 
   def doc: Document =
-    Jsoup.parse(view.apply(amendDisplayModel, IndividualProtection2016.toString, "open").body)
+    Jsoup.parse(view.apply(amendDisplayModel, IndividualProtection2016, Open).body)
 
   def docWithoutPso: Document = Jsoup.parse(
-    view.apply(amendDisplayModelWithoutPso, IndividualProtection2016.toString, "open").body
+    view.apply(amendDisplayModelWithoutPso, IndividualProtection2016, Open).body
   )
 
   "the AmendSummaryView" should {
@@ -188,7 +188,7 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewMes
     "have a link to add a new Pension sharing order" in {
       docWithoutPso.select("a#addPsoLink").text() shouldBe plaAmendsAddAPensionSharingOrderText
       docWithoutPso.select("a#addPsoLink").attr("href") shouldBe controllers.routes.AmendsPensionSharingOrderController
-        .amendPsoDetails(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")
+        .amendPsoDetails(IndividualProtection2016, Open)
         .url
     }
 
@@ -258,7 +258,7 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewMes
 
       formElement.attr("method") shouldBe "POST"
       formElement.attr("action") shouldBe controllers.routes.AmendsController
-        .amendProtection(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")
+        .amendProtection(IndividualProtection2016, Open)
         .url
     }
 

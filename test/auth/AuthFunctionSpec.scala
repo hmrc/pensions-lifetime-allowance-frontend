@@ -28,8 +28,8 @@ import play.api.mvc.Results._
 import play.api.mvc.{MessagesControllerComponents, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.{Environment, Mode}
-import testHelpers.{FakeApplication, SessionCacheTestHelper}
+import play.api.Environment
+import testHelpers.FakeApplication
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.http.HeaderCarrier
 import views.html.pages.fallback.technicalError
@@ -37,12 +37,7 @@ import views.html.pages.fallback.technicalError
 import java.net.URLEncoder
 import scala.concurrent.{ExecutionContext, Future}
 
-class AuthFunctionSpec
-    extends FakeApplication
-    with MockitoSugar
-    with SessionCacheTestHelper
-    with BeforeAndAfterEach
-    with AuthMock {
+class AuthFunctionSpec extends FakeApplication with MockitoSugar with BeforeAndAfterEach with AuthMock {
 
   implicit val system: ActorSystem              = ActorSystem()
   implicit val materializer: Materializer       = mock[Materializer]
@@ -74,84 +69,6 @@ class AuthFunctionSpec
     override implicit val ec: ExecutionContext                    = inject[ExecutionContext]
   }
 
-  "In AuthFunction calling the genericAuthWithoutNino action" when {
-    "passing auth validation" should {
-
-      "execute the body" in {
-        val authFunction = new TestAuthFunction
-        mockAuthConnector(Future.successful {})
-        val result = authFunction.genericAuthWithoutNino("IP2016")(Future.successful(Ok("Test body")))(
-          fakeRequest,
-          mockMessages,
-          hc
-        )
-        status(result) shouldBe 200
-        contentAsString(result) shouldBe "Test body"
-      }
-    }
-
-    "failing auth validation" should {
-
-      "redirect to IV uplift page on an insufficient confidence level exception" in {
-        val authFunction = new TestAuthFunction
-        when(mockEnv.mode).thenReturn(Mode.Test)
-        mockAuthConnector(Future.failed(InsufficientConfidenceLevel("")))
-        val result = authFunction.genericAuthWithoutNino("IP2016")(Future.successful(InternalServerError("Test body")))(
-          fakeRequest,
-          mockMessages,
-          hc
-        )
-
-        status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some(
-          s"${mockAppConfig.ivUpliftUrl}?" + "origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=https://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/check-your-pension-protections-and-enhancements/not-authorised"
-        )
-      }
-
-      "return a 500 on an unexpected authorisation exception" in {
-        val authFunction = new TestAuthFunction
-        mockAuthConnector(Future.failed(InternalError("")))
-        val result = authFunction.genericAuthWithoutNino("IP2016")(Future.successful(Ok("Test body")))(
-          fakeRequest,
-          mockMessages,
-          hc
-        )
-
-        status(result) shouldBe 500
-      }
-
-      "redirect to IV uplift page on an insufficient enrolments exception" in {
-        val authFunction = new TestAuthFunction
-        mockAuthConnector(Future.failed(InsufficientEnrolments("")))
-        val result = authFunction.genericAuthWithoutNino("IP2016")(Future.successful(InternalServerError("Test body")))(
-          fakeRequest,
-          mockMessages,
-          hc
-        )
-
-        status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some(
-          s"${mockAppConfig.ivUpliftUrl}?" + "origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=https://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/check-your-pension-protections-and-enhancements/not-authorised"
-        )
-      }
-
-      "redirect to gg login page on an no active session exception" in {
-        val authFunction = new TestAuthFunction
-        mockAuthConnector(Future.failed(new SessionRecordNotFound))
-        val result = authFunction.genericAuthWithoutNino("IP2016")(Future.successful(InternalServerError("Test body")))(
-          fakeRequest,
-          mockMessages,
-          hc
-        )
-
-        status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some(
-          s"${mockAppConfig.ggSignInUrl}?continue=${URLEncoder.encode(requestUrl, "UTF-8")}&origin=${mockAppConfig.appName}"
-        )
-      }
-    }
-  }
-
   "In AuthFunction calling the genericAuthWithNino action" when {
     val body: String => Future[Result] = nino => Future.successful(Ok(nino))
     "passing auth validation" should {
@@ -159,7 +76,7 @@ class AuthFunctionSpec
       "execute the body" in {
         val authFunction = new TestAuthFunction
         mockAuthConnector(Future.successful(Option("AA000001A")))
-        val result = authFunction.genericAuthWithNino("IP2016")(body)(fakeRequest, mockMessages, hc)
+        val result = authFunction.genericAuthWithNino(body)(fakeRequest, mockMessages, hc)
 
         status(result) shouldBe 200
         contentAsString(result) shouldBe "AA000001A"
@@ -170,7 +87,7 @@ class AuthFunctionSpec
       "redirect to IV uplift page on an insufficient confidence level exception" in {
         val authFunction = new TestAuthFunction
         mockAuthConnector(Future.failed(InsufficientConfidenceLevel("")))
-        val result = authFunction.genericAuthWithNino("IP2016")(body)(fakeRequest, mockMessages, hc)
+        val result = authFunction.genericAuthWithNino(body)(fakeRequest, mockMessages, hc)
 
         status(result) shouldBe 303
         redirectLocation(result) shouldBe Some(
@@ -181,7 +98,7 @@ class AuthFunctionSpec
       "return a 500 on an unexpected authorisation exception" in {
         val authFunction = new TestAuthFunction
         mockAuthConnector(Future.failed(InternalError("")))
-        val result = authFunction.genericAuthWithNino("IP2016")(body)(fakeRequest, mockMessages, hc)
+        val result = authFunction.genericAuthWithNino(body)(fakeRequest, mockMessages, hc)
 
         status(result) shouldBe 500
       }
@@ -189,7 +106,7 @@ class AuthFunctionSpec
       "redirect to IV uplift page on an insufficient enrolments exception" in {
         val authFunction = new TestAuthFunction
         mockAuthConnector(Future.failed(InsufficientEnrolments("")))
-        val result = authFunction.genericAuthWithNino("IP2016")(body)(fakeRequest, mockMessages, hc)
+        val result = authFunction.genericAuthWithNino(body)(fakeRequest, mockMessages, hc)
 
         status(result) shouldBe 303
         redirectLocation(result) shouldBe Some(
@@ -200,7 +117,7 @@ class AuthFunctionSpec
       "redirect to gg login page on an no active session exception" in {
         val authFunction = new TestAuthFunction
         mockAuthConnector(Future.failed(new SessionRecordNotFound))
-        val result = authFunction.genericAuthWithNino("IP2016")(body)(fakeRequest, mockMessages, hc)
+        val result = authFunction.genericAuthWithNino(body)(fakeRequest, mockMessages, hc)
 
         status(result) shouldBe 303
         redirectLocation(result) shouldBe Some(

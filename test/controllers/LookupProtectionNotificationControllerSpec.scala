@@ -18,8 +18,8 @@ package controllers
 
 import config.FrontendAppConfig
 import connectors.PsaLookupConnector
+import models.PsaLookupRequest
 import models.cache.CacheMap
-import models.{PsaLookupRequest, PsaLookupResult}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{reset, verify, when}
 import org.scalatest.BeforeAndAfterEach
@@ -82,7 +82,8 @@ class LookupProtectionNotificationControllerSpec extends FakeApplication with Be
       "there is data in cache" should {
         "return 200 with correct message on pnn form" in {
           when(appConfig.psalookupjourneyShutterEnabled).thenReturn(false)
-          cacheFetchCondition[PsaLookupRequest](Some(PsaLookupRequest("PSAREF")))
+          when(sessionCacheService.fetchPsaLookupRequest(any()))
+            .thenReturn(Future.successful(Some(PsaLookupRequest("PSAREF"))))
 
           val result = controller.displayProtectionNotificationNoForm(request)
 
@@ -93,7 +94,7 @@ class LookupProtectionNotificationControllerSpec extends FakeApplication with Be
 
       "redirect when no data entered on first page for pnn form" in {
         when(appConfig.psalookupjourneyShutterEnabled).thenReturn(false)
-        cacheFetchCondition[PsaLookupRequest](None)
+        when(sessionCacheService.fetchPsaLookupRequest(any())).thenReturn(Future.successful(None))
 
         val result = controller.displayProtectionNotificationNoForm(request)
 
@@ -147,9 +148,11 @@ class LookupProtectionNotificationControllerSpec extends FakeApplication with Be
 
       "submit pnn form with valid data and redirect to results page" in {
         when(appConfig.psalookupjourneyShutterEnabled).thenReturn(false)
-        cacheFetchCondition[PsaLookupRequest](Some(PsaLookupRequest("PSA REF")))
+        when(sessionCacheService.fetchPsaLookupRequest(any()))
+          .thenReturn(Future.successful(Some(PsaLookupRequest("PSAREF"))))
+        when(sessionCacheService.savePsaLookupResult(any())(any())).thenReturn(Future.successful(mockCacheMap))
+
         plaConnectorReturn(HttpResponse(status = OK, json = plaReturnJson, headers = Map.empty))
-        cacheSaveCondition[PsaLookupResult](mockCacheMap)
 
         val result = controller.submitProtectionNotificationNoForm(postRequest)
 
@@ -159,10 +162,11 @@ class LookupProtectionNotificationControllerSpec extends FakeApplication with Be
 
       "submit pnn form with valid data and redirect when a NOT FOUND is returned" in {
         when(appConfig.psalookupjourneyShutterEnabled).thenReturn(false)
-        cacheFetchCondition[PsaLookupRequest](Some(PsaLookupRequest("PSA REF")))
+        when(sessionCacheService.fetchPsaLookupRequest(any()))
+          .thenReturn(Future.successful(Some(PsaLookupRequest("PSAREF"))))
         when(plaConnector.psaLookup(any(), any())(any(), any()))
           .thenReturn(Future.failed(UpstreamErrorResponse("message", NOT_FOUND, NOT_FOUND)))
-        cacheSaveCondition[PsaLookupResult](mockCacheMap)
+        when(sessionCacheService.savePsaLookupResult(any())(any())).thenReturn(Future.successful(mockCacheMap))
 
         val result = controller.submitProtectionNotificationNoForm(postRequest)
 
@@ -172,7 +176,8 @@ class LookupProtectionNotificationControllerSpec extends FakeApplication with Be
 
       "display errors when invalid data entered for pnn form" in {
         when(appConfig.psalookupjourneyShutterEnabled).thenReturn(false)
-        cacheSaveCondition[PsaLookupRequest](mockCacheMap)
+        when(sessionCacheService.savePsaLookupRequest(any())(any())).thenReturn(Future.successful(mockCacheMap))
+
         val postRequestInvalid = postRequest.withFormUrlEncodedBody(invalidPNNForm: _*)
 
         val result = controller.submitProtectionNotificationNoForm(postRequestInvalid)
@@ -182,7 +187,7 @@ class LookupProtectionNotificationControllerSpec extends FakeApplication with Be
 
       "redirect to the administrator reference form when PSA request data not found on submission" in {
         when(appConfig.psalookupjourneyShutterEnabled).thenReturn(false)
-        cacheFetchCondition[PsaLookupRequest](None)
+        when(sessionCacheService.fetchPsaLookupRequest(any())).thenReturn(Future.successful(None))
 
         val result = controller.submitProtectionNotificationNoForm(postRequest)
 
@@ -205,14 +210,6 @@ class LookupProtectionNotificationControllerSpec extends FakeApplication with Be
     }
 
   }
-
-  def cacheFetchCondition[T](data: Option[T]): Unit =
-    when(sessionCacheService.fetchAndGetFormData[T](any())(any(), any()))
-      .thenReturn(Future.successful(data))
-
-  def cacheSaveCondition[T](data: CacheMap): Unit =
-    when(sessionCacheService.saveFormData[T](any(), any())(any(), any()))
-      .thenReturn(Future.successful(data))
 
   def plaConnectorReturn(data: HttpResponse): Unit =
     when(plaConnector.psaLookup(any(), any())(any(), any()))

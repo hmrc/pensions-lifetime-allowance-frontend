@@ -19,13 +19,13 @@ package constructors.display
 import common.{Display, Exceptions}
 import models.display.AmendOutcomeDisplayModel
 import models.pla.response.AmendProtectionResponseStatus.Withdrawn
-import models.{AmendedProtectionModel, NotificationId, PersonalDetailsModel}
+import models.{AmendResponseModel, NotificationId, PersonalDetailsModel}
 import play.api.i18n.{Lang, Messages}
 
 object AmendOutcomeDisplayModelConstructor {
 
   def createAmendOutcomeDisplayModel(
-      model: AmendedProtectionModel,
+      model: AmendResponseModel,
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       nino: String,
       notificationId: NotificationId
@@ -48,7 +48,7 @@ object AmendOutcomeDisplayModelConstructor {
     )
   }
 
-  private def extractProtectedAmount(notificationId: NotificationId, model: AmendedProtectionModel): Int =
+  private def extractProtectedAmount(notificationId: NotificationId, model: AmendResponseModel): Int =
     if (notificationId.status == Withdrawn) {
       model.relevantAmount
     } else {

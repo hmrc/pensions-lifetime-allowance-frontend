@@ -24,13 +24,7 @@ import models.display.{
   ExistingProtectionsDisplayModel,
   PrintDisplayModel
 }
-import models.{
-  AmendedProtectionModel,
-  NotificationId,
-  PersonalDetailsModel,
-  ProtectionModel,
-  TransformedReadResponseModel
-}
+import models.{AmendResponseModel, NotificationId, PersonalDetailsModel, ProtectionModel, TransformedReadResponseModel}
 import play.api.i18n.{Lang, Messages, MessagesApi}
 
 import javax.inject.Inject
@@ -62,7 +56,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) {
   }
 
   def createAmendOutcomeDisplayModel(
-      model: AmendedProtectionModel,
+      model: AmendResponseModel,
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       nino: String,
       notificationId: NotificationId
@@ -78,7 +72,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) {
   }
 
   def createAmendOutcomeDisplayModelNoNotificationId(
-      model: AmendedProtectionModel,
+      model: AmendResponseModel,
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       nino: String
   )(implicit lang: Lang): AmendOutcomeDisplayModelNoNotificationId = {

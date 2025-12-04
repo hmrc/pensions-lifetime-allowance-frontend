@@ -16,7 +16,7 @@
 
 package services
 
-import models._
+import models.{DateModel, PensionDebitModel}
 import models.cache.CacheMap
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
@@ -28,7 +28,6 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
 import testHelpers.FakeApplication
-import testHelpers.TestFormats._
 import uk.gov.hmrc.mongo.cache.DataKey
 
 import java.util.UUID
@@ -43,26 +42,27 @@ class SessionCacheServiceSpec extends FakeApplication with MockitoSugar with Sca
 
   object TestSessionCacheService extends SessionCacheService(mockSessionRepository)
 
+  val testModel = PensionDebitModel(DateModel.of(2025, 12, 4), 10_000)
+  val testKey   = "cache-key"
+
   "Calculator Connector" should {
     "fetch and get from repo" in {
-      val testModel = PensionsTakenModel(Some("No"))
-      when(mockSessionRepository.getFromSession[PensionsTakenModel](DataKey[PensionsTakenModel](any()))(any(), any()))
+      when(mockSessionRepository.getFromSession[PensionDebitModel](DataKey[PensionDebitModel](any()))(any(), any()))
         .thenReturn(Future.successful(Option(testModel)))
 
-      val result = TestSessionCacheService.fetchAndGetFormData[PensionsTakenModel]("willAddToPension")
+      val result = TestSessionCacheService.fetchAndGetFormData[PensionDebitModel](testKey)
       await(result) shouldBe Some(testModel)
     }
 
     "save form data to repo" in {
-      val testModel        = PensionsTakenModel(Some("No"))
       val returnedCacheMap = CacheMap("haveAddedToPension", Map("data" -> Json.toJson(testModel)))
       when(
         mockSessionRepository
-          .putInSession[PensionsTakenModel](DataKey[PensionsTakenModel](any()), any())(any(), any(), any())
+          .putInSession[PensionDebitModel](DataKey[PensionDebitModel](any()), any())(any(), any(), any())
       )
         .thenReturn(Future.successful(returnedCacheMap))
 
-      val result = TestSessionCacheService.saveFormData("haveAddedToPension", testModel)
+      val result = TestSessionCacheService.saveFormData(testKey, testModel)
       await(result) shouldBe returnedCacheMap
     }
   }

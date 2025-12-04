@@ -17,10 +17,8 @@
 package controllers
 
 import auth.AuthFunction
-import common._
 import config.FrontendAppConfig
 import forms.AmendPensionsTakenBeforeForm._
-import models.amend.AmendProtectionModel
 import models.amend.value.AmendPensionsTakenBeforeModel
 import models.pla.AmendableProtectionType
 import models.pla.AmendableProtectionType._

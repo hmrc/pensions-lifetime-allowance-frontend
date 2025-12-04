@@ -16,12 +16,9 @@
 
 package constructors.display
 
-import models.amend.AmendProtectionModel
 import models.display.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel}
 import models.pla.AmendableProtectionType
 import models.pla.request.AmendProtectionRequestStatus
-import models.pla.response.{ProtectionStatus, ProtectionType}
-import models.{DateModel, PensionDebitModel, ProtectionModel}
 
 class AmendDisplayModelConstructorSpec extends DisplayConstructorsTestData {
 
@@ -61,23 +58,11 @@ class AmendDisplayModelConstructorSpec extends DisplayConstructorsTestData {
     }
 
     "return no current PSO's when amountOption is 0" in {
-      val tstNoPsoAmountProtection = ProtectionModel(
-        psaCheckReference = Some("psaRef"),
-        identifier = Some(100001),
-        protectionType = ProtectionType.IndividualProtection2016,
-        status = ProtectionStatus.Open,
-        protectedAmount = Some(1100000.34),
-        relevantAmount = Some(1100000.34),
-        preADayPensionInPayment = None,
-        postADayBenefitCrystallisationEvents = None,
-        pensionDebitTotalAmount = Some(0.00),
-        nonUKRights = Some(100000.0),
-        uncrystallisedRights = Some(1000000.34)
+      val amendProtectionModel = tstNoPsoAmendProtectionModel.copy(
+        pensionDebitTotalAmount = Some(0.0)
       )
 
-      val amendModel = AmendProtectionModel(tstNoPsoAmountProtection, tstNoPsoAmountProtection)
-
-      AmendDisplayModelConstructor.createAmendDisplayModel(amendModel) shouldBe AmendDisplayModel(
+      AmendDisplayModelConstructor.createAmendDisplayModel(amendProtectionModel) shouldBe AmendDisplayModel(
         protectionType = AmendableProtectionType.IndividualProtection2016,
         amended = false,
         pensionContributionSections = tstPensionContributionNoPsoDisplaySections,
@@ -88,23 +73,6 @@ class AmendDisplayModelConstructorSpec extends DisplayConstructorsTestData {
     }
 
     "correctly produce a display section for any current PSO's" in {
-      val tstNewPsoAmountProtection = ProtectionModel(
-        psaCheckReference = Some("psaRef"),
-        identifier = Some(100001),
-        protectionType = ProtectionType.IndividualProtection2016,
-        status = ProtectionStatus.Open,
-        protectedAmount = Some(1100000.34),
-        relevantAmount = Some(1100000.34),
-        preADayPensionInPayment = None,
-        postADayBenefitCrystallisationEvents = None,
-        pensionDebit = Some(PensionDebitModel(DateModel.of(2017, 3, 2), 1000.0)),
-        pensionDebitTotalAmount = Some(0.0),
-        nonUKRights = Some(100000.0),
-        uncrystallisedRights = Some(1000000.34)
-      )
-
-      val amendModel = AmendProtectionModel(tstNewPsoAmountProtection, tstNewPsoAmountProtection)
-
       val tstPsoAddedSection = Seq(
         AmendDisplaySectionModel(
           "pensionDebits",
@@ -130,7 +98,9 @@ class AmendDisplayModelConstructorSpec extends DisplayConstructorsTestData {
         )
       )
 
-      AmendDisplayModelConstructor.createAmendDisplayModel(amendModel) shouldBe AmendDisplayModel(
+      AmendDisplayModelConstructor.createAmendDisplayModel(
+        tstWithExistingPsoAmendProtectionModel
+      ) shouldBe AmendDisplayModel(
         protectionType = AmendableProtectionType.IndividualProtection2016,
         amended = false,
         pensionContributionSections = tstPensionContributionNoPsoDisplaySections,
@@ -140,61 +110,6 @@ class AmendDisplayModelConstructorSpec extends DisplayConstructorsTestData {
       )
 
     }
-  }
-
-  "modelsDiffer" should {
-
-    "return false for the same model" in {
-      val tstModel = ProtectionModel(
-        psaCheckReference = Some("psaRef"),
-        identifier = Some(10000)
-      )
-      AmendDisplayModelConstructor.modelsDiffer(tstModel, tstModel) shouldBe false
-    }
-
-    "return false for two models with the same properties" in {
-      val tstModel1 = ProtectionModel(
-        psaCheckReference = Some("psaRef"),
-        identifier = Some(10000),
-        preADayPensionInPayment = Some(23412.87)
-      )
-      val tstModel2 = ProtectionModel(
-        psaCheckReference = Some("psaRef"),
-        preADayPensionInPayment = Some(23412.87),
-        identifier = Some(10000)
-      )
-      AmendDisplayModelConstructor.modelsDiffer(tstModel1, tstModel2) shouldBe false
-    }
-
-    "return true for two models with different properties" in {
-      val tstModel1 = ProtectionModel(
-        psaCheckReference = Some("psaRef"),
-        identifier = Some(100001),
-        preADayPensionInPayment = Some(23412.87)
-      )
-      val tstModel2 = ProtectionModel(
-        psaCheckReference = Some("psaRef"),
-        identifier = Some(10000),
-        preADayPensionInPayment = Some(23412.87)
-      )
-      AmendDisplayModelConstructor.modelsDiffer(tstModel1, tstModel2) shouldBe true
-    }
-
-    "return true for two models with different number of properties" in {
-      val tstModel1 = ProtectionModel(
-        psaCheckReference = Some("psaRef"),
-        identifier = Some(100001),
-        preADayPensionInPayment = Some(23412.87),
-        sequence = Some(4)
-      )
-      val tstModel2 = ProtectionModel(
-        psaCheckReference = Some("psaRef"),
-        identifier = Some(10000),
-        preADayPensionInPayment = Some(23412.87)
-      )
-      AmendDisplayModelConstructor.modelsDiffer(tstModel1, tstModel2) shouldBe true
-    }
-
   }
 
 }

@@ -17,23 +17,21 @@
 package controllers
 
 import auth.{AuthFunction, AuthFunctionImpl, authenticatedFakeRequest}
-import common.Exceptions.RequiredValueNotDefinedException
-import common.{Exceptions, Strings}
+import common.Exceptions
 import config._
 import connectors.PsaLookupConnector
 import constructors.display.DisplayConstructors
 import mocks.AuthMock
-import models.amend.{AmendProtectionModel, AmendPsoDetailsModel}
-import models.{AmendResponseModel, PensionDebitModel, ProtectionModel}
-import models.cache.CacheMap
+import models.amend.AmendProtectionModel
 import models.display.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel}
-import models.pla.AmendableProtectionType._
-import models.pla.response.ProtectionStatus.Dormant
+import models.pla.AmendableProtectionType
+import models.pla.request.AmendProtectionRequestStatus
+import models.{DateModel, PensionDebitModel}
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.mockito.ArgumentMatchers.{any, anyString, eq => eqTo}
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
@@ -41,28 +39,28 @@ import org.scalatestplus.mockito.MockitoSugar
 import play.api.Environment
 import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
-import play.api.libs.json.JsNull
 import play.api.mvc.{AnyContent, MessagesControllerComponents, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionCacheService
 import testHelpers._
+import testdata.AmendProtectionModelTestData
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends._
 import views.html.pages.fallback.technicalError
 
-import java.time.LocalDate
 import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
 
 class AmendsPensionSharingOrderControllerSpec
     extends FakeApplication
     with MockitoSugar
-    with SessionCacheTestHelper
+    with MockSessionCacheService
     with BeforeAndAfterEach
     with AuthMock
     with I18nSupport
+    with AmendProtectionModelTestData
     with ScalaFutures {
 
   implicit val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
@@ -97,30 +95,6 @@ class AmendsPensionSharingOrderControllerSpec
     super.beforeEach()
   }
 
-  val testIndividualProtection2016DormantModel = AmendProtectionModel(
-    ProtectionModel(None, None),
-    ProtectionModel(
-      None,
-      None,
-      protectionType = Some("IndividualProtection2016"),
-      status = Some(Dormant.toString),
-      relevantAmount = Some(100000),
-      uncrystallisedRights = Some(100000)
-    )
-  )
-
-  val testIndividualProtection2016LTADormantModel = AmendProtectionModel(
-    ProtectionModel(None, None),
-    ProtectionModel(
-      None,
-      None,
-      protectionType = Some("IndividualProtection2016LTA"),
-      status = Some(Dormant.toString),
-      relevantAmount = Some(100000),
-      uncrystallisedRights = Some(100000)
-    )
-  )
-
   val authFunction = new AuthFunctionImpl(
     mcc,
     mockAuthConnector,
@@ -139,110 +113,6 @@ class AmendsPensionSharingOrderControllerSpec
   val mockUsername       = "mockuser"
   val mockUserId: String = "/auth/oid/" + mockUsername
 
-  val individualProtection2016Protection = ProtectionModel(
-    psaCheckReference = Some("testPSARef"),
-    uncrystallisedRights = Some(100000.00),
-    nonUKRights = Some(2000.00),
-    preADayPensionInPayment = Some(2000.00),
-    postADayBenefitCrystallisationEvents = Some(2000.00),
-    notificationId = Some(12),
-    identifier = Some(12345),
-    protectionType = Some("IndividualProtection2016"),
-    status = Some(Dormant.toString),
-    certificateDate = Some("2016-04-17"),
-    protectedAmount = Some(1250000),
-    protectionReference = Some("PSA123456")
-  )
-
-  val testAmendIndividualProtection2016ProtectionModel =
-    AmendProtectionModel(individualProtection2016Protection, individualProtection2016Protection)
-
-  val individualProtection2016LTAProtection = ProtectionModel(
-    psaCheckReference = Some("testPSARef"),
-    uncrystallisedRights = Some(100000.00),
-    nonUKRights = Some(2000.00),
-    preADayPensionInPayment = Some(2000.00),
-    postADayBenefitCrystallisationEvents = Some(2000.00),
-    notificationId = Some(12),
-    identifier = Some(12345),
-    protectionType = Some("IndividualProtection2016LTA"),
-    status = Some(Dormant.toString),
-    certificateDate = Some("2016-04-17"),
-    protectedAmount = Some(1250000),
-    protectionReference = Some("PSA123456")
-  )
-
-  val testAmendIndividualProtection2016LTAProtectionModel =
-    AmendProtectionModel(individualProtection2016LTAProtection, individualProtection2016LTAProtection)
-
-  val individualProtection2014Protection = ProtectionModel(
-    psaCheckReference = Some("testPSARef"),
-    uncrystallisedRights = Some(100000.00),
-    nonUKRights = Some(2000.00),
-    preADayPensionInPayment = Some(2000.00),
-    postADayBenefitCrystallisationEvents = Some(2000.00),
-    notificationId = Some(12),
-    identifier = Some(12345),
-    protectionType = Some(IndividualProtection2014.toString),
-    status = Some(Dormant.toString),
-    certificateDate = Some("2016-04-17"),
-    protectedAmount = Some(1250000),
-    protectionReference = Some("PSA123456")
-  )
-
-  val testAmendIndividualProtection2014ProtectionModel =
-    AmendProtectionModel(individualProtection2014Protection, individualProtection2014Protection)
-
-  val individualProtection2014LTAProtection = ProtectionModel(
-    psaCheckReference = Some("testPSARef"),
-    uncrystallisedRights = Some(100000.00),
-    nonUKRights = Some(2000.00),
-    preADayPensionInPayment = Some(2000.00),
-    postADayBenefitCrystallisationEvents = Some(2000.00),
-    notificationId = Some(12),
-    identifier = Some(12345),
-    protectionType = Some(IndividualProtection2014LTA.toString),
-    status = Some(Dormant.toString),
-    certificateDate = Some("2016-04-17"),
-    protectedAmount = Some(1250000),
-    protectionReference = Some("PSA123456")
-  )
-
-  val testAmendIndividualProtection2014LTAProtectionModel =
-    AmendProtectionModel(individualProtection2014LTAProtection, individualProtection2014LTAProtection)
-
-  val individualProtection2016NoDebitProtection = ProtectionModel(
-    psaCheckReference = Some("testPSARef"),
-    uncrystallisedRights = Some(100000.00),
-    nonUKRights = Some(0.0),
-    preADayPensionInPayment = Some(0.0),
-    postADayBenefitCrystallisationEvents = Some(0.0),
-    notificationId = Some(12),
-    identifier = Some(12345),
-    protectionType = Some(IndividualProtection2016.toString),
-    status = Some(Dormant.toString),
-    certificateDate = Some("2016-04-17"),
-    protectedAmount = Some(1250000),
-    protectionReference = Some("PSA123456")
-  )
-
-  val testAmendIndividualProtection2016ProtectionModelWithNoDebit =
-    AmendProtectionModel(individualProtection2016NoDebitProtection, individualProtection2016NoDebitProtection)
-
-  val noNotificationIdProtection = ProtectionModel(
-    psaCheckReference = Some("testPSARef"),
-    identifier = Some(12345),
-    uncrystallisedRights = Some(100000.00),
-    nonUKRights = Some(0.0),
-    preADayPensionInPayment = Some(0.0),
-    postADayBenefitCrystallisationEvents = Some(0.0),
-    protectionType = Some(IndividualProtection2014.toString),
-    status = Some(Dormant.toString),
-    certificateDate = Some("2016-04-17"),
-    protectedAmount = Some(1250000),
-    protectionReference = Some("PSA123456")
-  )
-
   val tstPensionContributionNoPsoDisplaySections = Seq(
     AmendDisplaySectionModel(
       "OverseasPensions",
@@ -251,7 +121,10 @@ class AmendsPensionSharingOrderControllerSpec
           "YesNo",
           Some(
             controllers.routes.AmendsOverseasPensionController
-              .amendOverseasPensions(Strings.ProtectionTypeUrl.IndividualProtection2014, "active")
+              .amendOverseasPensions(
+                AmendableProtectionType.IndividualProtection2014,
+                AmendProtectionRequestStatus.Open
+              )
           ),
           None,
           "Yes"
@@ -260,7 +133,10 @@ class AmendsPensionSharingOrderControllerSpec
           "Amt",
           Some(
             controllers.routes.AmendsOverseasPensionController
-              .amendOverseasPensions(Strings.ProtectionTypeUrl.IndividualProtection2014, "active")
+              .amendOverseasPensions(
+                AmendableProtectionType.IndividualProtection2014,
+                AmendProtectionRequestStatus.Open
+              )
           ),
           None,
           "£100,000"
@@ -274,7 +150,7 @@ class AmendsPensionSharingOrderControllerSpec
           "Amt",
           Some(
             controllers.routes.AmendsCurrentPensionController
-              .amendCurrentPensions(Strings.ProtectionTypeUrl.IndividualProtection2014, "active")
+              .amendCurrentPensions(AmendableProtectionType.IndividualProtection2014, AmendProtectionRequestStatus.Open)
           ),
           None,
           "£1,000,000"
@@ -290,7 +166,7 @@ class AmendsPensionSharingOrderControllerSpec
   )
 
   val tstAmendDisplayModel = AmendDisplayModel(
-    protectionType = IndividualProtection2014.toString,
+    protectionType = AmendableProtectionType.IndividualProtection2014,
     amended = true,
     pensionContributionSections = tstPensionContributionNoPsoDisplaySections,
     psoAdded = false,
@@ -298,68 +174,26 @@ class AmendsPensionSharingOrderControllerSpec
     totalAmount = "£1,100,000"
   )
 
-  val individualProtection2014ActiveAmendmentProtection = ProtectionModel(
-    psaCheckReference = Some("psaRef"),
-    identifier = Some(12345),
-    notificationId = Some(33)
-  )
-
-  val tstActiveAmendResponseModel = AmendResponseModel(individualProtection2014ActiveAmendmentProtection)
-
-  val individualProtection2016InactiveAmendmentProtection = ProtectionModel(
-    psaCheckReference = Some("psaRef"),
-    identifier = Some(12345),
-    notificationId = Some(43)
-  )
-
-  val tstInactiveAmendResponseModel = AmendResponseModel(individualProtection2016InactiveAmendmentProtection)
-
-  def cacheFetchCondition[T](data: Option[T]): Unit =
-    when(mockSessionCacheService.fetchAndGetFormData[T](anyString())(any(), any()))
-      .thenReturn(Future.successful(data))
-
   "Calling the amendPsoDetails action" when {
-
-    val testProtectionNoPsoList = ProtectionModel(
-      psaCheckReference = Some("psaRef"),
-      identifier = Some(1234),
-      pensionDebits = None
-    )
-
-    val testProtectionEmptyPsoList = ProtectionModel(
-      psaCheckReference = Some("psaRef"),
-      identifier = Some(1234),
-      pensionDebits = Some(List.empty)
-    )
-
-    val testProtectionSinglePsoList = ProtectionModel(
-      psaCheckReference = Some("psaRef"),
-      identifier = Some(1234),
-      pensionDebits = Some(List(PensionDebitModel("2016-12-23T15:14:00", 1000.0)))
-    )
-
-    val testProtectionMultiplePsoList = ProtectionModel(
-      psaCheckReference = Some("psaRef"),
-      identifier = Some(1234),
-      pensionDebits =
-        Some(List(PensionDebitModel("2016-12-23T15:14:00", 1000.0), PensionDebitModel("2016-12-27:15:12:00", 11322.75)))
-    )
-
     "there is no amendment model fetched from cache" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](None)
+      mockFetchAmendProtectionModel(any(), any())(None)
 
       val result: Future[Result] =
-        controller.amendPsoDetails(Strings.ProtectionTypeUrl.IndividualProtection2014, "open")(fakeRequest)
+        controller.amendPsoDetails(AmendableProtectionType.IndividualProtection2014, AmendProtectionRequestStatus.Open)(
+          fakeRequest
+        )
 
       status(result) shouldBe 500
     }
     "show the technical error page for existing protections" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](None)
+      mockFetchAmendProtectionModel(any(), any())(None)
 
       val result: Future[Result] =
-        controller.amendPsoDetails(Strings.ProtectionTypeUrl.IndividualProtection2014, "open")(fakeRequest)
+        controller.amendPsoDetails(AmendableProtectionType.IndividualProtection2014, AmendProtectionRequestStatus.Open)(
+          fakeRequest
+        )
       val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
 
       jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
@@ -369,14 +203,16 @@ class AmendsPensionSharingOrderControllerSpec
       await(result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
     }
 
-    "there is no PSO list stored in the AmendProtectionModel" in {
+    "there is no PSO stored in the AmendProtectionModel" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](
-        Some(AmendProtectionModel(testProtectionNoPsoList, testProtectionNoPsoList))
+      mockFetchAmendProtectionModel(any(), any())(
+        Some(amendDormantIndividualProtection2016)
       )
 
       val result: Future[Result] =
-        controller.amendPsoDetails(Strings.ProtectionTypeUrl.IndividualProtection2014, "open")(fakeRequest)
+        controller.amendPsoDetails(AmendableProtectionType.IndividualProtection2014, AmendProtectionRequestStatus.Open)(
+          fakeRequest
+        )
       val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
 
       status(result) shouldBe 200
@@ -387,31 +223,17 @@ class AmendsPensionSharingOrderControllerSpec
       jsoupDoc.body.getElementById("pso.year").attr("value") shouldEqual ""
     }
 
-    "there is an empty PSO list stored in the AmendProtectionModel" in {
+    "there is a PSO stored in the AmendProtectionModel" in {
+      val amendDormantIndividualProtection2014WithPensionDebit =
+        amendDormantIndividualProtection2014.withPensionDebit(Some(PensionDebitModel(DateModel.of(2016, 12, 23), 1000)))
+
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](
-        Some(AmendProtectionModel(testProtectionEmptyPsoList, testProtectionEmptyPsoList))
-      )
-
-      val result: Future[Result] =
-        controller.amendPsoDetails(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")(fakeRequest)
-      val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
-
-      status(result) shouldBe 200
-      jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
-      jsoupDoc.body.getElementById("pso.day").attr("value") shouldEqual ""
-      jsoupDoc.body.getElementById("pso.month").attr("value") shouldEqual ""
-      jsoupDoc.body.getElementById("pso.year").attr("value") shouldEqual ""
-    }
-
-    "there is a PSO list of one PSO stored in the AmendProtectionModel" in {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](
-        Some(AmendProtectionModel(testProtectionSinglePsoList, testProtectionSinglePsoList))
+      mockFetchAmendProtectionModel(any(), any())(
+        Some(amendDormantIndividualProtection2014WithPensionDebit)
       )
 
       val result = FakeRequests.authorisedGet(
-        controller.amendPsoDetails(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")
+        controller.amendPsoDetails(AmendableProtectionType.IndividualProtection2016, AmendProtectionRequestStatus.Open)
       )
 
       status(result) shouldBe 200
@@ -425,110 +247,82 @@ class AmendsPensionSharingOrderControllerSpec
       jsoupDoc.body.getElementById("psoAmt").attr("value") shouldEqual "1000"
     }
 
-    "there is a PSO list of more then one PSO stored in the AmendProtectionModel" in {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](
-        Some(AmendProtectionModel(testProtectionMultiplePsoList, testProtectionMultiplePsoList))
-      )
-
-      val result: Future[Result] =
-        controller.amendPsoDetails(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")(fakeRequest)
-      val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
-
-      status(result) shouldBe 500
-      jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
-      jsoupDoc.body
-        .getElementById("tryAgainLink")
-        .attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections}"
-      await(result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
-    }
   }
 
   "Calling the submitAmendPsoDetails action" when {
 
     case class TestData(
         amendProtectionModel: AmendProtectionModel,
-        psoYear: String,
-        protectionTypeUrl: String
+        psoYear: Int,
+        protectionType: AmendableProtectionType
     )
 
     Seq(
       TestData(
-        testAmendIndividualProtection2014ProtectionModel,
-        "2014",
-        Strings.ProtectionTypeUrl.IndividualProtection2014
+        amendDormantIndividualProtection2014,
+        2014,
+        AmendableProtectionType.IndividualProtection2014
       ),
       TestData(
-        testAmendIndividualProtection2014LTAProtectionModel,
-        "2014",
-        Strings.ProtectionTypeUrl.IndividualProtection2014LTA
+        amendDormantIndividualProtection2014LTA,
+        2014,
+        AmendableProtectionType.IndividualProtection2014LTA
       ),
       TestData(
-        testAmendIndividualProtection2016ProtectionModel,
-        "2016",
-        Strings.ProtectionTypeUrl.IndividualProtection2016
+        amendDormantIndividualProtection2016,
+        2016,
+        AmendableProtectionType.IndividualProtection2016
       ),
       TestData(
-        testAmendIndividualProtection2016LTAProtectionModel,
-        "2016",
-        Strings.ProtectionTypeUrl.IndividualProtection2016LTA
+        amendDormantIndividualProtection2016LTA,
+        2016,
+        AmendableProtectionType.IndividualProtection2016LTA
       )
     ).foreach { testData =>
-      s"provided with valid data for ${testData.protectionTypeUrl}" should {
+      s"provided with valid data for ${testData.protectionType}" should {
 
         val requestData = Seq(
           ("pso.day", "6"),
           ("pso.month", "4"),
-          ("pso.year", testData.psoYear),
+          ("pso.year", testData.psoYear.toString),
           ("psoAmt", "100000")
         )
 
         "return 303 (Redirect) and amendsSummary view" in {
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-          cacheFetchCondition[AmendProtectionModel](Some(testData.amendProtectionModel))
-          when(mockSessionCacheService.saveFormData(any(), any())(any(), any()))
-            .thenReturn(Future.successful(CacheMap("", Map("" -> JsNull))))
+          mockFetchAmendProtectionModel(any(), any())(Some(testData.amendProtectionModel))
+          mockSaveAmendProtectionModel()
 
           val result: Future[Result] = controller.submitAmendPsoDetails(
-            protectionType = testData.protectionTypeUrl,
-            status = "open",
+            protectionType = testData.protectionType,
+            status = AmendProtectionRequestStatus.Open,
             existingPSO = true
           )(authenticatedFakeRequest().withFormUrlEncodedBody(requestData: _*).withMethod("POST"))
 
           status(result) shouldBe 303
           redirectLocation(result) shouldBe Some(
-            s"${routes.AmendsController.amendsSummary(testData.protectionTypeUrl, "open").url}"
+            s"${routes.AmendsController.amendsSummary(testData.protectionType, AmendProtectionRequestStatus.Open).url}"
           )
         }
 
         "save correct data into cache" in {
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-          cacheFetchCondition[AmendProtectionModel](Some(testData.amendProtectionModel))
-          when(mockSessionCacheService.saveFormData(any(), any())(any(), any()))
-            .thenReturn(Future.successful(CacheMap("", Map("" -> JsNull))))
+          mockFetchAmendProtectionModel(any(), any())(Some(testData.amendProtectionModel))
+          mockSaveAmendProtectionModel()
 
           controller
             .submitAmendPsoDetails(
-              protectionType = testData.protectionTypeUrl,
-              status = "open",
+              protectionType = testData.protectionType,
+              status = AmendProtectionRequestStatus.Open,
               existingPSO = true
             )(authenticatedFakeRequest().withFormUrlEncodedBody(requestData: _*).withMethod("POST"))
             .futureValue
 
-          val expectedPensionDebitStartDate     = s"${testData.psoYear}-04-06"
-          val expectedPensionDebitEnteredAmount = 100000.0
-          val expectedUpdatedProtection: ProtectionModel = testData.amendProtectionModel.updatedProtection.copy(
-            pensionDebits = Some(
-              List(
-                PensionDebitModel(startDate = expectedPensionDebitStartDate, amount = expectedPensionDebitEnteredAmount)
-              )
-            ),
-            pensionDebitStartDate = Some(expectedPensionDebitStartDate),
-            pensionDebitEnteredAmount = Some(expectedPensionDebitEnteredAmount)
+          val expectedAmendProtectionModel = testData.amendProtectionModel.withPensionDebit(
+            Some(PensionDebitModel(DateModel.of(testData.psoYear, 4, 6), 10_000))
           )
-          val expectedAmendProtectionModel: AmendProtectionModel =
-            testData.amendProtectionModel.copy(updatedProtection = expectedUpdatedProtection)
-          verify(mockSessionCacheService).saveFormData(any(), eqTo(expectedAmendProtectionModel))(any(), any())
+
+          verify(mockSessionCacheService).saveAmendProtectionModel(eqTo(expectedAmendProtectionModel))(any())
         }
       }
     }
@@ -546,8 +340,8 @@ class AmendsPensionSharingOrderControllerSpec
         )
 
         val result: Future[Result] = controller.submitAmendPsoDetails(
-          protectionType = Strings.ProtectionTypeUrl.IndividualProtection2014,
-          status = "open",
+          protectionType = AmendableProtectionType.IndividualProtection2014,
+          status = AmendProtectionRequestStatus.Open,
           existingPSO = true
         )(authenticatedFakeRequest().withFormUrlEncodedBody(data: _*).withMethod("POST"))
 
@@ -559,9 +353,8 @@ class AmendsPensionSharingOrderControllerSpec
 
       "return " in {
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        cacheFetchCondition[AmendProtectionModel](None)
-        when(mockSessionCacheService.saveFormData(any(), any())(any(), any()))
-          .thenReturn(Future.successful(CacheMap("", Map("" -> JsNull))))
+        mockFetchAmendProtectionModel(any(), any())(None)
+        mockSaveAmendProtectionModel()
 
         val requestData = Seq(
           ("pso.day", "6"),
@@ -572,8 +365,8 @@ class AmendsPensionSharingOrderControllerSpec
 
         val result: Throwable = controller
           .submitAmendPsoDetails(
-            protectionType = Strings.ProtectionTypeUrl.IndividualProtection2014,
-            status = "open",
+            protectionType = AmendableProtectionType.IndividualProtection2014,
+            status = AmendProtectionRequestStatus.Open,
             existingPSO = true
           )(authenticatedFakeRequest().withFormUrlEncodedBody(requestData: _*).withMethod("POST"))
           .failed
@@ -581,28 +374,6 @@ class AmendsPensionSharingOrderControllerSpec
 
         result shouldBe a[Exceptions.RequiredValueNotDefinedException]
         result.getMessage shouldBe "Value not found for amendModel in updateAmendModelWithPso"
-      }
-    }
-
-  }
-
-  "Calling createPensionDebitModel" when {
-
-    "not supplied with a PSO amount" should {
-
-      "return the correct value not found exception" in
-        (the[RequiredValueNotDefinedException] thrownBy {
-          controller.createPensionDebitModel(AmendPsoDetailsModel(LocalDate.of(2017, 3, 1), None))
-        } should have).message("Value not found for psoAmt in createPensionDebitModel")
-    }
-
-    "supplied with a PSO amount" should {
-
-      "return the correct list" in {
-        val result: PensionDebitModel =
-          controller.createPensionDebitModel(AmendPsoDetailsModel(LocalDate.of(2017, 3, 1), Some(1)))
-
-        result shouldBe PensionDebitModel("2017-03-01", 1)
       }
     }
   }

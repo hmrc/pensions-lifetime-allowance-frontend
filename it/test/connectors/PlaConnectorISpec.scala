@@ -67,7 +67,7 @@ class PlaConnectorISpec extends IntegrationBaseSpec with ScalaFutures {
       pensionDebitEnteredAmount = Some(25000),
       notificationId = Some(3),
       protectedAmount = Some(120000),
-      pensionDebitStartDate = Some("2026-07-09"),
+      pensionDebitStartDate = Some(DateModel.of(2026, 7, 9)),
       pensionDebitTotalAmount = Some(40000)
     )
 

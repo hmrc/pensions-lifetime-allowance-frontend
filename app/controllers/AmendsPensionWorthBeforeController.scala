@@ -20,7 +20,6 @@ import auth.AuthFunction
 import common._
 import config.FrontendAppConfig
 import forms.AmendPensionsWorthBeforeForm.amendPensionsWorthBeforeForm
-import models.amend.AmendProtectionModel
 import models.amend.value.AmendPensionsWorthBeforeModel
 import models.pla.AmendableProtectionType
 import models.pla.AmendableProtectionType._

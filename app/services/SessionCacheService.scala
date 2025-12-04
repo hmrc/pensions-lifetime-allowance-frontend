@@ -20,7 +20,7 @@ import models.amend.{AmendProtectionModel, AmendsGAModel}
 import models.cache.CacheMap
 import models.pla.AmendableProtectionType
 import models.pla.request.AmendProtectionRequestStatus
-import models.{AmendedProtectionModel, ProtectionModel, PsaLookupRequest, PsaLookupResult}
+import models.{AmendResponseModel, ProtectionModel, PsaLookupRequest, PsaLookupResult}
 import play.api.Logging
 import play.api.libs.json.{Json, Reads, Writes}
 import play.api.mvc.Request
@@ -45,10 +45,10 @@ class SessionCacheService @Inject() (sessionRepository: SessionRepository)(
 
   private val amendsGAModelKey: String = "AmendsGA"
 
-  private val amendedProtectionModelKey: String = "amendResponseModel"
-  private val psaLookupRequestKey               = "psa-lookup-request"
-  private val psaLookupResultKey                = "psa-lookup-result"
-  private val previousTechnicalIssuesKey        = "previous-technical-issues"
+  private val amendResponseModelKey: String = "amendResponseModel"
+  private val psaLookupRequestKey           = "psa-lookup-request"
+  private val psaLookupResultKey            = "psa-lookup-result"
+  private val previousTechnicalIssuesKey    = "previous-technical-issues"
 
   def saveOpenProtection(openProtection: ProtectionModel)(implicit request: Request[_]): Future[CacheMap] =
     saveFormData[ProtectionModel](openProtectionKey, openProtection)
@@ -64,10 +64,10 @@ class SessionCacheService @Inject() (sessionRepository: SessionRepository)(
   def saveAmendsGAModel(amendsGAModel: AmendsGAModel)(implicit request: Request[_]): Future[CacheMap] =
     saveFormData[AmendsGAModel](amendsGAModelKey, amendsGAModel)
 
-  def saveAmendedProtectionModel(amendedProtectionModel: AmendedProtectionModel)(
+  def saveAmendResponseModel(amendResponseModel: AmendResponseModel)(
       implicit request: Request[_]
   ): Future[CacheMap] =
-    saveFormData[AmendedProtectionModel](amendedProtectionModelKey, amendedProtectionModel)
+    saveFormData[AmendResponseModel](amendResponseModelKey, amendResponseModel)
 
   def savePsaLookupRequest(psaLookupRequest: PsaLookupRequest)(implicit request: Request[_]): Future[CacheMap] =
     saveFormData[PsaLookupRequest](psaLookupRequestKey, psaLookupRequest)
@@ -78,7 +78,7 @@ class SessionCacheService @Inject() (sessionRepository: SessionRepository)(
   def savePreviousTechnicalIssues(previousTechnicalIssues: Boolean)(implicit request: Request[_]): Future[CacheMap] =
     saveFormData[Boolean](previousTechnicalIssuesKey, previousTechnicalIssues)
 
-  private def saveFormData[T](
+  private[services] def saveFormData[T](
       key: String,
       data: T
   )(implicit request: Request[_], formats: Writes[T]): Future[CacheMap] = {
@@ -97,8 +97,8 @@ class SessionCacheService @Inject() (sessionRepository: SessionRepository)(
   def fetchAmendsGAModel(implicit request: Request[_]): Future[Option[AmendsGAModel]] =
     fetchAndGetFormData[AmendsGAModel](amendsGAModelKey)
 
-  def fetchAmendedProtectionModel(implicit request: Request[_]): Future[Option[AmendedProtectionModel]] =
-    fetchAndGetFormData[AmendedProtectionModel](amendedProtectionModelKey)
+  def fetchAmendResponseModel(implicit request: Request[_]): Future[Option[AmendResponseModel]] =
+    fetchAndGetFormData[AmendResponseModel](amendResponseModelKey)
 
   def fetchPsaLookupRequest(implicit request: Request[_]): Future[Option[PsaLookupRequest]] =
     fetchAndGetFormData[PsaLookupRequest](psaLookupRequestKey)
@@ -109,7 +109,7 @@ class SessionCacheService @Inject() (sessionRepository: SessionRepository)(
   def fetchPreviousTechnicalIssues(implicit request: Request[_]): Future[Option[Boolean]] =
     fetchAndGetFormData[Boolean](previousTechnicalIssuesKey)
 
-  private def fetchAndGetFormData[T](
+  private[services] def fetchAndGetFormData[T](
       key: String
   )(implicit request: Request[_], formats: Reads[T]): Future[Option[T]] = {
     logger.info(s"Fetching $key")

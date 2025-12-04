@@ -16,24 +16,27 @@
 
 package models.pla
 
-import AmendableProtectionType._
+import models.pla.AmendableProtectionType._
+import models.pla.response.ProtectionType
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
 class AmendableProtectionTypeSpec extends AnyWordSpec with Matchers {
 
-  "AmendableProtectionType on from" should {
+  "AmendableProtectionType on tryFromProtectionType" should {
 
     "return correct AmendableProtectionType" when {
 
       val testScenarios = Seq(
-        "IP2014" -> IndividualProtection2014,
-        "IP2016" -> IndividualProtection2016
-      ) ++ AmendableProtectionType.values.map(protectionType => protectionType.toString -> protectionType)
+        ProtectionType.IndividualProtection2014    -> IndividualProtection2014,
+        ProtectionType.IndividualProtection2014LTA -> IndividualProtection2014LTA,
+        ProtectionType.IndividualProtection2016    -> IndividualProtection2016,
+        ProtectionType.IndividualProtection2016LTA -> IndividualProtection2016LTA
+      )
 
       testScenarios.foreach { case (input, expectedType) =>
         s"provided with '$input' value" in {
-          AmendableProtectionType.fromProtectionType(input) shouldBe expectedType
+          AmendableProtectionType.tryFromProtectionType(input) shouldBe Some(expectedType)
         }
       }
     }
@@ -42,13 +45,6 @@ class AmendableProtectionTypeSpec extends AnyWordSpec with Matchers {
       import models.pla.response.ProtectionType._
 
       val testValues = Seq(
-        "Unknown",
-        "FP2016",
-        "Primary",
-        "Enhanced",
-        "Fixed",
-        "FP2014"
-      ) ++ Seq(
         FixedProtection2016,
         FixedProtection2016LTA,
         FixedProtection2014,
@@ -62,14 +58,11 @@ class AmendableProtectionTypeSpec extends AnyWordSpec with Matchers {
         PensionCreditRights,
         InternationalEnhancementS221,
         InternationalEnhancementS224
-      ).map(_.toString)
+      )
 
       testValues.foreach { input =>
         s"provided with '$input' value" in {
-          val exc =
-            the[IllegalArgumentException] thrownBy AmendableProtectionType.fromProtectionType(input)
-
-          exc.getMessage shouldBe s"Cannot create AmendableProtectionType from String: $input"
+          AmendableProtectionType.tryFromProtectionType(input) shouldBe None
         }
       }
     }

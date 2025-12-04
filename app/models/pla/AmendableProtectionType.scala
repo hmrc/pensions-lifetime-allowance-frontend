@@ -61,14 +61,6 @@ object AmendableProtectionType extends Enumerable.Implicits {
   implicit val toEnumerable: Enumerable[AmendableProtectionType] =
     Enumerable(values.map(v => v.jsonValue -> v): _*)
 
-  def fromProtectionType(protectionType: ProtectionType): AmendableProtectionType =
-    tryFromProtectionType(protectionType)
-      .getOrElse(
-        throw new IllegalArgumentException(
-          s"Cannot create AmendableProtectionType from ProtectionType: $protectionType"
-        )
-      )
-
   def tryFromProtectionType(protectionType: ProtectionType): Option[AmendableProtectionType] =
     protectionType match {
       case ProtectionType.IndividualProtection2014    => Some(IndividualProtection2014)
