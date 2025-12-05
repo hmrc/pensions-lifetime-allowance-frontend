@@ -183,7 +183,7 @@ class ReadProtectionsControllerSpec
         when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
           .thenReturn(testExistingProtectionsDisplayModel)
 
-        await(controller.saveActiveProtection(None)(fakeRequest)) shouldBe true
+        await(controller.saveActiveProtection(None)(fakeRequest)) shouldBe None
         verify(mockSessionCacheService, times(0)).saveOpenProtection(any())(any())
       }
     }
@@ -335,6 +335,7 @@ class ReadProtectionsControllerSpec
       when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
         .thenReturn(testExistingProtectionsDisplayModel)
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
+      mockCacheSave()
 
       controller.currentProtections(fakeRequest).futureValue
 

@@ -78,7 +78,7 @@ object AmendedProtectionType extends Enumerable.Implicits {
       case ProtectionType.IndividualProtection2014LTA => Some(IndividualProtection2014LTA)
       case ProtectionType.IndividualProtection2016    => Some(IndividualProtection2016)
       case ProtectionType.IndividualProtection2016LTA => Some(IndividualProtection2016LTA)
-      case ProtectionType.FixedProtection2016         => Some(FixedProtection2016LTA)
+      case ProtectionType.FixedProtection2016         => Some(FixedProtection2016)
       case ProtectionType.FixedProtection2016LTA      => Some(FixedProtection2016LTA)
       case _                                          => None
     }

@@ -262,6 +262,7 @@ class AmendsPensionTakenBeforeControllerSpec
   "the data is valid with a no for IndividualProtection2016" in {
     mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
     mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2016))
+    mockSaveAmendProtectionModel()
 
     val result = FakeRequests.authorisedPost(
       controller.submitAmendPensionsTakenBefore(
@@ -300,6 +301,7 @@ class AmendsPensionTakenBeforeControllerSpec
   "the data is valid with a no for IndividualProtection2016LTA" in {
     mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
     mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2016LTA))
+    mockSaveAmendProtectionModel()
 
     val result = FakeRequests.authorisedPost(
       controller.submitAmendPensionsTakenBefore(
@@ -338,6 +340,7 @@ class AmendsPensionTakenBeforeControllerSpec
   "the data is valid with a no for IndividualProtection2014" in {
     mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
     mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2014))
+    mockSaveAmendProtectionModel()
 
     val result = FakeRequests.authorisedPost(
       controller.submitAmendPensionsTakenBefore(
@@ -376,6 +379,7 @@ class AmendsPensionTakenBeforeControllerSpec
   "the data is valid with a no for IndividualProtection2014LTA" in {
     mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
     mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2014LTA))
+    mockSaveAmendProtectionModel()
 
     val result = FakeRequests.authorisedPost(
       controller.submitAmendPensionsTakenBefore(

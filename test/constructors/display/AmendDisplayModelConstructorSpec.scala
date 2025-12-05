@@ -31,29 +31,33 @@ class AmendDisplayModelConstructorSpec extends DisplayConstructorsTestData {
         pensionContributionSections = tstPensionContributionNoPsoDisplaySections,
         psoAdded = false,
         psoSections = tstNoPsoDisplaySections,
-        totalAmount = "£1,100,000.34"
+        totalAmount = "£1,100,000"
       )
     }
 
     "correctly transform an AmendProtectionModel into an AmendDisplayModel with PSOs" in {
-      AmendDisplayModelConstructor.createAmendDisplayModel(tstWithPsoAmendProtectionModel) shouldBe AmendDisplayModel(
+      AmendDisplayModelConstructor.createAmendDisplayModel(
+        tstWithExistingPsoAmendProtectionModel
+      ) shouldBe AmendDisplayModel(
         protectionType = AmendableProtectionType.IndividualProtection2016,
         amended = false,
         pensionContributionSections = tstPensionContributionPsoDisplaySections,
         psoAdded = false,
         psoSections = tstNoPsoDisplaySections,
-        totalAmount = "£1,100,000.34"
+        totalAmount = "£1,099,000"
       )
     }
 
     "return no current PSO's when not supplied with an amountOption" in {
-      AmendDisplayModelConstructor.createAmendDisplayModel(tstWithPsoAmendProtectionModel) shouldBe AmendDisplayModel(
+      AmendDisplayModelConstructor.createAmendDisplayModel(
+        tstWithExistingPsoAmendProtectionModel
+      ) shouldBe AmendDisplayModel(
         protectionType = AmendableProtectionType.IndividualProtection2016,
         amended = false,
         pensionContributionSections = tstPensionContributionPsoDisplaySections,
         psoAdded = false,
         psoSections = tstNoPsoDisplaySections,
-        totalAmount = "£1,100,000.34"
+        totalAmount = "£1,099,000"
       )
     }
 
@@ -68,7 +72,7 @@ class AmendDisplayModelConstructorSpec extends DisplayConstructorsTestData {
         pensionContributionSections = tstPensionContributionNoPsoDisplaySections,
         psoAdded = false,
         psoSections = tstNoPsoDisplaySections,
-        totalAmount = "£1,100,000.34"
+        totalAmount = "£1,100,000"
       )
     }
 
@@ -99,14 +103,14 @@ class AmendDisplayModelConstructorSpec extends DisplayConstructorsTestData {
       )
 
       AmendDisplayModelConstructor.createAmendDisplayModel(
-        tstWithExistingPsoAmendProtectionModel
+        tstWithPsoAmendProtectionModel
       ) shouldBe AmendDisplayModel(
         protectionType = AmendableProtectionType.IndividualProtection2016,
-        amended = false,
+        amended = true,
         pensionContributionSections = tstPensionContributionNoPsoDisplaySections,
         psoAdded = true,
         psoSections = tstPsoAddedSection,
-        totalAmount = "£1,100,000.34"
+        totalAmount = "£1,100,000"
       )
 
     }

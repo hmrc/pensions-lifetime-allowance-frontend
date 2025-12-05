@@ -16,7 +16,7 @@
 
 package repositories
 
-import models.PensionsTakenModel
+import models.{DateModel, PensionDebitModel}
 import models.cache.CacheMap
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
@@ -46,7 +46,7 @@ class SessionRepositoryISpec
     .configure("mongodb.uri" -> mongoUri)
     .build()
 
-  implicit val pensionsTakenModelFormat: OFormat[PensionsTakenModel] = Json.format[PensionsTakenModel]
+  implicit val pensionsTakenModelFormat: OFormat[PensionDebitModel] = Json.format[PensionDebitModel]
 
   val repository = new SessionRepository(mongoComponent, inject[Configuration], inject[TimestampSupport])
 
@@ -55,9 +55,9 @@ class SessionRepositoryISpec
   val userRequest: Request[AnyContent]      = FakeRequest().withSession(SessionKeys.sessionId -> session1)
   val otherUserRequest: Request[AnyContent] = FakeRequest().withSession(SessionKeys.sessionId -> session2)
 
-  val testAnswerKey: DataKey[PensionsTakenModel] = DataKey[PensionsTakenModel]("pensionsTaken")
-  val testAnswer: PensionsTakenModel             = PensionsTakenModel(Some("no"))
-  val testOldAnswer: PensionsTakenModel          = PensionsTakenModel(Some("yes"))
+  val testAnswerKey: DataKey[PensionDebitModel] = DataKey[PensionDebitModel]("pensionsTaken")
+  val testAnswer: PensionDebitModel             = PensionDebitModel(DateModel.of(2025, 12, 5), 200)
+  val testOldAnswer: PensionDebitModel          = PensionDebitModel(DateModel.of(2024, 11, 23), 599)
   val testCacheMap: CacheMap      = CacheMap(session1, Map(testAnswerKey.unwrap -> Json.toJson(testAnswer)))
   val testOtherCacheMap: CacheMap = CacheMap(session2, Map(testAnswerKey.unwrap -> Json.toJson(testAnswer)))
 
@@ -110,10 +110,10 @@ class SessionRepositoryISpec
       repository.clearSession(userRequest).futureValue
 
       repository
-        .getFromSession[PensionsTakenModel](testAnswerKey)(pensionsTakenModelFormat, userRequest)
+        .getFromSession[PensionDebitModel](testAnswerKey)(pensionsTakenModelFormat, userRequest)
         .futureValue shouldBe None
       repository
-        .getFromSession[PensionsTakenModel](testAnswerKey)(pensionsTakenModelFormat, otherUserRequest)
+        .getFromSession[PensionDebitModel](testAnswerKey)(pensionsTakenModelFormat, otherUserRequest)
         .futureValue shouldBe Some(testAnswer)
     }
   }

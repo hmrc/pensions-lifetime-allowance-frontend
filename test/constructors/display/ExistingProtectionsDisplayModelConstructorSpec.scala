@@ -41,7 +41,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
         sequence = 1,
         protectionType = IndividualProtection2014,
         status = Open,
-        certificateDate = Some(DateModel.of(2017, 4, 17)),
+        certificateDate = Some(DateModel.of(2016, 4, 17)),
         certificateTime = Some(TimeModel.of(15, 14, 0)),
         protectedAmount = Some(1250000),
         protectionReference = Some("PSA123456")

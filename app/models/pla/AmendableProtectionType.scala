@@ -75,7 +75,9 @@ object AmendableProtectionType extends Enumerable.Implicits {
 
       override def bind(key: String, value: String): Either[String, AmendableProtectionType] =
         value match {
+          case "ip2014"                              => Right(IndividualProtection2014)
           case UrlString.IndividualProtection2014    => Right(IndividualProtection2014)
+          case "ip2016"                              => Right(IndividualProtection2016)
           case UrlString.IndividualProtection2016    => Right(IndividualProtection2016)
           case UrlString.IndividualProtection2014LTA => Right(IndividualProtection2014LTA)
           case UrlString.IndividualProtection2016LTA => Right(IndividualProtection2016LTA)

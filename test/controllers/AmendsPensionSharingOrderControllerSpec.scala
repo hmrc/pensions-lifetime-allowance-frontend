@@ -319,7 +319,7 @@ class AmendsPensionSharingOrderControllerSpec
             .futureValue
 
           val expectedAmendProtectionModel = testData.amendProtectionModel.withPensionDebit(
-            Some(PensionDebitModel(DateModel.of(testData.psoYear, 4, 6), 10_000))
+            Some(PensionDebitModel(DateModel.of(testData.psoYear, 4, 6), 100_000))
           )
 
           verify(mockSessionCacheService).saveAmendProtectionModel(eqTo(expectedAmendProtectionModel))(any())

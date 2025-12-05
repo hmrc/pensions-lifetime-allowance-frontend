@@ -17,6 +17,7 @@
 package constructors.display
 
 import enums.ApplicationStage
+import models.NotificationId.NotificationId1
 import models.amend.AmendProtectionModel
 import models.display.{AmendDisplayRowModel, AmendDisplaySectionModel, AmendPrintDisplayModel}
 import models.pla.AmendableProtectionType
@@ -29,7 +30,8 @@ import models.{
   PensionDebitModel,
   Person,
   PersonalDetailsModel,
-  ProtectionModel
+  ProtectionModel,
+  TimeModel
 }
 import org.scalatestplus.mockito.MockitoSugar.mock
 import play.api.i18n.{Lang, Messages}
@@ -47,18 +49,23 @@ trait DisplayConstructorsTestData extends FakeApplication {
 
   val tstPsaCheckRef = "PSA33456789"
 
-  val tstProtectionModel: ProtectionModel = ProtectionModel(
+  val tstProtection: ProtectionModel = ProtectionModel(
     psaCheckReference = tstPsaCheckRef,
     identifier = 100001,
     sequence = 1,
     protectionType = ProtectionType.IndividualProtection2016,
     status = ProtectionStatus.Open,
-    certificateDate = None,
-    certificateTime = None
+    certificateDate = Some(DateModel.of(2016, 4, 17)),
+    certificateTime = Some(TimeModel.of(15, 14, 0)),
+    protectedAmount = Some(1_100_000),
+    preADayPensionInPayment = None,
+    postADayBenefitCrystallisationEvents = None,
+    nonUKRights = Some(100_000),
+    uncrystallisedRights = Some(1_000_000.34)
   )
 
   val tstNoPsoAmendProtectionModel: AmendProtectionModel =
-    AmendProtectionModel.tryFromProtection(tstProtectionModel).get
+    AmendProtectionModel.tryFromProtection(tstProtection).get
 
   val tstWithPsoAmendProtectionModel: AmendProtectionModel =
     tstNoPsoAmendProtectionModel.withPensionDebit(Some(PensionDebitModel(DateModel.of(2017, 3, 2), 1000)))
@@ -248,6 +255,21 @@ trait DisplayConstructorsTestData extends FakeApplication {
     )
   )
 
+  val tstPerson               = Person(firstName = "Testy", lastName = "McTestface")
+  val tstPersonalDetailsModel = PersonalDetailsModel(tstPerson)
+
+  val tstProtectionModel: ProtectionModel = ProtectionModel(
+    psaCheckReference = tstPsaCheckRef,
+    identifier = 12345,
+    sequence = 1,
+    protectionType = ProtectionType.IndividualProtection2014,
+    status = ProtectionStatus.Open,
+    certificateDate = Some(DateModel.of(2016, 4, 17)),
+    certificateTime = Some(TimeModel.of(15, 14, 0)),
+    protectedAmount = Some(1_250_000),
+    protectionReference = Some("PSA123456")
+  )
+
   val tstNino = "testNino"
 
   val amendResponseModel = AmendResponseModel(
@@ -255,16 +277,16 @@ trait DisplayConstructorsTestData extends FakeApplication {
     sequence = 1,
     protectionType = AmendedProtectionType.IndividualProtection2014,
     status = AmendProtectionResponseStatus.Open,
-    certificateDate = None,
-    certificateTime = None,
-    protectionReference = None,
+    certificateDate = Some(DateModel.of(2016, 4, 17)),
+    certificateTime = Some(TimeModel.of(15, 14, 0)),
+    protectionReference = Some("protectionReference"),
     psaCheckReference = tstPsaCheckRef,
     relevantAmount = 1_250_000,
     preADayPensionInPaymentAmount = 375_000,
     postADayBenefitCrystallisationEventAmount = 375_000,
     uncrystallisedRightsAmount = 375_000,
     nonUKRightsAmount = 375_000,
-    notificationId = None,
+    notificationId = Some(NotificationId1),
     protectedAmount = Some(1_250_000),
     pensionDebitTotalAmount = Some(0),
     pensionDebit = None
@@ -277,14 +299,11 @@ trait DisplayConstructorsTestData extends FakeApplication {
     protectionType = AmendedProtectionType.IndividualProtection2014,
     status = None,
     psaCheckReference = Some(tstPsaCheckRef),
-    protectionReference = Some("PSA123456"),
+    protectionReference = Some("protectionReference"),
     fixedProtectionReference = None,
     protectedAmount = Some("£1,250,000"),
     certificateDate = Some("17 April 2016"),
     certificateTime = Some("3:14pm")
   )
-
-  val tstPerson               = Person(firstName = "Testy", lastName = "McTestface")
-  val tstPersonalDetailsModel = PersonalDetailsModel(tstPerson)
 
 }

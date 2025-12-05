@@ -167,6 +167,7 @@ class LookupProtectionNotificationControllerSpec extends FakeApplication with Be
         when(plaConnector.psaLookup(any(), any())(any(), any()))
           .thenReturn(Future.failed(UpstreamErrorResponse("message", NOT_FOUND, NOT_FOUND)))
         when(sessionCacheService.savePsaLookupResult(any())(any())).thenReturn(Future.successful(mockCacheMap))
+        when(sessionCacheService.savePsaLookupRequest(any())(any())).thenReturn(Future.successful(mockCacheMap))
 
         val result = controller.submitProtectionNotificationNoForm(postRequest)
 

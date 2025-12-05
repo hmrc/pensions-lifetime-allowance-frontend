@@ -317,7 +317,7 @@ class AmendsControllerSpec
           )(fakeRequest)
 
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some(routes.AmendsController.amendmentOutcome)
+        redirectLocation(result) shouldBe Some(routes.AmendsController.amendmentOutcome.url)
 
         verify(mockSessionCacheService).saveAmendResponseModel(any())(any())
       }
@@ -386,8 +386,8 @@ class AmendsControllerSpec
             identifier = 2,
             sequenceNumber = 2,
             `type` = IndividualProtection2016,
-            certificateDate = DateModel.of(2016, 9, 4),
-            certificateTime = TimeModel.of(9, 0, 19),
+            certificateDate = amendResponseModel.certificateDate.get,
+            certificateTime = amendResponseModel.certificateTime.get,
             status = Dormant,
             protectionReference = Some("IP16123001"),
             relevantAmount = Some(1000001),
@@ -408,7 +408,7 @@ class AmendsControllerSpec
           val fixedProtectionRecord = individualProtectionRecord.copy(
             `type` = FixedProtection2016,
             status = Open,
-            protectionReference = Some("FP16123456")
+            protectionReference = Some("FPXXXXX")
           )
 
           val readProtectionResponseModel = {

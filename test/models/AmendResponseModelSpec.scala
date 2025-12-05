@@ -36,15 +36,15 @@ class AmendResponseModelSpec extends AnyWordSpec with Matchers {
         certificateTime = Some(TimeModel.of(17, 43, 12)),
         status = AmendProtectionResponseStatus.Dormant,
         protectionReference = Some(protectionReference),
-        relevantAmount = 105000,
-        preADayPensionInPaymentAmount = 1500,
-        postADayBenefitCrystallisationEventAmount = 2500,
-        uncrystallisedRightsAmount = 75500,
+        relevantAmount = 105_000,
+        preADayPensionInPaymentAmount = 1_500,
+        postADayBenefitCrystallisationEventAmount = 2_500,
+        uncrystallisedRightsAmount = 75_500,
         nonUKRightsAmount = 0,
-        pensionDebit = Some(PensionDebitModel(DateModel.of(2026, 7, 9), 2500)),
+        pensionDebit = Some(PensionDebitModel(DateModel.of(2026, 7, 9), 25_000)),
         notificationId = Some(NotificationId3),
-        protectedAmount = Some(120000),
-        pensionDebitTotalAmount = Some(40000)
+        protectedAmount = Some(120_000),
+        pensionDebitTotalAmount = Some(40_000)
       )
 
       AmendResponseModel.from(amendProtectionResponse, "testPSARef") shouldBe expectedResult

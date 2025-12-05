@@ -195,7 +195,7 @@ class ExistingProtectionsViewSpec extends CommonViewSpecHelper with ExistingProt
         docActiveAndInactive
           .select("#listProtections > h3")
           .text shouldBe "Individual protection 2014 for dormant protections"
-        docActiveAndInactive.select("#dormantInactiveProtectedAmount1Content").text shouldBe "100.00"
+        docActiveAndInactive.select("#DormantInactiveProtectedAmount1Content").text shouldBe "100.00"
       }
     }
 
@@ -207,12 +207,12 @@ class ExistingProtectionsViewSpec extends CommonViewSpecHelper with ExistingProt
 
     s"have a content for Existing Protections page for inactive protection" in {
       docActiveAndInactive
-        .select("#dormantInactiveProtectedAmount1Heading")
+        .select("#DormantInactiveProtectedAmount1Heading")
         .text shouldBe plaExistingProtectionsProtectedAmount
       docActiveAndInactive
-        .select("#dormantInactiveProtectionReference1Heading")
+        .select("#DormantInactiveProtectionReference1Heading")
         .text shouldBe plaExistingProtectionsProtectionRef
-      docActiveAndInactive.select("#dormantInactivePSACheckRef1Heading").text shouldBe plaExistingProtectionsPSARef
+      docActiveAndInactive.select("#DormantInactivePSACheckRef1Heading").text shouldBe plaExistingProtectionsPSARef
     }
 
     "have a view details about taking higher tax-free lump sums with protected allowances and the link which" should {

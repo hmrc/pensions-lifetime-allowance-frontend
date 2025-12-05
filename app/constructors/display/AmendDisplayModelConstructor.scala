@@ -201,7 +201,7 @@ object AmendDisplayModelConstructor extends Logging {
 
   private def createSection(
       protection: AmendProtectionModel,
-      applicationStage: ApplicationStage.Value,
+      applicationStage: ApplicationStage,
       amountOption: Option[Double],
       displayYesNoOnly: Boolean = false,
       displayAmountOnly: Boolean = false
@@ -212,14 +212,14 @@ object AmendDisplayModelConstructor extends Logging {
   }
 
   private def createNoChangeSection(
-      applicationStage: ApplicationStage.Value,
+      applicationStage: ApplicationStage,
       amountOption: Option[Double]
   )(implicit messages: Messages): AmendDisplaySectionModel =
     createNoChangeYesNoSection(applicationStage.toString, amountOption)
 
   private def createCurrentPensionsSection(
       protection: AmendProtectionModel,
-      applicationStage: ApplicationStage.Value
+      applicationStage: ApplicationStage
   ): AmendDisplaySectionModel = {
     val amendCall       = Helpers.createAmendCall(protection, applicationStage)
     val currentPensions = protection.updated.uncrystallisedRights

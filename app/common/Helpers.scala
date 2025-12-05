@@ -31,7 +31,7 @@ object Helpers {
   def createPsoRemoveCall(model: AmendProtectionModel): Call =
     controllers.routes.AmendsRemovePensionSharingOrderController.removePso(model.protectionType, model.status)
 
-  def createAmendCall(model: AmendProtectionModel, applicationSection: ApplicationStage.Value): Call = {
+  def createAmendCall(model: AmendProtectionModel, applicationSection: ApplicationStage): Call = {
     import ApplicationStage._
     applicationSection match {
       case PensionsTakenBefore =>

@@ -36,7 +36,7 @@ object AmendProtectionRequestStatus extends Enumerable.Implicits {
   def tryFromProtectionStatus(protectionStatus: ProtectionStatus): Option[AmendProtectionRequestStatus] =
     protectionStatus match {
       case ProtectionStatus.Open    => Some(Open)
-      case ProtectionStatus.Dormant => Some(Open)
+      case ProtectionStatus.Dormant => Some(Dormant)
       case _                        => None
     }
 

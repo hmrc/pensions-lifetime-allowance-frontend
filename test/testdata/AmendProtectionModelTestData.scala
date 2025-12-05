@@ -31,7 +31,7 @@ trait AmendProtectionModelTestData {
     status = Dormant,
     certificateDate = Some(DateModel.of(2016, 4, 17)),
     certificateTime = Some(TimeModel.of(14, 52, 25)),
-    uncrystallisedRights = Some(100000.00),
+    uncrystallisedRights = Some(100_000.00),
     nonUKRights = Some(2000.00),
     preADayPensionInPayment = Some(2000.00),
     postADayBenefitCrystallisationEvents = Some(2000.00),

@@ -141,7 +141,7 @@ class AmendsOverseasPensionControllerSpec
 
     "supplied with the stored test model for (dormant, IndividualProtection2016, nonUKRights = £0.0)" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2016))
+      mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2016.withNonUKRights(None)))
 
       val result: Future[Result] =
         controller.amendOverseasPensions(
@@ -157,7 +157,9 @@ class AmendsOverseasPensionControllerSpec
 
     "supplied with the stored test model for (dormant, IndividualProtection2016, nonUKRights = £2000)" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2016))
+      mockFetchAmendProtectionModel(any(), any())(
+        Some(amendDormantIndividualProtection2016.withNonUKRights(Some(2_000)))
+      )
 
       val result: Future[Result] =
         controller.amendOverseasPensions(
