@@ -127,7 +127,7 @@ object AmendProtectionFields {
     preADayPensionInPayment = protectionModel.preADayPensionInPayment,
     uncrystallisedRights = protectionModel.uncrystallisedRights.getOrElse(0),
     nonUKRights = protectionModel.nonUKRights,
-    pensionDebit = protectionModel.pensionDebit
+    pensionDebit = None
   )
 
   implicit val format: OFormat[AmendProtectionFields] = Json.format[AmendProtectionFields]

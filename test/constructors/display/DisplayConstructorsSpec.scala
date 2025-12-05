@@ -78,8 +78,7 @@ class DisplayConstructorsSpec extends DisplayConstructorsTestData {
     "use correct messages localisation" when {
 
       val protectionModel = tstProtectionModel.copy(
-        uncrystallisedRights = Some(100_000),
-        pensionDebit = None
+        uncrystallisedRights = Some(100_000)
       )
 
       val tstAmendProtectionModel = AmendProtectionModel

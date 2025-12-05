@@ -35,7 +35,6 @@ case class ProtectionModel(
     preADayPensionInPayment: Option[Double] = None,
     uncrystallisedRights: Option[Double] = None,
     nonUKRights: Option[Double] = None,
-    pensionDebit: Option[PensionDebitModel] = None,
     pensionDebitTotalAmount: Option[Double] = None,
     protectionReference: Option[String] = None,
     lumpSumPercentage: Option[Int] = None,
@@ -68,11 +67,7 @@ case class ProtectionModel(
 
 object ProtectionModel {
 
-  def apply(psaCheckReference: String, record: ProtectionRecord): ProtectionModel = {
-    val pensionDebit = record.pensionDebitStartDate.zip(record.pensionDebitEnteredAmount).map {
-      case (startDate, enteredAmount) => PensionDebitModel(startDate, enteredAmount)
-    }
-
+  def apply(psaCheckReference: String, record: ProtectionRecord): ProtectionModel =
     ProtectionModel(
       psaCheckReference = psaCheckReference,
       identifier = record.identifier,
@@ -87,14 +82,12 @@ object ProtectionModel {
       preADayPensionInPayment = record.preADayPensionInPaymentAmount.map(_.toDouble),
       uncrystallisedRights = record.uncrystallisedRightsAmount.map(_.toDouble),
       nonUKRights = record.nonUKRightsAmount.map(_.toDouble),
-      pensionDebit = pensionDebit,
       pensionDebitTotalAmount = record.pensionDebitTotalAmount.map(_.toDouble),
       protectionReference = record.protectionReference,
       lumpSumPercentage = record.lumpSumPercentage,
       lumpSumAmount = record.lumpSumAmount,
       enhancementFactor = record.enhancementFactor
     )
-  }
 
   implicit val format: OFormat[ProtectionModel] = Json.format[ProtectionModel]
 }

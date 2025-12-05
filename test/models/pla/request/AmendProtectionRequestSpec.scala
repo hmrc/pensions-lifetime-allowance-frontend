@@ -42,7 +42,6 @@ class AmendProtectionRequestSpec extends AnyWordSpec with Matchers {
     uncrystallisedRights = Some(75_500.00),
     nonUKRights = Some(0.00),
     protectedAmount = Some(120_000),
-    pensionDebit = Some(pensionDebit),
     pensionDebitTotalAmount = Some(40_000)
   )
 

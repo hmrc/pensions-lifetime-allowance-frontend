@@ -53,7 +53,6 @@ case class AmendResponseModel(
     preADayPensionInPayment = Some(preADayPensionInPaymentAmount),
     uncrystallisedRights = Some(uncrystallisedRightsAmount),
     nonUKRights = Some(nonUKRightsAmount),
-    pensionDebit = pensionDebit,
     pensionDebitTotalAmount = pensionDebitTotalAmount.map(_.toDouble),
     protectionReference = protectionReference,
     lumpSumPercentage = None,

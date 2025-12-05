@@ -131,7 +131,6 @@ class ProtectionModelSpec extends AnyWordSpec with Matchers with ModelGenerators
           result.uncrystallisedRights shouldBe protectionRecord.uncrystallisedRightsAmount.map(_.toDouble)
           result.nonUKRights shouldBe protectionRecord.nonUKRightsAmount.map(_.toDouble)
           result.pensionDebitTotalAmount shouldBe protectionRecord.pensionDebitTotalAmount.map(_.toDouble)
-          result.pensionDebit shouldBe pensionDebit
           result.protectionReference shouldBe protectionRecord.protectionReference
         }
     }
