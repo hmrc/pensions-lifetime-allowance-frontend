@@ -16,6 +16,7 @@
 
 package models.pla.response
 
+import models.{DateModel, TimeModel}
 import play.api.libs.json.{Json, Reads}
 
 case class ReadProtectionsResponse(
@@ -40,8 +41,8 @@ case class ProtectionRecord(
     identifier: Long,
     sequenceNumber: Int,
     `type`: ProtectionType,
-    certificateDate: String,
-    certificateTime: String,
+    certificateDate: DateModel,
+    certificateTime: TimeModel,
     status: ProtectionStatus,
     protectionReference: Option[String],
     relevantAmount: Option[Int],
@@ -52,7 +53,7 @@ case class ProtectionRecord(
     pensionDebitAmount: Option[Int],
     pensionDebitEnteredAmount: Option[Int],
     protectedAmount: Option[Int],
-    pensionDebitStartDate: Option[String],
+    pensionDebitStartDate: Option[DateModel],
     pensionDebitTotalAmount: Option[Int],
     lumpSumAmount: Option[Int],
     lumpSumPercentage: Option[Int],
@@ -60,5 +61,6 @@ case class ProtectionRecord(
 )
 
 object ProtectionRecord {
+
   implicit val reads: Reads[ProtectionRecord] = Json.reads[ProtectionRecord]
 }

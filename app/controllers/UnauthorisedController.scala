@@ -43,8 +43,6 @@ class UnauthorisedController @Inject() (
     with I18nSupport
     with Logging {
 
-  private val issuesKey = "previous-technical-issues"
-
   def showNotAuthorised(journeyId: Option[String]): Action[AnyContent] = Action.async { implicit request =>
     val result: Future[Result] = journeyId
       .map { id =>
@@ -53,10 +51,12 @@ class UnauthorisedController @Inject() (
           .flatMap {
             case IdentityVerificationResult.TechnicalIssue =>
               logger.warn("Technical Issue relating to Identity verification, user directed to technical issue page")
-              sessionCacheService.fetchAndGetFormData[Boolean](issuesKey).flatMap {
+              sessionCacheService.fetchPreviousTechnicalIssues.flatMap {
                 case Some(true) => Future.successful(Ok(technicalIssue()))
                 case _ =>
-                  sessionCacheService.saveFormData(issuesKey, true).map(_ => InternalServerError(technicalIssue()))
+                  sessionCacheService
+                    .savePreviousTechnicalIssues(previousTechnicalIssues = true)
+                    .map(_ => InternalServerError(technicalIssue()))
               }
             case IdentityVerificationResult.LockedOut => Future.successful(Unauthorized(lockedOut()))
             case IdentityVerificationResult.Timeout =>

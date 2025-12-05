@@ -16,7 +16,7 @@
 
 package views.pages.lookup
 
-import models.PSALookupRequest
+import models.PsaLookupRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import testHelpers.CommonViewSpecHelper
@@ -27,7 +27,7 @@ class PsaLookupNotFoundResultsViewSpec extends CommonViewSpecHelper with PsaLook
 
   val view: psa_lookup_not_found_results = inject[psa_lookup_not_found_results]
 
-  val psaLookupRequest = PSALookupRequest("check", Some("ref"))
+  val psaLookupRequest = PsaLookupRequest("check", Some("ref"))
 
   val doc: Document = Jsoup.parse(view.apply(psaLookupRequest, "timestamp").body)
 

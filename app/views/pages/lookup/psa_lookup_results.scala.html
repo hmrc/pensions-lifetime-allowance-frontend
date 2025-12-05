@@ -19,7 +19,7 @@
     govukButton: GovukButton
 )
 
-@(lookupResult: PSALookupResult, timestamp: String)(implicit request: Request[_], messages: Messages)
+@(lookupResult: PsaLookupResult, timestamp: String)(implicit request: Request[_], messages: Messages)
 
 @protectedAmountValue = @{
   f"${lookupResult.protectedAmount.get}%1.0f"

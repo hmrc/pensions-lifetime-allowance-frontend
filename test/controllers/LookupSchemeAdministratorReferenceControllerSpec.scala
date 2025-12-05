@@ -17,7 +17,6 @@
 package controllers
 
 import config.FrontendAppConfig
-import models.PSALookupRequest
 import models.cache.CacheMap
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{reset, verify, when}
@@ -63,6 +62,7 @@ class LookupSchemeAdministratorReferenceControllerSpec
   override def beforeEach(): Unit = {
     super.beforeEach()
 
+    reset(sessionCacheService)
     reset(appConfig)
     reset(psa_lookup_scheme_admin_ref_form)
     reset(withdrawnPSALookupJourney)
@@ -79,7 +79,7 @@ class LookupSchemeAdministratorReferenceControllerSpec
     "psalookupjourneyShutterEnabled toggle is disabled" should {
       "return 200 with correct message on psaRef form" in {
         when(appConfig.psalookupjourneyShutterEnabled).thenReturn(false)
-        cacheFetchCondition[PSALookupRequest](None)
+        when(sessionCacheService.fetchPsaLookupRequest(any())).thenReturn(Future.successful(None))
 
         val result = controller.displaySchemeAdministratorReferenceForm(request)
 
@@ -119,7 +119,7 @@ class LookupSchemeAdministratorReferenceControllerSpec
 
       "submit psaRef form with valid data and redirect to pnn form" in {
         when(appConfig.psalookupjourneyShutterEnabled).thenReturn(false)
-        cacheSaveCondition[PSALookupRequest](mockCacheMap)
+        when(sessionCacheService.savePsaLookupRequest(any())(any())).thenReturn(Future.successful(mockCacheMap))
 
         val request =
           FakeRequest().withSession(sessionId).withFormUrlEncodedBody(validPSARefForm: _*).withMethod("POST")
@@ -155,13 +155,5 @@ class LookupSchemeAdministratorReferenceControllerSpec
       }
     }
   }
-
-  def cacheFetchCondition[T](data: Option[T]): Unit =
-    when(sessionCacheService.fetchAndGetFormData[T](any())(any(), any()))
-      .thenReturn(Future.successful(data))
-
-  def cacheSaveCondition[T](data: CacheMap): Unit =
-    when(sessionCacheService.saveFormData[T](any(), any())(any(), any()))
-      .thenReturn(Future.successful(data))
 
 }

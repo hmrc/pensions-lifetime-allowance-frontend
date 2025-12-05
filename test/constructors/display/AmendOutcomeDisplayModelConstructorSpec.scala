@@ -17,7 +17,7 @@
 package constructors.display
 
 import common.Exceptions.OptionNotDefinedException
-import models.AmendResponseModel
+import models.NotificationId._
 
 class AmendOutcomeDisplayModelConstructorSpec extends DisplayConstructorsTestData {
 
@@ -26,57 +26,41 @@ class AmendOutcomeDisplayModelConstructorSpec extends DisplayConstructorsTestDat
 
     "correctly transform an AmendResponseModel into an AmendResultDisplayModel" when
       Seq(
-        1  -> amendResponseModelNotification1  -> amendResultDisplayModelNotification1,
-        2  -> amendResponseModelNotification2  -> amendResultDisplayModelNotification2,
-        3  -> amendResponseModelNotification3  -> amendResultDisplayModelNotification3,
-        4  -> amendResponseModelNotification4  -> amendResultDisplayModelNotification4,
-        5  -> amendResponseModelNotification5  -> amendResultDisplayModelNotification5,
-        6  -> amendResponseModelNotification6  -> amendResultDisplayModelNotification6,
-        7  -> amendResponseModelNotification7  -> amendResultDisplayModelNotification7,
-        8  -> amendResponseModelNotification8  -> amendResultDisplayModelNotification8,
-        9  -> amendResponseModelNotification9  -> amendResultDisplayModelNotification9,
-        10 -> amendResponseModelNotification10 -> amendResultDisplayModelNotification10,
-        11 -> amendResponseModelNotification11 -> amendResultDisplayModelNotification11,
-        12 -> amendResponseModelNotification12 -> amendResultDisplayModelNotification12,
-        13 -> amendResponseModelNotification13 -> amendResultDisplayModelNotification13,
-        14 -> amendResponseModelNotification14 -> amendResultDisplayModelNotification14
+        NotificationId1  -> amendResponseModelNotification1  -> amendOutcomeDisplayModelNotification1,
+        NotificationId2  -> amendResponseModelNotification2  -> amendOutcomeDisplayModelNotification2,
+        NotificationId3  -> amendResponseModelNotification3  -> amendOutcomeDisplayModelNotification3,
+        NotificationId4  -> amendResponseModelNotification4  -> amendOutcomeDisplayModelNotification4,
+        NotificationId5  -> amendResponseModelNotification5  -> amendOutcomeDisplayModelNotification5,
+        NotificationId6  -> amendResponseModelNotification6  -> amendOutcomeDisplayModelNotification6,
+        NotificationId7  -> amendResponseModelNotification7  -> amendOutcomeDisplayModelNotification7,
+        NotificationId8  -> amendResponseModelNotification8  -> amendOutcomeDisplayModelNotification8,
+        NotificationId9  -> amendResponseModelNotification9  -> amendOutcomeDisplayModelNotification9,
+        NotificationId10 -> amendResponseModelNotification10 -> amendOutcomeDisplayModelNotification10,
+        NotificationId11 -> amendResponseModelNotification11 -> amendOutcomeDisplayModelNotification11,
+        NotificationId12 -> amendResponseModelNotification12 -> amendOutcomeDisplayModelNotification12,
+        NotificationId13 -> amendResponseModelNotification13 -> amendOutcomeDisplayModelNotification13,
+        NotificationId14 -> amendResponseModelNotification14 -> amendOutcomeDisplayModelNotification14
       ).foreach { case ((notificationId, amendResponseModel), amendResultDisplayModel) =>
         s"notification id is $notificationId" in {
           AmendOutcomeDisplayModelConstructor.createAmendOutcomeDisplayModel(
             amendResponseModel,
             Some(personalDetailsModel),
-            nino
+            nino,
+            notificationId
           ) shouldBe amendResultDisplayModel
         }
       }
 
     "throw exception" when {
-      "notificationId is missing" in {
-        val exception =
-          the[OptionNotDefinedException] thrownBy AmendOutcomeDisplayModelConstructor.createAmendOutcomeDisplayModel(
-            AmendResponseModel(
-              amendResponseModelNotification1.protection.copy(
-                notificationId = None
-              )
-            ),
-            Some(personalDetailsModel),
-            nino
-          )
-
-        exception.functionName shouldBe "createAmendResultDisplayModel"
-        exception.optionName shouldBe "notificationId"
-      }
-
       "protectedAmount is missing" in {
         val exception =
           the[OptionNotDefinedException] thrownBy AmendOutcomeDisplayModelConstructor.createAmendOutcomeDisplayModel(
-            AmendResponseModel(
-              amendResponseModelNotification1.protection.copy(
-                protectedAmount = None
-              )
+            amendResponseModelNotification1.copy(
+              protectedAmount = None
             ),
             Some(personalDetailsModel),
-            nino
+            nino,
+            NotificationId1
           )
 
         exception.functionName shouldBe "createAmendResultDisplayModel"

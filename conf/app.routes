@@ -56,33 +56,33 @@ GET         /existing-protections                                               
 GET         /print-protection                                                             @controllers.PrintController.printView
 
 ## Amends ##
-GET         /amend-protection/pensions-taken-before/:protectionType/:status               @controllers.AmendsPensionTakenBeforeController.amendPensionsTakenBefore(protectionType, status)
-POST        /amend-protection/pensions-taken-before/:protectionType/:status               @controllers.AmendsPensionTakenBeforeController.submitAmendPensionsTakenBefore(protectionType, status)
+GET         /amend-protection/pensions-taken-before/:protectionType/:status               @controllers.AmendsPensionTakenBeforeController.amendPensionsTakenBefore(protectionType: models.pla.AmendableProtectionType, status: models.pla.request.AmendProtectionRequestStatus)
+POST        /amend-protection/pensions-taken-before/:protectionType/:status               @controllers.AmendsPensionTakenBeforeController.submitAmendPensionsTakenBefore(protectionType: models.pla.AmendableProtectionType, status: models.pla.request.AmendProtectionRequestStatus)
 
-GET         /amend-protection/pensions-taken-between/:protectionType/:status              @controllers.AmendsPensionTakenBetweenController.amendPensionsTakenBetween(protectionType, status)
-POST        /amend-protection/pensions-taken-between/:protectionType/:status              @controllers.AmendsPensionTakenBetweenController.submitAmendPensionsTakenBetween(protectionType, status)
+GET         /amend-protection/pensions-taken-between/:protectionType/:status              @controllers.AmendsPensionTakenBetweenController.amendPensionsTakenBetween(protectionType: models.pla.AmendableProtectionType, status: models.pla.request.AmendProtectionRequestStatus)
+POST        /amend-protection/pensions-taken-between/:protectionType/:status              @controllers.AmendsPensionTakenBetweenController.submitAmendPensionsTakenBetween(protectionType: models.pla.AmendableProtectionType, status: models.pla.request.AmendProtectionRequestStatus)
 
-GET         /amend-protection/pensions-worth-before/:protectionType/:status               @controllers.AmendsPensionWorthBeforeController.amendPensionsWorthBefore(protectionType, status)
-POST        /amend-protection/pensions-worth-before/:protectionType/:status               @controllers.AmendsPensionWorthBeforeController.submitAmendPensionsWorthBefore(protectionType, status)
+GET         /amend-protection/pensions-worth-before/:protectionType/:status               @controllers.AmendsPensionWorthBeforeController.amendPensionsWorthBefore(protectionType: models.pla.AmendableProtectionType, status: models.pla.request.AmendProtectionRequestStatus)
+POST        /amend-protection/pensions-worth-before/:protectionType/:status               @controllers.AmendsPensionWorthBeforeController.submitAmendPensionsWorthBefore(protectionType: models.pla.AmendableProtectionType, status: models.pla.request.AmendProtectionRequestStatus)
 
-GET         /amend-protection/pensions-used-between/:protectionType/:status               @controllers.AmendsPensionUsedBetweenController.amendPensionsUsedBetween(protectionType, status)
-POST        /amend-protection/pensions-used-between/:protectionType/:status               @controllers.AmendsPensionUsedBetweenController.submitAmendPensionsUsedBetween(protectionType, status)
+GET         /amend-protection/pensions-used-between/:protectionType/:status               @controllers.AmendsPensionUsedBetweenController.amendPensionsUsedBetween(protectionType: models.pla.AmendableProtectionType, status: models.pla.request.AmendProtectionRequestStatus)
+POST        /amend-protection/pensions-used-between/:protectionType/:status               @controllers.AmendsPensionUsedBetweenController.submitAmendPensionsUsedBetween(protectionType: models.pla.AmendableProtectionType, status: models.pla.request.AmendProtectionRequestStatus)
 
-GET         /amend-protection/overseas-pensions/:protectionType/:status                   @controllers.AmendsOverseasPensionController.amendOverseasPensions(protectionType, status)
-POST        /amend-protection/overseas-pensions/:protectionType/:status                   @controllers.AmendsOverseasPensionController.submitAmendOverseasPensions(protectionType, status)
+GET         /amend-protection/overseas-pensions/:protectionType/:status                   @controllers.AmendsOverseasPensionController.amendOverseasPensions(protectionType: models.pla.AmendableProtectionType, status: models.pla.request.AmendProtectionRequestStatus)
+POST        /amend-protection/overseas-pensions/:protectionType/:status                   @controllers.AmendsOverseasPensionController.submitAmendOverseasPensions(protectionType: models.pla.AmendableProtectionType, status: models.pla.request.AmendProtectionRequestStatus)
 
-GET         /amend-protection/current-pensions/:protectionType/:status                    @controllers.AmendsCurrentPensionController.amendCurrentPensions(protectionType, status)
-POST        /amend-protection/current-pensions/:protectionType/:status                    @controllers.AmendsCurrentPensionController.submitAmendCurrentPension(protectionType, status)
+GET         /amend-protection/current-pensions/:protectionType/:status                    @controllers.AmendsCurrentPensionController.amendCurrentPensions(protectionType: models.pla.AmendableProtectionType, status: models.pla.request.AmendProtectionRequestStatus)
+POST        /amend-protection/current-pensions/:protectionType/:status                    @controllers.AmendsCurrentPensionController.submitAmendCurrentPension(protectionType: models.pla.AmendableProtectionType, status: models.pla.request.AmendProtectionRequestStatus)
 
-GET         /amend-protection/pension-sharing-order/:protectionType/:status               @controllers.AmendsPensionSharingOrderController.amendPsoDetails(protectionType, status)
-POST        /amend-protection/pension-sharing-order/:protectionType/:status               @controllers.AmendsPensionSharingOrderController.submitAmendPsoDetails(protectionType, status, existingPSO: Boolean)
+GET         /amend-protection/pension-sharing-order/:protectionType/:status               @controllers.AmendsPensionSharingOrderController.amendPsoDetails(protectionType: models.pla.AmendableProtectionType, status: models.pla.request.AmendProtectionRequestStatus)
+POST        /amend-protection/pension-sharing-order/:protectionType/:status               @controllers.AmendsPensionSharingOrderController.submitAmendPsoDetails(protectionType: models.pla.AmendableProtectionType, status: models.pla.request.AmendProtectionRequestStatus, existingPSO: Boolean)
 
-GET         /amend-protection/pension-sharing-order/remove/:protectionType/:status        @controllers.AmendsRemovePensionSharingOrderController.removePso(protectionType, status)
-POST        /amend-protection/pension-sharing-order/remove/:protectionType/:status        @controllers.AmendsRemovePensionSharingOrderController.submitRemovePso(protectionType, status)
+GET         /amend-protection/pension-sharing-order/remove/:protectionType/:status        @controllers.AmendsRemovePensionSharingOrderController.removePso(protectionType: models.pla.AmendableProtectionType, status: models.pla.request.AmendProtectionRequestStatus)
+POST        /amend-protection/pension-sharing-order/remove/:protectionType/:status        @controllers.AmendsRemovePensionSharingOrderController.submitRemovePso(protectionType: models.pla.AmendableProtectionType, status: models.pla.request.AmendProtectionRequestStatus)
 
-POST        /amend-protection/submit-amendment/:protectionType/:status                    @controllers.AmendsController.amendProtection(protectionType, status)
+POST        /amend-protection/submit-amendment/:protectionType/:status                    @controllers.AmendsController.amendProtection(protectionType: models.pla.AmendableProtectionType, status: models.pla.request.AmendProtectionRequestStatus)
 GET         /amend-protection/amendment-outcome                                           @controllers.AmendsController.amendmentOutcome
-GET         /amend-protection/:protectionType/:status                                     @controllers.AmendsController.amendsSummary(protectionType, status)
+GET         /amend-protection/:protectionType/:status                                     @controllers.AmendsController.amendsSummary(protectionType: models.pla.AmendableProtectionType, status: models.pla.request.AmendProtectionRequestStatus)
 
 ## PSA Lookup routes ##
 GET         /psalookup/protection-notification-number                                     @controllers.LookupProtectionNotificationController.displayProtectionNotificationNoForm

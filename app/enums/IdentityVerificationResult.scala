@@ -19,19 +19,45 @@ package enums
 import play.api.Logging
 import play.api.libs.json._
 
-object IdentityVerificationResult extends Enumeration with Logging {
-  type IdentityVerificationResult = Value
-  val Success: enums.IdentityVerificationResult.Value              = Value
-  val Incomplete: enums.IdentityVerificationResult.Value           = Value
-  val FailedMatching: enums.IdentityVerificationResult.Value       = Value
-  val InsufficientEvidence: enums.IdentityVerificationResult.Value = Value
-  val LockedOut: enums.IdentityVerificationResult.Value            = Value
-  val UserAborted: enums.IdentityVerificationResult.Value          = Value
-  val Timeout: enums.IdentityVerificationResult.Value              = Value
-  val TechnicalIssue: enums.IdentityVerificationResult.Value       = Value
-  val PreconditionFailed: enums.IdentityVerificationResult.Value   = Value
-  val FailedIV: enums.IdentityVerificationResult.Value             = Value
-  val UnknownOutcome: enums.IdentityVerificationResult.Value       = Value
+sealed trait IdentityVerificationResult
+
+object IdentityVerificationResult extends Logging {
+
+  case object Success extends IdentityVerificationResult
+
+  case object Incomplete extends IdentityVerificationResult
+
+  case object FailedMatching extends IdentityVerificationResult
+
+  case object InsufficientEvidence extends IdentityVerificationResult
+
+  case object LockedOut extends IdentityVerificationResult
+
+  case object UserAborted extends IdentityVerificationResult
+
+  case object Timeout extends IdentityVerificationResult
+
+  case object TechnicalIssue extends IdentityVerificationResult
+
+  case object PreconditionFailed extends IdentityVerificationResult
+
+  case object FailedIV extends IdentityVerificationResult
+
+  case object UnknownOutcome extends IdentityVerificationResult
+
+  val values = Seq(
+    Success,
+    Incomplete,
+    FailedMatching,
+    InsufficientEvidence,
+    LockedOut,
+    UserAborted,
+    Timeout,
+    TechnicalIssue,
+    PreconditionFailed,
+    FailedIV,
+    UnknownOutcome
+  )
 
   implicit val formats: Format[IdentityVerificationResult] = new Format[IdentityVerificationResult] {
     def reads(json: JsValue): JsResult[IdentityVerificationResult] =

@@ -16,35 +16,38 @@
 
 package models.pla
 
+import models.pla.request.AmendProtectionRequestStatus
+import models.pla.response.ProtectionStatus
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
 class AmendProtectionRequestStatusSpec extends AnyWordSpec with Matchers {
 
-  "AmendProtectionRequestStatus on from" should {
+  "AmendProtectionRequestStatus on tryFromProtectionStatus" should {
 
     "return correct AmendProtectionRequestStatus" when {
 
       val testScenarios = Seq(
-        "OPEN"    -> AmendProtectionRequestStatus.Open,
-        "open"    -> AmendProtectionRequestStatus.Open,
-        "DORMANT" -> AmendProtectionRequestStatus.Dormant,
-        "dormant" -> AmendProtectionRequestStatus.Dormant
+        ProtectionStatus.Open    -> AmendProtectionRequestStatus.Open,
+        ProtectionStatus.Dormant -> AmendProtectionRequestStatus.Dormant
       )
 
       testScenarios.foreach { case (input, expectedStatus) =>
         s"provided with '$input' value" in {
-          AmendProtectionRequestStatus.from(input) shouldBe expectedStatus
+          AmendProtectionRequestStatus.tryFromProtectionStatus(input) shouldBe Some(expectedStatus)
         }
       }
     }
 
     "throw IllegalArgumentException" when
-      Seq("Unknown", "Withdrawn", "Expired", "Unsuccessful", "Rejected").foreach { input =>
+      Seq(
+        ProtectionStatus.Withdrawn,
+        ProtectionStatus.Expired,
+        ProtectionStatus.Unsuccessful,
+        ProtectionStatus.Rejected
+      ).foreach { input =>
         s"provided with '$input' value" in {
-          val exc = the[IllegalArgumentException] thrownBy AmendProtectionRequestStatus.from(input)
-
-          exc.getMessage shouldBe s"Cannot create AmendProtectionRequestStatus from String: $input"
+          AmendProtectionRequestStatus.tryFromProtectionStatus(input) shouldBe None
         }
       }
   }

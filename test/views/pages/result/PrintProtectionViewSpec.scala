@@ -17,8 +17,9 @@
 package views.pages.result
 
 import models.display.PrintDisplayModel
+import models.pla.response.ProtectionStatus.Open
 import models.pla.response.ProtectionType
-import models.pla.response.ProtectionType.{FixedProtection2016, FixedProtection2016LTA}
+import models.pla.response.ProtectionType.{FixedProtection2016, FixedProtection2016LTA, IndividualProtection2016}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import testHelpers.CommonViewSpecHelper
@@ -37,13 +38,13 @@ class PrintProtectionViewSpec extends CommonViewSpecHelper with ResultPrintPageC
     firstName = "Jim",
     surname = "Davis",
     nino = nino,
-    protectionType = "IP2016",
-    status = "active",
+    protectionType = IndividualProtection2016,
+    status = Open,
     psaCheckReference = "PSA33456789",
     protectionReference = "IP123456789001",
     protectedAmount = Some("1,200,000"),
-    certificateDate = Some("23/02/2015"),
-    certificateTime = Some("12:34:56"),
+    certificateDate = Some("23 February 2015"),
+    certificateTime = Some("12:34 pm"),
     lumpSumPercentage = Some("42%"),
     lumpSumAmount = Some("1,000"),
     enhancementFactor = Some("0.17"),
@@ -162,21 +163,20 @@ class PrintProtectionViewSpec extends CommonViewSpecHelper with ResultPrintPageC
 
     "have a contact hmrc section" when {
 
-      ProtectionType.values.diff(Seq(FixedProtection2016, FixedProtection2016LTA)).map(_.toString).foreach {
-        protectionType =>
-          s"provided with protection type: $protectionType" in {
-            val p3 = {
-              val newModel = model.copy(protectionType = protectionType)
-              val newView  = view(newModel)
-              val newDoc   = Jsoup.parse(newView.body)
-              newDoc.select("div p").get(2)
-            }
-
-            p3.text shouldBe plaPrintContactHMRC
+      ProtectionType.values.diff(Seq(FixedProtection2016, FixedProtection2016LTA)).foreach { protectionType =>
+        s"provided with protection type: $protectionType" in {
+          val p3 = {
+            val newModel = model.copy(protectionType = protectionType)
+            val newView  = view(newModel)
+            val newDoc   = Jsoup.parse(newView.body)
+            newDoc.select("div p").get(2)
           }
+
+          p3.text shouldBe plaPrintContactHMRC
+        }
       }
 
-      Seq("FP2016", FixedProtection2016.toString, FixedProtection2016LTA.toString).foreach { protectionType =>
+      Seq(FixedProtection2016, FixedProtection2016LTA).foreach { protectionType =>
         s"provided with protection type: $protectionType" in {
           val p3 = {
             val newModel = model.copy(protectionType = protectionType)

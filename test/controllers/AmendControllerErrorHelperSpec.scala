@@ -31,7 +31,6 @@ import views.html.pages.fallback.technicalError
 class AmendControllerErrorHelperSpec
     extends FakeApplication
     with MockitoSugar
-    with SessionCacheTestHelper
     with BeforeAndAfterEach
     with AmendControllerErrorHelper
     with I18nSupport {
@@ -49,12 +48,6 @@ class AmendControllerErrorHelperSpec
   override def beforeEach(): Unit =
     reset(technicalError)
 
-  "unknownProtectionType" should {
-    "return the correctly formatted log message" in {
-      unknownProtectionType("PROTECTION_TYPE", "WHEN") shouldBe "Unknown amendable protection type PROTECTION_TYPE WHEN"
-    }
-  }
-
   "couldNotRetrieveModelForNino" should {
     "return the correctly formatted log message" in {
       couldNotRetrieveModelForNino(
@@ -66,7 +59,7 @@ class AmendControllerErrorHelperSpec
 
   "buildTechnicalError" should {
     "return the technical error page" in {
-      when(technicalError.apply(any())(any(), any())).thenReturn(HtmlFormat.raw("html"))
+      when(technicalError.apply()(any(), any())).thenReturn(HtmlFormat.raw("html"))
 
       val error = buildTechnicalError(technicalError)
 

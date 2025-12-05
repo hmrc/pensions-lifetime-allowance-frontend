@@ -17,8 +17,8 @@
 package forms
 
 import forms.AmendCurrentPensionForm._
-import models.amendModels.AmendCurrentPensionModel
-import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
+import models.amend.value.AmendCurrentPensionModel
+import models.pla.AmendableProtectionType.IndividualProtection2016
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Lang
 import testHelpers.FakeApplication
@@ -39,28 +39,28 @@ class AmendCurrentPensionFormSpec extends FakeApplication with CommonErrorMessag
 
       "supplied with a valid model" in {
         val model  = AmendCurrentPensionModel(Some(1))
-        val result = amendCurrentPensionForm(IndividualProtection2016.toString).fillAndValidate(model)
+        val result = amendCurrentPensionForm(IndividualProtection2016).fillAndValidate(model)
 
         result.data shouldBe validMap
       }
 
       "supplied with a valid map with an amount with two decimal places" in {
         val map    = validMap.updated("amendedUKPensionAmt", "0.01")
-        val result = amendCurrentPensionForm(IndividualProtection2016.toString).bind(map)
+        val result = amendCurrentPensionForm(IndividualProtection2016).bind(map)
 
         result.value shouldBe Some(AmendCurrentPensionModel(Some(0.01)))
       }
 
       "supplied with a valid map with zero amount" in {
         val map    = validMap.updated("amendedUKPensionAmt", "0")
-        val result = amendCurrentPensionForm(IndividualProtection2016.toString).bind(map)
+        val result = amendCurrentPensionForm(IndividualProtection2016).bind(map)
 
         result.value shouldBe Some(AmendCurrentPensionModel(Some(0)))
       }
 
       "supplied with a valid map with the maximum amount" in {
         val map    = validMap.updated("amendedUKPensionAmt", { Constants.npsMaxCurrency - 1 }.toString)
-        val result = amendCurrentPensionForm(IndividualProtection2016.toString).bind(map)
+        val result = amendCurrentPensionForm(IndividualProtection2016).bind(map)
 
         result.value shouldBe Some(AmendCurrentPensionModel(Some(Constants.npsMaxCurrency - 1)))
       }
@@ -72,7 +72,7 @@ class AmendCurrentPensionFormSpec extends FakeApplication with CommonErrorMessag
 
         "has a single error with the correct error message" in {
           val map    = validMap - "amendedUKPensionAmt"
-          val result = amendCurrentPensionForm(IndividualProtection2016.toString).bind(map)
+          val result = amendCurrentPensionForm(IndividualProtection2016).bind(map)
 
           result.errors.size shouldBe 1
           result.error("amendedUKPensionAmt").get.message shouldBe errorMissingAmount(
@@ -86,7 +86,7 @@ class AmendCurrentPensionFormSpec extends FakeApplication with CommonErrorMessag
 
         "has a single error with the correct error message" in {
           val map    = validMap.updated("amendedUKPensionAmt", "")
-          val result = amendCurrentPensionForm(IndividualProtection2016.toString).bind(map)
+          val result = amendCurrentPensionForm(IndividualProtection2016).bind(map)
 
           result.errors.size shouldBe 1
           result.error("amendedUKPensionAmt").get.message shouldBe errorMissingAmount(
@@ -99,7 +99,7 @@ class AmendCurrentPensionFormSpec extends FakeApplication with CommonErrorMessag
       "supplied with a non-numeric amount".which {
         "has a single error with the correct error message" in {
           val map    = validMap.updated("amendedUKPensionAmt", "a")
-          val result = amendCurrentPensionForm(IndividualProtection2016.toString).bind(map)
+          val result = amendCurrentPensionForm(IndividualProtection2016).bind(map)
 
           result.errors.size shouldBe 1
           result.error("amendedUKPensionAmt").get.message shouldBe errorReal(
@@ -112,7 +112,7 @@ class AmendCurrentPensionFormSpec extends FakeApplication with CommonErrorMessag
       "supplied with a negative amount".which {
         "has a single error with the correct error message" in {
           val map    = validMap.updated("amendedUKPensionAmt", "-0.01")
-          val result = amendCurrentPensionForm(IndividualProtection2016.toString).bind(map)
+          val result = amendCurrentPensionForm(IndividualProtection2016).bind(map)
 
           result.errors.size shouldBe 1
           result.error("amendedUKPensionAmt").get.message shouldBe errorNegative(
@@ -124,7 +124,7 @@ class AmendCurrentPensionFormSpec extends FakeApplication with CommonErrorMessag
 
       "supplied with an amount with too many decimal places" in {
         val map    = validMap.updated("amendedUKPensionAmt", "0.001")
-        val result = amendCurrentPensionForm(IndividualProtection2016.toString).bind(map)
+        val result = amendCurrentPensionForm(IndividualProtection2016).bind(map)
 
         result.errors.size shouldBe 1
         result.error("amendedUKPensionAmt").get.message shouldBe errorDecimal(
@@ -135,7 +135,7 @@ class AmendCurrentPensionFormSpec extends FakeApplication with CommonErrorMessag
 
       "supplied with an amount above the maximum" in {
         val map    = validMap.updated("amendedUKPensionAmt", Constants.npsMaxCurrency.toString)
-        val result = amendCurrentPensionForm(IndividualProtection2016.toString).bind(map)
+        val result = amendCurrentPensionForm(IndividualProtection2016).bind(map)
 
         result.errors.size shouldBe 1
         result.error("amendedUKPensionAmt").get.message shouldBe errorMaximum(

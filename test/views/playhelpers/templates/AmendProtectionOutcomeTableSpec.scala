@@ -16,6 +16,8 @@
 
 package views.playhelpers.templates
 
+import models.NotificationId
+import models.NotificationId._
 import models.display.AmendPrintDisplayModel
 import org.jsoup.Jsoup
 import testHelpers.CommonViewSpecHelper
@@ -43,26 +45,26 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
   private val DormantText              = "Dormant"
   private val WithdrawnText            = "Withdrawn"
 
-  private def getPrintDisplayModelFor(notificationId: Int): AmendPrintDisplayModel = notificationId match {
-    case 1  => amendPrintDisplayModelNotification1
-    case 2  => amendPrintDisplayModelNotification2
-    case 3  => amendPrintDisplayModelNotification3
-    case 4  => amendPrintDisplayModelNotification4
-    case 5  => amendPrintDisplayModelNotification5
-    case 6  => amendPrintDisplayModelNotification6
-    case 7  => amendPrintDisplayModelNotification7
-    case 8  => amendPrintDisplayModelNotification8
-    case 9  => amendPrintDisplayModelNotification9
-    case 10 => amendPrintDisplayModelNotification10
-    case 11 => amendPrintDisplayModelNotification11
-    case 12 => amendPrintDisplayModelNotification12
-    case 13 => amendPrintDisplayModelNotification13
-    case 14 => amendPrintDisplayModelNotification14
+  private def getPrintDisplayModelFor(notificationId: NotificationId): AmendPrintDisplayModel = notificationId match {
+    case NotificationId1  => amendPrintDisplayModelNotification1
+    case NotificationId2  => amendPrintDisplayModelNotification2
+    case NotificationId3  => amendPrintDisplayModelNotification3
+    case NotificationId4  => amendPrintDisplayModelNotification4
+    case NotificationId5  => amendPrintDisplayModelNotification5
+    case NotificationId6  => amendPrintDisplayModelNotification6
+    case NotificationId7  => amendPrintDisplayModelNotification7
+    case NotificationId8  => amendPrintDisplayModelNotification8
+    case NotificationId9  => amendPrintDisplayModelNotification9
+    case NotificationId10 => amendPrintDisplayModelNotification10
+    case NotificationId11 => amendPrintDisplayModelNotification11
+    case NotificationId12 => amendPrintDisplayModelNotification12
+    case NotificationId13 => amendPrintDisplayModelNotification13
+    case NotificationId14 => amendPrintDisplayModelNotification14
   }
 
   "amendProtectionOutcomeTable" when {
 
-    Seq(1, 5).foreach { notificationId =>
+    Seq(NotificationId1, NotificationId5).foreach { notificationId =>
       s"provided with PrintDisplayModel containing notificationId: $notificationId" when {
 
         val printDisplayModel = getPrintDisplayModelFor(notificationId)
@@ -190,7 +192,7 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
       }
     }
 
-    Seq(2, 3, 4).foreach { notificationId =>
+    Seq(NotificationId2, NotificationId3, NotificationId4).foreach { notificationId =>
       s"provided with PrintDisplayModel containing notificationId: $notificationId" should {
 
         val printDisplayModel = getPrintDisplayModelFor(notificationId)
@@ -306,7 +308,7 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
 
     "provided with PrintDisplayModel containing notificationId: 6" should {
 
-      val printDisplayModel = getPrintDisplayModelFor(6)
+      val printDisplayModel = getPrintDisplayModelFor(NotificationId6)
 
       "includeProtectedAmount is set to false" should {
 
@@ -418,7 +420,7 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
 
     "provided with PrintDisplayModel containing notificationId: 7" should {
 
-      val printDisplayModel = getPrintDisplayModelFor(7)
+      val printDisplayModel = getPrintDisplayModelFor(NotificationId7)
 
       "includeProtectedAmount is set to false" should {
 
@@ -530,7 +532,7 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
 
     "provided with PrintDisplayModel containing notificationId: 8" should {
 
-      val printDisplayModel = getPrintDisplayModelFor(8)
+      val printDisplayModel = getPrintDisplayModelFor(NotificationId8)
 
       "includeProtectedAmount is set to false" should {
 
@@ -654,7 +656,7 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
       }
     }
 
-    Seq(9, 10, 11, 12).foreach { notificationId =>
+    Seq(NotificationId9, NotificationId10, NotificationId11, NotificationId12).foreach { notificationId =>
       s"provided with PrintDisplayModel containing notificationId: $notificationId" should {
 
         val printDisplayModel = getPrintDisplayModelFor(notificationId)
@@ -770,7 +772,7 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
 
     "provided with PrintDisplayModel containing notificationId: 13" should {
 
-      val printDisplayModel = getPrintDisplayModelFor(13)
+      val printDisplayModel = getPrintDisplayModelFor(NotificationId13)
 
       "includeProtectedAmount is set to false" should {
 
@@ -882,7 +884,7 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
 
     "provided with PrintDisplayModel containing notificationId: 14" should {
 
-      val printDisplayModel = getPrintDisplayModelFor(14)
+      val printDisplayModel = getPrintDisplayModelFor(NotificationId14)
 
       "includeProtectedAmount is set to false" should {
 

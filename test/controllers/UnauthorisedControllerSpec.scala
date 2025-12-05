@@ -22,15 +22,14 @@ import enums.IdentityVerificationResult
 import models.cache.CacheMap
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
-import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Application
 import play.api.http.Status
-import play.api.libs.json.{Format, Json}
-import play.api.mvc.{MessagesControllerComponents, Request, Result}
+import play.api.libs.json.Json
+import play.api.mvc.{MessagesControllerComponents, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionCacheService
@@ -44,16 +43,21 @@ import views.html.pages.timeout
 import scala.concurrent.{ExecutionContext, Future}
 import scala.io.Source
 
-class UnauthorisedControllerSpec extends FakeApplication with MockitoSugar with BeforeAndAfterEach {
+class UnauthorisedControllerSpec
+    extends FakeApplication
+    with MockitoSugar
+    with BeforeAndAfterEach
+    with MockSessionCacheService {
 
   val mockMCC: MessagesControllerComponents                            = inject[MessagesControllerComponents]
   val mockActionWithSessionId: ActionWithSessionId                     = mock[ActionWithSessionId]
   val mockHttp: HttpClientV2                                           = mock[HttpClientV2]
   val fakeRequest                                                      = FakeRequest("GET", "/")
-  val mockSessionCacheService: SessionCacheService                     = mock[SessionCacheService]
   val mockAppConfig: FrontendAppConfig                                 = inject[FrontendAppConfig]
   val mockIdentityVerificationConnector: IdentityVerificationConnector = mock[IdentityVerificationConnector]
   val requestBuilder: RequestBuilder                                   = mock[RequestBuilder]
+
+  override val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
 
   implicit val ec: ExecutionContext                 = inject[ExecutionContext]
   implicit val mockImplAppConfig: FrontendAppConfig = inject[FrontendAppConfig]
@@ -117,21 +121,8 @@ class UnauthorisedControllerSpec extends FakeApplication with MockitoSugar with 
   }
 
   def setupCacheMocks(data: Option[Boolean]): Unit = {
-    when(
-      mockSessionCacheService
-        .fetchAndGetFormData[Boolean](ArgumentMatchers.eq("previous-technical-issues"))(
-          any[Request[_]],
-          any[Format[Boolean]]
-        )
-    )
-      .thenReturn(Future.successful(data))
-    when(
-      mockSessionCacheService
-        .saveFormData(ArgumentMatchers.eq("previous-technical-issues"), any[Boolean])(
-          any[Request[_]],
-          any[Format[Boolean]]
-        )
-    )
+    when(mockSessionCacheService.fetchPreviousTechnicalIssues(any())).thenReturn(Future.successful(data))
+    when(mockSessionCacheService.savePreviousTechnicalIssues(any())(any()))
       .thenReturn(Future.successful(mock[CacheMap]))
   }
 

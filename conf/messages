@@ -344,11 +344,11 @@ pla.protection.protectionReference                = None
 
 ## Visually Hidden Content
 pla.hidden.activeProtection = for active protection
-pla.hidden.dormant          = for dormant protections
-pla.hidden.withdrawn        = for withdrawn protections
-pla.hidden.unsuccessful     = for unsuccessful applications
-pla.hidden.rejected         = for rejected applications
-pla.hidden.expired          = for expired applications
+pla.hidden.Dormant          = for dormant protections
+pla.hidden.Withdrawn        = for withdrawn protections
+pla.hidden.Unsuccessful     = for unsuccessful applications
+pla.hidden.Rejected         = for rejected applications
+pla.hidden.Expired          = for expired applications
 
 ## Result Success ##
 pla.resultSuccess.allowanceSubheading         = Your protected amount is

@@ -344,11 +344,11 @@ pla.protection.protectionReference                = Dim un
 
 ## Visually Hidden Content
 pla.hidden.activeProtection = ar gyfer diogelwch sydd ar waith
-pla.hidden.dormant          = ar gyfer diogelwch segur
-pla.hidden.withdrawn        = ar gyfer diogelwch sydd wedi''i dynnu''n ôl
-pla.hidden.unsuccessful     = ar gyfer ceisiadau aflwyddiannus
-pla.hidden.rejected         = ar gyfer ceisiadau aflwyddiannus
-pla.hidden.expired          = ar gyfer ceisiadau sydd wedi dod i ben
+pla.hidden.Dormant          = ar gyfer diogelwch segur
+pla.hidden.Withdrawn        = ar gyfer diogelwch sydd wedi''i dynnu''n ôl
+pla.hidden.Unsuccessful     = ar gyfer ceisiadau aflwyddiannus
+pla.hidden.Rejected         = ar gyfer ceisiadau aflwyddiannus
+pla.hidden.Expired          = ar gyfer ceisiadau sydd wedi dod i ben
 
 ## Result Success ##
 pla.resultSuccess.allowanceSubheading         = Eich Y swm wedi’i ddiogelu yw

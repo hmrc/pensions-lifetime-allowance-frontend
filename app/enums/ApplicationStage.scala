@@ -16,29 +16,21 @@
 
 package enums
 
-object ApplicationStage extends Enumeration {
+sealed trait ApplicationStage
 
-  type ApplicationStage = Value
-  val PensionsTakenBefore  = Value
-  val PensionsWorthBefore  = Value
-  val PensionsTakenBetween = Value
-  val PensionsUsedBetween  = Value
-  val OverseasPensions     = Value
-  val CurrentPensions      = Value
-  val PreviousPsos         = Value
-  val CurrentPsos          = Value
+object ApplicationStage {
+  case object PensionsTakenBefore extends ApplicationStage
 
-  def fromString(applicationStage: String): Option[Value] =
-    applicationStage.toLowerCase match {
-      case "pensionstakenbefore"  => Some(PensionsTakenBefore)
-      case "pensionsworthbefore"  => Some(PensionsWorthBefore)
-      case "pensionstakenbetween" => Some(PensionsTakenBetween)
-      case "pensionsusedbetween"  => Some(PensionsUsedBetween)
-      case "overseaspensions"     => Some(OverseasPensions)
-      case "currentpensions"      => Some(CurrentPensions)
-      case "previouspsos"         => Some(PreviousPsos)
-      case "currentpsos"          => Some(CurrentPsos)
-      case _                      => None
-    }
+  case object PensionsWorthBefore extends ApplicationStage
+
+  case object PensionsTakenBetween extends ApplicationStage
+
+  case object PensionsUsedBetween extends ApplicationStage
+
+  case object OverseasPensions extends ApplicationStage
+
+  case object CurrentPensions extends ApplicationStage
+
+  case object CurrentPsos extends ApplicationStage
 
 }

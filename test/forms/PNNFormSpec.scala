@@ -31,7 +31,7 @@ class PNNFormSpec extends FakeApplication with CommonErrorMessages with MockitoS
   val mcc: MessagesControllerComponents          = inject[MessagesControllerComponents]
   val messagesApi: MessagesApi                   = mcc.messagesApi
   implicit val messageProvider: MessagesProvider = MessagesImpl(Lang(Locale.ENGLISH), messagesApi)
-  private val form                               = PSALookupProtectionNotificationNoForm.pnnForm(messageProvider)
+  private val form                               = PsaLookupProtectionNotificationNoForm.pnnForm(messageProvider)
 
   "PNN ref form" must {
     "return no errors with valid nps reference" in {

@@ -16,6 +16,7 @@
 
 package generators
 
+import models.{DateModel, TimeModel}
 import models.pla.response.{
   ProtectionRecord,
   ProtectionRecordsList,
@@ -30,17 +31,17 @@ import java.time.LocalDate
 
 trait ModelGenerators extends ScalaCheckDrivenPropertyChecks {
 
-  val dateGen: Gen[String] = for {
+  val dateGen: Gen[DateModel] = for {
     year  <- Gen.choose(2000, 2025)
     month <- Gen.choose(1, 12)
     day   <- Gen.choose(1, LocalDate.of(year, month, 1).lengthOfMonth())
-  } yield f"$year%04d-$month%02d-$day%02d"
+  } yield DateModel.of(year, month, day)
 
-  val timeGen: Gen[String] = for {
+  val timeGen: Gen[TimeModel] = for {
     hour   <- Gen.choose(0, 23)
     minute <- Gen.choose(0, 59)
     second <- Gen.choose(0, 59)
-  } yield f"$hour%02d$minute%02d$second%02d"
+  } yield TimeModel.of(hour, minute, second)
 
   val intGen: Gen[Int] = Gen.posNum[Int]
 
@@ -66,26 +67,26 @@ trait ModelGenerators extends ScalaCheckDrivenPropertyChecks {
     lumpSumPercentage                         <- Gen.option(intGen)
     enhancementFactor                         <- Gen.option(Gen.double)
   } yield ProtectionRecord(
-    identifier,
-    sequenceNumber,
-    protectionType,
-    certificateDate,
-    certificateTime,
-    status,
-    protectionReference,
-    relevantAmount,
-    preADayPensionInPaymentAmount,
-    postADayBenefitCrystallisationEventAmount,
-    uncrystallisedRightsAmount,
-    nonUKRightsAmount,
-    pensionDebitAmount,
-    pensionDebitEnteredAmount,
-    protectedAmount,
-    pensionDebitStartDate,
-    pensionDebitTotalAmount,
-    lumpSumAmount,
-    lumpSumPercentage,
-    enhancementFactor
+    identifier = identifier,
+    sequenceNumber = sequenceNumber,
+    `type` = protectionType,
+    certificateDate = certificateDate,
+    certificateTime = certificateTime,
+    status = status,
+    protectionReference = protectionReference,
+    relevantAmount = relevantAmount,
+    preADayPensionInPaymentAmount = preADayPensionInPaymentAmount,
+    postADayBenefitCrystallisationEventAmount = postADayBenefitCrystallisationEventAmount,
+    uncrystallisedRightsAmount = uncrystallisedRightsAmount,
+    nonUKRightsAmount = nonUKRightsAmount,
+    pensionDebitAmount = pensionDebitAmount,
+    pensionDebitEnteredAmount = pensionDebitEnteredAmount,
+    protectedAmount = protectedAmount,
+    pensionDebitStartDate = pensionDebitStartDate,
+    pensionDebitTotalAmount = pensionDebitTotalAmount,
+    lumpSumAmount = lumpSumAmount,
+    lumpSumPercentage = lumpSumPercentage,
+    enhancementFactor = enhancementFactor
   )
 
   val protectionRecordsListGen: Gen[ProtectionRecordsList] = for {

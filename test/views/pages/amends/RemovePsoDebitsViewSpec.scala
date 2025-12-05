@@ -16,8 +16,8 @@
 
 package views.pages.amends
 
-import common.Strings
-import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
+import models.pla.AmendableProtectionType.IndividualProtection2016
+import models.pla.request.AmendProtectionRequestStatus.Open
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
@@ -31,7 +31,7 @@ class RemovePsoDebitsViewSpec extends CommonViewSpecHelper with RemovePsoDetails
   implicit val formWithCSRF: FormWithCSRF = inject[FormWithCSRF]
 
   val view: removePsoDebits = inject[removePsoDebits]
-  val doc: Document         = Jsoup.parse(view.apply(IndividualProtection2016.toString, "open").body)
+  val doc: Document         = Jsoup.parse(view.apply(IndividualProtection2016, Open).body)
 
   "the RemovePsoDetailsView" should {
     "have the correct title" in {
@@ -51,7 +51,7 @@ class RemovePsoDebitsViewSpec extends CommonViewSpecHelper with RemovePsoDetails
 
       formElement.attr("method") shouldBe "POST"
       formElement.attr("action") shouldBe controllers.routes.AmendsRemovePensionSharingOrderController
-        .submitRemovePso(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")
+        .submitRemovePso(IndividualProtection2016, Open)
         .url
     }
 

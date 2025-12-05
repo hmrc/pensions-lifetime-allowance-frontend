@@ -16,7 +16,7 @@
 
 package constructors.display
 
-import models.amendModels.AmendProtectionModel
+import models.amend.AmendProtectionModel
 import models.display.{
   AmendDisplayModel,
   AmendOutcomeDisplayModel,
@@ -24,7 +24,7 @@ import models.display.{
   ExistingProtectionsDisplayModel,
   PrintDisplayModel
 }
-import models.{AmendResponseModel, PersonalDetailsModel, ProtectionModel, TransformedReadResponseModel}
+import models.{AmendResponseModel, NotificationId, PersonalDetailsModel, ProtectionModel, TransformedReadResponseModel}
 import play.api.i18n.{Lang, Messages, MessagesApi}
 
 import javax.inject.Inject
@@ -58,11 +58,17 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) {
   def createAmendOutcomeDisplayModel(
       model: AmendResponseModel,
       personalDetailsModelOpt: Option[PersonalDetailsModel],
-      nino: String
+      nino: String,
+      notificationId: NotificationId
   )(implicit lang: Lang): AmendOutcomeDisplayModel = {
     implicit val messages: Messages = messagesForLang(lang)
 
-    AmendOutcomeDisplayModelConstructor.createAmendOutcomeDisplayModel(model, personalDetailsModelOpt, nino)
+    AmendOutcomeDisplayModelConstructor.createAmendOutcomeDisplayModel(
+      model,
+      personalDetailsModelOpt,
+      nino,
+      notificationId
+    )
   }
 
   def createAmendOutcomeDisplayModelNoNotificationId(

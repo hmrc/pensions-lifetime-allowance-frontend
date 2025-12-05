@@ -18,7 +18,16 @@ package models.pla.response
 
 import utils.{Enumerable, EnumerableInstance}
 
-sealed abstract class ProtectionType(name: String, override val jsonValue: String) extends EnumerableInstance(name)
+sealed abstract class ProtectionType(name: String, override val jsonValue: String) extends EnumerableInstance(name) {
+
+  def isFixedProtection2016: Boolean =
+    this match {
+      case ProtectionType.FixedProtection2016    => true
+      case ProtectionType.FixedProtection2016LTA => true
+      case _                                     => false
+    }
+
+}
 
 object ProtectionType extends Enumerable.Implicits {
 
@@ -72,20 +81,5 @@ object ProtectionType extends Enumerable.Implicits {
 
   implicit val enumerable: Enumerable[ProtectionType] =
     Enumerable(values.map(v => v.jsonValue -> v): _*)
-
-  private val valuesLowerCase =
-    values.map(protectionType => protectionType.toString.toLowerCase -> protectionType).toMap
-
-  def tryFrom(str: String): Option[ProtectionType] =
-    str.toLowerCase match {
-      case "ip2014"   => Some(IndividualProtection2014)
-      case "ip2016"   => Some(IndividualProtection2016)
-      case "fp2014"   => Some(FixedProtection2014)
-      case "fp2016"   => Some(FixedProtection2016)
-      case "fixed"    => Some(FixedProtection)
-      case "primary"  => Some(PrimaryProtection)
-      case "enhanced" => Some(EnhancedProtection)
-      case str        => valuesLowerCase.get(str.replace("-", ""))
-    }
 
 }

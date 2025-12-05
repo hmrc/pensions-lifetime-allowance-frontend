@@ -14,9 +14,10 @@
  * limitations under the License.
  *@
 
-@import common.Strings
 @import config.FrontendAppConfig
 @import models.display.AmendDisplayModel
+@import models.pla.request.AmendProtectionRequestStatus
+@import models.pla.AmendableProtectionType
 
 @this(
     layout: Layout,
@@ -28,7 +29,11 @@
     appConfig: FrontendAppConfig
 )
 
-@(model: AmendDisplayModel, protectionType: String, status: String)(implicit request: Request[_], messages: Messages)
+@(
+    model: AmendDisplayModel,
+    protectionType: AmendableProtectionType,
+    status: AmendProtectionRequestStatus
+)(implicit request: Request[_], messages: Messages)
 
 @layout(
     pageTitle = Messages("pla.amends.title")
@@ -75,11 +80,11 @@
 
     @if(!model.psoAdded){
         <p class="govuk-body">
-            <a class="govuk-link" href="@routes.AmendsPensionSharingOrderController.amendPsoDetails(Strings.protectionTypeUrlString(Some(model.protectionType)), status)" id="addPsoLink">@Messages("pla.amends.addPsoLink")</a>
+            <a class="govuk-link" href="@routes.AmendsPensionSharingOrderController.amendPsoDetails(model.protectionType, status)" id="addPsoLink">@Messages("pla.amends.addPsoLink")</a>
         </p>
     }
 
-    @form(action = routes.AmendsController.amendProtection(Strings.protectionTypeUrlString(Some(protectionType)), status)) {
+    @form(action = routes.AmendsController.amendProtection(protectionType, status)) {
         @if(model.amended) {
             @govukInsetText(InsetText(
                 id = Some("declaration"),

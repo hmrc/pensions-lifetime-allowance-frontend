@@ -14,9 +14,10 @@
  * limitations under the License.
  *@
 
-@import common.Strings
-@import models.amendModels.AmendOverseasPensionsModel
 @import play.api.data._
+@import models.amend.value.AmendOverseasPensionsModel
+@import models.pla.AmendableProtectionType
+@import models.pla.request.AmendProtectionRequestStatus
 
 @this(
     layout: Layout,
@@ -27,7 +28,11 @@
     formHiddenYesNoRadio: playHelpers.templates.formHiddenYesNoRadio
 )
 
-@(amendOverseasPensionsForm: Form[AmendOverseasPensionsModel], protectionType: String, status: String)(implicit request: Request[_], messages: Messages)
+@(
+    amendOverseasPensionsForm: Form[AmendOverseasPensionsModel],
+    protectionType: AmendableProtectionType,
+    status: AmendProtectionRequestStatus
+)(implicit request: Request[_], messages: Messages)
 
 @hiddenYesNoContent = {
     @formInputMoney(
@@ -54,7 +59,7 @@
 
     <h1 class="govuk-heading-xl">@Messages("pla.overseasPensions.title")</h1>
 
-    @form(action = routes.AmendsOverseasPensionController.submitAmendOverseasPensions(Strings.protectionTypeUrlString(Some(protectionType)), status)) {
+    @form(action = routes.AmendsOverseasPensionController.submitAmendOverseasPensions(protectionType, status)) {
 
         <p class="govuk-body">@Messages("pla.ip14OverseasPensions.question")</p>
 

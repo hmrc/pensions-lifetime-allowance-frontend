@@ -17,8 +17,8 @@
 package forms
 
 import forms.AmendOverseasPensionsForm._
-import models.amendModels.AmendOverseasPensionsModel
-import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
+import models.amend.value.AmendOverseasPensionsModel
+import models.pla.AmendableProtectionType.IndividualProtection2016
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Lang
 import testHelpers.FakeApplication
@@ -37,14 +37,14 @@ class AmendOverseasPensionsFormSpec extends FakeApplication with CommonErrorMess
 
       "provided with a valid model" in {
         val model  = AmendOverseasPensionsModel("yes", Some(1000.0))
-        val result = amendOverseasPensionsForm(IndividualProtection2016.toString).fill(model)
+        val result = amendOverseasPensionsForm(IndividualProtection2016).fill(model)
 
         result.data shouldBe validMap
       }
 
       "provided with a valid map with no amount" in {
         val map    = Map("amendedOverseasPensions" -> "no", "amendedOverseasPensionsAmt" -> "")
-        val result = amendOverseasPensionsForm(IndividualProtection2016.toString).bind(map)
+        val result = amendOverseasPensionsForm(IndividualProtection2016).bind(map)
 
         result.value shouldBe Some(AmendOverseasPensionsModel("no", None))
       }
@@ -55,21 +55,21 @@ class AmendOverseasPensionsFormSpec extends FakeApplication with CommonErrorMess
             Constants.npsMaxCurrency - 1
           }.toString
         )
-        val result = amendOverseasPensionsForm(IndividualProtection2016.toString).bind(map)
+        val result = amendOverseasPensionsForm(IndividualProtection2016).bind(map)
 
         result.value shouldBe Some(AmendOverseasPensionsModel("yes", Some(Constants.npsMaxCurrency - 1)))
       }
 
       "provided with a valid map with a zero amount" in {
         val map    = validMap.updated("amendedOverseasPensionsAmt", "0")
-        val result = amendOverseasPensionsForm(IndividualProtection2016.toString).bind(map)
+        val result = amendOverseasPensionsForm(IndividualProtection2016).bind(map)
 
         result.value shouldBe Some(AmendOverseasPensionsModel("yes", Some(0)))
       }
 
       "provided with a valid map with an amount with two decimal places" in {
         val map    = validMap.updated("amendedOverseasPensionsAmt", "0.01")
-        val result = amendOverseasPensionsForm(IndividualProtection2016.toString).bind(map)
+        val result = amendOverseasPensionsForm(IndividualProtection2016).bind(map)
 
         result.value shouldBe Some(AmendOverseasPensionsModel("yes", Some(0.01)))
       }
@@ -81,7 +81,7 @@ class AmendOverseasPensionsFormSpec extends FakeApplication with CommonErrorMess
 
         "not provided with a value for amendedOverseasPensions" in {
           val map    = validMap - "amendedOverseasPensions"
-          val result = amendOverseasPensionsForm(IndividualProtection2016.toString).bind(map)
+          val result = amendOverseasPensionsForm(IndividualProtection2016).bind(map)
 
           result.errors.size shouldBe 1
           result.error("amendedOverseasPensions").get.message shouldBe errorQuestion(
@@ -92,7 +92,7 @@ class AmendOverseasPensionsFormSpec extends FakeApplication with CommonErrorMess
 
         "provided with an invalid value for amendedOverseasPensionsAmt" in {
           val map    = validMap.updated("amendedOverseasPensionsAmt", "a")
-          val result = amendOverseasPensionsForm(IndividualProtection2016.toString).bind(map)
+          val result = amendOverseasPensionsForm(IndividualProtection2016).bind(map)
 
           result.errors.size shouldBe 1
           result.errors.head.message shouldBe errorReal(messageKey, IndividualProtection2016.toString)
@@ -106,7 +106,7 @@ class AmendOverseasPensionsFormSpec extends FakeApplication with CommonErrorMess
 
         "provided an answer of yes for amendedOverseasPensions with no value for amendedOverseasPensionsAmt" in {
           val map    = validMap.updated("amendedOverseasPensionsAmt", "")
-          val result = amendOverseasPensionsForm(IndividualProtection2016.toString).bind(map)
+          val result = amendOverseasPensionsForm(IndividualProtection2016).bind(map)
 
           result.errors.size shouldBe 1
           result.errors.head.message shouldBe errorMissingAmount(messageKey, IndividualProtection2016.toString)
@@ -114,7 +114,7 @@ class AmendOverseasPensionsFormSpec extends FakeApplication with CommonErrorMess
 
         "provided an answer of yes for amendedOverseasPensions with a value for amendedOverseasPensionsAmt larger than the maximum" in {
           val map    = validMap.updated("amendedOverseasPensionsAmt", s"${Constants.npsMaxCurrency + 1}")
-          val result = amendOverseasPensionsForm(IndividualProtection2016.toString).bind(map)
+          val result = amendOverseasPensionsForm(IndividualProtection2016).bind(map)
 
           result.errors.size shouldBe 1
           result.errors.head.message shouldBe errorMaximum(messageKey, IndividualProtection2016.toString)
@@ -122,7 +122,7 @@ class AmendOverseasPensionsFormSpec extends FakeApplication with CommonErrorMess
 
         "provided an answer of yes for amendedOverseasPensions with a value for amendedOverseasPensionsAmt that is negative" in {
           val map    = validMap.updated("amendedOverseasPensionsAmt", "-0.01")
-          val result = amendOverseasPensionsForm(IndividualProtection2016.toString).bind(map)
+          val result = amendOverseasPensionsForm(IndividualProtection2016).bind(map)
 
           result.errors.size shouldBe 1
           result.errors.head.message shouldBe errorNegative(messageKey, IndividualProtection2016.toString)
@@ -130,7 +130,7 @@ class AmendOverseasPensionsFormSpec extends FakeApplication with CommonErrorMess
 
         "provided an answer of yes for amendedOverseasPensions with a value for amendedOverseasPensionsAmt that has more than two decimal places" in {
           val map    = validMap.updated("amendedOverseasPensionsAmt", "0.001")
-          val result = amendOverseasPensionsForm(IndividualProtection2016.toString).bind(map)
+          val result = amendOverseasPensionsForm(IndividualProtection2016).bind(map)
 
           result.errors.size shouldBe 1
           result.errors.head.message shouldBe errorDecimal(messageKey, IndividualProtection2016.toString)
@@ -141,7 +141,7 @@ class AmendOverseasPensionsFormSpec extends FakeApplication with CommonErrorMess
         val map = validMap
           .updated("amendedOverseasPensions", "no")
           .updated("amendedOverseasPensionsAmt", "-0.001")
-        val result = amendOverseasPensionsForm(IndividualProtection2016.toString).bind(map)
+        val result = amendOverseasPensionsForm(IndividualProtection2016).bind(map)
 
         result.errors.size shouldBe 0
       }

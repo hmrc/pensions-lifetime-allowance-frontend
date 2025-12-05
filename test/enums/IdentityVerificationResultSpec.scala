@@ -17,7 +17,7 @@
 package enums
 
 import play.api.libs.json.{JsString, Json}
-import enums.IdentityVerificationResult.IdentityVerificationResult
+import enums.IdentityVerificationResult
 import org.scalatest.OptionValues
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
@@ -27,7 +27,7 @@ class IdentityVerificationResultSpec extends AnyWordSpecLike with Matchers with 
   "IdentityVerificationResult" when {
     "serialising to JSON" should {
       "return JSString" in {
-        Json.toJson(IdentityVerificationResult.Success) shouldBe JsString("Success")
+        Json.toJson[IdentityVerificationResult](IdentityVerificationResult.Success) shouldBe JsString("Success")
       }
     }
 

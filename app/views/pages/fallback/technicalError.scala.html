@@ -18,32 +18,19 @@
     layout: Layout
 )
 
-@(pType: String)(implicit request: Request[_], messages: Messages)
+@()(implicit request: Request[_], messages: Messages)
 
-@restartTarget = @{
-    pType match {
-        case "existingProtections" => controllers.routes.ReadProtectionsController.currentProtections
-        case _ => controllers.routes.ApplicationClosedController.showApplicationClosed2016()
-    }
-}
+@restartTarget = @{controllers.routes.ReadProtectionsController.currentProtections}
 
 @linkText = @{
-    if(pType != "existingProtections") {
-        Messages("pla.techError.startAgain")
-    } else {
-        Messages("pla.techError.retry")
-    }
+    Messages("pla.techError.retry")
 }
 
 @layout(
     pageTitle = Messages("pla.techError.title")
-    ) {
+) {
 
 <h1 class="govuk-heading-xl" id="pageHeading">@Messages("pla.techError.pageHeading")</h1>
-
-@if(pType != "existingProtections") {
-    <p class="govuk-body" id="startAgainText">@Messages("pla.techError.paraOne")</p>
-}
 
 <p>
     <a class="govuk-body govuk-link" href=@restartTarget id="tryAgainLink">@linkText</a>

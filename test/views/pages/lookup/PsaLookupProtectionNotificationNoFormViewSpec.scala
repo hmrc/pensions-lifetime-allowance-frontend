@@ -16,7 +16,7 @@
 
 package views.pages.lookup
 
-import forms.PSALookupProtectionNotificationNoForm
+import forms.PsaLookupProtectionNotificationNoForm
 import org.jsoup.Jsoup
 import testHelpers.CommonViewSpecHelper
 import testHelpers.messages.lookup.PsaLookupProtectionNotificationNoFormSpecMessages
@@ -32,7 +32,7 @@ class PsaLookupProtectionNotificationNoFormViewSpec
 
     "provided with a form without errors" should {
       val form =
-        PSALookupProtectionNotificationNoForm.pnnForm.bind(Map("lifetimeAllowanceReference" -> "IP141000000000A"))
+        PsaLookupProtectionNotificationNoForm.pnnForm.bind(Map("lifetimeAllowanceReference" -> "IP141000000000A"))
       val doc = Jsoup.parse(view.apply(form).body)
 
       "have the correct title" in {
@@ -87,7 +87,7 @@ class PsaLookupProtectionNotificationNoFormViewSpec
     }
 
     "provided with a form with errors" should {
-      val form = PSALookupProtectionNotificationNoForm.pnnForm.bind(Map("lifetimeAllowanceReference" -> "A"))
+      val form = PsaLookupProtectionNotificationNoForm.pnnForm.bind(Map("lifetimeAllowanceReference" -> "A"))
       val doc  = Jsoup.parse(view.apply(form).body)
 
       "have an error summary" in {
@@ -108,7 +108,7 @@ class PsaLookupProtectionNotificationNoFormViewSpec
     }
 
     "provided with an empty form" should {
-      val form = PSALookupProtectionNotificationNoForm.pnnForm
+      val form = PsaLookupProtectionNotificationNoForm.pnnForm
       val doc  = Jsoup.parse(view.apply(form).body)
 
       "not have an error summary" in {

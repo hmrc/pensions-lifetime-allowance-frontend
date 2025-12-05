@@ -16,16 +16,14 @@
 
 package constructors.display
 
-import common.{Display, Exceptions, Strings}
+import common.{Display, Exceptions}
 import constructors.display.ExistingProtectionsDisplayModelConstructor.{
-  createDateAndTimeDisplayStrings,
   shouldDisplayEnhancementFactor,
   shouldDisplayFactor,
   shouldDisplayLumpSumAmount,
   shouldDisplayLumpSumPercentage
 }
 import models.display.PrintDisplayModel
-import models.pla.response.ProtectionType.FixedProtection2016
 import models.{PersonalDetailsModel, ProtectionModel}
 import play.api.i18n.{Lang, Messages}
 import utils.Constants
@@ -45,38 +43,35 @@ object PrintDisplayModelConstructor {
     val firstName = personalDetailsModel.person.firstName.toLowerCase.capitalize
     val surname   = personalDetailsModel.person.lastName.toLowerCase.capitalize
 
-    val protectionType = Strings.protectionTypeString(protectionModel.protectionType)
-    val status         = Strings.statusString(protectionModel.status)
-    val psaCheckReference = protectionModel.psaCheckReference.getOrElse {
-      throw Exceptions.RequiredValueNotDefinedException("createPrintDisplayModel", "psaCheckReference")
-    }
+    val protectionType    = protectionModel.protectionType
+    val status            = protectionModel.status
+    val psaCheckReference = protectionModel.psaCheckReference
+
     val protectionReference =
       protectionModel.protectionReference.getOrElse(Messages("pla.protection.protectionReference"))
 
-    val protectedAmountOption =
-      protectionModel.protectedAmount.map(amt => Display.currencyDisplayString(BigDecimal(amt)))
-
-    val protectedAmount = protectionModel.protectionType match {
-      case Some("FP2016") | Some(FixedProtection2016.toString) =>
-        Some(Display.currencyDisplayString(Constants.fpProtectedAmount))
-      case _ => protectedAmountOption
+    val protectedAmount = if (protectionType.isFixedProtection2016) {
+      Some(Display.currencyDisplayString(Constants.fpProtectedAmount))
+    } else {
+      protectionModel.protectedAmount.map(amt => Display.currencyDisplayString(amt))
     }
 
-    val (certificateDate, certificateTime) = createDateAndTimeDisplayStrings(protectionModel.certificateDate)
+    val certificateDate = protectionModel.certificateDate.map(Display.dateDisplayString)
+    val certificateTime = protectionModel.certificateTime.map(Display.timeDisplayString)
 
-    val lumpSumPercentage = protectionModel.hipFields.lumpSumPercentage
+    val lumpSumPercentage = protectionModel.lumpSumPercentage
       .filter(_ => shouldDisplayLumpSumPercentage(protectionType))
       .map(lumpSumPercentage => Display.percentageDisplayString(lumpSumPercentage))
 
-    val lumpSumAmount = protectionModel.hipFields.lumpSumAmount
+    val lumpSumAmount = protectionModel.lumpSumAmount
       .filter(_ => shouldDisplayLumpSumAmount(protectionType))
-      .map(lumpSumAmount => Display.currencyDisplayString(BigDecimal(lumpSumAmount)))
+      .map(lumpSumAmount => Display.currencyDisplayString(lumpSumAmount))
 
-    val factor = protectionModel.hipFields.enhancementFactor
+    val factor = protectionModel.enhancementFactor
       .filter(_ => shouldDisplayFactor(protectionType))
       .map(factor => Display.factorDisplayString(factor))
 
-    val enhancementFactor = protectionModel.hipFields.enhancementFactor
+    val enhancementFactor = protectionModel.enhancementFactor
       .filter(_ => shouldDisplayEnhancementFactor(protectionType))
       .map(enhancementFactor => Display.factorDisplayString(enhancementFactor))
 

@@ -14,19 +14,25 @@
  * limitations under the License.
  *@
 
-@import models.amendModels.AmendPensionsWorthBeforeModel
-@import common.{Links, Strings}
+@import common.Links
+@import models.amend.value.AmendPensionsWorthBeforeModel
+@import models.pla.AmendableProtectionType
+@import models.pla.request.AmendProtectionRequestStatus
 
 @this(
-        layout: Layout,
-        form: uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF,
-        errorSummary: playHelpers.templates.errorSummary,
-        formInputMoney: playHelpers.templates.formInputMoney,
-        helpTextAccordion: playHelpers.templates.helpTextAccordion,
-        submitButton: playHelpers.templates.submitButton
+    layout: Layout,
+    form: uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF,
+    errorSummary: playHelpers.templates.errorSummary,
+    formInputMoney: playHelpers.templates.formInputMoney,
+    helpTextAccordion: playHelpers.templates.helpTextAccordion,
+    submitButton: playHelpers.templates.submitButton
 )
 
-@(amendPensionsWorthBeforeForm: Form[AmendPensionsWorthBeforeModel], protectionType: String, status: String)(implicit request: Request[_], messages: Messages)
+@(
+    amendPensionsWorthBeforeForm: Form[AmendPensionsWorthBeforeModel],
+    protectionType: AmendableProtectionType,
+    status: AmendProtectionRequestStatus
+)(implicit request: Request[_], messages: Messages)
 
 @helpTextAccordionContent = {
         <p class="govuk-body">@Messages("pla.pensionsWorthBefore.para.1")</p>
@@ -70,7 +76,7 @@
 
      <h1 class="govuk-heading-xl">@Messages("pla.pensionsWorthBefore.title")</h1>
 
-     @form(action = routes.AmendsPensionWorthBeforeController.submitAmendPensionsWorthBefore(Strings.protectionTypeUrlString(Some(protectionType)), status)) {
+     @form(action = routes.AmendsPensionWorthBeforeController.submitAmendPensionsWorthBefore(protectionType, status)) {
           @helpTextAccordion(
                id = "ip16-amend-pensions-taken-before-help",
                summaryText = Messages("pla.pensionsWorthBefore.help"),

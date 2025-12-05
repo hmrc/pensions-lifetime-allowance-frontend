@@ -16,7 +16,7 @@
 
 package views.lookup
 
-import forms.PSALookupSchemeAdministratorReferenceForm
+import forms.PsaLookupSchemeAdministratorReferenceForm
 import org.jsoup.Jsoup
 import testHelpers.CommonViewSpecHelper
 import testHelpers.messages.lookup.PsaLookupSchemeAdminRefFormSpecMessages
@@ -29,7 +29,7 @@ class PsaLookupSchemeAdminRefFormViewSpec extends CommonViewSpecHelper with PsaL
   "The Psa Lookup Scheme Admin Ref form view" when {
 
     "provided with no errors" should {
-      val form = PSALookupSchemeAdministratorReferenceForm.psaRefForm.bind(
+      val form = PsaLookupSchemeAdministratorReferenceForm.psaRefForm.bind(
         Map("pensionSchemeAdministratorCheckReference" -> "PSA12345678A")
       )
       val doc = Jsoup.parse(view.apply(form).body)
@@ -83,7 +83,7 @@ class PsaLookupSchemeAdminRefFormViewSpec extends CommonViewSpecHelper with PsaL
     }
 
     "provided with errors" should {
-      val form = PSALookupSchemeAdministratorReferenceForm.psaRefForm.bind(
+      val form = PsaLookupSchemeAdministratorReferenceForm.psaRefForm.bind(
         Map("pensionSchemeAdministratorCheckReference" -> "A")
       )
       val doc = Jsoup.parse(view.apply(form).body)
@@ -102,7 +102,7 @@ class PsaLookupSchemeAdminRefFormViewSpec extends CommonViewSpecHelper with PsaL
     }
 
     "provided with an empty form" should {
-      val form = PSALookupSchemeAdministratorReferenceForm.psaRefForm
+      val form = PsaLookupSchemeAdministratorReferenceForm.psaRefForm
       val doc  = Jsoup.parse(view.apply(form).body)
 
       "have no error summary" in {

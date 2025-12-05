@@ -16,6 +16,7 @@
 
 package models.display
 
+import models.pla.response.ProtectionStatus.Open
 import models.pla.response.ProtectionType
 import models.pla.response.ProtectionType._
 import org.scalatest.matchers.should.Matchers
@@ -30,8 +31,8 @@ class PrintDisplayModelSpec extends AnyWordSpec with Matchers {
       firstName = "Jim",
       surname = "Davis",
       nino = nino,
-      protectionType = "IP2016",
-      status = "active",
+      protectionType = IndividualProtection2016,
+      status = Open,
       psaCheckReference = "PSA33456789",
       protectionReference = "IP123456789001",
       protectedAmount = Some("1,200,000"),
@@ -39,7 +40,7 @@ class PrintDisplayModelSpec extends AnyWordSpec with Matchers {
       certificateTime = Some("12:34:56")
     )
 
-    val fixedProtectionTypes = Seq(FixedProtection2016.toString, FixedProtection2016LTA.toString, "FP2016")
+    val fixedProtectionTypes = Seq(FixedProtection2016, FixedProtection2016LTA)
 
     "return true" when
       fixedProtectionTypes.foreach { protectionType =>
@@ -52,7 +53,7 @@ class PrintDisplayModelSpec extends AnyWordSpec with Matchers {
 
     "return false" when {
 
-      val testScenarios = (ProtectionType.values.map(_.toString) ++ Seq("IP2014", "IP2016")).diff(fixedProtectionTypes)
+      val testScenarios = ProtectionType.values.diff(fixedProtectionTypes)
 
       testScenarios.foreach { protectionType =>
         s"ProtectionModel contains protectionType: '$protectionType'" in {
