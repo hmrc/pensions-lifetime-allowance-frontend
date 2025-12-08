@@ -79,6 +79,51 @@ class ProtectionModelSpec extends AnyWordSpec with Matchers with ModelGenerators
 
   }
 
+  "ProtectionModel on asAmendable" should {
+
+    val allAmendableCombinations = for {
+      status <- Seq(Open, Dormant)
+      protectionType <- Seq(
+        ProtectionType.IndividualProtection2014,
+        ProtectionType.IndividualProtection2014LTA,
+        ProtectionType.IndividualProtection2016,
+        ProtectionType.IndividualProtection2016LTA
+      )
+    } yield (status, protectionType)
+
+    "return Some" when
+      allAmendableCombinations.foreach { case (status, protectionType) =>
+        s"ProtectionModel contains status: '$status' and protectionType: '$protectionType''" in {
+          protectionModel
+            .copy(
+              protectionType = protectionType,
+              status = status
+            )
+            .asAmendable shouldBe defined
+        }
+      }
+
+    "return None" when {
+
+      val allCombinations = for {
+        status         <- ProtectionStatus.values
+        protectionType <- ProtectionType.values
+      } yield (status, protectionType)
+
+      allCombinations.diff(allAmendableCombinations).foreach { case (status, protectionType) =>
+        s"ProtectionModel contains status: $status and protectionType: $protectionType" in {
+          protectionModel
+            .copy(
+              protectionType = protectionType,
+              status = status
+            )
+            .asAmendable shouldBe None
+        }
+      }
+    }
+
+  }
+
   "ProtectionModel on isFixedProtection2016" should {
 
     val fixedProtectionTypes =
