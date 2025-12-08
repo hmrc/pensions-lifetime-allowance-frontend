@@ -83,7 +83,7 @@ class PlaConnectorISpec extends IntegrationBaseSpec with ScalaFutures {
          |    "nonUKRightsAmount": 0,
          |    "pensionDebitAmount": 25000,
          |    "pensionDebitEnteredAmount": 25000,
-         |    "notificationIdentifier": 3,
+         |    "notificationIdentifier": 7,
          |    "protectedAmount": 120000,
          |    "pensionDebitStartDate": "2026-07-09",
          |    "pensionDebitTotalAmount": 40000

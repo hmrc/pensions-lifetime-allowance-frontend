@@ -16,7 +16,7 @@
 
 package testdata
 
-import models.NotificationId.NotificationId3
+import models.NotificationId.NotificationId7
 import models.{DateModel, TimeModel}
 import models.pla.AmendableProtectionType
 import models.pla.request.{AmendProtectionRequest, AmendProtectionRequestStatus}
@@ -69,7 +69,7 @@ object PlaConnectorTestData {
     nonUKRightsAmount = 0,
     pensionDebitAmount = Some(25000),
     pensionDebitEnteredAmount = Some(25000),
-    notificationIdentifier = Some(NotificationId3),
+    notificationIdentifier = Some(NotificationId7),
     protectedAmount = Some(120000),
     pensionDebitStartDate = Some(DateModel.of(2026, 7, 9)),
     pensionDebitTotalAmount = Some(40000)

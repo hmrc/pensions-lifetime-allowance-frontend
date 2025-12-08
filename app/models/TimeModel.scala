@@ -37,9 +37,9 @@ object TimeModel {
     case JsString(timeString) =>
       parse(timeString) match {
         case Some(time) => JsSuccess(time)
-        case None       => JsError("invalid certificateTime")
+        case None       => JsError("invalid time string")
       }
-    case _ => JsError("certificateTime must be a string")
+    case _ => JsError("time must be a string")
   }
 
   implicit val writes: Writes[TimeModel] = time => JsString(serialise(time))

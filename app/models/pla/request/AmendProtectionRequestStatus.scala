@@ -44,7 +44,7 @@ object AmendProtectionRequestStatus extends Enumerable.Implicits {
     new PathBindable[AmendProtectionRequestStatus] {
 
       override def bind(key: String, value: String): Either[String, AmendProtectionRequestStatus] =
-        value match {
+        value.toLowerCase match {
           case UrlString.Open    => Right(Open)
           case UrlString.Dormant => Right(Dormant)
           case s                 => Left(s"Unknown protection status '$s'")

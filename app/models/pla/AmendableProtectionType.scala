@@ -74,14 +74,14 @@ object AmendableProtectionType extends Enumerable.Implicits {
     new PathBindable[AmendableProtectionType] {
 
       override def bind(key: String, value: String): Either[String, AmendableProtectionType] =
-        value match {
+        value.toLowerCase match {
           case "ip2014"                              => Right(IndividualProtection2014)
           case UrlString.IndividualProtection2014    => Right(IndividualProtection2014)
           case "ip2016"                              => Right(IndividualProtection2016)
           case UrlString.IndividualProtection2016    => Right(IndividualProtection2016)
           case UrlString.IndividualProtection2014LTA => Right(IndividualProtection2014LTA)
           case UrlString.IndividualProtection2016LTA => Right(IndividualProtection2016LTA)
-          case p                                     => Left(s"Unknown protection type '$p''")
+          case p                                     => Left(s"Unknown protection type '$p'")
         }
 
       override def unbind(key: String, value: AmendableProtectionType): String = value match {
