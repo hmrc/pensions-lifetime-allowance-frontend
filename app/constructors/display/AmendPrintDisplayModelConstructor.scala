@@ -67,23 +67,23 @@ object AmendPrintDisplayModelConstructor {
     )
   }
 
-  def shouldDisplayProtectionReference(notificationId: Option[NotificationId]): Boolean = notificationId match {
+  private[display] def shouldDisplayProtectionReference(notificationId: Option[NotificationId]): Boolean = notificationId match {
     case Some(notificationId) => NotificationIds.showingProtectionReference.contains(notificationId)
     case None                 => false
   }
 
-  def shouldDisplayFixedProtectionReference(notificationId: Option[NotificationId]): Boolean =
+  private[display] def shouldDisplayFixedProtectionReference(notificationId: Option[NotificationId]): Boolean =
     notificationId match {
       case Some(notificationId) => NotificationIds.showingFixedProtection2016Details.contains(notificationId)
       case None                 => false
     }
 
-  def shouldDisplayPsaCheckReference(notificationId: Option[NotificationId]): Boolean = notificationId match {
+  private[display] def shouldDisplayPsaCheckReference(notificationId: Option[NotificationId]): Boolean = notificationId match {
     case Some(notificationId) => NotificationIds.showingPsaCheckReference.contains(notificationId)
     case None                 => false
   }
 
-  def shouldDisplayStatus(notificationId: Option[NotificationId]): Boolean = notificationId match {
+  private[display] def shouldDisplayStatus(notificationId: Option[NotificationId]): Boolean = notificationId match {
     case Some(notificationId) => NotificationIds.showingStatus.contains(notificationId)
     case None                 => true
   }

@@ -24,16 +24,16 @@ import javax.inject.Inject
 
 class AccessibilityStatementConfig @Inject() (config: Configuration) {
 
-  val platformHost: Option[String] =
+  private val platformHost: Option[String] =
     config.getOptional[String]("platform.frontend.host")
 
-  val accessibilityStatementHost: Option[String] =
+  private val accessibilityStatementHost: Option[String] =
     platformHost.orElse(config.getOptional[String]("accessibility-statement.host"))
 
-  val accessibilityStatementPath: Option[String] =
+  private val accessibilityStatementPath: Option[String] =
     config.getOptional[String]("accessibility-statement.path")
 
-  val accessibilityStatementServicePath: Option[String] =
+  private val accessibilityStatementServicePath: Option[String] =
     config.getOptional[String]("accessibility-statement.service-path")
 
   def url(implicit request: RequestHeader): Option[String] =

@@ -35,7 +35,7 @@ object AmendOutcomeDisplayModelNoNotificationIdConstructor {
 
     val protectedAmount = model.protectedAmount.getOrElse {
       throw Exceptions.OptionNotDefinedException(
-        "createamendOutcomeDisplayModelNoNotificationId",
+        "createAmendOutcomeDisplayModelNoNotificationId",
         "protectedAmount",
         protectionType.toString
       )
