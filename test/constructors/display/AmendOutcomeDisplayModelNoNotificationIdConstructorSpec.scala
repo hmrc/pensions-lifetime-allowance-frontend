@@ -20,7 +20,7 @@ import common.Exceptions.OptionNotDefinedException
 
 class AmendOutcomeDisplayModelNoNotificationIdConstructorSpec extends DisplayConstructorsTestData {
 
-  "createamendOutcomeDisplayModelNoNotificationId" should {
+  "createAmendOutcomeDisplayModelNoNotificationId" should {
     import testdata.AmendProtectionDisplayModelTestData._
 
     "correctly transform AmendResponseModel into amendOutcomeDisplayModelNoNotificationId" in {
@@ -43,7 +43,7 @@ class AmendOutcomeDisplayModelNoNotificationIdConstructorSpec extends DisplayCon
               nino
             )
 
-        exception.functionName shouldBe "createamendOutcomeDisplayModelNoNotificationId"
+        exception.functionName shouldBe "createAmendOutcomeDisplayModelNoNotificationId"
         exception.optionName shouldBe "protectedAmount"
       }
     }

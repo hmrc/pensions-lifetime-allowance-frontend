@@ -134,7 +134,7 @@ class DisplayConstructorsSpec extends DisplayConstructorsTestData {
     }
   }
 
-  "createamendOutcomeDisplayModelNoNotificationId" should {
+  "createAmendOutcomeDisplayModelNoNotificationId" should {
     "use correct messages localisation" when {
 
       "provided with English language" in {

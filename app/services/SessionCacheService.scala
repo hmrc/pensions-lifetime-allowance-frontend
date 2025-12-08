@@ -21,8 +21,7 @@ import models.cache.CacheMap
 import models.pla.AmendableProtectionType
 import models.pla.request.AmendProtectionRequestStatus
 import models.{AmendResponseModel, ProtectionModel, PsaLookupRequest, PsaLookupResult}
-import play.api.Logging
-import play.api.libs.json.{Json, Reads, Writes}
+import play.api.libs.json.{Reads, Writes}
 import play.api.mvc.Request
 import repositories.SessionRepository
 import uk.gov.hmrc.mongo.cache.DataKey
@@ -33,7 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class SessionCacheService @Inject() (sessionRepository: SessionRepository)(
     implicit executionContext: ExecutionContext
-) extends Logging {
+) {
 
   private val openProtectionKey: String = "openProtection"
 
@@ -81,10 +80,8 @@ class SessionCacheService @Inject() (sessionRepository: SessionRepository)(
   private[services] def saveFormData[T](
       key: String,
       data: T
-  )(implicit request: Request[_], formats: Writes[T]): Future[CacheMap] = {
-    logger.info(s"Saving $key as ${Json.toJson(data)}")
+  )(implicit request: Request[_], formats: Writes[T]): Future[CacheMap] =
     sessionRepository.putInSession(DataKey(key), data)
-  }
 
   def fetchOpenProtection(implicit request: Request[_]): Future[Option[ProtectionModel]] =
     fetchAndGetFormData[ProtectionModel](openProtectionKey)
@@ -111,10 +108,8 @@ class SessionCacheService @Inject() (sessionRepository: SessionRepository)(
 
   private[services] def fetchAndGetFormData[T](
       key: String
-  )(implicit request: Request[_], formats: Reads[T]): Future[Option[T]] = {
-    logger.info(s"Fetching $key")
+  )(implicit request: Request[_], formats: Reads[T]): Future[Option[T]] =
     sessionRepository.getFromSession[T](DataKey(key))
-  }
 
   def remove(implicit request: Request[_]): Future[Unit] =
     sessionRepository.clearSession

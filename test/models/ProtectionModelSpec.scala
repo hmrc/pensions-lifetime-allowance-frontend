@@ -111,11 +111,6 @@ class ProtectionModelSpec extends AnyWordSpec with Matchers with ModelGenerators
             protectionRecord
           )
 
-          val pensionDebit =
-            protectionRecord.pensionDebitStartDate.zip(protectionRecord.pensionDebitEnteredAmount).map {
-              case (startDate, amount) => PensionDebitModel(startDate, amount)
-            }
-
           result.psaCheckReference shouldBe readProtectionsResponse.pensionSchemeAdministratorCheckReference
           result.identifier shouldBe protectionRecord.identifier
           result.certificateDate shouldBe Some(protectionRecord.certificateDate)
