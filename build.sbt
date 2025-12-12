@@ -18,8 +18,9 @@ lazy val scoverageSettings = {
   import scoverage.ScoverageKeys
   Seq(
     // Semicolon-separated list of regexs matching classes to exclude
-    ScoverageKeys.coverageExcludedPackages := "<empty>;Reverse.*;.*AuthService.*;models\\.data\\..*;views.html.*;uk.gov.hmrc.BuildInfo;app.*;prod.*;config.*",
-    ScoverageKeys.coverageExcludedFiles    := ".*/Routes.*;.*/RoutesPrefix.*;.*/PdfGeneratorConnector.*;",
+    // [info] All done. Coverage was stmt=[94.24%] branch=[91.39%]
+    ScoverageKeys.coverageExcludedPackages := "<empty>;Reverse.*;views.html.*;config.*",
+    ScoverageKeys.coverageExcludedFiles    := ".*/Routes.*;.*/RoutesPrefix.*;",
     ScoverageKeys.coverageMinimumStmtTotal := 90,
     ScoverageKeys.coverageFailOnMinimum    := true,
     ScoverageKeys.coverageHighlighting     := true,
