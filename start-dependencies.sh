@@ -1,4 +1,4 @@
 #!/bin/bash
 
-sm --start PLA_ALL -r
-sm --stop PLA_FRONTEND
+sm2 --start PLA_ALL
+sm2 --stop PLA_FRONTEND
