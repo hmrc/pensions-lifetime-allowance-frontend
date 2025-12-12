@@ -42,13 +42,11 @@ class PlaConnector @Inject() (
     http: HttpClientV2
 ) extends Logging {
 
-  private val serviceUrl: String = appConfig.servicesConfig.baseUrl("pensions-lifetime-allowance")
-
   def readProtections(nino: String)(
       implicit hc: HeaderCarrier,
       ex: ExecutionContext
   ): Future[Either[PlaConnectorError, ReadProtectionsResponse]] = {
-    val url = s"$serviceUrl/protect-your-lifetime-allowance/v2/individuals/$nino/protections"
+    val url = s"${appConfig.backendUrl}/protect-your-lifetime-allowance/v2/individuals/$nino/protections"
 
     http
       .get(url"$url")
@@ -81,7 +79,7 @@ class PlaConnector @Inject() (
   )(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[Either[PlaConnectorError, AmendProtectionResponse]] = {
     val id          = protection.identifier
     val requestBody = AmendProtectionRequest.from(protection)
-    val url         = s"$serviceUrl/protect-your-lifetime-allowance/v2/individuals/$nino/protections/$id"
+    val url         = s"${appConfig.backendUrl}/protect-your-lifetime-allowance/v2/individuals/$nino/protections/$id"
 
     http
       .post(url"$url")

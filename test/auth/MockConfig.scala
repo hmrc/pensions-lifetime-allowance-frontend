@@ -47,5 +47,6 @@ object MockConfig extends AppConfig {
   override val sessionMissingUpliftUrlPrefix: Option[String] = None
   override val configuration: Configuration                  = NoConfiguration
   override val basGatewaySignOutUrl: String = "http://localhost:9553/bas-gateway/sign-out-without-state"
+  override val backendUrl: String           = "http://localhost:9011"
 
 }
