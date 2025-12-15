@@ -60,7 +60,7 @@ class AmendsPensionTakenBeforeController @Inject() (
           .fetchAmendProtectionModel(protectionType, status)
           .map {
             case Some(data) =>
-              val yesNoValue = if (data.updated.preADayPensionInPayment.getOrElse[Double](0) > 0) "yes" else "no"
+              val yesNoValue = if (data.updated.preADayPensionInPaymentAmount.getOrElse[Double](0) > 0) "yes" else "no"
               val form = amendPensionsTakenBeforeForm(protectionType)
                 .fill(AmendPensionsTakenBeforeModel(yesNoValue))
               protectionType match {
@@ -109,7 +109,7 @@ class AmendsPensionTakenBeforeController @Inject() (
                           )
                         )
                       case "no" =>
-                        val updatedModel = model.withPreADayPensionInPayment(None)
+                        val updatedModel = model.withPreADayPensionInPaymentAmount(None)
                         sessionCacheService
                           .saveAmendProtectionModel(updatedModel)
                           .map(_ => Redirect(routes.AmendsController.amendsSummary(protectionType, status)))

@@ -50,17 +50,17 @@ class PlaConnectorISpec extends IntegrationBaseSpec with ScalaFutures {
     val protectionInputProtectionModel: ProtectionModel = ProtectionModel(
       psaCheckReference = "psaCheckReference",
       identifier = lifetimeAllowanceIdentifier,
-      sequence = lifetimeAllowanceSequenceNumber,
+      sequenceNumber = lifetimeAllowanceSequenceNumber,
       protectionType = IndividualProtection2014,
       status = Dormant,
       certificateDate = Some(DateModel.of(2025, 7, 15)),
       certificateTime = Some(TimeModel.of(17, 43, 12)),
       protectionReference = Some(protectionReference),
       relevantAmount = Some(105000),
-      preADayPensionInPayment = Some(1500.00),
-      postADayBenefitCrystallisationEvents = Some(2500.00),
-      uncrystallisedRights = Some(75500.00),
-      nonUKRights = Some(0.00),
+      preADayPensionInPaymentAmount = Some(1500.00),
+      postADayBenefitCrystallisationEventAmount = Some(2500.00),
+      uncrystallisedRightsAmount = Some(75500.00),
+      nonUKRightsAmount = Some(0.00),
       protectedAmount = Some(120000),
       pensionDebitTotalAmount = Some(40000)
     )

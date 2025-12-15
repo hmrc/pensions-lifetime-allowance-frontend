@@ -23,26 +23,26 @@ import testHelpers.FakeApplication
 class AmendsGAConstructorSpec extends FakeApplication {
 
   val testAmendProtectionFields1: AmendProtectionFields = AmendProtectionFields(
-    uncrystallisedRights = 100000.00,
-    nonUKRights = Some(2000.00),
-    preADayPensionInPayment = Some(2000.00),
-    postADayBenefitCrystallisationEvents = Some(2000.00),
+    uncrystallisedRightsAmount = 100000.00,
+    nonUKRightsAmount = Some(2000.00),
+    preADayPensionInPaymentAmount = Some(2000.00),
+    postADayBenefitCrystallisationEventAmount = Some(2000.00),
     pensionDebit = None
   )
 
   val testAmendProtectionFields2: AmendProtectionFields = AmendProtectionFields(
-    uncrystallisedRights = 250000.00,
-    nonUKRights = Some(500.00),
-    preADayPensionInPayment = Some(1000.00),
-    postADayBenefitCrystallisationEvents = Some(1000.00),
+    uncrystallisedRightsAmount = 250000.00,
+    nonUKRightsAmount = Some(500.00),
+    preADayPensionInPaymentAmount = Some(1000.00),
+    postADayBenefitCrystallisationEventAmount = Some(1000.00),
     pensionDebit = Some(PensionDebitModel(DateModel.of(2016, 10, 23), 1000.0))
   )
 
   val testAmendProtectionFields3: AmendProtectionFields = AmendProtectionFields(
-    uncrystallisedRights = 250000.00,
-    nonUKRights = Some(0.00),
-    preADayPensionInPayment = Some(0.00),
-    postADayBenefitCrystallisationEvents = Some(0.00),
+    uncrystallisedRightsAmount = 250000.00,
+    nonUKRightsAmount = Some(0.00),
+    preADayPensionInPaymentAmount = Some(0.00),
+    postADayBenefitCrystallisationEventAmount = Some(0.00),
     pensionDebit = None
   )
 

@@ -18,7 +18,7 @@ package models
 
 import play.api.libs.json.{Json, OFormat}
 
-case class PensionDebitModel(startDate: DateModel, amount: Double)
+case class PensionDebitModel(startDate: DateModel, enteredAmount: Double)
 
 object PensionDebitModel {
   implicit val format: OFormat[PensionDebitModel] = Json.format[PensionDebitModel]

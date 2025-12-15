@@ -61,7 +61,7 @@ class AmendsPensionTakenBetweenController @Inject() (
           .map {
             case Some(data) =>
               val yesNoValue =
-                if (data.updated.postADayBenefitCrystallisationEvents.getOrElse[Double](0) > 0) "yes"
+                if (data.updated.postADayBenefitCrystallisationEventAmount.getOrElse[Double](0) > 0) "yes"
                 else "no"
               val form =
                 amendPensionsTakenBetweenForm(protectionType)
@@ -117,7 +117,7 @@ class AmendsPensionTakenBetweenController @Inject() (
                           )
                         )
                       case "no" =>
-                        val updatedModel = model.withPostADayBenefitCrystallisationEvents(None)
+                        val updatedModel = model.withPostADayBenefitCrystallisationEventAmount(None)
 
                         sessionCacheService
                           .saveAmendProtectionModel(updatedModel)

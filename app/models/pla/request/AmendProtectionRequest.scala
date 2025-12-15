@@ -45,7 +45,7 @@ object AmendProtectionRequest {
   implicit val writes: Writes[AmendProtectionRequest] = Json.writes[AmendProtectionRequest]
 
   def from(protectionModel: AmendProtectionModel): AmendProtectionRequest = {
-    val lifetimeAllowanceSequenceNumber = protectionModel.sequence
+    val lifetimeAllowanceSequenceNumber = protectionModel.sequenceNumber
 
     val lifetimeAllowanceType = protectionModel.protectionType
     val status                = protectionModel.status
@@ -54,20 +54,20 @@ object AmendProtectionRequest {
       protectionModel.updatedRelevantAmount
 
     val preADayPensionInPayment =
-      protectionModel.updated.preADayPensionInPayment.getOrElse[Double](0)
+      protectionModel.updated.preADayPensionInPaymentAmount.getOrElse[Double](0)
 
     val postADayBenefitCrystallisationEvents =
-      protectionModel.updated.postADayBenefitCrystallisationEvents.getOrElse[Double](0)
+      protectionModel.updated.postADayBenefitCrystallisationEventAmount.getOrElse[Double](0)
 
     val uncrystallisedRights =
-      protectionModel.updated.uncrystallisedRights
+      protectionModel.updated.uncrystallisedRightsAmount
 
     val nonUKRights =
-      protectionModel.updated.nonUKRights.getOrElse[Double](0)
+      protectionModel.updated.nonUKRightsAmount.getOrElse[Double](0)
 
     val pensionDebitStartDate = protectionModel.updated.pensionDebit.map(_.startDate)
 
-    val pensionDebitEnteredAmount = protectionModel.updated.pensionDebit.map(_.amount)
+    val pensionDebitEnteredAmount = protectionModel.updated.pensionDebit.map(_.enteredAmount)
 
     AmendProtectionRequest(
       lifetimeAllowanceSequenceNumber = lifetimeAllowanceSequenceNumber,

@@ -18,4 +18,4 @@ package models.amend
 
 import java.time.LocalDate
 
-case class AmendPsoDetailsModel(pso: LocalDate, psoAmt: Option[BigDecimal]) {}
+case class AmendPsoDetailsModel(startDate: LocalDate, enteredAmount: Option[BigDecimal]) {}

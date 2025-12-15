@@ -65,7 +65,7 @@ class AmendsCurrentPensionController @Inject() (
                 AmendCurrentPensionModel(
                   Some(
                     Display.currencyInputDisplayFormat(
-                      amendProtectionModel.updated.uncrystallisedRights
+                      amendProtectionModel.updated.uncrystallisedRightsAmount
                     )
                   )
                 )
@@ -105,7 +105,7 @@ class AmendsCurrentPensionController @Inject() (
                 .flatMap {
                   case Some(model) =>
                     val updatedModel =
-                      model.withUncrystallisedrights(amendCurrentPensionsModel.amendedUKPensionAmt.get.toDouble)
+                      model.withUncrystallisedRightsAmount(amendCurrentPensionsModel.amendedUKPensionAmt.get.toDouble)
 
                     sessionCacheService
                       .saveAmendProtectionModel(updatedModel)

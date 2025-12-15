@@ -93,7 +93,7 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
   private val testProtectionModel = ProtectionModel(
     psaCheckReference = "tstPSACeckRef",
     identifier = 1111111,
-    sequence = 1,
+    sequenceNumber = 1,
     protectionType = ProtectionType.IndividualProtection2014,
     status = ProtectionStatus.Open,
     certificateDate = None,

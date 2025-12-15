@@ -65,7 +65,7 @@ class AmendsPensionWorthBeforeController @Inject() (
                 AmendPensionsWorthBeforeModel(
                   Some(
                     Display.currencyInputDisplayFormat(
-                      data.updated.preADayPensionInPayment.getOrElse[Double](0)
+                      data.updated.preADayPensionInPaymentAmount.getOrElse[Double](0)
                     )
                   )
                 )
@@ -106,7 +106,7 @@ class AmendsPensionWorthBeforeController @Inject() (
                 .flatMap {
                   case Some(model) =>
                     val updatedAmount = success.amendedPensionsTakenBeforeAmt.get.toDouble
-                    val updatedModel  = model.withPreADayPensionInPayment(Some(updatedAmount))
+                    val updatedModel  = model.withPreADayPensionInPaymentAmount(Some(updatedAmount))
 
                     sessionCacheService
                       .saveAmendProtectionModel(updatedModel)

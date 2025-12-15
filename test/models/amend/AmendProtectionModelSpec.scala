@@ -29,17 +29,17 @@ class AmendProtectionModelSpec extends AnyWordSpec with Matchers with ModelGener
   val protectionModel = ProtectionModel(
     psaCheckReference = "psaCheckReference",
     identifier = 10101,
-    sequence = 20202,
+    sequenceNumber = 20202,
     protectionType = ProtectionType.IndividualProtection2014,
     status = ProtectionStatus.Open,
     certificateDate = Some(DateModel.of(2025, 12, 8)),
     certificateTime = Some(TimeModel.of(12, 57, 10)),
     protectedAmount = Some(1_500_000),
     relevantAmount = Some(1_700_000),
-    postADayBenefitCrystallisationEvents = Some(450_000),
-    preADayPensionInPayment = Some(450_000),
-    uncrystallisedRights = Some(450_000),
-    nonUKRights = Some(450_000),
+    postADayBenefitCrystallisationEventAmount = Some(450_000),
+    preADayPensionInPaymentAmount = Some(450_000),
+    uncrystallisedRightsAmount = Some(450_000),
+    nonUKRightsAmount = Some(450_000),
     pensionDebitTotalAmount = Some(100_000),
     protectionReference = Some("protectionReference"),
     lumpSumPercentage = None,
@@ -50,7 +50,7 @@ class AmendProtectionModelSpec extends AnyWordSpec with Matchers with ModelGener
   val amendProtectionModel = AmendProtectionModel(
     psaCheckReference = "psaCheckReference",
     identifier = 10101,
-    sequence = 20202,
+    sequenceNumber = 20202,
     protectionType = AmendableProtectionType.IndividualProtection2014,
     status = AmendProtectionRequestStatus.Open,
     pensionDebitTotalAmount = Some(100_000),
@@ -59,17 +59,17 @@ class AmendProtectionModelSpec extends AnyWordSpec with Matchers with ModelGener
     protectionReference = Some("protectionReference"),
     protectedAmount = Some(1_500_000),
     original = AmendProtectionFields(
-      postADayBenefitCrystallisationEvents = Some(450_000),
-      preADayPensionInPayment = Some(450_000),
-      uncrystallisedRights = 450_000,
-      nonUKRights = Some(450_000),
+      postADayBenefitCrystallisationEventAmount = Some(450_000),
+      preADayPensionInPaymentAmount = Some(450_000),
+      uncrystallisedRightsAmount = 450_000,
+      nonUKRightsAmount = Some(450_000),
       pensionDebit = None
     ),
     updated = AmendProtectionFields(
-      postADayBenefitCrystallisationEvents = Some(450_000),
-      preADayPensionInPayment = Some(450_000),
-      uncrystallisedRights = 450_000,
-      nonUKRights = Some(450_000),
+      postADayBenefitCrystallisationEventAmount = Some(450_000),
+      preADayPensionInPaymentAmount = Some(450_000),
+      uncrystallisedRightsAmount = 450_000,
+      nonUKRightsAmount = Some(450_000),
       pensionDebit = None
     )
   )
@@ -136,25 +136,25 @@ class AmendProtectionModelSpec extends AnyWordSpec with Matchers with ModelGener
   "hasChanges" should {
     "return true" when {
       "the preADayPensionInPaymentAmount is updated to another value" in {
-        amendProtectionModel.withPreADayPensionInPayment(Some(450_001)).hasChanges shouldBe true
+        amendProtectionModel.withPreADayPensionInPaymentAmount(Some(450_001)).hasChanges shouldBe true
       }
       "the preADayPensionInPaymentAmount is removed" in {
-        amendProtectionModel.withPreADayPensionInPayment(None).hasChanges shouldBe true
+        amendProtectionModel.withPreADayPensionInPaymentAmount(None).hasChanges shouldBe true
       }
       "the postADayBenefitCrystallisationEventsAmount is updated to another value" in {
-        amendProtectionModel.withPostADayBenefitCrystallisationEvents(Some(450_001)).hasChanges shouldBe true
+        amendProtectionModel.withPostADayBenefitCrystallisationEventAmount(Some(450_001)).hasChanges shouldBe true
       }
       "the postADayBenefitCrystallisationEventsAmount is removed" in {
-        amendProtectionModel.withPostADayBenefitCrystallisationEvents(None).hasChanges shouldBe true
+        amendProtectionModel.withPostADayBenefitCrystallisationEventAmount(None).hasChanges shouldBe true
       }
       "the nonUKRightsAmount is updated to another value" in {
-        amendProtectionModel.withNonUKRights(Some(450_001)).hasChanges shouldBe true
+        amendProtectionModel.withNonUKRightsAmount(Some(450_001)).hasChanges shouldBe true
       }
       "the nonUKRightsAmount is removed" in {
-        amendProtectionModel.withNonUKRights(None).hasChanges shouldBe true
+        amendProtectionModel.withNonUKRightsAmount(None).hasChanges shouldBe true
       }
       "the uncrystallisedRightsAmount is updated to another value" in
-        amendProtectionModel.withUncrystallisedrights(450_001)
+        amendProtectionModel.withUncrystallisedRightsAmount(450_001)
       "a pension sharing order is added" in {
         amendProtectionModel.withPensionDebit(Some(pensionDebitModel)).hasChanges shouldBe true
       }
@@ -166,7 +166,7 @@ class AmendProtectionModelSpec extends AnyWordSpec with Matchers with ModelGener
       }
 
       "the preADayPensionInPaymentAmount is updated to its current value" in {
-        val updated = amendProtectionModel.withPreADayPensionInPayment(Some(450_000))
+        val updated = amendProtectionModel.withPreADayPensionInPaymentAmount(Some(450_000))
 
         updated.hasChanges shouldBe false
         updated shouldBe amendProtectionModel
@@ -174,21 +174,24 @@ class AmendProtectionModelSpec extends AnyWordSpec with Matchers with ModelGener
 
       "the preADayPensionInPaymentAmount is updated to another value, then restored to its original value" in {
         val updated =
-          amendProtectionModel.withPreADayPensionInPayment(Some(450_001)).withPreADayPensionInPayment(Some(450_000))
+          amendProtectionModel
+            .withPreADayPensionInPaymentAmount(Some(450_001))
+            .withPreADayPensionInPaymentAmount(Some(450_000))
 
         updated.hasChanges shouldBe false
         updated shouldBe amendProtectionModel
       }
 
       "the preADayPensionInPaymentAmount is removed, then restored to its original value" in {
-        val updated = amendProtectionModel.withPreADayPensionInPayment(None).withPreADayPensionInPayment(Some(450_000))
+        val updated =
+          amendProtectionModel.withPreADayPensionInPaymentAmount(None).withPreADayPensionInPaymentAmount(Some(450_000))
 
         updated.hasChanges shouldBe false
         updated shouldBe amendProtectionModel
       }
 
       "the postADayBenefitCrystallisationEventAmount is updated to its current value" in {
-        val updated = amendProtectionModel.withPostADayBenefitCrystallisationEvents(Some(450_000))
+        val updated = amendProtectionModel.withPostADayBenefitCrystallisationEventAmount(Some(450_000))
 
         updated.hasChanges shouldBe false
         updated shouldBe amendProtectionModel
@@ -196,8 +199,8 @@ class AmendProtectionModelSpec extends AnyWordSpec with Matchers with ModelGener
 
       "the postADayBenefitCrystallisationEventAmount is updated to another value, then restored to its original value" in {
         val updated = amendProtectionModel
-          .withPostADayBenefitCrystallisationEvents(Some(450_001))
-          .withPostADayBenefitCrystallisationEvents(Some(450_000))
+          .withPostADayBenefitCrystallisationEventAmount(Some(450_001))
+          .withPostADayBenefitCrystallisationEventAmount(Some(450_000))
 
         updated.hasChanges shouldBe false
         updated shouldBe amendProtectionModel
@@ -205,43 +208,44 @@ class AmendProtectionModelSpec extends AnyWordSpec with Matchers with ModelGener
 
       "the postADayBenefitCrystallisationEventAmount is removed, then restored to its original value" in {
         val updated = amendProtectionModel
-          .withPostADayBenefitCrystallisationEvents(None)
-          .withPostADayBenefitCrystallisationEvents(Some(450_000))
+          .withPostADayBenefitCrystallisationEventAmount(None)
+          .withPostADayBenefitCrystallisationEventAmount(Some(450_000))
 
         updated.hasChanges shouldBe false
         updated shouldBe amendProtectionModel
       }
 
       "the nonUKRightsAmount is updated to its current value" in {
-        val updated = amendProtectionModel.withNonUKRights(Some(450_000))
+        val updated = amendProtectionModel.withNonUKRightsAmount(Some(450_000))
 
         updated.hasChanges shouldBe false
         updated shouldBe amendProtectionModel
       }
 
       "the nonUKRightsAmount is updated to another value, then restored to its original value" in {
-        val updated = amendProtectionModel.withNonUKRights(Some(450_001)).withNonUKRights(Some(450_000))
+        val updated = amendProtectionModel.withNonUKRightsAmount(Some(450_001)).withNonUKRightsAmount(Some(450_000))
 
         updated.hasChanges shouldBe false
         updated shouldBe amendProtectionModel
       }
 
       "the nonUKRightsAmount is removed, then restored to its original value" in {
-        val updated = amendProtectionModel.withNonUKRights(None).withNonUKRights(Some(450_000))
+        val updated = amendProtectionModel.withNonUKRightsAmount(None).withNonUKRightsAmount(Some(450_000))
 
         updated.hasChanges shouldBe false
         updated shouldBe amendProtectionModel
       }
 
       "the uncrystallisedRightsAmount is updated to its current value" in {
-        val updated = amendProtectionModel.withUncrystallisedrights(450_000)
+        val updated = amendProtectionModel.withUncrystallisedRightsAmount(450_000)
 
         updated.hasChanges shouldBe false
         updated shouldBe amendProtectionModel
       }
 
       "the uncrystallisedRightsAmount is updated to another value, then restored to its original value" in {
-        val updated = amendProtectionModel.withUncrystallisedrights(450_001).withUncrystallisedrights(450_000)
+        val updated =
+          amendProtectionModel.withUncrystallisedRightsAmount(450_001).withUncrystallisedRightsAmount(450_000)
 
         updated.hasChanges shouldBe false
         updated shouldBe amendProtectionModel
@@ -271,10 +275,10 @@ class AmendProtectionModelSpec extends AnyWordSpec with Matchers with ModelGener
 
     "truncate decimal components before taking sum" in {
       amendProtectionModel
-        .withPreADayPensionInPayment(Some(450_000.99))
-        .withPostADayBenefitCrystallisationEvents(Some(450_000.99))
-        .withNonUKRights(Some(450_000.99))
-        .withUncrystallisedrights(450_000.99)
+        .withPreADayPensionInPaymentAmount(Some(450_000.99))
+        .withPostADayBenefitCrystallisationEventAmount(Some(450_000.99))
+        .withNonUKRightsAmount(Some(450_000.99))
+        .withUncrystallisedRightsAmount(450_000.99)
         .updatedRelevantAmount shouldBe 1_700_000
     }
   }
@@ -282,23 +286,23 @@ class AmendProtectionModelSpec extends AnyWordSpec with Matchers with ModelGener
   "withPreADayPensionInPayment" should {
     "return correct AmendProtectionModel" when {
       "provided with None" in {
-        amendProtectionModel.withPreADayPensionInPayment(None) shouldBe amendProtectionModel.copy(
+        amendProtectionModel.withPreADayPensionInPaymentAmount(None) shouldBe amendProtectionModel.copy(
           updated = amendProtectionModel.updated.copy(
-            preADayPensionInPayment = None
+            preADayPensionInPaymentAmount = None
           )
         )
       }
 
       "provided with Some containing new value" in {
-        amendProtectionModel.withPreADayPensionInPayment(Some(450_001)) shouldBe amendProtectionModel.copy(
+        amendProtectionModel.withPreADayPensionInPaymentAmount(Some(450_001)) shouldBe amendProtectionModel.copy(
           updated = amendProtectionModel.updated.copy(
-            preADayPensionInPayment = Some(450_001)
+            preADayPensionInPaymentAmount = Some(450_001)
           )
         )
       }
 
       "provided with Some containing existing value" in {
-        amendProtectionModel.withPreADayPensionInPayment(Some(450_000)) shouldBe amendProtectionModel
+        amendProtectionModel.withPreADayPensionInPaymentAmount(Some(450_000)) shouldBe amendProtectionModel
       }
     }
   }
@@ -306,23 +310,24 @@ class AmendProtectionModelSpec extends AnyWordSpec with Matchers with ModelGener
   "withPostADayBenefitCrystallisationEvents" should {
     "return correct AmendProtectionModel" when {
       "provided with None" in {
-        amendProtectionModel.withPostADayBenefitCrystallisationEvents(None) shouldBe amendProtectionModel.copy(
+        amendProtectionModel.withPostADayBenefitCrystallisationEventAmount(None) shouldBe amendProtectionModel.copy(
           updated = amendProtectionModel.updated.copy(
-            postADayBenefitCrystallisationEvents = None
+            postADayBenefitCrystallisationEventAmount = None
           )
         )
       }
 
       "provided with Some containing new value" in {
-        amendProtectionModel.withPostADayBenefitCrystallisationEvents(Some(450_001)) shouldBe amendProtectionModel.copy(
-          updated = amendProtectionModel.updated.copy(
-            postADayBenefitCrystallisationEvents = Some(450_001)
+        amendProtectionModel.withPostADayBenefitCrystallisationEventAmount(Some(450_001)) shouldBe amendProtectionModel
+          .copy(
+            updated = amendProtectionModel.updated.copy(
+              postADayBenefitCrystallisationEventAmount = Some(450_001)
+            )
           )
-        )
       }
 
       "provided with Some containing existing value" in {
-        amendProtectionModel.withPostADayBenefitCrystallisationEvents(Some(450_000)) shouldBe amendProtectionModel
+        amendProtectionModel.withPostADayBenefitCrystallisationEventAmount(Some(450_000)) shouldBe amendProtectionModel
       }
     }
   }
@@ -330,23 +335,23 @@ class AmendProtectionModelSpec extends AnyWordSpec with Matchers with ModelGener
   "withNonUKRights" should {
     "return correct AmendProtectionModel" when {
       "provided with None" in {
-        amendProtectionModel.withNonUKRights(None) shouldBe amendProtectionModel.copy(
+        amendProtectionModel.withNonUKRightsAmount(None) shouldBe amendProtectionModel.copy(
           updated = amendProtectionModel.updated.copy(
-            nonUKRights = None
+            nonUKRightsAmount = None
           )
         )
       }
 
       "provided with Some containing new value" in {
-        amendProtectionModel.withNonUKRights(Some(450_001)) shouldBe amendProtectionModel.copy(
+        amendProtectionModel.withNonUKRightsAmount(Some(450_001)) shouldBe amendProtectionModel.copy(
           updated = amendProtectionModel.updated.copy(
-            nonUKRights = Some(450_001)
+            nonUKRightsAmount = Some(450_001)
           )
         )
       }
 
       "provided with Some containing existing value" in {
-        amendProtectionModel.withNonUKRights(Some(450_000)) shouldBe amendProtectionModel
+        amendProtectionModel.withNonUKRightsAmount(Some(450_000)) shouldBe amendProtectionModel
       }
     }
   }
@@ -354,15 +359,15 @@ class AmendProtectionModelSpec extends AnyWordSpec with Matchers with ModelGener
   "withUncrystallisedRights" should {
     "return correct AmendProtectionModel" when {
       "provided with new value" in {
-        amendProtectionModel.withUncrystallisedrights(450_001) shouldBe amendProtectionModel.copy(
+        amendProtectionModel.withUncrystallisedRightsAmount(450_001) shouldBe amendProtectionModel.copy(
           updated = amendProtectionModel.updated.copy(
-            uncrystallisedRights = 450_001
+            uncrystallisedRightsAmount = 450_001
           )
         )
       }
 
       "provided with its current value" in {
-        amendProtectionModel.withUncrystallisedrights(450_000) shouldBe amendProtectionModel
+        amendProtectionModel.withUncrystallisedRightsAmount(450_000) shouldBe amendProtectionModel
       }
     }
   }

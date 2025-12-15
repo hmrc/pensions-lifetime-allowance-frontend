@@ -29,7 +29,7 @@ class PrintDisplayModelConstructorSpec extends DisplayConstructorsTestData {
     val tstProtectionModel = ProtectionModel(
       psaCheckReference = tstPsaCheckRef,
       identifier = 12345,
-      sequence = 1,
+      sequenceNumber = 1,
       protectionType = IndividualProtection2014,
       status = Open,
       certificateDate = Some(DateModel.of(2016, 4, 17)),

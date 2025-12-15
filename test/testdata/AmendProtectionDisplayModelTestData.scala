@@ -70,7 +70,7 @@ object AmendProtectionDisplayModelTestData {
 
   private val exampleAmendResponseModelIndividualProtection2014 = AmendResponseModel(
     identifier = 1,
-    sequence = 1,
+    sequenceNumber = 1,
     psaCheckReference = psaCheckReference,
     protectionType = IndividualProtection2014,
     status = Dormant,
@@ -104,7 +104,7 @@ object AmendProtectionDisplayModelTestData {
 
   private val exampleAmendResponseModelIndividualProtection2016 = AmendResponseModel(
     identifier = 1,
-    sequence = 1,
+    sequenceNumber = 1,
     psaCheckReference = psaCheckReference,
     protectionType = IndividualProtection2016,
     status = Dormant,

@@ -52,16 +52,16 @@ trait DisplayConstructorsTestData extends FakeApplication {
   val tstProtection: ProtectionModel = ProtectionModel(
     psaCheckReference = tstPsaCheckRef,
     identifier = 100001,
-    sequence = 1,
+    sequenceNumber = 1,
     protectionType = ProtectionType.IndividualProtection2016,
     status = ProtectionStatus.Open,
     certificateDate = Some(DateModel.of(2016, 4, 17)),
     certificateTime = Some(TimeModel.of(15, 14, 0)),
     protectedAmount = Some(1_100_000),
-    preADayPensionInPayment = None,
-    postADayBenefitCrystallisationEvents = None,
-    nonUKRights = Some(100_000),
-    uncrystallisedRights = Some(1_000_000.34)
+    preADayPensionInPaymentAmount = None,
+    postADayBenefitCrystallisationEventAmount = None,
+    nonUKRightsAmount = Some(100_000),
+    uncrystallisedRightsAmount = Some(1_000_000.34)
   )
 
   val tstNoPsoAmendProtectionModel: AmendProtectionModel =
@@ -261,7 +261,7 @@ trait DisplayConstructorsTestData extends FakeApplication {
   val tstProtectionModel: ProtectionModel = ProtectionModel(
     psaCheckReference = tstPsaCheckRef,
     identifier = 12345,
-    sequence = 1,
+    sequenceNumber = 1,
     protectionType = ProtectionType.IndividualProtection2014,
     status = ProtectionStatus.Open,
     certificateDate = Some(DateModel.of(2016, 4, 17)),
@@ -274,7 +274,7 @@ trait DisplayConstructorsTestData extends FakeApplication {
 
   val amendResponseModel = AmendResponseModel(
     identifier = 1,
-    sequence = 1,
+    sequenceNumber = 1,
     protectionType = AmendedProtectionType.IndividualProtection2014,
     status = AmendProtectionResponseStatus.Open,
     certificateDate = Some(DateModel.of(2016, 4, 17)),

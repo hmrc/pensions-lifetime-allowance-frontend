@@ -27,7 +27,7 @@ class ProtectionModelSpec extends AnyWordSpec with Matchers with ModelGenerators
   val protectionModel = ProtectionModel(
     psaCheckReference = "psaCheckRef",
     identifier = 10,
-    sequence = 1,
+    sequenceNumber = 1,
     protectionType = ProtectionType.IndividualProtection2014,
     status = Open,
     certificateDate = None,
@@ -160,16 +160,16 @@ class ProtectionModelSpec extends AnyWordSpec with Matchers with ModelGenerators
           result.identifier shouldBe protectionRecord.identifier
           result.certificateDate shouldBe Some(protectionRecord.certificateDate)
           result.certificateTime shouldBe Some(protectionRecord.certificateTime)
-          result.sequence shouldBe protectionRecord.sequenceNumber
+          result.sequenceNumber shouldBe protectionRecord.sequenceNumber
           result.protectionType shouldBe protectionRecord.`type`
           result.status shouldBe protectionRecord.status
           result.protectedAmount shouldBe protectionRecord.protectedAmount.map(_.toDouble)
           result.relevantAmount shouldBe protectionRecord.relevantAmount.map(_.toDouble)
-          result.postADayBenefitCrystallisationEvents shouldBe protectionRecord.postADayBenefitCrystallisationEventAmount
+          result.postADayBenefitCrystallisationEventAmount shouldBe protectionRecord.postADayBenefitCrystallisationEventAmount
             .map(_.toDouble)
-          result.preADayPensionInPayment shouldBe protectionRecord.preADayPensionInPaymentAmount.map(_.toDouble)
-          result.uncrystallisedRights shouldBe protectionRecord.uncrystallisedRightsAmount.map(_.toDouble)
-          result.nonUKRights shouldBe protectionRecord.nonUKRightsAmount.map(_.toDouble)
+          result.preADayPensionInPaymentAmount shouldBe protectionRecord.preADayPensionInPaymentAmount.map(_.toDouble)
+          result.uncrystallisedRightsAmount shouldBe protectionRecord.uncrystallisedRightsAmount.map(_.toDouble)
+          result.nonUKRightsAmount shouldBe protectionRecord.nonUKRightsAmount.map(_.toDouble)
           result.pensionDebitTotalAmount shouldBe protectionRecord.pensionDebitTotalAmount.map(_.toDouble)
           result.protectionReference shouldBe protectionRecord.protectionReference
         }

@@ -78,11 +78,11 @@ class AmendsPensionSharingOrderController @Inject() (
     }
 
   private[controllers] def createPensionDebit(formModel: AmendPsoDetailsModel): PensionDebitModel = {
-    val date = formModel.pso
-    val amt = formModel.psoAmt.getOrElse {
+    val date = formModel.startDate
+    val amt = formModel.enteredAmount.getOrElse {
       throw Exceptions.RequiredValueNotDefinedException("createPensionDebit", "psoAmt")
     }
-    PensionDebitModel(startDate = DateModel(date), amount = amt.toDouble)
+    PensionDebitModel(startDate = DateModel(date), enteredAmount = amt.toDouble)
   }
 
   def amendPsoDetails(
@@ -116,7 +116,7 @@ class AmendsPensionSharingOrderController @Inject() (
 
   private def createAmendPsoDetailsModel(psoDetails: PensionDebitModel): AmendPsoDetailsModel = {
     val date = psoDetails.startDate.date
-    AmendPsoDetailsModel(date, Some(Display.currencyInputDisplayFormat(psoDetails.amount)))
+    AmendPsoDetailsModel(date, Some(Display.currencyInputDisplayFormat(psoDetails.enteredAmount)))
   }
 
 }

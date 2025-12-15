@@ -24,7 +24,7 @@ import play.api.libs.json.{Json, OFormat}
 case class AmendProtectionModel(
     psaCheckReference: String,
     identifier: Long,
-    sequence: Int,
+    sequenceNumber: Int,
     protectionType: AmendableProtectionType,
     status: AmendProtectionRequestStatus,
     pensionDebitTotalAmount: Option[Double],
@@ -40,37 +40,37 @@ case class AmendProtectionModel(
 
   def updatedRelevantAmount: Double =
     List(
-      updated.preADayPensionInPayment.map(_.toInt),
-      updated.postADayBenefitCrystallisationEvents.map(_.toInt),
-      updated.nonUKRights.map(_.toInt),
-      Some(updated.uncrystallisedRights.toInt)
+      updated.preADayPensionInPaymentAmount.map(_.toInt),
+      updated.postADayBenefitCrystallisationEventAmount.map(_.toInt),
+      updated.nonUKRightsAmount.map(_.toInt),
+      Some(updated.uncrystallisedRightsAmount.toInt)
     ).flatten.sum.toDouble - pensionDebitTotalAmount.getOrElse[Double](0)
 
-  def withPostADayBenefitCrystallisationEvents(value: Option[Double]): AmendProtectionModel =
+  def withPostADayBenefitCrystallisationEventAmount(value: Option[Double]): AmendProtectionModel =
     copy(
       updated = updated.copy(
-        postADayBenefitCrystallisationEvents = value
+        postADayBenefitCrystallisationEventAmount = value
       )
     )
 
-  def withPreADayPensionInPayment(value: Option[Double]): AmendProtectionModel =
+  def withPreADayPensionInPaymentAmount(value: Option[Double]): AmendProtectionModel =
     copy(
       updated = updated.copy(
-        preADayPensionInPayment = value
+        preADayPensionInPaymentAmount = value
       )
     )
 
-  def withUncrystallisedrights(value: Double): AmendProtectionModel =
+  def withUncrystallisedRightsAmount(value: Double): AmendProtectionModel =
     copy(
       updated = updated.copy(
-        uncrystallisedRights = value
+        uncrystallisedRightsAmount = value
       )
     )
 
-  def withNonUKRights(value: Option[Double]): AmendProtectionModel =
+  def withNonUKRightsAmount(value: Option[Double]): AmendProtectionModel =
     copy(
       updated = updated.copy(
-        nonUKRights = value
+        nonUKRightsAmount = value
       )
     )
 
@@ -96,7 +96,7 @@ object AmendProtectionModel {
       AmendProtectionModel(
         psaCheckReference = protectionModel.psaCheckReference,
         identifier = protectionModel.identifier,
-        sequence = protectionModel.sequence,
+        sequenceNumber = protectionModel.sequenceNumber,
         protectionType = protectionType,
         status = status,
         pensionDebitTotalAmount = protectionModel.pensionDebitTotalAmount,
@@ -113,20 +113,20 @@ object AmendProtectionModel {
 }
 
 case class AmendProtectionFields(
-    postADayBenefitCrystallisationEvents: Option[Double],
-    preADayPensionInPayment: Option[Double],
-    uncrystallisedRights: Double,
-    nonUKRights: Option[Double],
+    postADayBenefitCrystallisationEventAmount: Option[Double],
+    preADayPensionInPaymentAmount: Option[Double],
+    uncrystallisedRightsAmount: Double,
+    nonUKRightsAmount: Option[Double],
     pensionDebit: Option[PensionDebitModel]
 )
 
 object AmendProtectionFields {
 
   def fromProtection(protectionModel: ProtectionModel): AmendProtectionFields = AmendProtectionFields(
-    postADayBenefitCrystallisationEvents = protectionModel.postADayBenefitCrystallisationEvents,
-    preADayPensionInPayment = protectionModel.preADayPensionInPayment,
-    uncrystallisedRights = protectionModel.uncrystallisedRights.getOrElse(0),
-    nonUKRights = protectionModel.nonUKRights,
+    postADayBenefitCrystallisationEventAmount = protectionModel.postADayBenefitCrystallisationEventAmount,
+    preADayPensionInPaymentAmount = protectionModel.preADayPensionInPaymentAmount,
+    uncrystallisedRightsAmount = protectionModel.uncrystallisedRightsAmount.getOrElse(0),
+    nonUKRightsAmount = protectionModel.nonUKRightsAmount,
     pensionDebit = None
   )
 

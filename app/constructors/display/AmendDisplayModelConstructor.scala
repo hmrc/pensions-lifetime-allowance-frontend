@@ -70,7 +70,7 @@ object AmendDisplayModelConstructor extends Logging {
               s"${ApplicationStage.CurrentPsos.toString}-psoDetails",
               changeLinkCall = Some(psoAmendCall),
               removeLinkCall = Some(psoRemoveCall),
-              Display.currencyDisplayString(pensionDebit.amount),
+              Display.currencyDisplayString(pensionDebit.enteredAmount),
               Display.dateDisplayString(pensionDebit.startDate)
             )
           )
@@ -85,32 +85,35 @@ object AmendDisplayModelConstructor extends Logging {
     val pensionsTakenBeforeSection = createSection(
       protection,
       ApplicationStage.PensionsTakenBefore,
-      protection.updated.preADayPensionInPayment,
+      protection.updated.preADayPensionInPaymentAmount,
       displayYesNoOnly = true
     )
     val pensionsWorthBeforeSection = createSection(
       protection,
       ApplicationStage.PensionsWorthBefore,
-      protection.updated.preADayPensionInPayment,
+      protection.updated.preADayPensionInPaymentAmount,
       displayAmountOnly = true
     )
     val pensionsTakenBetweenSection = createSection(
       protection,
       ApplicationStage.PensionsTakenBetween,
-      protection.updated.postADayBenefitCrystallisationEvents,
+      protection.updated.postADayBenefitCrystallisationEventAmount,
       displayYesNoOnly = true
     )
     val pensionsUsedBetweenSection = createSection(
       protection,
       ApplicationStage.PensionsUsedBetween,
-      protection.updated.postADayBenefitCrystallisationEvents,
+      protection.updated.postADayBenefitCrystallisationEventAmount,
       displayAmountOnly = true
     )
     val overseasPensionsSection =
-      createSection(protection, ApplicationStage.OverseasPensions, protection.updated.nonUKRights)
+      createSection(protection, ApplicationStage.OverseasPensions, protection.updated.nonUKRightsAmount)
     val previousPsoSection = createPreviousPsoSection(protection)
 
-    (protection.updated.postADayBenefitCrystallisationEvents, protection.updated.preADayPensionInPayment) match {
+    (
+      protection.updated.postADayBenefitCrystallisationEventAmount,
+      protection.updated.preADayPensionInPaymentAmount
+    ) match {
       case (Some(postAmt), None) =>
         if (postAmt < 0.01) {
           Seq(
@@ -222,7 +225,7 @@ object AmendDisplayModelConstructor extends Logging {
       applicationStage: ApplicationStage
   ): AmendDisplaySectionModel = {
     val amendCall       = Helpers.createAmendCall(protection, applicationStage)
-    val currentPensions = protection.updated.uncrystallisedRights
+    val currentPensions = protection.updated.uncrystallisedRightsAmount
     AmendDisplaySectionModel(
       applicationStage.toString,
       Seq(

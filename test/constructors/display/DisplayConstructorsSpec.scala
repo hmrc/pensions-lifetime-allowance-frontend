@@ -78,7 +78,7 @@ class DisplayConstructorsSpec extends DisplayConstructorsTestData {
     "use correct messages localisation" when {
 
       val protectionModel = tstProtectionModel.copy(
-        uncrystallisedRights = Some(100_000)
+        uncrystallisedRightsAmount = Some(100_000)
       )
 
       val tstAmendProtectionModel = AmendProtectionModel
@@ -88,7 +88,7 @@ class DisplayConstructorsSpec extends DisplayConstructorsTestData {
           Some(
             PensionDebitModel(
               startDate = DateModel.of(2016, 4, 17),
-              amount = 100
+              enteredAmount = 100
             )
           )
         )

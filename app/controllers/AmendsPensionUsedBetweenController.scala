@@ -66,7 +66,7 @@ class AmendsPensionUsedBetweenController @Inject() (
                   AmendPensionsUsedBetweenModel(
                     Some(
                       Display.currencyInputDisplayFormat(
-                        data.updated.postADayBenefitCrystallisationEvents.getOrElse[Double](0)
+                        data.updated.postADayBenefitCrystallisationEventAmount.getOrElse[Double](0)
                       )
                     )
                   )
@@ -106,7 +106,7 @@ class AmendsPensionUsedBetweenController @Inject() (
                 .flatMap {
                   case Some(model) =>
                     val updatedAmount = success.amendedPensionsUsedBetweenAmt.get.toDouble
-                    val updatedModel  = model.withPostADayBenefitCrystallisationEvents(Some(updatedAmount))
+                    val updatedModel  = model.withPostADayBenefitCrystallisationEventAmount(Some(updatedAmount))
 
                     sessionCacheService
                       .saveAmendProtectionModel(updatedModel)

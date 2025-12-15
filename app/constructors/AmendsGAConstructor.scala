@@ -22,14 +22,14 @@ object AmendsGAConstructor {
 
   def identifyAmendsChanges(updated: AmendProtectionFields, original: AmendProtectionFields): AmendsGAModel = {
     val current: Option[String] =
-      if (updated.uncrystallisedRights != original.uncrystallisedRights) Some("UpdatedValue") else None
+      if (updated.uncrystallisedRightsAmount != original.uncrystallisedRightsAmount) Some("UpdatedValue") else None
 
-    val before: Option[String] = gaAction(updated.preADayPensionInPayment, original.preADayPensionInPayment)
+    val before: Option[String] = gaAction(updated.preADayPensionInPaymentAmount, original.preADayPensionInPaymentAmount)
 
     val between: Option[String] =
-      gaAction(updated.postADayBenefitCrystallisationEvents, original.postADayBenefitCrystallisationEvents)
+      gaAction(updated.postADayBenefitCrystallisationEventAmount, original.postADayBenefitCrystallisationEventAmount)
 
-    val overseas: Option[String] = gaAction(updated.nonUKRights, original.nonUKRights)
+    val overseas: Option[String] = gaAction(updated.nonUKRightsAmount, original.nonUKRightsAmount)
 
     val pso: Option[String] = if (updated.pensionDebit.isDefined) Some("addedPSO") else None
     AmendsGAModel(current, before, between, overseas, pso)

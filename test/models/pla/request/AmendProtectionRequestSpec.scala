@@ -30,17 +30,17 @@ class AmendProtectionRequestSpec extends AnyWordSpec with Matchers {
   val protectionModel = ProtectionModel(
     psaCheckReference = "psaCheckReference",
     identifier = lifetimeAllowanceIdentifier,
-    sequence = lifetimeAllowanceSequenceNumber,
+    sequenceNumber = lifetimeAllowanceSequenceNumber,
     protectionType = ProtectionType.IndividualProtection2014,
     status = ProtectionStatus.Dormant,
     certificateDate = Some(DateModel.of(2025, 7, 15)),
     certificateTime = Some(TimeModel.of(17, 43, 12)),
     protectionReference = Some(protectionReference),
     relevantAmount = Some(105_000),
-    preADayPensionInPayment = Some(1_500.00),
-    postADayBenefitCrystallisationEvents = Some(2_500.00),
-    uncrystallisedRights = Some(75_500.00),
-    nonUKRights = Some(0.00),
+    preADayPensionInPaymentAmount = Some(1_500.00),
+    postADayBenefitCrystallisationEventAmount = Some(2_500.00),
+    uncrystallisedRightsAmount = Some(75_500.00),
+    nonUKRightsAmount = Some(0.00),
     protectedAmount = Some(120_000),
     pensionDebitTotalAmount = Some(40_000)
   )

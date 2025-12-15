@@ -21,7 +21,7 @@ import play.api.libs.json.{Format, Json}
 
 case class AmendResponseModel(
     identifier: Long,
-    sequence: Int,
+    sequenceNumber: Int,
     status: AmendProtectionResponseStatus,
     protectionType: AmendedProtectionType,
     certificateDate: Option[DateModel],
@@ -44,15 +44,15 @@ case class AmendResponseModel(
     identifier = identifier,
     certificateDate = certificateDate,
     certificateTime = certificateTime,
-    sequence = sequence,
+    sequenceNumber = sequenceNumber,
     protectionType = protectionType.toProtectionType,
     status = status.toProtectionStatus,
     protectedAmount = protectedAmount.map(_.toDouble),
     relevantAmount = Some(relevantAmount),
-    postADayBenefitCrystallisationEvents = Some(postADayBenefitCrystallisationEventAmount),
-    preADayPensionInPayment = Some(preADayPensionInPaymentAmount),
-    uncrystallisedRights = Some(uncrystallisedRightsAmount),
-    nonUKRights = Some(nonUKRightsAmount),
+    postADayBenefitCrystallisationEventAmount = Some(postADayBenefitCrystallisationEventAmount),
+    preADayPensionInPaymentAmount = Some(preADayPensionInPaymentAmount),
+    uncrystallisedRightsAmount = Some(uncrystallisedRightsAmount),
+    nonUKRightsAmount = Some(nonUKRightsAmount),
     pensionDebitTotalAmount = pensionDebitTotalAmount.map(_.toDouble),
     protectionReference = protectionReference,
     lumpSumPercentage = None,
@@ -87,7 +87,7 @@ object AmendResponseModel {
 
     AmendResponseModel(
       identifier = amendResponse.lifetimeAllowanceIdentifier,
-      sequence = amendResponse.lifetimeAllowanceSequenceNumber,
+      sequenceNumber = amendResponse.lifetimeAllowanceSequenceNumber,
       protectionType = AmendedProtectionType.from(amendResponse.lifetimeAllowanceType),
       certificateDate = amendResponse.certificateDate,
       certificateTime = amendResponse.certificateTime,

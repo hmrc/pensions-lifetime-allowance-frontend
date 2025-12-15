@@ -136,15 +136,15 @@ class ReadProtectionsControllerSpec
   val individualProtection2016 = ProtectionModel(
     psaCheckReference = "testPSARef",
     identifier = 12345,
-    sequence = 1,
+    sequenceNumber = 1,
     protectionType = IndividualProtection2016,
     status = Dormant,
     certificateDate = Some(DateModel.of(2016, 9, 4)),
     certificateTime = Some(TimeModel.of(9, 0, 19)),
-    uncrystallisedRights = Some(100000.00),
-    nonUKRights = Some(2000.00),
-    preADayPensionInPayment = Some(2000.00),
-    postADayBenefitCrystallisationEvents = Some(2000.00),
+    uncrystallisedRightsAmount = Some(100000.00),
+    nonUKRightsAmount = Some(2000.00),
+    preADayPensionInPaymentAmount = Some(2000.00),
+    postADayBenefitCrystallisationEventAmount = Some(2000.00),
     protectedAmount = Some(1250000),
     protectionReference = Some("PSA123456")
   )
@@ -155,15 +155,15 @@ class ReadProtectionsControllerSpec
   val nonAmendableProtection = ProtectionModel(
     psaCheckReference = "testPSARef",
     identifier = 12345,
-    sequence = 1,
+    sequenceNumber = 1,
     protectionType = IndividualProtection2016,
     status = Rejected,
     certificateDate = Some(DateModel.of(2016, 9, 4)),
     certificateTime = Some(TimeModel.of(9, 0, 19)),
-    uncrystallisedRights = Some(100000.00),
-    nonUKRights = Some(2000.00),
-    preADayPensionInPayment = Some(2000.00),
-    postADayBenefitCrystallisationEvents = Some(2000.00),
+    uncrystallisedRightsAmount = Some(100000.00),
+    nonUKRightsAmount = Some(2000.00),
+    preADayPensionInPaymentAmount = Some(2000.00),
+    postADayBenefitCrystallisationEventAmount = Some(2000.00),
     protectedAmount = Some(1250000),
     protectionReference = Some("PSA123456")
   )

@@ -26,15 +26,15 @@ trait AmendProtectionModelTestData {
   val dormantIndividualProtection2016 = ProtectionModel(
     psaCheckReference = "testPSARef",
     identifier = 1,
-    sequence = 1,
+    sequenceNumber = 1,
     protectionType = ProtectionType.IndividualProtection2016,
     status = Dormant,
     certificateDate = Some(DateModel.of(2016, 4, 17)),
     certificateTime = Some(TimeModel.of(14, 52, 25)),
-    uncrystallisedRights = Some(100_000.00),
-    nonUKRights = Some(2000.00),
-    preADayPensionInPayment = Some(2000.00),
-    postADayBenefitCrystallisationEvents = Some(2000.00),
+    uncrystallisedRightsAmount = Some(100_000.00),
+    nonUKRightsAmount = Some(2000.00),
+    preADayPensionInPaymentAmount = Some(2000.00),
+    postADayBenefitCrystallisationEventAmount = Some(2000.00),
     protectedAmount = Some(1250000),
     protectionReference = Some("PSA123456")
   )

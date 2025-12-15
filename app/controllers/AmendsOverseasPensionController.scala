@@ -61,7 +61,7 @@ class AmendsOverseasPensionController @Inject() (
           .fetchAmendProtectionModel(protectionType, status)
           .map {
             case Some(amendProtectionModel) =>
-              val nonUKRights = amendProtectionModel.updated.nonUKRights.getOrElse[Double](0)
+              val nonUKRights = amendProtectionModel.updated.nonUKRightsAmount.getOrElse[Double](0)
               val yesNoValue  = if (nonUKRights > 0) "yes" else "no"
               val form =
                 amendOverseasPensionsForm(protectionType).fill(
@@ -108,7 +108,7 @@ class AmendsOverseasPensionController @Inject() (
                       case "yes" => Some(amendOverseasPensionsModel.amendedOverseasPensionsAmt.get.toDouble)
                       case "no"  => None
                     }
-                    val updatedModel = model.withNonUKRights(updatedAmount)
+                    val updatedModel = model.withNonUKRightsAmount(updatedAmount)
 
                     sessionCacheService
                       .saveAmendProtectionModel(updatedModel)
