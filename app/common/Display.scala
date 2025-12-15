@@ -48,13 +48,13 @@ object Display {
 
   private val englishDateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
 
-  def dateDisplayString(date: DateModel)(implicit lang: Lang, messages: Messages): String =
+  def dateDisplayString(dateModel: DateModel)(implicit lang: Lang, messages: Messages): String =
     if (lang.language == "cy") {
-      val monthNum       = date.date.getMonthValue
+      val monthNum       = dateModel.date.getMonthValue
       val welshFormatter = DateTimeFormatter.ofPattern(s"""d '${messages(s"pla.month.$monthNum")}' yyyy""")
-      date.date.format(welshFormatter)
+      dateModel.date.format(welshFormatter)
     } else {
-      date.date.format(englishDateFormatter)
+      dateModel.date.format(englishDateFormatter)
     }
 
   private val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("h:mma")
