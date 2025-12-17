@@ -31,7 +31,7 @@ object TimeModel {
   private def parse(timeString: String): Option[TimeModel] =
     Try(LocalTime.parse(timeString, timeFormat)).toOption.map(TimeModel(_))
 
-  private def serialise(time: TimeModel): String = time.time.format(timeFormat)
+  private def serialiseTime(timeModel: TimeModel): String = timeModel.time.format(timeFormat)
 
   implicit val reads: Reads[TimeModel] = {
     case JsString(timeString) =>
@@ -42,7 +42,7 @@ object TimeModel {
     case _ => JsError("time must be a string")
   }
 
-  implicit val writes: Writes[TimeModel] = time => JsString(serialise(time))
+  implicit val writes: Writes[TimeModel] = time => JsString(serialiseTime(time))
 
   implicit val format: Format[TimeModel] = Format(reads, writes)
 

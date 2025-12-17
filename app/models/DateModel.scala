@@ -31,7 +31,7 @@ object DateModel {
   private def parseDate(dateString: String): Option[DateModel] =
     Try(LocalDate.parse(dateString, dateFormat)).toOption.map(DateModel(_))
 
-  private def serialiseDate(date: DateModel): String = date.date.format(dateFormat)
+  private def serialiseDate(dateModel: DateModel): String = dateModel.date.format(dateFormat)
 
   implicit val reads: Reads[DateModel] = {
     case JsString(dateString) =>
