@@ -16,58 +16,52 @@
 
 package models
 
-import models.pla.response.{ProtectionRecord, ProtectionType}
-import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionRequestStatus}
+import models.pla.AmendableProtectionType
+import models.pla.response.{ProtectionRecord, ProtectionStatus, ProtectionType}
+import models.pla.request.AmendProtectionRequestStatus
 import play.api.libs.json.{Json, OFormat}
 
 case class ProtectionModel(
-    psaCheckReference: Option[String],
-    protectionID: Option[Long],
-    certificateDate: Option[String] = None,
-    version: Option[Int] = None,
-    protectionType: Option[String] = None,
-    status: Option[String] = None,
+    psaCheckReference: String,
+    identifier: Long,
+    sequenceNumber: Int,
+    protectionType: ProtectionType,
+    status: ProtectionStatus,
+    certificateDate: Option[DateModel],
+    certificateTime: Option[TimeModel],
     protectedAmount: Option[Double] = None,
     relevantAmount: Option[Double] = None,
-    postADayBenefitCrystallisationEvents: Option[Double] = None,
-    preADayPensionInPayment: Option[Double] = None,
-    uncrystallisedRights: Option[Double] = None,
-    nonUKRights: Option[Double] = None,
-    pensionDebitAmount: Option[Double] = None,
-    pensionDebitEnteredAmount: Option[Double] = None,
-    pensionDebitStartDate: Option[String] = None,
+    postADayBenefitCrystallisationEventAmount: Option[Double] = None,
+    preADayPensionInPaymentAmount: Option[Double] = None,
+    uncrystallisedRightsAmount: Option[Double] = None,
+    nonUKRightsAmount: Option[Double] = None,
     pensionDebitTotalAmount: Option[Double] = None,
-    pensionDebits: Option[List[PensionDebitModel]] = None,
-    notificationId: Option[Int] = None,
     protectionReference: Option[String] = None,
-    withdrawnDate: Option[String] = None,
-    // Play's Json.Format breaks if this case class exceeds 22 fields, so additional fields go here
-    hipFieldsOption: Option[ProtectionModelHipFields] = None
+    lumpSumPercentage: Option[Int] = None,
+    lumpSumAmount: Option[Int] = None,
+    enhancementFactor: Option[Double] = None
 ) {
 
-  def isEmpty: Boolean = this == ProtectionModel(None, None)
+  private def amendableProtectionType = AmendableProtectionType.tryFromProtectionType(protectionType)
+
+  private def amendableStatus = AmendProtectionRequestStatus.tryFromProtectionStatus(status)
 
   def isAmendable: Boolean = {
     def isStatusAmendable: Boolean =
-      status.flatMap(AmendProtectionRequestStatus.tryFrom).isDefined
+      amendableStatus.isDefined
+
     def isProtectionTypeAmendable: Boolean =
-      protectionType.flatMap(AmendProtectionLifetimeAllowanceType.tryFrom).isDefined
+      amendableProtectionType.isDefined
 
     isStatusAmendable && isProtectionTypeAmendable
   }
 
-  def isFixedProtection2016: Boolean = {
-    val fp2016Str = "FP2016"
-    val fixedProtection2016Types = Set(
-      fp2016Str.toLowerCase,
-      ProtectionType.FixedProtection2016.toString.toLowerCase,
-      ProtectionType.FixedProtection2016LTA.toString.toLowerCase
-    )
+  def asAmendable: Option[(AmendableProtectionType, AmendProtectionRequestStatus)] =
 
-    protectionType.map(_.toLowerCase).exists(fixedProtection2016Types.contains)
-  }
+    amendableProtectionType.zip(amendableStatus)
 
-  def hipFields: ProtectionModelHipFields = ProtectionModelHipFields.fromOption(hipFieldsOption)
+  def isFixedProtection2016: Boolean =
+    protectionType.isFixedProtection2016
 
 }
 
@@ -75,60 +69,25 @@ object ProtectionModel {
 
   def apply(psaCheckReference: String, record: ProtectionRecord): ProtectionModel =
     ProtectionModel(
-      Some(psaCheckReference),
-      Some(record.identifier),
-      Some(buildRecordDateTime(record)),
-      Some(record.sequenceNumber),
-      Some(record.`type`.toString),
-      Some(record.status.toString),
-      record.protectedAmount.map(_.toDouble),
-      record.relevantAmount.map(_.toDouble),
-      record.postADayBenefitCrystallisationEventAmount.map(_.toDouble),
-      record.preADayPensionInPaymentAmount.map(_.toDouble),
-      record.uncrystallisedRightsAmount.map(_.toDouble),
-      record.nonUKRightsAmount.map(_.toDouble),
-      record.pensionDebitAmount.map(_.toDouble),
-      record.pensionDebitEnteredAmount.map(_.toDouble),
-      record.pensionDebitStartDate,
-      record.pensionDebitTotalAmount.map(_.toDouble),
-      None,
-      notificationId = None,
-      record.protectionReference,
-      None,
-      Some(
-        ProtectionModelHipFields(
-          record.lumpSumPercentage,
-          record.lumpSumAmount,
-          record.enhancementFactor
-        )
-      )
+      psaCheckReference = psaCheckReference,
+      identifier = record.identifier,
+      certificateDate = Some(record.certificateDate),
+      certificateTime = Some(record.certificateTime),
+      sequenceNumber = record.sequenceNumber,
+      protectionType = record.`type`,
+      status = record.status,
+      protectedAmount = record.protectedAmount.map(_.toDouble),
+      relevantAmount = record.relevantAmount.map(_.toDouble),
+      postADayBenefitCrystallisationEventAmount = record.postADayBenefitCrystallisationEventAmount.map(_.toDouble),
+      preADayPensionInPaymentAmount = record.preADayPensionInPaymentAmount.map(_.toDouble),
+      uncrystallisedRightsAmount = record.uncrystallisedRightsAmount.map(_.toDouble),
+      nonUKRightsAmount = record.nonUKRightsAmount.map(_.toDouble),
+      pensionDebitTotalAmount = record.pensionDebitTotalAmount.map(_.toDouble),
+      protectionReference = record.protectionReference,
+      lumpSumPercentage = record.lumpSumPercentage,
+      lumpSumAmount = record.lumpSumAmount,
+      enhancementFactor = record.enhancementFactor
     )
 
-  private def buildRecordDateTime(record: ProtectionRecord): String =
-    s"${record.certificateDate}T${record.certificateTime}"
-
   implicit val format: OFormat[ProtectionModel] = Json.format[ProtectionModel]
-}
-
-case class PensionDebitModel(startDate: String, amount: Double)
-
-object PensionDebitModel {
-  implicit val pdFormat: OFormat[PensionDebitModel] = Json.format[PensionDebitModel]
-}
-
-case class ProtectionModelHipFields(
-    lumpSumPercentage: Option[Int] = None,
-    lumpSumAmount: Option[Int] = None,
-    enhancementFactor: Option[Double] = None
-) {
-  def isEmpty: Boolean = this == ProtectionModelHipFields()
-}
-
-object ProtectionModelHipFields {
-  def empty = ProtectionModelHipFields()
-
-  def fromOption(option: Option[ProtectionModelHipFields]): ProtectionModelHipFields =
-    option.getOrElse(ProtectionModelHipFields.empty)
-
-  implicit val format: OFormat[ProtectionModelHipFields] = Json.format[ProtectionModelHipFields]
 }

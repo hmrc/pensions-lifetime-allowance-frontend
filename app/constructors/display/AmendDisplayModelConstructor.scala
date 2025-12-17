@@ -18,8 +18,7 @@ package constructors.display
 
 import common._
 import enums.ApplicationStage
-import models.ProtectionModel
-import models.amendModels.AmendProtectionModel
+import models.amend.AmendProtectionModel
 import models.display.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel}
 import play.api.Logging
 import play.api.i18n.{Lang, Messages}
@@ -30,21 +29,17 @@ object AmendDisplayModelConstructor extends Logging {
   def createAmendDisplayModel(
       model: AmendProtectionModel
   )(implicit lang: Lang, messages: Messages): AmendDisplayModel = {
-    val amended = modelsDiffer(model.originalProtection, model.updatedProtection)
-    val totalAmount = Display.currencyDisplayString(
-      BigDecimal(
-        model.updatedProtection.relevantAmount.getOrElse(0.0)
-      )
-    )
-    val protectionType = Strings.protectionTypeString(model.updatedProtection.protectionType)
+    val amended = model.hasChanges
 
-    val pcSections: Seq[AmendDisplaySectionModel] = createAmendPensionContributionSectionsFromProtection(
-      model.updatedProtection
-    )
+    val totalAmount = Display.currencyDisplayString(BigDecimal(model.updatedRelevantAmount))
 
-    val pensionDebitAdded = model.updatedProtection.pensionDebits.isDefined
+    val protectionType = model.protectionType
 
-    val psoSections: Seq[AmendDisplaySectionModel] = createCurrentPsoSection(model.updatedProtection).getOrElse(Seq())
+    val pcSections: Seq[AmendDisplaySectionModel] = createAmendPensionContributionSectionsFromProtection(model)
+
+    val pensionDebitAdded = model.updated.pensionDebit.isDefined
+
+    val psoSections: Seq[AmendDisplaySectionModel] = createCurrentPsoSection(model).getOrElse(Seq())
 
     AmendDisplayModel(
       protectionType = protectionType,
@@ -56,76 +51,69 @@ object AmendDisplayModelConstructor extends Logging {
     )
   }
 
-  private def createPreviousPsoSection(model: ProtectionModel)(implicit messages: Messages): AmendDisplaySectionModel =
+  private def createPreviousPsoSection(model: AmendProtectionModel)(
+      implicit messages: Messages
+  ): AmendDisplaySectionModel =
     createNoChangeSection(ApplicationStage.CurrentPsos, model.pensionDebitTotalAmount)
 
   private def createCurrentPsoSection(
-      model: ProtectionModel
+      model: AmendProtectionModel
   )(implicit lang: Lang, messages: Messages): Option[Seq[AmendDisplaySectionModel]] =
-    model.pensionDebits.flatMap { psoList =>
-      if (psoList.length > 1) {
-        logger.warn("More than one PSO amendment was found in the protection model, where only one is permitted.")
-        None
-      } else {
-        val psoAmendCall  = Helpers.createAmendCall(model, ApplicationStage.CurrentPsos)
-        val psoRemoveCall = Helpers.createPsoRemoveCall(model)
-        psoList.headOption.map { debit =>
+    model.updated.pensionDebit.map { pensionDebit =>
+      val psoAmendCall  = Helpers.createAmendCall(model, ApplicationStage.CurrentPsos)
+      val psoRemoveCall = Helpers.createPsoRemoveCall(model)
+      Seq(
+        AmendDisplaySectionModel(
+          "pensionDebits",
           Seq(
-            AmendDisplaySectionModel(
-              "pensionDebits",
-              Seq(
-                AmendDisplayRowModel(
-                  s"${ApplicationStage.CurrentPsos.toString}-psoDetails",
-                  changeLinkCall = Some(psoAmendCall),
-                  removeLinkCall = psoRemoveCall,
-                  Display.currencyDisplayString(BigDecimal(debit.amount)),
-                  Display.dateDisplayString(Dates.constructDateTimeFromAPIString(debit.startDate))
-                )
-              )
+            AmendDisplayRowModel(
+              s"${ApplicationStage.CurrentPsos.toString}-psoDetails",
+              changeLinkCall = Some(psoAmendCall),
+              removeLinkCall = Some(psoRemoveCall),
+              Display.currencyDisplayString(pensionDebit.enteredAmount),
+              Display.dateDisplayString(pensionDebit.startDate)
             )
           )
-        }
-      }
-    }
-
-  private[display] def modelsDiffer(modelA: ProtectionModel, modelB: ProtectionModel): Boolean =
-    modelA match {
-      case `modelB` => false
-      case _        => true
+        )
+      )
     }
 
   private def createAmendPensionContributionSectionsFromProtection(
-      protection: ProtectionModel
+      protection: AmendProtectionModel
   )(implicit messages: Messages): Seq[AmendDisplaySectionModel] = {
     val currentPensionsSection = createCurrentPensionsSection(protection, ApplicationStage.CurrentPensions)
     val pensionsTakenBeforeSection = createSection(
       protection,
       ApplicationStage.PensionsTakenBefore,
-      protection.preADayPensionInPayment,
+      protection.updated.preADayPensionInPaymentAmount,
       displayYesNoOnly = true
     )
     val pensionsWorthBeforeSection = createSection(
       protection,
       ApplicationStage.PensionsWorthBefore,
-      protection.preADayPensionInPayment,
+      protection.updated.preADayPensionInPaymentAmount,
       displayAmountOnly = true
     )
     val pensionsTakenBetweenSection = createSection(
       protection,
       ApplicationStage.PensionsTakenBetween,
-      protection.postADayBenefitCrystallisationEvents,
+      protection.updated.postADayBenefitCrystallisationEventAmount,
       displayYesNoOnly = true
     )
     val pensionsUsedBetweenSection = createSection(
       protection,
       ApplicationStage.PensionsUsedBetween,
-      protection.postADayBenefitCrystallisationEvents,
+      protection.updated.postADayBenefitCrystallisationEventAmount,
       displayAmountOnly = true
     )
-    val overseasPensionsSection = createSection(protection, ApplicationStage.OverseasPensions, protection.nonUKRights)
-    val previousPsoSection      = createPreviousPsoSection(protection)
+    val overseasPensionsSection =
+      createSection(protection, ApplicationStage.OverseasPensions, protection.updated.nonUKRightsAmount)
+    val previousPsoSection = createPreviousPsoSection(protection)
 
-    (protection.postADayBenefitCrystallisationEvents, protection.preADayPensionInPayment) match {
+    (
+      protection.updated.postADayBenefitCrystallisationEventAmount,
+      protection.updated.preADayPensionInPaymentAmount
+    ) match {
       case (Some(postAmt), None) =>
         if (postAmt < 0.01) {
           Seq(
@@ -215,8 +203,8 @@ object AmendDisplayModelConstructor extends Logging {
   }
 
   private def createSection(
-      protection: ProtectionModel,
-      applicationStage: ApplicationStage.Value,
+      protection: AmendProtectionModel,
+      applicationStage: ApplicationStage,
       amountOption: Option[Double],
       displayYesNoOnly: Boolean = false,
       displayAmountOnly: Boolean = false
@@ -227,23 +215,17 @@ object AmendDisplayModelConstructor extends Logging {
   }
 
   private def createNoChangeSection(
-      applicationStage: ApplicationStage.Value,
+      applicationStage: ApplicationStage,
       amountOption: Option[Double]
   )(implicit messages: Messages): AmendDisplaySectionModel =
     createNoChangeYesNoSection(applicationStage.toString, amountOption)
 
   private def createCurrentPensionsSection(
-      protection: ProtectionModel,
-      applicationStage: ApplicationStage.Value
+      protection: AmendProtectionModel,
+      applicationStage: ApplicationStage
   ): AmendDisplaySectionModel = {
-    val amendCall = Helpers.createAmendCall(protection, applicationStage)
-    val currentPensions = protection.uncrystallisedRights.getOrElse(
-      throw Exceptions.OptionNotDefinedException(
-        "createCurrentPensionsSection",
-        "currentPensions",
-        protection.protectionType.getOrElse("No protection type")
-      )
-    )
+    val amendCall       = Helpers.createAmendCall(protection, applicationStage)
+    val currentPensions = protection.updated.uncrystallisedRightsAmount
     AmendDisplaySectionModel(
       applicationStage.toString,
       Seq(
@@ -251,7 +233,7 @@ object AmendDisplayModelConstructor extends Logging {
           "Amt",
           Some(amendCall),
           removeLinkCall = None,
-          Display.currencyDisplayString(BigDecimal(currentPensions))
+          Display.currencyDisplayString(currentPensions)
         )
       )
     )

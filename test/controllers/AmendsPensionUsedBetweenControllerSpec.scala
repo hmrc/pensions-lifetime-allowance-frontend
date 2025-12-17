@@ -17,17 +17,15 @@
 package controllers
 
 import auth.{AuthFunction, AuthFunctionImpl}
-import common.Strings
 import config._
 import mocks.AuthMock
-import models._
-import models.amendModels._
-import models.pla.response.ProtectionStatus.Dormant
+import models.pla.AmendableProtectionType
+import models.pla.request.AmendProtectionRequestStatus
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.mockito.ArgumentMatchers.{any, anyString}
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
@@ -38,6 +36,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionCacheService
 import testHelpers._
+import testdata.AmendProtectionModelTestData
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends._
@@ -49,9 +48,10 @@ import scala.concurrent.{ExecutionContext, Future}
 class AmendsPensionUsedBetweenControllerSpec
     extends FakeApplication
     with MockitoSugar
-    with SessionCacheTestHelper
+    with MockSessionCacheService
     with BeforeAndAfterEach
     with AuthMock
+    with AmendProtectionModelTestData
     with I18nSupport {
 
   implicit val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
@@ -87,18 +87,6 @@ class AmendsPensionUsedBetweenControllerSpec
     super.beforeEach()
   }
 
-  val testIndividualProtection2016DormantModel = AmendProtectionModel(
-    ProtectionModel(None, None),
-    ProtectionModel(
-      None,
-      None,
-      protectionType = Some("IndividualProtection2016"),
-      status = Some(Dormant.toString),
-      relevantAmount = Some(100000),
-      uncrystallisedRights = Some(100000)
-    )
-  )
-
   val authFunction = new AuthFunctionImpl(
     mcc,
     mockAuthConnector,
@@ -118,135 +106,30 @@ class AmendsPensionUsedBetweenControllerSpec
   val mockUsername       = "mockuser"
   val mockUserId: String = "/auth/oid/" + mockUsername
 
-  val individualProtection2016Protection = ProtectionModel(
-    psaCheckReference = Some("testPSARef"),
-    uncrystallisedRights = Some(100000.00),
-    nonUKRights = Some(2000.00),
-    preADayPensionInPayment = Some(2000.00),
-    postADayBenefitCrystallisationEvents = Some(2000.00),
-    notificationId = Some(12),
-    protectionID = Some(12345),
-    protectionType = Some("IndividualProtection2016"),
-    status = Some(Dormant.toString),
-    certificateDate = Some("2016-04-17"),
-    protectedAmount = Some(1250000),
-    protectionReference = Some("PSA123456")
-  )
-
-  val testAmendIndividualProtection2016ProtectionModel =
-    AmendProtectionModel(individualProtection2016Protection, individualProtection2016Protection)
-
-  val individualProtection2016LTAProtection = ProtectionModel(
-    psaCheckReference = Some("testPSARef"),
-    uncrystallisedRights = Some(100000.00),
-    nonUKRights = Some(2000.00),
-    preADayPensionInPayment = Some(2000.00),
-    postADayBenefitCrystallisationEvents = Some(2000.00),
-    notificationId = Some(12),
-    protectionID = Some(12345),
-    protectionType = Some("IndividualProtection2016LTA"),
-    status = Some(Dormant.toString),
-    certificateDate = Some("2016-04-17"),
-    protectedAmount = Some(1250000),
-    protectionReference = Some("PSA123456")
-  )
-
-  val testAmendIndividualProtection2016LTAProtectionModel =
-    AmendProtectionModel(individualProtection2016LTAProtection, individualProtection2016LTAProtection)
-
-  val individualProtection2014Protection = ProtectionModel(
-    psaCheckReference = Some("testPSARef"),
-    uncrystallisedRights = Some(100000.00),
-    nonUKRights = Some(2000.00),
-    preADayPensionInPayment = Some(2000.00),
-    postADayBenefitCrystallisationEvents = Some(2000.00),
-    notificationId = Some(12),
-    protectionID = Some(12345),
-    protectionType = Some("IndividualProtection2014"),
-    status = Some(Dormant.toString),
-    certificateDate = Some("2016-04-17"),
-    protectedAmount = Some(1250000),
-    protectionReference = Some("PSA123456")
-  )
-
-  val testAmendIndividualProtection2014ProtectionModel =
-    AmendProtectionModel(individualProtection2014Protection, individualProtection2014Protection)
-
-  val individualProtection2014LTAProtection = ProtectionModel(
-    psaCheckReference = Some("testPSARef"),
-    uncrystallisedRights = Some(100000.00),
-    nonUKRights = Some(2000.00),
-    preADayPensionInPayment = Some(2000.00),
-    postADayBenefitCrystallisationEvents = Some(2000.00),
-    notificationId = Some(12),
-    protectionID = Some(12345),
-    protectionType = Some("IndividualProtection2014LTA"),
-    status = Some(Dormant.toString),
-    certificateDate = Some("2016-04-17"),
-    protectedAmount = Some(1250000),
-    protectionReference = Some("PSA123456")
-  )
-
-  val testAmendIndividualProtection2014LTAProtectionModel =
-    AmendProtectionModel(individualProtection2014LTAProtection, individualProtection2014LTAProtection)
-
-  val individualProtection2016NoDebitProtection = ProtectionModel(
-    psaCheckReference = Some("testPSARef"),
-    uncrystallisedRights = Some(100000.00),
-    nonUKRights = Some(0.0),
-    preADayPensionInPayment = Some(0.0),
-    postADayBenefitCrystallisationEvents = Some(0.0),
-    notificationId = Some(12),
-    protectionID = Some(12345),
-    protectionType = Some("IndividualProtection2016"),
-    status = Some(Dormant.toString),
-    certificateDate = Some("2016-04-17"),
-    protectedAmount = Some(1250000),
-    protectionReference = Some("PSA123456")
-  )
-
-  val testAmendIndividualProtection2016ProtectionModelWithNoDebit =
-    AmendProtectionModel(individualProtection2016NoDebitProtection, individualProtection2016NoDebitProtection)
-
-  val individualProtection2016LTANoDebitProtection = ProtectionModel(
-    psaCheckReference = Some("testPSARef"),
-    uncrystallisedRights = Some(100000.00),
-    nonUKRights = Some(0.0),
-    preADayPensionInPayment = Some(0.0),
-    postADayBenefitCrystallisationEvents = Some(0.0),
-    notificationId = Some(12),
-    protectionID = Some(12345),
-    protectionType = Some("IndividualProtection2016LTA"),
-    status = Some(Dormant.toString),
-    certificateDate = Some("2016-04-17"),
-    protectedAmount = Some(1250000),
-    protectionReference = Some("PSA123456")
-  )
-
-  val testAmendIndividualProtection2016LTAProtectionModelWithNoDebit =
-    AmendProtectionModel(individualProtection2016LTANoDebitProtection, individualProtection2016LTANoDebitProtection)
-
-  def cacheFetchCondition[T](data: Option[T]): Unit =
-    when(mockSessionCacheService.fetchAndGetFormData[T](anyString())(any(), any()))
-      .thenReturn(Future.successful(data))
-
   "In AmendsPensionUsedBetweenController calling the .amendPensionsUsedBetween action" when {
     "not supplied with a stored model" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](None)
+      mockFetchAmendProtectionModel(any(), any())(None)
 
       val result: Future[Result] =
-        controller.amendPensionsUsedBetween(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")(fakeRequest)
+        controller.amendPensionsUsedBetween(
+          AmendableProtectionType.IndividualProtection2016,
+          AmendProtectionRequestStatus.Open
+        )(fakeRequest)
 
       status(result) shouldBe 500
 
     }
-    "supplied with the stored test model for (dormant, IndividualProtection2016, preADay = £0.0)" in {
+
+    "supplied with the stored test model for (dormant, IndividualProtection2014, preADay = £0.0)" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016ProtectionModelWithNoDebit))
+      mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2014))
 
       val result: Future[Result] =
-        controller.amendPensionsUsedBetween(Strings.ProtectionTypeUrl.IndividualProtection2016, "dormant")(fakeRequest)
+        controller.amendPensionsUsedBetween(
+          AmendableProtectionType.IndividualProtection2014,
+          AmendProtectionRequestStatus.Dormant
+        )(fakeRequest)
       val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
 
       jsoupDoc.body
@@ -254,30 +137,19 @@ class AmendsPensionUsedBetweenControllerSpec
         .attr("class") shouldBe "govuk-input govuk-input--width-10"
     }
 
-    "supplied with the stored test model for (dormant, IndividualProtection2016LTA, preADay = £0.0)" in {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016LTAProtectionModelWithNoDebit))
-
-      val result: Future[Result] =
-        controller.amendPensionsUsedBetween(Strings.ProtectionTypeUrl.IndividualProtection2016LTA, "dormant")(
-          fakeRequest
-        )
-      val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
-
-      jsoupDoc.body
-        .getElementById("amendedPensionsUsedBetweenAmt")
-        .attr("class") shouldBe "govuk-input govuk-input--width-10"
-    }
   }
 
   "Submitting Amend IndividualProtection2016 Pensions Used Between data" when {
 
     "the model can't be fetched from cache" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](None)
+      mockFetchAmendProtectionModel(any(), any())(None)
 
       val result = FakeRequests.authorisedPost(
-        controller.submitAmendPensionsUsedBetween(Strings.ProtectionTypeUrl.IndividualProtection2016, "dormant"),
+        controller.submitAmendPensionsUsedBetween(
+          AmendableProtectionType.IndividualProtection2016,
+          AmendProtectionRequestStatus.Dormant
+        ),
         ("amendedPensionsUsedBetweenAmt", "0")
       )
 
@@ -288,7 +160,10 @@ class AmendsPensionUsedBetweenControllerSpec
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
       val result = FakeRequests.authorisedPost(
-        controller.submitAmendPensionsUsedBetween(Strings.ProtectionTypeUrl.IndividualProtection2016, "dormant"),
+        controller.submitAmendPensionsUsedBetween(
+          AmendableProtectionType.IndividualProtection2016,
+          AmendProtectionRequestStatus.Dormant
+        ),
         ("amendedPensionsUsedBetweenAmt", "yes")
       )
 
@@ -297,19 +172,22 @@ class AmendsPensionUsedBetweenControllerSpec
 
     "the data is valid with a no response" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016ProtectionModel))
-      cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
+      mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2016))
+      mockSaveAmendProtectionModel()
 
       val result = FakeRequests.authorisedPost(
-        controller.submitAmendPensionsUsedBetween(Strings.ProtectionTypeUrl.IndividualProtection2016, "dormant"),
+        controller.submitAmendPensionsUsedBetween(
+          AmendableProtectionType.IndividualProtection2016,
+          AmendProtectionRequestStatus.Dormant
+        ),
         ("amendedPensionsUsedBetweenAmt", "0")
       )
 
       status(result) shouldBe 303
 
       redirectLocation(result) shouldBe Some(s"${routes.AmendsController.amendsSummary(
-          Strings.ProtectionTypeUrl.IndividualProtection2016,
-          Strings.StatusUrl.Dormant
+          AmendableProtectionType.IndividualProtection2016,
+          AmendProtectionRequestStatus.Dormant
         )}")
     }
   }
@@ -318,10 +196,13 @@ class AmendsPensionUsedBetweenControllerSpec
 
     "the model can't be fetched from cache" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](None)
+      mockFetchAmendProtectionModel(any(), any())(None)
 
       val result = FakeRequests.authorisedPost(
-        controller.submitAmendPensionsUsedBetween(Strings.ProtectionTypeUrl.IndividualProtection2016LTA, "dormant"),
+        controller.submitAmendPensionsUsedBetween(
+          AmendableProtectionType.IndividualProtection2016LTA,
+          AmendProtectionRequestStatus.Dormant
+        ),
         ("amendedPensionsUsedBetweenAmt", "0")
       )
 
@@ -332,7 +213,10 @@ class AmendsPensionUsedBetweenControllerSpec
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
       val result = FakeRequests.authorisedPost(
-        controller.submitAmendPensionsUsedBetween(Strings.ProtectionTypeUrl.IndividualProtection2016LTA, "dormant"),
+        controller.submitAmendPensionsUsedBetween(
+          AmendableProtectionType.IndividualProtection2016LTA,
+          AmendProtectionRequestStatus.Dormant
+        ),
         ("amendedPensionsUsedBetweenAmt", "yes")
       )
 
@@ -341,19 +225,22 @@ class AmendsPensionUsedBetweenControllerSpec
 
     "the data is valid with a no response" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016LTAProtectionModel))
-      cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
+      mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2016LTA))
+      mockSaveAmendProtectionModel()
 
       val result = FakeRequests.authorisedPost(
-        controller.submitAmendPensionsUsedBetween(Strings.ProtectionTypeUrl.IndividualProtection2016LTA, "dormant"),
+        controller.submitAmendPensionsUsedBetween(
+          AmendableProtectionType.IndividualProtection2016LTA,
+          AmendProtectionRequestStatus.Dormant
+        ),
         ("amendedPensionsUsedBetweenAmt", "0")
       )
 
       status(result) shouldBe 303
 
       redirectLocation(result) shouldBe Some(s"${routes.AmendsController.amendsSummary(
-          Strings.ProtectionTypeUrl.IndividualProtection2016LTA,
-          Strings.StatusUrl.Dormant
+          AmendableProtectionType.IndividualProtection2016LTA,
+          AmendProtectionRequestStatus.Dormant
         )}")
     }
   }
@@ -362,10 +249,13 @@ class AmendsPensionUsedBetweenControllerSpec
 
     "the model can't be fetched from cache" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](None)
+      mockFetchAmendProtectionModel(any(), any())(None)
 
       val result = FakeRequests.authorisedPost(
-        controller.submitAmendPensionsUsedBetween(Strings.ProtectionTypeUrl.IndividualProtection2014, "dormant"),
+        controller.submitAmendPensionsUsedBetween(
+          AmendableProtectionType.IndividualProtection2014,
+          AmendProtectionRequestStatus.Dormant
+        ),
         ("amendedPensionsUsedBetweenAmt", "0")
       )
 
@@ -377,8 +267,8 @@ class AmendsPensionUsedBetweenControllerSpec
 
       val result = FakeRequests.authorisedPost(
         controller.submitAmendPensionsUsedBetween(
-          Strings.ProtectionTypeUrl.IndividualProtection2014,
-          Strings.StatusUrl.Dormant
+          AmendableProtectionType.IndividualProtection2014,
+          AmendProtectionRequestStatus.Dormant
         ),
         ("amendedPensionsUsedBetweenAmt", "yes")
       )
@@ -388,13 +278,13 @@ class AmendsPensionUsedBetweenControllerSpec
 
     "the data is valid with a no response" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2014ProtectionModel))
-      cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
+      mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2014))
+      mockSaveAmendProtectionModel()
 
       val result = FakeRequests.authorisedPost(
         controller.submitAmendPensionsUsedBetween(
-          Strings.ProtectionTypeUrl.IndividualProtection2014,
-          Strings.StatusUrl.Dormant
+          AmendableProtectionType.IndividualProtection2014,
+          AmendProtectionRequestStatus.Dormant
         ),
         ("amendedPensionsUsedBetweenAmt", "0")
       )
@@ -402,8 +292,8 @@ class AmendsPensionUsedBetweenControllerSpec
       status(result) shouldBe 303
 
       redirectLocation(result) shouldBe Some(s"${routes.AmendsController.amendsSummary(
-          Strings.ProtectionTypeUrl.IndividualProtection2014,
-          Strings.StatusUrl.Dormant
+          AmendableProtectionType.IndividualProtection2014,
+          AmendProtectionRequestStatus.Dormant
         )}")
     }
   }
@@ -412,10 +302,13 @@ class AmendsPensionUsedBetweenControllerSpec
 
     "the model can't be fetched from cache" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](None)
+      mockFetchAmendProtectionModel(any(), any())(None)
 
       val result = FakeRequests.authorisedPost(
-        controller.submitAmendPensionsUsedBetween(Strings.ProtectionTypeUrl.IndividualProtection2014LTA, "dormant"),
+        controller.submitAmendPensionsUsedBetween(
+          AmendableProtectionType.IndividualProtection2014LTA,
+          AmendProtectionRequestStatus.Dormant
+        ),
         ("amendedPensionsUsedBetweenAmt", "0")
       )
 
@@ -427,8 +320,8 @@ class AmendsPensionUsedBetweenControllerSpec
 
       val result = FakeRequests.authorisedPost(
         controller.submitAmendPensionsUsedBetween(
-          Strings.ProtectionTypeUrl.IndividualProtection2014LTA,
-          Strings.StatusUrl.Dormant
+          AmendableProtectionType.IndividualProtection2014LTA,
+          AmendProtectionRequestStatus.Dormant
         ),
         ("amendedPensionsUsedBetweenAmt", "yes")
       )
@@ -438,13 +331,13 @@ class AmendsPensionUsedBetweenControllerSpec
 
     "the data is valid with a no response" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2014LTAProtectionModel))
-      cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
+      mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2014LTA))
+      mockSaveAmendProtectionModel()
 
       val result = FakeRequests.authorisedPost(
         controller.submitAmendPensionsUsedBetween(
-          Strings.ProtectionTypeUrl.IndividualProtection2014LTA,
-          Strings.StatusUrl.Dormant
+          AmendableProtectionType.IndividualProtection2014LTA,
+          AmendProtectionRequestStatus.Dormant
         ),
         ("amendedPensionsUsedBetweenAmt", "0")
       )
@@ -452,8 +345,8 @@ class AmendsPensionUsedBetweenControllerSpec
       status(result) shouldBe 303
 
       redirectLocation(result) shouldBe Some(s"${routes.AmendsController.amendsSummary(
-          Strings.ProtectionTypeUrl.IndividualProtection2014LTA,
-          Strings.StatusUrl.Dormant
+          AmendableProtectionType.IndividualProtection2014LTA,
+          AmendProtectionRequestStatus.Dormant
         )}")
     }
   }

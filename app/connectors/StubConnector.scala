@@ -30,8 +30,8 @@ class StubConnector @Inject() (appConfig: FrontendAppConfig, http: HttpClientV2)
   val serviceUrl: String = appConfig.servicesConfig.baseUrl("pla-dynamic-stub")
 
   private def deleteProtectionByNinoUrl(nino: String) = s"$serviceUrl/test-only/individuals/$nino/protections"
-  private def deleteProtectionsUrl                    = s"$serviceUrl/test-only/protections/removeAll"
-  private def insertProtectionsUrl                    = s"$serviceUrl/test-only/protections/insert"
+  private val deleteProtectionsUrl                    = s"$serviceUrl/test-only/protections/removeAll"
+  private val insertProtectionsUrl                    = s"$serviceUrl/test-only/protections/insert"
 
   def deleteProtectionByNino(nino: String)(implicit hc: HeaderCarrier): Future[Int] = {
     val dpUrl = deleteProtectionByNinoUrl(nino)

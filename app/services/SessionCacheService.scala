@@ -16,8 +16,12 @@
 
 package services
 
+import models.amend.{AmendProtectionModel, AmendsGAModel}
 import models.cache.CacheMap
-import play.api.libs.json.Format
+import models.pla.AmendableProtectionType
+import models.pla.request.AmendProtectionRequestStatus
+import models.{AmendResponseModel, ProtectionModel, PsaLookupRequest, PsaLookupResult}
+import play.api.libs.json.{Reads, Writes}
 import play.api.mvc.Request
 import repositories.SessionRepository
 import uk.gov.hmrc.mongo.cache.DataKey
@@ -30,10 +34,81 @@ class SessionCacheService @Inject() (sessionRepository: SessionRepository)(
     implicit executionContext: ExecutionContext
 ) {
 
-  def saveFormData[T](key: String, data: T)(implicit request: Request[_], formats: Format[T]): Future[CacheMap] =
+  private val openProtectionKey: String = "openProtection"
+
+  private def amendProtectionModelKey(
+      protectionType: AmendableProtectionType,
+      status: AmendProtectionRequestStatus
+  ): String =
+    status.toString + protectionType.toString + "Amendment"
+
+  private val amendsGAModelKey: String = "AmendsGA"
+
+  private val amendResponseModelKey: String = "amendResponseModel"
+  private val psaLookupRequestKey           = "psa-lookup-request"
+  private val psaLookupResultKey            = "psa-lookup-result"
+  private val previousTechnicalIssuesKey    = "previous-technical-issues"
+
+  def saveOpenProtection(openProtection: ProtectionModel)(implicit request: Request[_]): Future[CacheMap] =
+    saveFormData[ProtectionModel](openProtectionKey, openProtection)
+
+  def saveAmendProtectionModel(
+      amendProtectionModel: AmendProtectionModel
+  )(implicit request: Request[_]): Future[CacheMap] =
+    saveFormData[AmendProtectionModel](
+      amendProtectionModelKey(amendProtectionModel.protectionType, amendProtectionModel.status),
+      amendProtectionModel
+    )
+
+  def saveAmendsGAModel(amendsGAModel: AmendsGAModel)(implicit request: Request[_]): Future[CacheMap] =
+    saveFormData[AmendsGAModel](amendsGAModelKey, amendsGAModel)
+
+  def saveAmendResponseModel(amendResponseModel: AmendResponseModel)(
+      implicit request: Request[_]
+  ): Future[CacheMap] =
+    saveFormData[AmendResponseModel](amendResponseModelKey, amendResponseModel)
+
+  def savePsaLookupRequest(psaLookupRequest: PsaLookupRequest)(implicit request: Request[_]): Future[CacheMap] =
+    saveFormData[PsaLookupRequest](psaLookupRequestKey, psaLookupRequest)
+
+  def savePsaLookupResult(psaLookupResult: PsaLookupResult)(implicit request: Request[_]): Future[CacheMap] =
+    saveFormData[PsaLookupResult](psaLookupResultKey, psaLookupResult)
+
+  def savePreviousTechnicalIssues(previousTechnicalIssues: Boolean)(implicit request: Request[_]): Future[CacheMap] =
+    saveFormData[Boolean](previousTechnicalIssuesKey, previousTechnicalIssues)
+
+  private[services] def saveFormData[T](
+      key: String,
+      data: T
+  )(implicit request: Request[_], formats: Writes[T]): Future[CacheMap] =
     sessionRepository.putInSession(DataKey(key), data)
 
-  def fetchAndGetFormData[T](key: String)(implicit request: Request[_], formats: Format[T]): Future[Option[T]] =
+  def fetchOpenProtection(implicit request: Request[_]): Future[Option[ProtectionModel]] =
+    fetchAndGetFormData[ProtectionModel](openProtectionKey)
+
+  def fetchAmendProtectionModel(protectionType: AmendableProtectionType, status: AmendProtectionRequestStatus)(
+      implicit request: Request[_]
+  ): Future[Option[AmendProtectionModel]] =
+    fetchAndGetFormData[AmendProtectionModel](amendProtectionModelKey(protectionType, status))
+
+  def fetchAmendsGAModel(implicit request: Request[_]): Future[Option[AmendsGAModel]] =
+    fetchAndGetFormData[AmendsGAModel](amendsGAModelKey)
+
+  def fetchAmendResponseModel(implicit request: Request[_]): Future[Option[AmendResponseModel]] =
+    fetchAndGetFormData[AmendResponseModel](amendResponseModelKey)
+
+  def fetchPsaLookupRequest(implicit request: Request[_]): Future[Option[PsaLookupRequest]] =
+    fetchAndGetFormData[PsaLookupRequest](psaLookupRequestKey)
+
+  def fetchPsaLookupResult(implicit request: Request[_]): Future[Option[PsaLookupResult]] =
+    fetchAndGetFormData[PsaLookupResult](psaLookupResultKey)
+
+  def fetchPreviousTechnicalIssues(implicit request: Request[_]): Future[Option[Boolean]] =
+    fetchAndGetFormData[Boolean](previousTechnicalIssuesKey)
+
+  private[services] def fetchAndGetFormData[T](
+      key: String
+  )(implicit request: Request[_], formats: Reads[T]): Future[Option[T]] =
     sessionRepository.getFromSession[T](DataKey(key))
 
   def remove(implicit request: Request[_]): Future[Unit] =

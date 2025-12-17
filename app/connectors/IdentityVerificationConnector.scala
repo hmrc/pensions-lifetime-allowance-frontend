@@ -17,7 +17,7 @@
 package connectors
 
 import config.FrontendAppConfig
-import enums.IdentityVerificationResult.IdentityVerificationResult
+import enums.IdentityVerificationResult
 
 import javax.inject.Inject
 import play.api.libs.json.{Json, OFormat}

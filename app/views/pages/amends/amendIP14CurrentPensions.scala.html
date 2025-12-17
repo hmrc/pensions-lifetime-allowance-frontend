@@ -14,20 +14,26 @@
  * limitations under the License.
  *@
 
-@import models.amendModels.AmendCurrentPensionModel
 @import play.api.data._
-@import common.{Links, Strings}
+@import common.Links
+@import models.amend.value.AmendCurrentPensionModel
+@import models.pla.AmendableProtectionType
+@import models.pla.request.AmendProtectionRequestStatus
 
 @this(
-        layout: Layout,
-        errorSummary: playHelpers.templates.errorSummary,
-        form: uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF,
-        helpTextAccordion: playHelpers.templates.helpTextAccordion,
-        formInputMoney: playHelpers.templates.formInputMoney,
-        submitButton: playHelpers.templates.submitButton
+    layout: Layout,
+    errorSummary: playHelpers.templates.errorSummary,
+    form: uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF,
+    helpTextAccordion: playHelpers.templates.helpTextAccordion,
+    formInputMoney: playHelpers.templates.formInputMoney,
+    submitButton: playHelpers.templates.submitButton
 )
 
-@(amendCurrentPensionForm: Form[AmendCurrentPensionModel], protectionType: String, status: String)(implicit request: Request[_], messages: Messages)
+@(
+    amendCurrentPensionForm: Form[AmendCurrentPensionModel],
+    protectionType: AmendableProtectionType,
+    status: AmendProtectionRequestStatus
+)(implicit request: Request[_], messages: Messages)
 
 @helpTextAccordionContent = {
     <p class="govuk-body">@Messages("pla.ip14CurrentPensions.hiddenTextPara")</p>
@@ -79,7 +85,7 @@
         hiddenContent = helpTextAccordionContent
     )
 
-    @form(action = routes.AmendsCurrentPensionController.submitAmendCurrentPension(Strings.protectionTypeUrlString(Some(protectionType)), status)) {
+    @form(action = routes.AmendsCurrentPensionController.submitAmendCurrentPension(protectionType, status)) {
         @formInputMoney(
             field =  amendCurrentPensionForm("amendedUKPensionAmt"),
             question = Messages("pla.ip14CurrentPensions.title"),

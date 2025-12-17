@@ -17,22 +17,27 @@
 package controllers
 
 import auth.AuthFunctionImpl
-import common.Strings
-import common.Strings.{ProtectionTypeUrl, StatusUrl}
 import config._
-import connectors.PlaConnectorError.{ConflictResponseError, IncorrectResponseBodyError, LockedResponseError}
+import connectors.PlaConnectorError.{ConflictResponseError, LockedResponseError}
 import connectors.{CitizenDetailsConnector, PlaConnector}
 import constructors.display.DisplayConstructors
-import enums.ApplicationType
 import mocks.AuthMock
-import models.amendModels._
+import models.NotificationId._
+import models.amend.AmendsGAModel
 import models.cache.CacheMap
 import models.display.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel}
+import models.pla.AmendableProtectionType
+import models.pla.request.AmendProtectionRequestStatus
 import models.pla.response.ProtectionStatus.{Dormant, Open}
-import models.pla.response.ProtectionType.{FixedProtection2016, IndividualProtection2014, IndividualProtection2016}
-import models.pla.response.{AmendProtectionResponse, ProtectionRecord, ProtectionRecordsList, ReadProtectionsResponse}
-import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionResponseStatus}
-import models.{AmendResponseModel, Person, PersonalDetailsModel, ProtectionModel}
+import models.pla.response.ProtectionType.{FixedProtection2016, IndividualProtection2016}
+import models.pla.response.{
+  AmendProtectionResponse,
+  AmendProtectionResponseStatus,
+  ProtectionRecord,
+  ProtectionRecordsList,
+  ReadProtectionsResponse
+}
+import models.{DateModel, Person, PersonalDetailsModel, TimeModel}
 import org.mockito.ArgumentMatchers.{any, anyString, eq => eqTo}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
@@ -45,10 +50,10 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import services.SessionCacheService
 import testHelpers._
-import testdata.AmendProtectionOutcomeViewsTestData.amendResultDisplayModelIP14
+import testdata.AmendProtectionDisplayModelTestData._
+import testdata.AmendProtectionModelTestData
 import testdata.PlaConnectorTestData.amendProtectionResponse
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
-import utils.Constants
 import views.html.pages.amends._
 import views.html.pages.fallback.technicalError
 import views.html.pages.result.manualCorrespondenceNeeded
@@ -58,15 +63,15 @@ import scala.concurrent.{ExecutionContext, Future}
 class AmendsControllerSpec
     extends FakeApplication
     with MockitoSugar
-    with SessionCacheTestHelper
+    with MockSessionCacheService
     with BeforeAndAfterEach
     with AuthMock
     with ScalaFutures
+    with AmendProtectionModelTestData
     with I18nSupport {
 
   private val displayConstructors: DisplayConstructors         = mock[DisplayConstructors]
   private val citizenDetailsConnector: CitizenDetailsConnector = mock[CitizenDetailsConnector]
-  private val sessionCacheService: SessionCacheService         = mock[SessionCacheService]
   private val plaConnector: PlaConnector                       = mock[PlaConnector]
   private val appConfig: FrontendAppConfig                     = mock[FrontendAppConfig]
 
@@ -79,7 +84,8 @@ class AmendsControllerSpec
   private val amendOutcomeNoNotificationIdView: amendOutcomeNoNotificationId = mock[amendOutcomeNoNotificationId]
   private val amendSummaryView: amendSummary                                 = mock[amendSummary]
 
-  override val messagesApi: MessagesApi = messagesControllerComponents.messagesApi
+  override val messagesApi: MessagesApi                     = messagesControllerComponents.messagesApi
+  override val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
 
   private val ec: ExecutionContext = inject[ExecutionContext]
 
@@ -90,7 +96,7 @@ class AmendsControllerSpec
   )(appConfig, ec)
 
   private val controller = new AmendsController(
-    sessionCacheService = sessionCacheService,
+    sessionCacheService = mockSessionCacheService,
     citizenDetailsConnector = citizenDetailsConnector,
     plaConnector = plaConnector,
     displayConstructors = displayConstructors,
@@ -105,7 +111,7 @@ class AmendsControllerSpec
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(sessionCacheService)
+    reset(mockSessionCacheService)
     reset(citizenDetailsConnector)
     reset(plaConnector)
     reset(plaConnector)
@@ -120,7 +126,7 @@ class AmendsControllerSpec
 
     mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
     when(manualCorrespondenceNeededView.apply()(any(), any())).thenReturn(HtmlFormat.empty)
-    when(technicalErrorView.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
+    when(technicalErrorView.apply()(any(), any())).thenReturn(HtmlFormat.empty)
     when(amendOutcomeView.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
     when(amendOutcomeNoNotificationIdView.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
     when(amendSummaryView.apply(any(), any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
@@ -130,23 +136,7 @@ class AmendsControllerSpec
 
   private val testNino: String = "AB123456A"
 
-  private val ip2014Protection = ProtectionModel(
-    psaCheckReference = Some("testPSARef"),
-    uncrystallisedRights = Some(100000.00),
-    nonUKRights = Some(2000.00),
-    preADayPensionInPayment = Some(2000.00),
-    postADayBenefitCrystallisationEvents = Some(2000.00),
-    notificationId = Some(12),
-    protectionID = Some(12345),
-    protectionType = Some(IndividualProtection2014.toString),
-    status = Some(Dormant.toString),
-    certificateDate = Some("2016-04-17"),
-    protectedAmount = Some(1250000),
-    protectionReference = Some("PSA123456")
-  )
-
-  private val psaCheckReference              = "PSA12345678A"
-  private val testAmendIP2014ProtectionModel = AmendProtectionModel(ip2014Protection, ip2014Protection)
+  private val psaCheckReference = "PSA12345678A"
 
   private val testPensionContributionNoPsoDisplaySections = Seq(
     AmendDisplaySectionModel(
@@ -156,7 +146,10 @@ class AmendsControllerSpec
           "YesNo",
           Some(
             controllers.routes.AmendsOverseasPensionController
-              .amendOverseasPensions(Strings.ProtectionTypeUrl.IndividualProtection2014, "active")
+              .amendOverseasPensions(
+                AmendableProtectionType.IndividualProtection2014,
+                AmendProtectionRequestStatus.Open
+              )
           ),
           None,
           "Yes"
@@ -165,7 +158,10 @@ class AmendsControllerSpec
           "Amt",
           Some(
             controllers.routes.AmendsOverseasPensionController
-              .amendOverseasPensions(Strings.ProtectionTypeUrl.IndividualProtection2014, "active")
+              .amendOverseasPensions(
+                AmendableProtectionType.IndividualProtection2014,
+                AmendProtectionRequestStatus.Open
+              )
           ),
           None,
           "£100,000"
@@ -179,7 +175,7 @@ class AmendsControllerSpec
           "Amt",
           Some(
             controllers.routes.AmendsCurrentPensionController
-              .amendCurrentPensions(Strings.ProtectionTypeUrl.IndividualProtection2014, "active")
+              .amendCurrentPensions(AmendableProtectionType.IndividualProtection2014, AmendProtectionRequestStatus.Open)
           ),
           None,
           "£1,000,000"
@@ -195,7 +191,7 @@ class AmendsControllerSpec
   )
 
   private val testAmendDisplayModel = AmendDisplayModel(
-    protectionType = IndividualProtection2014.toString,
+    protectionType = AmendableProtectionType.IndividualProtection2014,
     amended = true,
     pensionContributionSections = testPensionContributionNoPsoDisplaySections,
     psoAdded = false,
@@ -205,29 +201,25 @@ class AmendsControllerSpec
 
   private val testPersonalDetails = PersonalDetailsModel(Person("McTestFace", "Testy"))
 
-  private def cacheFetchCondition[T](key: String)(data: Option[T]): Unit =
-    when(sessionCacheService.fetchAndGetFormData[T](key)(any(), any()))
-      .thenReturn(Future.successful(data))
-
   "In AmendsController calling the amendsSummary action" when {
 
     "there is no stored amends model" in {
-      cacheFetchCondition[AmendProtectionModel](anyString())(None)
+      mockFetchAmendProtectionModel(any(), any())(None)
 
       val result = controller.amendsSummary(
-        Strings.ProtectionTypeUrl.IndividualProtection2016,
-        Strings.StatusUrl.Open
+        AmendableProtectionType.IndividualProtection2016,
+        AmendProtectionRequestStatus.Open
       )(fakeRequest)
 
       status(result) shouldBe 500
-      verify(technicalErrorView).apply(eqTo(ApplicationType.existingProtections.toString))(any(), any())
+      verify(technicalErrorView).apply()(any(), any())
     }
 
     "there is a stored, updated amends model" in {
-      cacheFetchCondition[AmendProtectionModel](anyString())(Some(testAmendIP2014ProtectionModel))
+      mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2014))
       when(displayConstructors.createAmendDisplayModel(any())(any())).thenReturn(testAmendDisplayModel)
-      val protectionType   = "ip2014"
-      val protectionStatus = "dormant"
+      val protectionType   = AmendableProtectionType.IndividualProtection2014
+      val protectionStatus = AmendProtectionRequestStatus.Dormant
 
       val result = controller.amendsSummary(protectionType, protectionStatus)(fakeRequest)
 
@@ -240,58 +232,53 @@ class AmendsControllerSpec
   "Calling the amendProtection action" when {
 
     "PlaConnector returns a valid response should redirect to amendmentOutcome" in {
-      cacheFetchCondition[AmendProtectionModel](anyString())(Some(testAmendIP2014ProtectionModel))
+      mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2014))
       when(plaConnector.amendProtection(any(), any())(any(), any()))
         .thenReturn(Future.successful(Right(amendProtectionResponse)))
-      when(sessionCacheService.saveFormData(anyString(), any())(any(), any()))
-        .thenReturn(Future.successful(CacheMap("cacheId", Map.empty)))
+      mockSaveAmendResponseModel()
+      mockSaveAmendsGAModel()
 
       val result =
-        controller.amendProtection(ProtectionTypeUrl.IndividualProtection2014, StatusUrl.Dormant)(fakeRequest)
+        controller.amendProtection(
+          AmendableProtectionType.IndividualProtection2014,
+          AmendProtectionRequestStatus.Dormant
+        )(fakeRequest)
 
       status(result) shouldBe 303
       redirectLocation(result) shouldBe Some(s"${routes.AmendsController.amendmentOutcome}")
+      verify(mockSessionCacheService).saveAmendResponseModel(any())(any())
     }
 
     "PlaConnector returns LockedResponseError should return Locked response and manual correspondence page" in {
-      cacheFetchCondition[AmendProtectionModel](anyString())(Some(testAmendIP2014ProtectionModel))
-      when(sessionCacheService.saveFormData(anyString(), any())(any(), any()))
-        .thenReturn(Future.successful(CacheMap("GA", Map.empty)))
+      mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2014))
       when(plaConnector.amendProtection(any(), any())(any(), any()))
         .thenReturn(Future.successful(Left(LockedResponseError)))
+      mockSaveAmendsGAModel()
 
       val result =
-        controller.amendProtection(ProtectionTypeUrl.IndividualProtection2014, StatusUrl.Dormant)(fakeRequest)
+        controller.amendProtection(
+          AmendableProtectionType.IndividualProtection2014,
+          AmendProtectionRequestStatus.Dormant
+        )(fakeRequest)
 
       status(result) shouldBe 423
       verify(manualCorrespondenceNeededView).apply()(any(), any())
     }
 
     "PlaConnector returns ConflictResponseError should return InternalServerError and technical error page" in {
-      cacheFetchCondition[AmendProtectionModel](anyString())(Some(testAmendIP2014ProtectionModel))
-      when(sessionCacheService.saveFormData(anyString(), any())(any(), any()))
-        .thenReturn(Future.successful(CacheMap("GA", Map.empty)))
+      mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2014))
       when(plaConnector.amendProtection(any(), any())(any(), any()))
         .thenReturn(Future.successful(Left(ConflictResponseError)))
+      mockSaveAmendsGAModel()
 
       val result =
-        controller.amendProtection(ProtectionTypeUrl.IndividualProtection2014, StatusUrl.Dormant)(fakeRequest)
+        controller.amendProtection(
+          AmendableProtectionType.IndividualProtection2014,
+          AmendProtectionRequestStatus.Dormant
+        )(fakeRequest)
 
       status(result) shouldBe 500
-      verify(technicalErrorView).apply(eqTo(ApplicationType.existingProtections.toString))(any(), any())
-    }
-
-    "PlaConnector returns IncorrectResponseBodyError should return InternalServerError and technical error page" in {
-      cacheFetchCondition[AmendProtectionModel](anyString())(Some(testAmendIP2014ProtectionModel))
-      when(sessionCacheService.saveFormData(anyString(), any())(any(), any()))
-        .thenReturn(Future.successful(CacheMap("GA", Map.empty)))
-      when(plaConnector.amendProtection(any(), any())(any(), any()))
-        .thenReturn(Future.successful(Left(IncorrectResponseBodyError)))
-
-      val result = controller.amendProtection(ProtectionTypeUrl.IndividualProtection2014, "invalidstatus")(fakeRequest)
-
-      status(result) shouldBe 500
-      verify(technicalErrorView).apply(eqTo(ApplicationType.existingProtections.toString))(any(), any())
+      verify(technicalErrorView).apply()(any(), any())
     }
 
     "PlaConnector returns a response with no notificationId" should {
@@ -299,9 +286,9 @@ class AmendsControllerSpec
         val response = AmendProtectionResponse(
           lifetimeAllowanceIdentifier = 1,
           lifetimeAllowanceSequenceNumber = 1,
-          lifetimeAllowanceType = AmendProtectionLifetimeAllowanceType.IndividualProtection2014,
-          certificateDate = Some("2025-10-28"),
-          certificateTime = Some("093820"),
+          lifetimeAllowanceType = AmendableProtectionType.IndividualProtection2014,
+          certificateDate = Some(DateModel.of(2025, 10, 28)),
+          certificateTime = Some(TimeModel.of(9, 38, 20)),
           status = AmendProtectionResponseStatus.Open,
           protectionReference = Some("psaRef"),
           relevantAmount = 1_350_000,
@@ -317,17 +304,22 @@ class AmendsControllerSpec
           pensionDebitTotalAmount = Some(150_000)
         )
 
-        cacheFetchCondition[AmendProtectionModel](anyString())(Some(testAmendIP2014ProtectionModel))
+        mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2014))
         when(plaConnector.amendProtection(any(), any())(any(), any()))
           .thenReturn(Future.successful(Right(response)))
-        when(sessionCacheService.saveFormData(anyString(), any())(any(), any()))
-          .thenReturn(Future.successful(CacheMap("GA", Map.empty)))
+        mockSaveAmendsGAModel()
+        mockSaveAmendResponseModel()
 
         val result =
-          controller.amendProtection(ProtectionTypeUrl.IndividualProtection2014, StatusUrl.Dormant)(fakeRequest)
+          controller.amendProtection(
+            AmendableProtectionType.IndividualProtection2014,
+            AmendProtectionRequestStatus.Dormant
+          )(fakeRequest)
 
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some(routes.AmendsController.amendmentOutcome.toString)
+        redirectLocation(result) shouldBe Some(routes.AmendsController.amendmentOutcome.url)
+
+        verify(mockSessionCacheService).saveAmendResponseModel(any())(any())
       }
     }
   }
@@ -338,146 +330,147 @@ class AmendsControllerSpec
 
     "there is no AmendResponseModel stored in cache" should {
       "return Internal Server Error" in {
-        cacheFetchCondition(eqTo("amendResponseModel"))(None)
-        cacheFetchCondition(eqTo("AmendsGA"))(Some(emptyAmendsGAModel))
+        mockFetchAmendResponseModel(None)
+        mockFetchAmendsGAModel(Some(emptyAmendsGAModel))
         when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
           .thenReturn(Future.successful(Some(testPersonalDetails)))
 
         val result = controller.amendmentOutcome()(fakeRequest)
 
         status(result) shouldBe INTERNAL_SERVER_ERROR
-        verify(technicalErrorView).apply(eqTo(ApplicationType.existingProtections.toString))(any(), any())
+        verify(technicalErrorView).apply()(any(), any())
       }
     }
 
-    Constants.amendmentCodesList.diff(Constants.fixedProtectionNotificationIds).foreach { notificationId =>
+    Seq(
+      NotificationId1  -> amendResponseModelNotification1  -> amendOutcomeDisplayModelNotification1,
+      NotificationId2  -> amendResponseModelNotification2  -> amendOutcomeDisplayModelNotification2,
+      NotificationId3  -> amendResponseModelNotification3  -> amendOutcomeDisplayModelNotification3,
+      NotificationId4  -> amendResponseModelNotification4  -> amendOutcomeDisplayModelNotification4,
+      NotificationId5  -> amendResponseModelNotification5  -> amendOutcomeDisplayModelNotification5,
+      NotificationId6  -> amendResponseModelNotification6  -> amendOutcomeDisplayModelNotification6,
+      NotificationId8  -> amendResponseModelNotification8  -> amendOutcomeDisplayModelNotification8,
+      NotificationId9  -> amendResponseModelNotification9  -> amendOutcomeDisplayModelNotification9,
+      NotificationId10 -> amendResponseModelNotification10 -> amendOutcomeDisplayModelNotification10,
+      NotificationId11 -> amendResponseModelNotification11 -> amendOutcomeDisplayModelNotification11,
+      NotificationId12 -> amendResponseModelNotification12 -> amendOutcomeDisplayModelNotification12,
+      NotificationId13 -> amendResponseModelNotification13 -> amendOutcomeDisplayModelNotification13
+    ).foreach { case ((notificationId, amendResponseModel), amendOutcomeDisplayModel) =>
       s"AmendResponseModel stored in cache contains notification ID: $notificationId" should {
         "return Ok status with amendOutcome view" in {
-          val amendResponseModel =
-            AmendResponseModel(ProtectionModel(Some("psaRef"), Some(12345), notificationId = Some(notificationId)))
-          cacheFetchCondition(eqTo("amendResponseModel"))(Some(amendResponseModel))
-          cacheFetchCondition(eqTo("AmendsGA"))(Some(emptyAmendsGAModel))
+          mockFetchAmendResponseModel(Some(amendResponseModel))
+          mockFetchAmendsGAModel(Some(emptyAmendsGAModel))
           when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
             .thenReturn(Future.successful(Some(testPersonalDetails)))
-          when(sessionCacheService.saveFormData(any(), any())(any(), any()))
+          when(mockSessionCacheService.saveOpenProtection(any())(any()))
             .thenReturn(Future.successful(CacheMap("", Map.empty)))
-          val amendResultDisplayModel = amendResultDisplayModelIP14.copy(notificationId = notificationId)
-          when(displayConstructors.createAmendOutcomeDisplayModel(any(), any(), anyString())(any()))
-            .thenReturn(amendResultDisplayModel)
+          when(displayConstructors.createAmendOutcomeDisplayModel(any(), any(), anyString(), any())(any()))
+            .thenReturn(amendOutcomeDisplayModel)
 
           val result = controller.amendmentOutcome()(fakeRequest)
 
           status(result) shouldBe OK
-          verify(sessionCacheService)
-            .saveFormData(eqTo("openProtection"), eqTo(amendResponseModel.protection))(any(), any())
-          verify(amendOutcomeView).apply(eqTo(amendResultDisplayModel))(any(), any())
+          verify(mockSessionCacheService).saveOpenProtection(eqTo(amendResponseModel.toProtectionModel))(any())
+          verify(amendOutcomeView).apply(eqTo(amendOutcomeDisplayModel))(any(), any())
         }
       }
     }
 
-    Constants.fixedProtectionNotificationIds.foreach { notificationId =>
-      s"AmendResponseModel stored in cache contains notification ID: $notificationId" should {
-
-        val amendResponseModel =
-          AmendResponseModel(ProtectionModel(Some(psaCheckReference), Some(2), notificationId = Some(notificationId)))
-
-        val individualProtectionRecord = ProtectionRecord(
-          identifier = 2,
-          sequenceNumber = 2,
-          `type` = IndividualProtection2016,
-          certificateDate = "2016-09-04",
-          certificateTime = "090019",
-          status = Dormant,
-          protectionReference = Some("IP16123001"),
-          relevantAmount = Some(1000001),
-          preADayPensionInPaymentAmount = Some(3000),
-          postADayBenefitCrystallisationEventAmount = Some(100),
-          uncrystallisedRightsAmount = Some(100),
-          nonUKRightsAmount = Some(100),
-          pensionDebitAmount = Some(100),
-          pensionDebitEnteredAmount = Some(100),
-          protectedAmount = Some(100000),
-          pensionDebitStartDate = Some("2016-09-04"),
-          pensionDebitTotalAmount = Some(10000),
-          lumpSumAmount = None,
-          lumpSumPercentage = None,
-          enhancementFactor = Some(5.6)
-        )
-        val fixedProtectionRecord = individualProtectionRecord.copy(
-          `type` = FixedProtection2016,
-          status = Open,
-          protectionReference = Some("FP16123456")
-        )
-
-        val readProtectionResponseModel = {
-          val fixedProtectionRecordsList      = ProtectionRecordsList(fixedProtectionRecord, None)
-          val individualProtectionRecordsList = ProtectionRecordsList(individualProtectionRecord, None)
-
-          ReadProtectionsResponse(
-            psaCheckReference,
-            Some(Seq(fixedProtectionRecordsList, individualProtectionRecordsList))
+    Seq(
+      NotificationId7  -> amendResponseModelNotification7  -> amendOutcomeDisplayModelNotification7,
+      NotificationId14 -> amendResponseModelNotification14 -> amendOutcomeDisplayModelNotification14
+    )
+      .foreach { case ((notificationId, amendResponseModel), amendOutcomeDisplayModel) =>
+        s"AmendResponseModel stored in cache contains notification ID: $notificationId" should {
+          val individualProtectionRecord = ProtectionRecord(
+            identifier = 2,
+            sequenceNumber = 2,
+            `type` = IndividualProtection2016,
+            certificateDate = amendResponseModel.certificateDate.get,
+            certificateTime = amendResponseModel.certificateTime.get,
+            status = Dormant,
+            protectionReference = Some("IP16123001"),
+            relevantAmount = Some(1000001),
+            preADayPensionInPaymentAmount = Some(3000),
+            postADayBenefitCrystallisationEventAmount = Some(100),
+            uncrystallisedRightsAmount = Some(100),
+            nonUKRightsAmount = Some(100),
+            pensionDebitAmount = Some(100),
+            pensionDebitEnteredAmount = Some(100),
+            protectedAmount = Some(100000),
+            pensionDebitStartDate = Some(DateModel.of(2016, 9, 4)),
+            pensionDebitTotalAmount = Some(10000),
+            lumpSumAmount = None,
+            lumpSumPercentage = None,
+            enhancementFactor = Some(5.6)
           )
-        }
 
-        "call PLAConnector" in {
-          cacheFetchCondition(eqTo("amendResponseModel"))(Some(amendResponseModel))
-          cacheFetchCondition(eqTo("AmendsGA"))(Some(emptyAmendsGAModel))
-          when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
-            .thenReturn(Future.successful(Some(testPersonalDetails)))
-          when(plaConnector.readProtections(any())(any(), any()))
-            .thenReturn(Future.successful(Right(readProtectionResponseModel)))
-          when(sessionCacheService.saveFormData(any(), any())(any(), any()))
-            .thenReturn(Future.successful(CacheMap("", Map.empty)))
-          val amendResultDisplayModel = amendResultDisplayModelIP14.copy(notificationId = notificationId)
-          when(displayConstructors.createAmendOutcomeDisplayModel(any(), any(), anyString())(any()))
-            .thenReturn(amendResultDisplayModel)
+          val fixedProtectionRecord = individualProtectionRecord.copy(
+            `type` = FixedProtection2016,
+            status = Open,
+            protectionReference = Some("FPXXXXX")
+          )
 
-          controller.amendmentOutcome()(fakeRequest).futureValue
+          val readProtectionResponseModel = {
+            val fixedProtectionRecordsList      = ProtectionRecordsList(fixedProtectionRecord, None)
+            val individualProtectionRecordsList = ProtectionRecordsList(individualProtectionRecord, None)
 
-          verify(plaConnector).readProtections(eqTo(testNino))(any(), any())
-        }
+            ReadProtectionsResponse(
+              psaCheckReference,
+              Some(Seq(fixedProtectionRecordsList, individualProtectionRecordsList))
+            )
+          }
 
-        "call SessionCacheService.saveFormData providing correct data" in {
-          cacheFetchCondition(eqTo("amendResponseModel"))(Some(amendResponseModel))
-          cacheFetchCondition(eqTo("AmendsGA"))(Some(emptyAmendsGAModel))
-          when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
-            .thenReturn(Future.successful(Some(testPersonalDetails)))
-          when(plaConnector.readProtections(any())(any(), any()))
-            .thenReturn(Future.successful(Right(readProtectionResponseModel)))
-          when(sessionCacheService.saveFormData(any(), any())(any(), any()))
-            .thenReturn(Future.successful(CacheMap("", Map.empty)))
-          val amendResultDisplayModel = amendResultDisplayModelIP14.copy(notificationId = notificationId)
-          when(displayConstructors.createAmendOutcomeDisplayModel(any(), any(), anyString())(any()))
-            .thenReturn(amendResultDisplayModel)
+          "call PLAConnector" in {
+            mockFetchAmendResponseModel(Some(amendResponseModel))
+            mockFetchAmendsGAModel(Some(emptyAmendsGAModel))
+            when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
+              .thenReturn(Future.successful(Some(testPersonalDetails)))
+            when(plaConnector.readProtections(any())(any(), any()))
+              .thenReturn(Future.successful(Right(readProtectionResponseModel)))
+            when(displayConstructors.createAmendOutcomeDisplayModel(any(), any(), anyString(), any())(any()))
+              .thenReturn(amendOutcomeDisplayModel)
 
-          controller.amendmentOutcome()(fakeRequest).futureValue
+            controller.amendmentOutcome()(fakeRequest).futureValue
 
-          val expectedProtectionModel =
-            ProtectionModel(psaCheckReference, fixedProtectionRecord).copy(notificationId = Some(notificationId))
-          verify(sessionCacheService)
-            .saveFormData(eqTo("openProtection"), eqTo(expectedProtectionModel))(any(), any())
-        }
+            verify(plaConnector).readProtections(eqTo(testNino))(any(), any())
+          }
 
-        "return Ok status with amendOutcome view" in {
-          cacheFetchCondition(eqTo("amendResponseModel"))(Some(amendResponseModel))
-          cacheFetchCondition(eqTo("AmendsGA"))(Some(emptyAmendsGAModel))
-          when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
-            .thenReturn(Future.successful(Some(testPersonalDetails)))
-          when(plaConnector.readProtections(any())(any(), any()))
-            .thenReturn(Future.successful(Right(readProtectionResponseModel)))
-          when(sessionCacheService.saveFormData(any(), any())(any(), any()))
-            .thenReturn(Future.successful(CacheMap("", Map.empty)))
-          val amendResultDisplayModel = amendResultDisplayModelIP14.copy(notificationId = notificationId)
-          when(displayConstructors.createAmendOutcomeDisplayModel(any(), any(), anyString())(any()))
-            .thenReturn(amendResultDisplayModel)
+          "call SessionCacheService.saveFormData providing correct data" in {
+            mockFetchAmendResponseModel(Some(amendResponseModel))
+            mockFetchAmendsGAModel(Some(emptyAmendsGAModel))
+            when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
+              .thenReturn(Future.successful(Some(testPersonalDetails)))
+            when(plaConnector.readProtections(any())(any(), any()))
+              .thenReturn(Future.successful(Right(readProtectionResponseModel)))
+            when(mockSessionCacheService.saveOpenProtection(any())(any()))
+              .thenReturn(Future.successful(CacheMap("", Map.empty)))
+            when(displayConstructors.createAmendOutcomeDisplayModel(any(), any(), anyString(), any())(any()))
+              .thenReturn(amendOutcomeDisplayModel)
 
-          val result = controller.amendmentOutcome()(fakeRequest)
+            controller.amendmentOutcome()(fakeRequest).futureValue
 
-          status(result) shouldBe OK
-          verify(amendOutcomeView).apply(eqTo(amendResultDisplayModel))(any(), any())
+            verify(mockSessionCacheService)
+              .saveOpenProtection(eqTo(amendResponseModel.toProtectionModel))(any())
+          }
+
+          "return Ok status with amendOutcome view" in {
+            mockFetchAmendResponseModel(Some(amendResponseModel))
+            mockFetchAmendsGAModel(Some(emptyAmendsGAModel))
+            when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
+              .thenReturn(Future.successful(Some(testPersonalDetails)))
+            when(plaConnector.readProtections(any())(any(), any()))
+              .thenReturn(Future.successful(Right(readProtectionResponseModel)))
+            when(displayConstructors.createAmendOutcomeDisplayModel(any(), any(), anyString(), any())(any()))
+              .thenReturn(amendOutcomeDisplayModel)
+
+            val result = controller.amendmentOutcome()(fakeRequest)
+
+            status(result) shouldBe OK
+            verify(amendOutcomeView).apply(eqTo(amendOutcomeDisplayModel))(any(), any())
+          }
         }
       }
-    }
 
     "AmendResponseModel stored in cache contains no notification ID" should {
       import testdata.AmendProtectionDisplayModelTestData._
@@ -485,10 +478,10 @@ class AmendsControllerSpec
       "return Ok status with amendOutcomeNoNotificationId view" in {
         val amendResponseModel = amendResponseModelNoNotificationIdIndividualProtection2014
 
-        val amendResultDisplayModel = amendResultDisplayModelNoNotificationIdIndividualProtection2014
+        val amendResultDisplayModel = amendOutcomeDisplayModelNoNotificationIdIndividualProtection2014
 
-        cacheFetchCondition(eqTo("amendResponseModel"))(Some(amendResponseModel))
-        cacheFetchCondition(eqTo("AmendsGA"))(Some(emptyAmendsGAModel))
+        mockFetchAmendResponseModel(Some(amendResponseModel))
+        mockFetchAmendsGAModel(Some(emptyAmendsGAModel))
         when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
           .thenReturn(Future.successful(Some(testPersonalDetails)))
         when(displayConstructors.createAmendOutcomeDisplayModelNoNotificationId(any(), any(), any())(any()))

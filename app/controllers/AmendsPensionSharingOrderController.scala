@@ -20,8 +20,10 @@ import auth.AuthFunction
 import common._
 import config.FrontendAppConfig
 import forms.AmendPsoDetailsForm._
-import models.PensionDebitModel
-import models.amendModels._
+import models.amend.AmendPsoDetailsModel
+import models.pla.AmendableProtectionType
+import models.pla.request.AmendProtectionRequestStatus
+import models.{DateModel, PensionDebitModel}
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc._
@@ -30,7 +32,6 @@ import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages
 
-import java.time.LocalDate
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -45,14 +46,17 @@ class AmendsPensionSharingOrderController @Inject() (
     val formWithCSRF: FormWithCSRF,
     val ec: ExecutionContext
 ) extends FrontendController(mcc)
-    with AmendControllerCacheHelper
     with AmendControllerErrorHelper
     with I18nSupport
     with Logging {
 
-  def submitAmendPsoDetails(protectionType: String, status: String, existingPSO: Boolean): Action[AnyContent] =
+  def submitAmendPsoDetails(
+      protectionType: AmendableProtectionType,
+      status: AmendProtectionRequestStatus,
+      existingPSO: Boolean
+  ): Action[AnyContent] =
     Action.async { implicit request =>
-      authFunction.genericAuthWithNino("existingProtections") { _ =>
+      authFunction.genericAuthWithNino { _ =>
         amendPsoDetailsForm(protectionType)
           .bindFromRequest()
           .fold(
@@ -60,48 +64,46 @@ class AmendsPensionSharingOrderController @Inject() (
               Future.successful(BadRequest(amendPsoDetails(formWithErrors, protectionType, status, existingPSO))),
             amendPsoDetailsModel =>
               for {
-                currentProtectionModel <- fetchAmendProtectionModel(protectionType, status)
-                pensionDebitModel = createPensionDebitModel(amendPsoDetailsModel)
-                updatedModel      = updateAmendModelWithPso(currentProtectionModel, pensionDebitModel)
+                amendProtectionModelOpt <- sessionCacheService.fetchAmendProtectionModel(protectionType, status)
+                amendProtectionModel = amendProtectionModelOpt.getOrElse {
+                  throw Exceptions.RequiredValueNotDefinedException("updateAmendModelWithPso", "amendModel")
+                }
+                pensionDebit = createPensionDebit(amendPsoDetailsModel)
+                updatedModel = amendProtectionModel.withPensionDebit(Some(pensionDebit))
 
-                _ <- saveAmendProtectionModel(protectionType, status, updatedModel)
-              } yield Redirect(routes.AmendsController.amendsSummary(protectionType.toLowerCase, status.toLowerCase))
+                _ <- sessionCacheService.saveAmendProtectionModel(updatedModel)
+              } yield Redirect(routes.AmendsController.amendsSummary(protectionType, status))
           )
       }
     }
 
-  private[controllers] def createPensionDebitModel(formModel: AmendPsoDetailsModel): PensionDebitModel = {
-    val date = formModel.pso.toString
-    val amt = formModel.psoAmt.getOrElse {
-      throw Exceptions.RequiredValueNotDefinedException("createPensionDebitModel", "psoAmt")
+  private[controllers] def createPensionDebit(formModel: AmendPsoDetailsModel): PensionDebitModel = {
+    val date = formModel.startDate
+    val amt = formModel.enteredAmount.getOrElse {
+      throw Exceptions.RequiredValueNotDefinedException("createPensionDebit", "psoAmt")
     }
-    PensionDebitModel(startDate = date, amount = amt.toDouble)
+    PensionDebitModel(startDate = DateModel(date), enteredAmount = amt.toDouble)
   }
 
-  private def updateAmendModelWithPso(
-      amendModelOption: Option[AmendProtectionModel],
-      pensionDebitModel: PensionDebitModel
-  ): AmendProtectionModel = {
-    val amendModel = amendModelOption.getOrElse {
-      throw Exceptions.RequiredValueNotDefinedException("updateAmendModelWithPso", "amendModel")
-    }
-    val newUpdatedProtection = amendModel.updatedProtection.copy(
-      pensionDebits = Some(List(pensionDebitModel)),
-      pensionDebitStartDate = Some(pensionDebitModel.startDate),
-      pensionDebitEnteredAmount = Some(pensionDebitModel.amount)
-    )
-
-    amendModel.copy(updatedProtection = newUpdatedProtection)
-  }
-
-  def amendPsoDetails(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
-    authFunction.genericAuthWithNino("existingProtections") { nino =>
-      fetchAmendProtectionModel(protectionType, status)
+  def amendPsoDetails(
+      protectionType: AmendableProtectionType,
+      status: AmendProtectionRequestStatus
+  ): Action[AnyContent] = Action.async { implicit request =>
+    authFunction.genericAuthWithNino { nino =>
+      sessionCacheService
+        .fetchAmendProtectionModel(protectionType, status)
         .map {
           case Some(amendProtectionModel) =>
-            amendProtectionModel.updatedProtection.pensionDebits match {
-              case Some(debits) =>
-                routeFromPensionDebitsList(debits, protectionType, status, nino)
+            amendProtectionModel.updated.pensionDebit match {
+              case Some(debit) =>
+                Ok(
+                  amendPsoDetails(
+                    amendPsoDetailsForm(protectionType).fill(createAmendPsoDetailsModel(debit)),
+                    protectionType,
+                    status,
+                    existingPso = true
+                  )
+                )
               case None =>
                 Ok(amendPsoDetails(amendPsoDetailsForm(protectionType), protectionType, status, existingPso = false))
             }
@@ -112,34 +114,9 @@ class AmendsPensionSharingOrderController @Inject() (
     }
   }
 
-  private def routeFromPensionDebitsList(
-      debits: Seq[PensionDebitModel],
-      protectionType: String,
-      status: String,
-      nino: String
-  )(
-      implicit request: Request[AnyContent]
-  ): Result =
-    debits.length match {
-      case 0 => Ok(amendPsoDetails(amendPsoDetailsForm(protectionType), protectionType, status, existingPso = false))
-      case 1 =>
-        Ok(
-          amendPsoDetails(
-            amendPsoDetailsForm(protectionType).fill(createAmendPsoDetailsModel(debits.head)),
-            protectionType,
-            status,
-            existingPso = true
-          )
-        )
-      case num =>
-        logger.warn(s"$num pension debits recorded for user nino $nino during amend journey")
-        buildTechnicalError(technicalError)
-    }
-
   private def createAmendPsoDetailsModel(psoDetails: PensionDebitModel): AmendPsoDetailsModel = {
-    val (day, month, year) = Dates.extractDMYFromAPIDateString(psoDetails.startDate)
-    val date               = LocalDate.of(year, month, day)
-    AmendPsoDetailsModel(date, Some(Display.currencyInputDisplayFormat(psoDetails.amount)))
+    val date = psoDetails.startDate.date
+    AmendPsoDetailsModel(date, Some(Display.currencyInputDisplayFormat(psoDetails.enteredAmount)))
   }
 
 }

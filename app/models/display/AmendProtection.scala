@@ -16,14 +16,17 @@
 
 package models.display
 
+import models.pla.AmendableProtectionType
+import models.{AmendedProtectionType, NotificationId}
+import models.pla.response.AmendProtectionResponseStatus
 import play.api.mvc.Call
 
 case class AmendPrintDisplayModel(
     firstName: String,
     surname: String,
     nino: String,
-    protectionType: String,
-    status: Option[String],
+    protectionType: AmendedProtectionType,
+    status: Option[AmendProtectionResponseStatus],
     psaCheckReference: Option[String],
     protectionReference: Option[String],
     fixedProtectionReference: Option[String],
@@ -33,7 +36,7 @@ case class AmendPrintDisplayModel(
 )
 
 case class AmendDisplayModel(
-    protectionType: String,
+    protectionType: AmendableProtectionType,
     amended: Boolean,
     pensionContributionSections: Seq[AmendDisplaySectionModel],
     psoAdded: Boolean,
@@ -54,13 +57,13 @@ case class AmendDisplayRowModel(
 )
 
 case class AmendOutcomeDisplayModel(
-    notificationId: Int,
+    notificationId: NotificationId,
     protectedAmount: String,
     details: Option[AmendPrintDisplayModel]
 )
 
 case class AmendOutcomeDisplayModelNoNotificationId(
     protectedAmount: String,
-    protectionType: String,
+    protectionType: AmendedProtectionType,
     details: Option[AmendPrintDisplayModel]
 )

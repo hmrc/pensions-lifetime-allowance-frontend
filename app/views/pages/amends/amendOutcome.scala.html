@@ -16,7 +16,7 @@
 
 @import models.display.AmendOutcomeDisplayModel
 @import play.api.i18n._
-@import views.pages.models.ViewConstants
+@import utils.NotificationIds
 
 @this(
 	layout: Layout,
@@ -39,10 +39,10 @@
 		</div>
 	</div>
 
-	@if(ViewConstants.amendmentCodesForInsetText.contains(model.notificationId)) {
+	@if(NotificationIds.showingInsetText.contains(model.notificationId)) {
 		<div class="govuk-inset-text">
 			<p>@messages(s"amendCode.${model.notificationId}.insetText")</p>
-			@if(ViewConstants.amendmentCodesForSecondInsetText.contains(model.notificationId)) {
+			@if(NotificationIds.showingSecondInsetText.contains(model.notificationId)) {
 				<p>@messages(s"amendCode.${model.notificationId}.insetText2")</p>
 			}
 		</div>
@@ -59,7 +59,7 @@
 
 	<h2 class="govuk-heading-m">@messages("pla.amendsResultPage.changeDetails")</h2>
 
-	@if(ViewConstants.changeDetailsShortSection.contains(model.notificationId)) {
+	@if(NotificationIds.showingShortChangeDetailsSection.contains(model.notificationId)) {
 		<p class="govuk-body">
 			@messages("pla.amendsResultPage.changeDetailsParaBeforeLink")
 			<a class="govuk-link" href="https://www.gov.uk/find-hmrc-contacts/pension-schemes-general-enquiries">@messages("pla.amendsResultPage.changeDetailsLink")</a>
@@ -67,7 +67,7 @@
 		</p>
 	}
 
-	@if(ViewConstants.changeDetailsLongSection.contains(model.notificationId)) {
+	@if(NotificationIds.showingLongChangeDetailsSection.contains(model.notificationId)) {
 		<p class="govuk-body">
 			@messages(s"amendCode.${model.notificationId}.changeDetailsPara")
 		</p>

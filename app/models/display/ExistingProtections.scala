@@ -16,19 +16,18 @@
 
 package models.display
 
-import models.pla.response.ProtectionType
+import models.pla.response.{ProtectionStatus, ProtectionType}
 import play.api.mvc.Call
 
 case class ExistingProtectionDisplayModel(
-    protectionType: String,
-    status: String,
+    protectionType: ProtectionType,
+    status: ProtectionStatus,
     amendCall: Option[Call],
-    psaCheckReference: Option[String],
+    psaCheckReference: String,
     protectionReference: String,
     protectedAmount: Option[String],
     certificateDate: Option[String],
-    certificateTime: Option[String] = None,
-    withdrawnDate: Option[String] = None,
+    certificateTime: Option[String],
     lumpSumAmount: Option[String] = None,
     lumpSumPercentage: Option[String] = None,
     factor: Option[String] = None,
@@ -69,7 +68,7 @@ object ExistingInactiveProtectionsDisplayModel {
 }
 
 case class ExistingInactiveProtectionsByType(
-    protections: Seq[(String, Seq[ExistingProtectionDisplayModel])]
+    protections: Seq[(ProtectionType, Seq[ExistingProtectionDisplayModel])]
 ) {
   def isEmpty: Boolean = protections.isEmpty
 
@@ -85,7 +84,7 @@ object ExistingInactiveProtectionsByType {
 
   def empty = ExistingInactiveProtectionsByType(Seq.empty)
 
-  private val protectionTypeOrder: Map[String, Int] = Seq(
+  private val protectionTypeOrder: Map[ProtectionType, Int] = Seq(
     ProtectionType.IndividualProtection2016,
     ProtectionType.IndividualProtection2016LTA,
     ProtectionType.IndividualProtection2014,
@@ -103,10 +102,9 @@ object ExistingInactiveProtectionsByType {
     ProtectionType.InternationalEnhancementS221,
     ProtectionType.InternationalEnhancementS224,
     ProtectionType.PensionCreditRights
-  )
-    .map(_.toString)
-    .zipWithIndex
-    .toMap
+  ).zipWithIndex.toMap
 
-  private def sortByProtectionType(t1: String, t2: String): Boolean = protectionTypeOrder(t1) < protectionTypeOrder(t2)
+  private def sortByProtectionType(t1: ProtectionType, t2: ProtectionType): Boolean =
+    protectionTypeOrder(t1) < protectionTypeOrder(t2)
+
 }

@@ -18,8 +18,8 @@ package controllers
 
 import config.FrontendAppConfig
 import connectors.PsaLookupConnector
-import forms.PSALookupProtectionNotificationNoForm
-import models.{PSALookupRequest, PSALookupResult}
+import forms.PsaLookupProtectionNotificationNoForm
+import models.{PsaLookupRequest, PsaLookupResult}
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.libs.json.Json
@@ -45,17 +45,13 @@ class LookupProtectionNotificationController @Inject() (
     with I18nSupport {
 
   private def pnnForm(implicit request: Request[AnyContent]): Form[String] =
-    PSALookupProtectionNotificationNoForm.pnnForm
-
-  private val lookupRequestID = "psa-lookup-request"
-  private val lookupResultID  = "psa-lookup-result"
+    PsaLookupProtectionNotificationNoForm.pnnForm
 
   def displayProtectionNotificationNoForm: Action[AnyContent] = actionWithSessionId.async { implicit request =>
     if (appConfig.psalookupjourneyShutterEnabled) {
       Future.successful(Ok(withdrawnPSALookupJourney()))
     } else {
-      sessionCacheService
-        .fetchAndGetFormData[PSALookupRequest](lookupRequestID)
+      sessionCacheService.fetchPsaLookupRequest
         .flatMap {
           case Some(_) => Future.successful(Ok(psa_lookup_protection_notification_no_form(pnnForm)))
           case _ =>
@@ -75,25 +71,24 @@ class LookupProtectionNotificationController @Inject() (
         .fold(
           formWithErrors => Future.successful(BadRequest(psa_lookup_protection_notification_no_form(formWithErrors))),
           validFormData =>
-            sessionCacheService
-              .fetchAndGetFormData[PSALookupRequest](lookupRequestID)
+            sessionCacheService.fetchPsaLookupRequest
               .flatMap {
-                case Some(PSALookupRequest(psaRef, _)) =>
+                case Some(PsaLookupRequest(psaRef, _)) =>
                   val pnn = validFormData.toUpperCase
                   plaConnector
                     .psaLookup(psaRef, pnn)
                     .flatMap { result =>
-                      val resultData    = Json.fromJson[PSALookupResult](result.json).get
+                      val resultData    = Json.fromJson[PsaLookupResult](result.json).get
                       val updatedResult = resultData.copy(protectionNotificationNumber = Some(pnn))
                       sessionCacheService
-                        .saveFormData[PSALookupResult](lookupResultID, updatedResult)
+                        .savePsaLookupResult(updatedResult)
                         .map(_ => Redirect(routes.LookupController.displayLookupResults))
                     }
                     .recoverWith {
                       case r: UpstreamErrorResponse if r.statusCode == NOT_FOUND =>
-                        val fullResult = PSALookupRequest(psaRef, Some(pnn))
+                        val fullResult = PsaLookupRequest(psaRef, Some(pnn))
                         sessionCacheService
-                          .saveFormData[PSALookupRequest](lookupRequestID, fullResult)
+                          .savePsaLookupRequest(fullResult)
                           .map(_ => Redirect(routes.LookupController.displayNotFoundResults))
                     }
                 case _ =>

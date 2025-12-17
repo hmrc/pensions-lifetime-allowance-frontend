@@ -23,6 +23,7 @@ import constructors.display.DisplayConstructors
 import mocks.AuthMock
 import models._
 import models.display.PrintDisplayModel
+import models.pla.response.{ProtectionStatus, ProtectionType}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
@@ -36,7 +37,6 @@ import services.SessionCacheService
 import testHelpers.FakeApplication
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
-import utils.Constants
 import views.html.pages.fallback.technicalError
 import views.html.pages.result.printProtection
 
@@ -91,21 +91,26 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
   private val testPersonalDetails = PersonalDetailsModel(Person("McTestFace", "Testy"))
 
   private val testProtectionModel = ProtectionModel(
-    psaCheckReference = Some("tstPSACeckRef"),
-    protectionID = Some(1111111),
-    notificationId = Some(15)
+    psaCheckReference = "tstPSACeckRef",
+    identifier = 1111111,
+    sequenceNumber = 1,
+    protectionType = ProtectionType.IndividualProtection2014,
+    status = ProtectionStatus.Open,
+    certificateDate = None,
+    certificateTime = None
   )
 
   private val testPrintDisplayModel = PrintDisplayModel(
-    "Testy",
-    "Mctestface",
-    "AA11TESTA",
-    "IP2016",
-    "open",
-    "PSATestNum",
-    "ProtRefTestNum",
-    Some("£1,246,500"),
-    Some("3 April 2016")
+    firstName = "Testy",
+    surname = "Mctestface",
+    nino = "AA11TESTA",
+    protectionType = ProtectionType.IndividualProtection2016,
+    status = ProtectionStatus.Open,
+    psaCheckReference = "PSATestNum",
+    protectionReference = "ProtRefTestNum",
+    protectedAmount = Some("£1,246,500"),
+    certificateDate = Some("3 April 2016"),
+    certificateTime = Some("3:14pm")
   )
 
   "PrintController on printView" when {
@@ -115,8 +120,7 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
         when(citizenDetailsConnector.getPersonDetails(any())(any()))
           .thenReturn(Future(Some(testPersonalDetails)))
-        when(sessionCacheService.fetchAndGetFormData[ProtectionModel](any())(any(), any()))
-          .thenReturn(Future(None))
+        when(sessionCacheService.fetchOpenProtection(any())).thenReturn(Future(None))
 
         val result = printController.printView(fakeRequest)
 
@@ -125,25 +129,20 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
       }
     }
 
-    (Constants.amendmentCodesList ++ Seq(15, 16)).foreach { notificationId =>
-      s"ProtectionModel stored in cache contains notificationId: $notificationId" should {
-        "return Ok with printProtectionView view" in {
-          val protectionModel   = testProtectionModel.copy(notificationId = Some(notificationId))
-          val printDisplayModel = testPrintDisplayModel
-          mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
+    "there is a protection stored in the cache" should {
+      "return Ok with printProtectionView view" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
 
-          when(citizenDetailsConnector.getPersonDetails(any())(any()))
-            .thenReturn(Future.successful(Some(testPersonalDetails)))
-          when(sessionCacheService.fetchAndGetFormData[ProtectionModel](any())(any(), any()))
-            .thenReturn(Future.successful(Some(protectionModel)))
-          when(displayConstructors.createPrintDisplayModel(any(), any(), any())(any()))
-            .thenReturn(printDisplayModel)
+        when(citizenDetailsConnector.getPersonDetails(any())(any()))
+          .thenReturn(Future.successful(Some(testPersonalDetails)))
+        when(sessionCacheService.fetchOpenProtection(any())).thenReturn(Future(Some(testProtectionModel)))
+        when(displayConstructors.createPrintDisplayModel(any(), any(), any())(any()))
+          .thenReturn(testPrintDisplayModel)
 
-          val result = printController.printView(fakeRequest)
+        val result = printController.printView(fakeRequest)
 
-          status(result) shouldBe 200
-          verify(printProtectionView).apply(ArgumentMatchers.eq(printDisplayModel))(any(), any())
-        }
+        status(result) shouldBe 200
+        verify(printProtectionView).apply(ArgumentMatchers.eq(testPrintDisplayModel))(any(), any())
       }
     }
   }

@@ -20,9 +20,10 @@ import auth.AuthFunction
 import common._
 import config.FrontendAppConfig
 import forms.AmendCurrentPensionForm._
-import models.amendModels._
-import models.pla.AmendProtectionLifetimeAllowanceType
-import models.pla.AmendProtectionLifetimeAllowanceType._
+import models.amend.value.AmendCurrentPensionModel
+import models.pla.AmendableProtectionType
+import models.pla.AmendableProtectionType._
+import models.pla.request.AmendProtectionRequestStatus
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc._
@@ -46,104 +47,75 @@ class AmendsCurrentPensionController @Inject() (
     val formWithCSRF: FormWithCSRF,
     val ec: ExecutionContext
 ) extends FrontendController(mcc)
-    with AmendControllerCacheHelper
     with AmendControllerErrorHelper
     with I18nSupport
     with Logging {
 
-  def amendCurrentPensions(protectionTypeString: String, status: String): Action[AnyContent] =
+  def amendCurrentPensions(
+      protectionType: AmendableProtectionType,
+      status: AmendProtectionRequestStatus
+  ): Action[AnyContent] =
     Action.async { implicit request =>
-      authFunction.genericAuthWithNino("existingProtections") { nino =>
-        AmendProtectionLifetimeAllowanceType
-          .tryFrom(protectionTypeString)
-          .map { protectionType =>
-            fetchAmendProtectionModel(protectionType.toString, status)
-              .map {
-                case Some(data) =>
-                  protectionType match {
-                    case IndividualProtection2016 | IndividualProtection2016LTA =>
-                      Ok(
-                        amendIP16CurrentPensions(
-                          amendCurrentPensionForm(protectionType.toString).fill(
-                            AmendCurrentPensionModel(
-                              Some(
-                                Display.currencyInputDisplayFormat(
-                                  data.updatedProtection.uncrystallisedRights.getOrElse[Double](0)
-                                )
-                              )
-                            )
-                          ),
-                          protectionType.toString,
-                          status
-                        )
-                      )
-                    case IndividualProtection2014 | IndividualProtection2014LTA =>
-                      Ok(
-                        amendIP14CurrentPensions(
-                          amendCurrentPensionForm(protectionType.toString).fill(
-                            AmendCurrentPensionModel(
-                              Some(
-                                Display.currencyInputDisplayFormat(
-                                  data.updatedProtection.uncrystallisedRights.getOrElse[Double](0)
-                                )
-                              )
-                            )
-                          ),
-                          protectionType.toString,
-                          status
-                        )
-                      )
-                  }
-                case _ =>
-                  logger.warn(couldNotRetrieveModelForNino(nino, "when loading the amend currentPension page"))
-                  buildTechnicalError(technicalError)
+      authFunction.genericAuthWithNino { nino =>
+        sessionCacheService
+          .fetchAmendProtectionModel(protectionType, status)
+          .map {
+            case Some(amendProtectionModel) =>
+              val form = amendCurrentPensionForm(protectionType).fill(
+                AmendCurrentPensionModel(
+                  Some(
+                    Display.currencyInputDisplayFormat(
+                      amendProtectionModel.updated.uncrystallisedRightsAmount
+                    )
+                  )
+                )
+              )
+              protectionType match {
+                case IndividualProtection2016 | IndividualProtection2016LTA =>
+                  Ok(amendIP16CurrentPensions(form, protectionType, status))
+                case IndividualProtection2014 | IndividualProtection2014LTA =>
+                  Ok(amendIP14CurrentPensions(form, protectionType, status))
               }
-          }
-          .getOrElse {
-            logger.warn(unknownProtectionType(protectionTypeString, "when loading the amend currentPension page"))
-            Future.successful(buildTechnicalError(technicalError))
+            case _ =>
+              logger.warn(couldNotRetrieveModelForNino(nino, "when loading the amend currentPension page"))
+              buildTechnicalError(technicalError)
           }
       }
     }
 
-  def submitAmendCurrentPension(protectionTypeString: String, status: String): Action[AnyContent] =
+  def submitAmendCurrentPension(
+      protectionType: AmendableProtectionType,
+      status: AmendProtectionRequestStatus
+  ): Action[AnyContent] =
     Action.async { implicit request =>
-      authFunction.genericAuthWithNino("existingProtections") { nino =>
-        AmendProtectionLifetimeAllowanceType
-          .tryFrom(protectionTypeString)
-          .map { protectionType =>
-            amendCurrentPensionForm(protectionType.toString)
-              .bindFromRequest()
-              .fold(
-                errors =>
-                  protectionType match {
-                    case IndividualProtection2016 | IndividualProtection2016LTA =>
-                      Future.successful(BadRequest(amendIP16CurrentPensions(errors, protectionType.toString, status)))
-                    case IndividualProtection2014 | IndividualProtection2014LTA =>
-                      Future.successful(BadRequest(amendIP14CurrentPensions(errors, protectionType.toString, status)))
-                  },
-                success =>
-                  fetchAmendProtectionModel(protectionType.toString, status)
-                    .flatMap {
-                      case Some(model) =>
-                        val updated = model.updatedProtection
-                          .copy(uncrystallisedRights = Some(success.amendedUKPensionAmt.get.toDouble))
-                        val updatedTotal   = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
-                        val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
+      authFunction.genericAuthWithNino { nino =>
+        amendCurrentPensionForm(protectionType)
+          .bindFromRequest()
+          .fold(
+            errors =>
+              protectionType match {
+                case IndividualProtection2016 | IndividualProtection2016LTA =>
+                  Future.successful(BadRequest(amendIP16CurrentPensions(errors, protectionType, status)))
+                case IndividualProtection2014 | IndividualProtection2014LTA =>
+                  Future.successful(BadRequest(amendIP14CurrentPensions(errors, protectionType, status)))
+              },
+            amendCurrentPensionsModel =>
+              sessionCacheService
+                .fetchAmendProtectionModel(protectionType, status)
+                .flatMap {
+                  case Some(model) =>
+                    val updatedModel =
+                      model.withUncrystallisedRightsAmount(amendCurrentPensionsModel.amendedUKPensionAmt.get.toDouble)
 
-                        saveAmendProtectionModel(protectionType.toString, status, amendProtModel)
-                          .map(_ => redirectToSummary(amendProtModel))
+                    sessionCacheService
+                      .saveAmendProtectionModel(updatedModel)
+                      .map(_ => Redirect(routes.AmendsController.amendsSummary(protectionType, status)))
 
-                      case _ =>
-                        logger.warn(couldNotRetrieveModelForNino(nino, "after submitting amend current UK pension"))
-                        Future.successful(buildTechnicalError(technicalError))
-                    }
-              )
-          }
-          .getOrElse {
-            logger.warn(unknownProtectionType(protectionTypeString, "after submitting amend current UK pension"))
-            Future.successful(buildTechnicalError(technicalError))
-          }
+                  case _ =>
+                    logger.warn(couldNotRetrieveModelForNino(nino, "after submitting amend current UK pension"))
+                    Future.successful(buildTechnicalError(technicalError))
+                }
+          )
       }
     }
 

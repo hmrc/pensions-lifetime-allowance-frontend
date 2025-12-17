@@ -17,12 +17,13 @@
 package common
 
 import common.Display._
+import models.{DateModel, TimeModel}
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 import testHelpers.FakeApplication
 
-import java.time.LocalDateTime
+import java.time.{LocalDate, LocalTime}
 import java.util.Locale
 
 class DisplaySpec extends FakeApplication with MockitoSugar {
@@ -60,7 +61,7 @@ class DisplaySpec extends FakeApplication with MockitoSugar {
     }
 
     "correctly create a date string for 17/04/2018" when {
-      val tstDate = LocalDateTime.of(2018, 4, 17, 15, 14, 0)
+      val tstDate = DateModel(LocalDate.of(2018, 4, 17))
 
       "lang is set to en" in {
 
@@ -78,13 +79,13 @@ class DisplaySpec extends FakeApplication with MockitoSugar {
 
   "timeDisplayString" should {
     "correctly create a time string for 17:23:09" in {
-      val testTime = LocalDateTime.of(2025, 9, 22, 17, 23, 9)
+      val testTime = TimeModel(LocalTime.of(17, 23, 9))
 
       timeDisplayString(testTime) shouldBe "5:23pm"
     }
 
     "correct create a time string for 09:35:25" in {
-      val testTime = LocalDateTime.of(2025, 8, 22, 9, 35, 25)
+      val testTime = TimeModel(LocalTime.of(9, 35, 25))
 
       timeDisplayString(testTime) shouldBe "9:35am"
     }

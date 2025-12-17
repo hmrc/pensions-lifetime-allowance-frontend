@@ -14,7 +14,6 @@
  * limitations under the License.
  *@
 
-@import common.Strings
 @import config.FrontendAppConfig
 @import models.display.ExistingProtectionDisplayModel
 @import play.api.i18n._
@@ -27,7 +26,7 @@
 
 @changeLink = {
     @protection.amendCall.map{ call =>
-        <a class="govuk-body govuk-link" href="@call" id=@{s"${protection.status.toLowerCase}-${Strings.protectionTypeString(Some(protection.protectionType))}-amend-link-$protectionNum"}>
+        <a class="govuk-body govuk-link" href="@call" id=@{s"${protection.status.toString.toLowerCase}-${protection.protectionType}-amend-link-$protectionNum"}>
             @Messages("pla.existingProtections.amendLinkText")
             <span class="govuk-visually-hidden">
                 @Messages("pla.protection.types." + protection.protectionType) @protection.protectionReference
@@ -50,9 +49,7 @@
 
     @protectionDetails(Messages(HeaderContent.getProtectionNotificationNumber), protection.protectionReference, "activeProtectionReference")
 
-    @protection.psaCheckReference.map { checkRef =>
-        @protectionDetails(Messages(HeaderContent.getSchemeAdministratorReference), checkRef, "activePSACheckRef")
-    }
+    @protectionDetails(Messages(HeaderContent.getSchemeAdministratorReference), protection.psaCheckReference, "activePSACheckRef")
 
     @protection.certificateDate.map{ certificateDate =>
         @protectionDetails(Messages("pla.existingProtections.applicationDate"), certificateDate, "activeCertificateDate")

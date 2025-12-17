@@ -17,14 +17,12 @@
 package controllers
 
 import auth.AuthFunction
-import common.Strings
 import config.FrontendAppConfig
 import connectors.PlaConnectorError.LockedResponseError
 import connectors.{PlaConnector, PlaConnectorError}
 import constructors.display.DisplayConstructors
-import enums.ApplicationType
 import models._
-import models.amendModels.AmendProtectionModel
+import models.amend.AmendProtectionModel
 import models.cache.CacheMap
 import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
@@ -57,7 +55,7 @@ class ReadProtectionsController @Inject() (
   val currentProtections: Action[AnyContent] = Action.async { implicit request =>
     implicit val lang: Lang = mcc.messagesApi.preferred(request).lang
 
-    authFunction.genericAuthWithNino("existingProtections") { nino =>
+    authFunction.genericAuthWithNino { nino =>
       fetchProtections(nino).flatMap {
 
         case Right(transformedReadResponseModel: TransformedReadResponseModel) =>
@@ -67,19 +65,19 @@ class ReadProtectionsController @Inject() (
 
         case Left(_) =>
           Future.successful(
-            InternalServerError(technicalError(ApplicationType.existingProtections.toString))
+            InternalServerError(technicalError())
               .withHeaders(CACHE_CONTROL -> "no-cache")
           )
       }
     }
   }
 
-  private def fetchProtections(
+  private[controllers] def fetchProtections(
       nino: String
   )(implicit hc: HeaderCarrier): Future[Either[PlaConnectorError, TransformedReadResponseModel]] =
     plaConnector.readProtections(nino).map(_.map(TransformedReadResponseModel.from))
 
-  private def saveAndDisplayExistingProtections(
+  private[controllers] def saveAndDisplayExistingProtections(
       transformedReadResponseModel: TransformedReadResponseModel
   )(implicit request: Request[AnyContent], lang: Lang): Future[Result] =
     for {
@@ -89,28 +87,28 @@ class ReadProtectionsController @Inject() (
       displayModel = displayConstructors.createExistingProtectionsDisplayModel(transformedReadResponseModel)
     } yield Ok(existingProtections(displayModel))
 
-  def saveActiveProtection(
+  private[controllers] def saveActiveProtection(
       activeModel: Option[ProtectionModel]
-  )(implicit request: Request[AnyContent]): Future[Boolean] =
-    activeModel
-      .map(model => sessionCacheService.saveFormData[ProtectionModel]("openProtection", model).map(_ => true))
-      .getOrElse(Future.successful(true))
+  )(implicit request: Request[AnyContent]): Future[Option[CacheMap]] =
+    activeModel.map(sessionCacheService.saveOpenProtection) match {
+      case Some(future) => future.map(Some(_))
+      case None         => Future.successful(None)
+    }
 
-  def saveAmendableProtections(model: TransformedReadResponseModel)(
+  private[controllers] def saveAmendableProtections(model: TransformedReadResponseModel)(
       implicit request: Request[AnyContent]
-  ): Future[Seq[CacheMap]] =
-    Future.sequence(getAmendableProtections(model).map(saveProtection))
-
-  def getAmendableProtections(model: TransformedReadResponseModel): Seq[ProtectionModel] =
-    model.inactiveProtections.filter(_.isAmendable) ++
-      model.activeProtection.filter(_.isAmendable)
-
-  private def saveProtection(protection: ProtectionModel)(implicit request: Request[AnyContent]): Future[CacheMap] = {
-    val cacheKey = Strings.protectionCacheKey(protection.protectionType, protection.status)
-    sessionCacheService.saveFormData[AmendProtectionModel](
-      cacheKey,
-      AmendProtectionModel(protection, protection)
-    )
+  ): Future[Seq[CacheMap]] = {
+    val allProtections = getAllProtections(model)
+    val protections    = allProtections.flatMap(saveIfAmendable)
+    Future.sequence(protections)
   }
+
+  private[controllers] def getAllProtections(model: TransformedReadResponseModel): Seq[ProtectionModel] =
+    model.activeProtection.toSeq ++ model.inactiveProtections
+
+  private[controllers] def saveIfAmendable(protection: ProtectionModel)(
+      implicit request: Request[AnyContent]
+  ): Option[Future[CacheMap]] =
+    AmendProtectionModel.tryFromProtection(protection).map(sessionCacheService.saveAmendProtectionModel)
 
 }

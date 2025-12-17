@@ -16,14 +16,17 @@
 
 package forms
 
-import models.amendModels.AmendPensionsWorthBeforeModel
 import common.Validation._
+import models.amend.value.AmendPensionsWorthBeforeModel
+import models.pla.AmendableProtectionType
 import play.api.data.Form
 import play.api.data.Forms._
 
 object AmendPensionsWorthBeforeForm extends CommonBinders {
 
-  def amendPensionsWorthBeforeForm(protectionType: String): Form[AmendPensionsWorthBeforeModel] = Form(
+  def amendPensionsWorthBeforeForm(
+      protectionType: AmendableProtectionType
+  ): Form[AmendPensionsWorthBeforeModel] = Form(
     mapping(
       "amendedPensionsTakenBeforeAmt" -> of(
         decimalFormatter(

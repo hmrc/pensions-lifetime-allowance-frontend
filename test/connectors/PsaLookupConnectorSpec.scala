@@ -17,7 +17,6 @@
 package connectors
 
 import config.FrontendAppConfig
-import models._
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalacheck.Gen
@@ -25,14 +24,11 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import play.api.Environment
-import play.api.libs.json.{JsValue, Json}
 import play.api.test.Helpers._
 import testHelpers.FakeApplication
-import testHelpers.TestFormats._
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, UpstreamErrorResponse}
 
-import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
 
 class PsaLookupConnectorSpec
@@ -55,62 +51,6 @@ class PsaLookupConnectorSpec
   val psaRef                         = "testPSARef"
   val ltaRef                         = "testLTARef"
   val requestBuilder: RequestBuilder = mock[RequestBuilder]
-
-  val negativePensionsTakenTuple: (String, JsValue) = "pensionsTaken" -> Json.toJson(PensionsTakenModel(Some("no")))
-
-  val negativeOverseasPensionsTuple: (String, JsValue) =
-    "overseasPensions" -> Json.toJson(OverseasPensionsModel("no", None))
-
-  val validCurrentPensionsTuple: (String, JsValue) =
-    "currentPensions" -> Json.toJson(CurrentPensionsModel(Some(BigDecimal(1001))))
-
-  val negativePensionDebitsTuple: (String, JsValue) = "pensionDebits" -> Json.toJson(PensionDebitsModel(Some("no")))
-
-  val negativeIP14PensionsTakenTuple: (String, JsValue) =
-    "ip14PensionsTaken" -> Json.toJson(PensionsTakenModel(Some("no")))
-
-  val validIP14PensionUsedBetweenTuple: (String, JsValue) =
-    "ip14PensionsUsedBetween" -> Json.toJson(PensionsUsedBetweenModel(Some(BigDecimal(1001))))
-
-  val negativeIP14OverseasPensionsTuple: (String, JsValue) =
-    "ip14OverseasPensions" -> Json.toJson(OverseasPensionsModel("no", None))
-
-  val validIP14CurrentPensionsTuple: (String, JsValue) =
-    "ip14CurrentPensions" -> Json.toJson(CurrentPensionsModel(Some(BigDecimal(1001))))
-
-  val negativeIP14PensionDebitsTuple: (String, JsValue) =
-    "ip14PensionDebits" -> Json.toJson(PensionDebitsModel(Some("no")))
-
-  val positivePensionsTakenTuple: (String, JsValue) = "pensionsTaken" -> Json.toJson(PensionsTakenModel(Some("yes")))
-
-  val positivePensionsTakenBeforeTuple: (String, JsValue) =
-    "pensionsTakenBefore" -> Json.toJson(PensionsTakenBeforeModel("yes"))
-
-  val negativePensionsTakenBeforeTuple: (String, JsValue) =
-    "pensionsTakenBefore" -> Json.toJson(PensionsTakenBeforeModel("no"))
-
-  val validPensionsWorthBeforeTuple: (String, JsValue) =
-    "pensionsWorthBefore" -> Json.toJson(PensionsWorthBeforeModel(Some(BigDecimal(1000.1234567891))))
-
-  val positivePensionsTakenBetweenTuple: (String, JsValue) =
-    "pensionsTakenBetween" -> Json.toJson(PensionsTakenBetweenModel("yes"))
-
-  val negativePensionsTakenBetweenTuple: (String, JsValue) =
-    "pensionsTakenBetween" -> Json.toJson(PensionsTakenBetweenModel("no"))
-
-  val validPensionUsedBetweenTuple: (String, JsValue) =
-    "pensionsUsedBetween" -> Json.toJson(PensionsUsedBetweenModel(Some(BigDecimal(1001))))
-
-  val positiveOverseasPensionsTuple: (String, JsValue) =
-    "overseasPensions" -> Json.toJson(OverseasPensionsModel("yes", Some(BigDecimal(1010.1234567891))))
-
-  val validCurrentPensionsTuple2: (String, JsValue) =
-    "currentPensions" -> Json.toJson(CurrentPensionsModel(Some(BigDecimal(1001.1234567891))))
-
-  val positivePensionDebitsTuple: (String, JsValue) = "pensionDebits" -> Json.toJson(PensionDebitsModel(Some("yes")))
-
-  val psoDetailsTuple: (String, JsValue) =
-    "psoDetails" -> Json.toJson(PsoDetailsModel(LocalDate.of(2016, 2, 1), Some(BigDecimal(10000.1234567891))))
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 

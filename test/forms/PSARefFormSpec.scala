@@ -32,7 +32,7 @@ class PSARefFormSpec extends FakeApplication with CommonErrorMessages with Mocki
   val messagesApi: MessagesApi                   = mcc.messagesApi
   implicit val messageProvider: MessagesProvider = MessagesImpl(Lang(Locale.ENGLISH), messagesApi)
 
-  private val form = PSALookupSchemeAdministratorReferenceForm.psaRefForm(messageProvider)
+  private val form = PsaLookupSchemeAdministratorReferenceForm.psaRefForm(messageProvider)
 
   "PSA ref form" must {
     "return no errors with valid data" in {

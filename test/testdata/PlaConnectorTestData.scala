@@ -16,9 +16,11 @@
 
 package testdata
 
-import models.pla.request.AmendProtectionRequest
-import models.pla.response.{AmendProtectionResponse, ReadProtectionsResponse}
-import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionRequestStatus, AmendProtectionResponseStatus}
+import models.NotificationId.NotificationId7
+import models.{DateModel, TimeModel}
+import models.pla.AmendableProtectionType
+import models.pla.request.{AmendProtectionRequest, AmendProtectionRequestStatus}
+import models.pla.response.{AmendProtectionResponse, AmendProtectionResponseStatus, ReadProtectionsResponse}
 
 object PlaConnectorTestData {
 
@@ -34,30 +36,30 @@ object PlaConnectorTestData {
 
   val amendProtectionRequest: AmendProtectionRequest = AmendProtectionRequest(
     lifetimeAllowanceSequenceNumber = lifetimeAllowanceSequenceNumber,
-    lifetimeAllowanceType = AmendProtectionLifetimeAllowanceType.IndividualProtection2014,
-    certificateDate = Some("2025-07-15"),
-    certificateTime = Some("174312"),
+    lifetimeAllowanceType = AmendableProtectionType.IndividualProtection2014,
+    certificateDate = Some(DateModel.of(2025, 7, 15)),
+    certificateTime = Some(TimeModel.of(17, 43, 12)),
     status = AmendProtectionRequestStatus.Dormant,
     protectionReference = Some(protectionReference),
-    relevantAmount = 105000,
+    relevantAmount = 39500,
     preADayPensionInPaymentAmount = 1500,
     postADayBenefitCrystallisationEventAmount = 2500,
     uncrystallisedRightsAmount = 75500,
     nonUKRightsAmount = 0,
-    pensionDebitAmount = Some(25000),
+    pensionDebitAmount = None,
     pensionDebitEnteredAmount = Some(25000),
-    notificationIdentifier = Some(3),
+    notificationIdentifier = None,
     protectedAmount = Some(120000),
-    pensionDebitStartDate = Some("2026-07-09"),
+    pensionDebitStartDate = Some(DateModel.of(2026, 7, 9)),
     pensionDebitTotalAmount = Some(40000)
   )
 
   val amendProtectionResponse: AmendProtectionResponse = AmendProtectionResponse(
     lifetimeAllowanceIdentifier = lifetimeAllowanceIdentifier,
     lifetimeAllowanceSequenceNumber = lifetimeAllowanceSequenceNumber + 1,
-    lifetimeAllowanceType = AmendProtectionLifetimeAllowanceType.IndividualProtection2014,
-    certificateDate = Some("2025-07-15"),
-    certificateTime = Some("174312"),
+    lifetimeAllowanceType = AmendableProtectionType.IndividualProtection2014,
+    certificateDate = Some(DateModel.of(2025, 7, 15)),
+    certificateTime = Some(TimeModel.of(17, 43, 12)),
     status = AmendProtectionResponseStatus.Dormant,
     protectionReference = Some(protectionReference),
     relevantAmount = 105000,
@@ -67,9 +69,9 @@ object PlaConnectorTestData {
     nonUKRightsAmount = 0,
     pensionDebitAmount = Some(25000),
     pensionDebitEnteredAmount = Some(25000),
-    notificationIdentifier = Some(3),
+    notificationIdentifier = Some(NotificationId7),
     protectedAmount = Some(120000),
-    pensionDebitStartDate = Some("2026-07-09"),
+    pensionDebitStartDate = Some(DateModel.of(2026, 7, 9)),
     pensionDebitTotalAmount = Some(40000)
   )
 

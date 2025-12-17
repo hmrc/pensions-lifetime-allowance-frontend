@@ -14,9 +14,10 @@
  * limitations under the License.
  *@
 
-@import common.Strings
-@import models.amendModels.AmendPensionsTakenBeforeModel
 @import play.api.data._
+@import models.amend.value.AmendPensionsTakenBeforeModel
+@import models.pla.AmendableProtectionType
+@import models.pla.request.AmendProtectionRequestStatus
 
 @this(
         layout: Layout,
@@ -28,9 +29,13 @@
         submitButton: playHelpers.templates.submitButton
 )
 
-@(amendPensionsTakenBeforeForm: Form[AmendPensionsTakenBeforeModel], protectionType: String, status: String)(implicit request: Request[_], messages: Messages)
+@(
+    amendPensionsTakenBeforeForm: Form[AmendPensionsTakenBeforeModel],
+    protectionType: AmendableProtectionType,
+    status: AmendProtectionRequestStatus
+)(implicit request: Request[_], messages: Messages)
 
- @title = @{
+@title = @{
         if(amendPensionsTakenBeforeForm.errors.nonEmpty) Messages("site.title.error", Messages("pla.pensionsTakenBefore.title")) else Messages("pla.pensionsTakenBefore.title")
  }
 
@@ -42,7 +47,7 @@
 
     <h1 class="govuk-heading-xl">@Messages("pla.pensionsTakenBefore.title")</h1>
 
-    @form(action = routes.AmendsPensionTakenBeforeController.submitAmendPensionsTakenBefore(Strings.protectionTypeUrlString(Some(protectionType)), status)) {
+    @form(action = routes.AmendsPensionTakenBeforeController.submitAmendPensionsTakenBefore(protectionType, status)) {
 
         @plaInputRadioGroup(
             legend = Messages("pla.pensionsTakenBefore.title"),

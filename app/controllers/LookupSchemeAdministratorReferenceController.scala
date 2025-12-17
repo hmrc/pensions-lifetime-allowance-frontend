@@ -17,8 +17,8 @@
 package controllers
 
 import config.FrontendAppConfig
-import forms.PSALookupSchemeAdministratorReferenceForm
-import models.PSALookupRequest
+import forms.PsaLookupSchemeAdministratorReferenceForm
+import models.PsaLookupRequest
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc._
@@ -41,18 +41,15 @@ class LookupSchemeAdministratorReferenceController @Inject() (
     with I18nSupport {
 
   private def psaRefForm(implicit request: Request[AnyContent]): Form[String] =
-    PSALookupSchemeAdministratorReferenceForm.psaRefForm
-
-  private val lookupRequestID = "psa-lookup-request"
+    PsaLookupSchemeAdministratorReferenceForm.psaRefForm
 
   def displaySchemeAdministratorReferenceForm: Action[AnyContent] = actionWithSessionId.async { implicit request =>
     if (appConfig.psalookupjourneyShutterEnabled) {
       Future.successful(Ok(withdrawnPSALookupJourney()))
     } else {
-      sessionCacheService
-        .fetchAndGetFormData[PSALookupRequest](lookupRequestID)
+      sessionCacheService.fetchPsaLookupRequest
         .flatMap {
-          case Some(PSALookupRequest(psaRef, _)) =>
+          case Some(PsaLookupRequest(psaRef, _)) =>
             Future.successful(Ok(psa_lookup_scheme_admin_ref_form(psaRefForm.fill(psaRef))))
           case _ => Future.successful(Ok(psa_lookup_scheme_admin_ref_form(psaRefForm)))
         }
@@ -69,7 +66,7 @@ class LookupSchemeAdministratorReferenceController @Inject() (
           formWithErrors => Future.successful(BadRequest(psa_lookup_scheme_admin_ref_form(formWithErrors))),
           validFormData =>
             sessionCacheService
-              .saveFormData[PSALookupRequest](lookupRequestID, PSALookupRequest(validFormData))
+              .savePsaLookupRequest(PsaLookupRequest(validFormData))
               .map(_ => Redirect(routes.LookupProtectionNotificationController.displayProtectionNotificationNoForm))
         )
     }

@@ -17,12 +17,12 @@
 package controllers
 
 import auth.AuthFunction
-import common._
 import config.FrontendAppConfig
 import forms.AmendPensionsTakenBetweenForm._
-import models.amendModels._
-import models.pla.AmendProtectionLifetimeAllowanceType
-import models.pla.AmendProtectionLifetimeAllowanceType._
+import models.amend.value.AmendPensionsTakenBetweenModel
+import models.pla.AmendableProtectionType
+import models.pla.AmendableProtectionType._
+import models.pla.request.AmendProtectionRequestStatus
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc._
@@ -46,110 +46,89 @@ class AmendsPensionTakenBetweenController @Inject() (
     val formWithCSRF: FormWithCSRF,
     val ec: ExecutionContext
 ) extends FrontendController(mcc)
-    with AmendControllerCacheHelper
     with AmendControllerErrorHelper
     with I18nSupport
     with Logging {
 
-  def amendPensionsTakenBetween(protectionTypeString: String, status: String): Action[AnyContent] =
+  def amendPensionsTakenBetween(
+      protectionType: AmendableProtectionType,
+      status: AmendProtectionRequestStatus
+  ): Action[AnyContent] =
     Action.async { implicit request =>
-      authFunction.genericAuthWithNino("existingProtections") { nino =>
-        AmendProtectionLifetimeAllowanceType
-          .tryFrom(protectionTypeString)
-          .map { protectionType =>
-            fetchAmendProtectionModel(protectionType.toString, status)
-              .map {
-                case Some(data) =>
-                  val yesNoValue =
-                    if (data.updatedProtection.postADayBenefitCrystallisationEvents.getOrElse[Double](0) > 0) "yes"
-                    else "no"
-                  protectionType match {
-                    case IndividualProtection2016 | IndividualProtection2016LTA =>
-                      Ok(
-                        amendIP16PensionsTakenBetween(
-                          amendPensionsTakenBetweenForm(protectionType.toString)
-                            .fill(AmendPensionsTakenBetweenModel(yesNoValue)),
-                          protectionType.toString,
-                          status
-                        )
-                      )
-                    case IndividualProtection2014 | IndividualProtection2014LTA =>
-                      Ok(
-                        amendIP14PensionsTakenBetween(
-                          amendPensionsTakenBetweenForm(protectionType.toString)
-                            .fill(AmendPensionsTakenBetweenModel(yesNoValue)),
-                          protectionType.toString,
-                          status
-                        )
-                      )
-                  }
-                case _ =>
-                  logger.warn(couldNotRetrieveModelForNino(nino, "when loading amend pensionTakenBetween page"))
-                  buildTechnicalError(technicalError)
+      authFunction.genericAuthWithNino { nino =>
+        sessionCacheService
+          .fetchAmendProtectionModel(protectionType, status)
+          .map {
+            case Some(data) =>
+              val yesNoValue =
+                if (data.updated.postADayBenefitCrystallisationEventAmount.getOrElse[Double](0) > 0) "yes"
+                else "no"
+              val form =
+                amendPensionsTakenBetweenForm(protectionType)
+                  .fill(AmendPensionsTakenBetweenModel(yesNoValue))
+              protectionType match {
+                case IndividualProtection2016 | IndividualProtection2016LTA =>
+                  Ok(amendIP16PensionsTakenBetween(form, protectionType, status))
+                case IndividualProtection2014 | IndividualProtection2014LTA =>
+                  Ok(amendIP14PensionsTakenBetween(form, protectionType, status))
               }
+            case _ =>
+              logger.warn(couldNotRetrieveModelForNino(nino, "when loading amend pensionTakenBetween page"))
+              buildTechnicalError(technicalError)
+          }
 
-          }
-          .getOrElse {
-            logger.warn(unknownProtectionType(protectionTypeString, "when loading amend pensionTakenBetween page"))
-            Future.successful(buildTechnicalError(technicalError))
-          }
       }
     }
 
-  def submitAmendPensionsTakenBetween(protectionTypeString: String, status: String): Action[AnyContent] =
+  def submitAmendPensionsTakenBetween(
+      protectionType: AmendableProtectionType,
+      status: AmendProtectionRequestStatus
+  ): Action[AnyContent] =
     Action.async { implicit request =>
-      authFunction.genericAuthWithNino("existingProtections") { nino =>
-        AmendProtectionLifetimeAllowanceType
-          .tryFrom(protectionTypeString)
-          .map { protectionType =>
-            amendPensionsTakenBetweenForm(protectionType.toString)
-              .bindFromRequest()
-              .fold(
-                errors =>
-                  protectionType match {
-                    case IndividualProtection2016 | IndividualProtection2016LTA =>
-                      Future.successful(
-                        BadRequest(amendIP16PensionsTakenBetween(errors, protectionType.toString, status))
-                      )
-                    case IndividualProtection2014 | IndividualProtection2014LTA =>
-                      Future.successful(
-                        BadRequest(amendIP14PensionsTakenBetween(errors, protectionType.toString, status))
-                      )
-                  },
-                success =>
-                  fetchAmendProtectionModel(protectionType.toString, status)
-                    .flatMap {
-                      case Some(model) =>
-                        success.amendedPensionsTakenBetween match {
-                          case "yes" =>
-                            Future.successful(
-                              Redirect(
-                                routes.AmendsPensionUsedBetweenController
-                                  .amendPensionsUsedBetween(
-                                    Strings.protectionTypeUrlString(Some(protectionType.toString)),
-                                    status.toLowerCase
-                                  )
+      authFunction.genericAuthWithNino { nino =>
+        amendPensionsTakenBetweenForm(protectionType)
+          .bindFromRequest()
+          .fold(
+            errors =>
+              protectionType match {
+                case IndividualProtection2016 | IndividualProtection2016LTA =>
+                  Future.successful(
+                    BadRequest(amendIP16PensionsTakenBetween(errors, protectionType, status))
+                  )
+                case IndividualProtection2014 | IndividualProtection2014LTA =>
+                  Future.successful(
+                    BadRequest(amendIP14PensionsTakenBetween(errors, protectionType, status))
+                  )
+              },
+            success =>
+              sessionCacheService
+                .fetchAmendProtectionModel(protectionType, status)
+                .flatMap {
+                  case Some(model) =>
+                    success.amendedPensionsTakenBetween match {
+                      case "yes" =>
+                        Future.successful(
+                          Redirect(
+                            routes.AmendsPensionUsedBetweenController
+                              .amendPensionsUsedBetween(
+                                protectionType,
+                                status
                               )
-                            )
-                          case "no" =>
-                            val updated = model.updatedProtection.copy(postADayBenefitCrystallisationEvents = Some(0))
-                            val updatedTotal   = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
-                            val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
+                          )
+                        )
+                      case "no" =>
+                        val updatedModel = model.withPostADayBenefitCrystallisationEventAmount(None)
 
-                            saveAmendProtectionModel(protectionType.toString, status, amendProtModel)
-                              .map(_ => redirectToSummary(amendProtModel))
-                        }
-                      case _ =>
-                        logger.warn(couldNotRetrieveModelForNino(nino, "after submitting amend pensions taken between"))
-                        Future.successful(buildTechnicalError(technicalError))
+                        sessionCacheService
+                          .saveAmendProtectionModel(updatedModel)
+                          .map(_ => Redirect(routes.AmendsController.amendsSummary(protectionType, status)))
                     }
-              )
+                  case _ =>
+                    logger.warn(couldNotRetrieveModelForNino(nino, "after submitting amend pensions taken between"))
+                    Future.successful(buildTechnicalError(technicalError))
+                }
+          )
 
-          }
-          .getOrElse {
-            logger.warn(unknownProtectionType(protectionTypeString, "after submitting amend pensions taken between"))
-            Future.successful(buildTechnicalError(technicalError))
-          }
       }
     }
 

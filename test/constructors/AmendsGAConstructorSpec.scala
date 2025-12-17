@@ -16,65 +16,41 @@
 
 package constructors
 
-import models.amendModels.AmendsGAModel
-import models.{PensionDebitModel, ProtectionModel}
+import models.amend.{AmendProtectionFields, AmendsGAModel}
+import models.{DateModel, PensionDebitModel}
 import testHelpers.FakeApplication
 
 class AmendsGAConstructorSpec extends FakeApplication {
 
-  val testProtectionModel1: ProtectionModel = ProtectionModel(
-    psaCheckReference = Some("testPSARef"),
-    uncrystallisedRights = Some(100000.00),
-    nonUKRights = Some(2000.00),
-    preADayPensionInPayment = Some(2000.00),
-    postADayBenefitCrystallisationEvents = Some(2000.00),
-    notificationId = Some(12),
-    protectionID = Some(12345),
-    protectionType = Some("IP2016"),
-    status = Some("dormant"),
-    certificateDate = Some("2016-04-17"),
-    protectedAmount = Some(1250000),
-    protectionReference = Some("PSA123456"),
-    pensionDebits = None
+  val testAmendProtectionFields1: AmendProtectionFields = AmendProtectionFields(
+    uncrystallisedRightsAmount = 100000.00,
+    nonUKRightsAmount = Some(2000.00),
+    preADayPensionInPaymentAmount = Some(2000.00),
+    postADayBenefitCrystallisationEventAmount = Some(2000.00),
+    pensionDebit = None
   )
 
-  val testProtectionModel2: ProtectionModel = ProtectionModel(
-    psaCheckReference = Some("testPSARef"),
-    uncrystallisedRights = Some(250000.00),
-    nonUKRights = Some(500.00),
-    preADayPensionInPayment = Some(1000.00),
-    postADayBenefitCrystallisationEvents = Some(1000.00),
-    notificationId = Some(12),
-    protectionID = Some(12345),
-    protectionType = Some("IP2016"),
-    status = Some("dormant"),
-    certificateDate = Some("2016-05-21"),
-    protectedAmount = Some(1000000),
-    protectionReference = Some("PSA123456"),
-    pensionDebits = Some(List(PensionDebitModel("2016-10-23", 1000.0)))
+  val testAmendProtectionFields2: AmendProtectionFields = AmendProtectionFields(
+    uncrystallisedRightsAmount = 250000.00,
+    nonUKRightsAmount = Some(500.00),
+    preADayPensionInPaymentAmount = Some(1000.00),
+    postADayBenefitCrystallisationEventAmount = Some(1000.00),
+    pensionDebit = Some(PensionDebitModel(DateModel.of(2016, 10, 23), 1000.0))
   )
 
-  val testProtectionModel3: ProtectionModel = ProtectionModel(
-    psaCheckReference = Some("testPSARef"),
-    uncrystallisedRights = Some(250000.00),
-    nonUKRights = Some(0.00),
-    preADayPensionInPayment = Some(0.00),
-    postADayBenefitCrystallisationEvents = Some(0.00),
-    notificationId = Some(12),
-    protectionID = Some(12345),
-    protectionType = Some("IP2016"),
-    status = Some("dormant"),
-    certificateDate = Some("2016-05-21"),
-    protectedAmount = Some(1000000),
-    protectionReference = Some("PSA123456"),
-    pensionDebits = None
+  val testAmendProtectionFields3: AmendProtectionFields = AmendProtectionFields(
+    uncrystallisedRightsAmount = 250000.00,
+    nonUKRightsAmount = Some(0.00),
+    preADayPensionInPaymentAmount = Some(0.00),
+    postADayBenefitCrystallisationEventAmount = Some(0.00),
+    pensionDebit = None
   )
 
   "Calling the identify changes method" when {
 
     "The original and updated protection models are the same" in {
-      val original = testProtectionModel1
-      val updated  = testProtectionModel1
+      val original = testAmendProtectionFields1
+      val updated  = testAmendProtectionFields1
 
       AmendsGAConstructor.identifyAmendsChanges(updated, original) shouldBe AmendsGAModel(None, None, None, None, None)
     }
@@ -82,41 +58,41 @@ class AmendsGAConstructorSpec extends FakeApplication {
     "The original and updated protection models are different" when {
 
       "The values for Current Pensions, PTBefore, PTBetween and Overseas Pensions are updated" in {
-        val original = testProtectionModel1
-        val updated  = testProtectionModel2
+        val original = testAmendProtectionFields1
+        val updated  = testAmendProtectionFields2
 
         AmendsGAConstructor.identifyAmendsChanges(updated, original) shouldBe AmendsGAModel(
-          Some("UpdatedValue"),
-          Some("UpdatedValue"),
-          Some("UpdatedValue"),
-          Some("UpdatedValue"),
-          Some("addedPSO")
+          current = Some("UpdatedValue"),
+          before = Some("UpdatedValue"),
+          between = Some("UpdatedValue"),
+          overseas = Some("UpdatedValue"),
+          pso = Some("addedPSO")
         )
       }
 
       "PTBefore, PTBetween and Overseas Pensions are amended from 'No' to 'Yes'" in {
-        val original = testProtectionModel3
-        val updated  = testProtectionModel1
+        val original = testAmendProtectionFields3
+        val updated  = testAmendProtectionFields1
 
         AmendsGAConstructor.identifyAmendsChanges(updated, original) shouldBe AmendsGAModel(
-          Some("UpdatedValue"),
-          Some("ChangedToYes"),
-          Some("ChangedToYes"),
-          Some("ChangedToYes"),
-          None
+          current = Some("UpdatedValue"),
+          before = Some("ChangedToYes"),
+          between = Some("ChangedToYes"),
+          overseas = Some("ChangedToYes"),
+          pso = None
         )
       }
 
       "PTBefore, PTBetween and Overseas Pensions are amended from 'Yes' to 'No'" in {
-        val original = testProtectionModel1
-        val updated  = testProtectionModel3
+        val original = testAmendProtectionFields1
+        val updated  = testAmendProtectionFields3
 
         AmendsGAConstructor.identifyAmendsChanges(updated, original) shouldBe AmendsGAModel(
-          Some("UpdatedValue"),
-          Some("ChangedToNo"),
-          Some("ChangedToNo"),
-          Some("ChangedToNo"),
-          None
+          current = Some("UpdatedValue"),
+          before = Some("ChangedToNo"),
+          between = Some("ChangedToNo"),
+          overseas = Some("ChangedToNo"),
+          pso = None
         )
       }
     }

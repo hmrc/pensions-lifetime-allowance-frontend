@@ -17,7 +17,7 @@
 package controllers
 
 import config.FrontendAppConfig
-import models.{PSALookupRequest, PSALookupResult}
+import models.{PsaLookupRequest, PsaLookupResult}
 import org.mockito.ArgumentMatchers.{any, anyString, eq => eqTo}
 import org.mockito.Mockito.{reset, verify, when}
 import org.scalatest.BeforeAndAfterEach
@@ -104,12 +104,13 @@ class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with 
       "there is data in session cache" should {
         "return 200 with psa_lookup_not_found_results view" in {
           when(appConfig.psalookupjourneyShutterEnabled).thenReturn(false)
-          cacheFetchCondition[PSALookupRequest](Some(Json.fromJson[PSALookupRequest](psaRequestJson).get))
+          when(sessionCacheService.fetchPsaLookupRequest(any()))
+            .thenReturn(Future.successful(Some(Json.fromJson[PsaLookupRequest](psaRequestJson).get)))
 
           val result = controller.displayNotFoundResults.apply(request)
 
           status(result) shouldBe OK
-          val expectedLookupRequest = Json.fromJson[PSALookupRequest](psaRequestJson).get
+          val expectedLookupRequest = Json.fromJson[PsaLookupRequest](psaRequestJson).get
           verify(psa_lookup_not_found_results).apply(eqTo(expectedLookupRequest), anyString())(any(), any())
         }
       }
@@ -117,7 +118,7 @@ class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with 
       "there is NO data in session cache" should {
         "return 303 Redirect" in {
           when(appConfig.psalookupjourneyShutterEnabled).thenReturn(false)
-          cacheFetchCondition[PSALookupRequest](None)
+          when(sessionCacheService.fetchPsaLookupRequest(any())).thenReturn(Future.successful(None))
 
           val result = controller.displayNotFoundResults.apply(request)
 
@@ -148,12 +149,13 @@ class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with 
       "there is data in session cache" should {
         "return 200 with psa_lookup_results" in {
           when(appConfig.psalookupjourneyShutterEnabled).thenReturn(false)
-          cacheFetchCondition[PSALookupResult](Some(Json.fromJson[PSALookupResult](plaReturnJson).get))
+          when(sessionCacheService.fetchPsaLookupResult(any()))
+            .thenReturn(Future.successful(Some(Json.fromJson[PsaLookupResult](plaReturnJson).get)))
 
           val result = controller.displayLookupResults.apply(request)
 
           status(result) shouldBe OK
-          val expectedLookupResult = Json.fromJson[PSALookupResult](plaReturnJson).get
+          val expectedLookupResult = Json.fromJson[PsaLookupResult](plaReturnJson).get
           verify(psa_lookup_results).apply(eqTo(expectedLookupResult), anyString())(any(), any())
         }
       }
@@ -161,7 +163,7 @@ class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with 
       "there is NO data in session cache" should {
         "return 303 Redirect" in {
           when(appConfig.psalookupjourneyShutterEnabled).thenReturn(false)
-          cacheFetchCondition[PSALookupResult](None)
+          when(sessionCacheService.fetchPsaLookupResult(any())).thenReturn(Future.successful(None))
 
           val result = controller.displayLookupResults.apply(request)
 
@@ -237,9 +239,5 @@ class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with 
       }
     }
   }
-
-  def cacheFetchCondition[T](data: Option[T]): Unit =
-    when(sessionCacheService.fetchAndGetFormData[T](any())(any(), any()))
-      .thenReturn(Future.successful(data))
 
 }

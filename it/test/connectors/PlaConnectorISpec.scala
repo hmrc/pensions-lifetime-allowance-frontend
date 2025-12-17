@@ -16,17 +16,14 @@
 
 package connectors
 
-import common.Exceptions
 import com.github.tomakehurst.wiremock.client.WireMock._
-import connectors.PlaConnectorError.{
-  ConflictResponseError,
-  IncorrectResponseBodyError,
-  LockedResponseError,
-  UnexpectedResponseError
-}
-import models.ProtectionModel
-import models.pla.response.ReadProtectionsResponse
-import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionResponseStatus}
+import connectors.PlaConnectorError.{ConflictResponseError, IncorrectResponseBodyError, LockedResponseError, UnexpectedResponseError}
+import models.amend.AmendProtectionModel
+import models.pla.response.ProtectionType.IndividualProtection2014
+import models.{DateModel, PensionDebitModel, ProtectionModel, TimeModel}
+import models.pla.AmendableProtectionType
+import models.pla.response.ProtectionStatus.Dormant
+import models.pla.response.{AmendProtectionResponseStatus, ReadProtectionsResponse}
 import org.scalatest.concurrent.ScalaFutures
 import play.api.http.Status.CONFLICT
 import play.api.libs.json.Json
@@ -50,32 +47,31 @@ class PlaConnectorISpec extends IntegrationBaseSpec with ScalaFutures {
 
   "PlaConnector on amendProtection" when {
 
-    val amendProtectionInputProtectionModel: ProtectionModel = ProtectionModel(
-      psaCheckReference = None,
-      protectionID = Some(lifetimeAllowanceIdentifier),
-      version = Some(lifetimeAllowanceSequenceNumber),
-      protectionType = Some("IP2014"),
-      certificateDate = Some("2025-07-15T174312"),
-      status = Some("dormant"),
+    val protectionInputProtectionModel: ProtectionModel = ProtectionModel(
+      psaCheckReference = "psaCheckReference",
+      identifier = lifetimeAllowanceIdentifier,
+      sequenceNumber = lifetimeAllowanceSequenceNumber,
+      protectionType = IndividualProtection2014,
+      status = Dormant,
+      certificateDate = Some(DateModel.of(2025, 7, 15)),
+      certificateTime = Some(TimeModel.of(17, 43, 12)),
       protectionReference = Some(protectionReference),
       relevantAmount = Some(105000),
-      preADayPensionInPayment = Some(1500.00),
-      postADayBenefitCrystallisationEvents = Some(2500.00),
-      uncrystallisedRights = Some(75500.00),
-      nonUKRights = Some(0.00),
-      pensionDebitAmount = Some(25000),
-      pensionDebitEnteredAmount = Some(25000),
-      notificationId = Some(3),
+      preADayPensionInPaymentAmount = Some(1500.00),
+      postADayBenefitCrystallisationEventAmount = Some(2500.00),
+      uncrystallisedRightsAmount = Some(75500.00),
+      nonUKRightsAmount = Some(0.00),
       protectedAmount = Some(120000),
-      pensionDebitStartDate = Some("2026-07-09"),
       pensionDebitTotalAmount = Some(40000)
     )
+
+    val amendProtectionInputProtectionModel = AmendProtectionModel.tryFromProtection(protectionInputProtectionModel).get.withPensionDebit(Some(PensionDebitModel(DateModel.of(2026, 7, 9), 25_000)))
 
     val correctResponseBodyStr =
       s"""{
          |    "lifetimeAllowanceIdentifier": $lifetimeAllowanceIdentifier,
          |    "lifetimeAllowanceSequenceNumber": ${lifetimeAllowanceSequenceNumber + 1},
-         |    "lifetimeAllowanceType": "${AmendProtectionLifetimeAllowanceType.IndividualProtection2014.jsonValue}",
+         |    "lifetimeAllowanceType": "${AmendableProtectionType.IndividualProtection2014.jsonValue}",
          |    "certificateDate": "2025-07-15",
          |    "certificateTime": "174312",
          |    "status": "${AmendProtectionResponseStatus.Dormant.jsonValue}",
@@ -87,7 +83,7 @@ class PlaConnectorISpec extends IntegrationBaseSpec with ScalaFutures {
          |    "nonUKRightsAmount": 0,
          |    "pensionDebitAmount": 25000,
          |    "pensionDebitEnteredAmount": 25000,
-         |    "notificationIdentifier": 3,
+         |    "notificationIdentifier": 7,
          |    "protectedAmount": 120000,
          |    "pensionDebitStartDate": "2026-07-09",
          |    "pensionDebitTotalAmount": 40000
@@ -120,13 +116,6 @@ class PlaConnectorISpec extends IntegrationBaseSpec with ScalaFutures {
 
         result shouldBe Right(amendProtectionResponse)
       }
-    }
-
-    "it is passed a protection with a missing Protection ID" should {
-      "throw a RequiredValueNotDefinedForNinoException and return a GenericPlaConnectorError" in
-        (the[Exceptions.RequiredValueNotDefinedForNinoException] thrownBy {
-          connector.amendProtection(testNino, amendProtectionInputProtectionModel.copy(protectionID = None)).futureValue
-        } should have).message(s"Value not found for protectionID in amendProtection with nino: $testNino")
     }
 
     "it receives response with body in incorrect format" should {

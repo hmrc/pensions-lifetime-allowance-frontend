@@ -35,7 +35,7 @@ class AmendOutcomeViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewM
 
     "provided with AmendResultDisplayModel containing notificationId: 1" should {
 
-      val doc = parseDocument(amendResultDisplayModelNotification1)
+      val doc = parseDocument(amendOutcomeDisplayModelNotification1)
 
       "not have back link with text back " in {
         val backButton = doc.select(".govuk-back-link").text()
@@ -141,7 +141,7 @@ class AmendOutcomeViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewM
 
     "provided with AmendResultDisplayModel containing notificationId: 2" should {
 
-      val doc = parseDocument(amendResultDisplayModelNotification2)
+      val doc = parseDocument(amendOutcomeDisplayModelNotification2)
 
       "contain title" in {
         doc.title() shouldBe title
@@ -261,7 +261,7 @@ class AmendOutcomeViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewM
 
     "provided with AmendResultDisplayModel containing notificationId: 3" should {
 
-      val doc = parseDocument(amendResultDisplayModelNotification3)
+      val doc = parseDocument(amendOutcomeDisplayModelNotification3)
 
       "contain title" in {
         doc.title() shouldBe title
@@ -381,7 +381,7 @@ class AmendOutcomeViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewM
 
     "provided with AmendResultDisplayModel containing notificationId: 4" should {
 
-      val doc = parseDocument(amendResultDisplayModelNotification4)
+      val doc = parseDocument(amendOutcomeDisplayModelNotification4)
 
       "contain title" in {
         doc.title() shouldBe title
@@ -501,7 +501,7 @@ class AmendOutcomeViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewM
 
     "provided with AmendResultDisplayModel containing notificationId: 5" should {
 
-      val doc = parseDocument(amendResultDisplayModelNotification5)
+      val doc = parseDocument(amendOutcomeDisplayModelNotification5)
 
       "contain title" in {
         doc.title() shouldBe title
@@ -602,7 +602,7 @@ class AmendOutcomeViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewM
 
     "provided with AmendResultDisplayModel containing notificationId: 6" should {
 
-      val doc = parseDocument(amendResultDisplayModelNotification6)
+      val doc = parseDocument(amendOutcomeDisplayModelNotification6)
 
       "contain title" in {
         doc.title() shouldBe title
@@ -700,7 +700,7 @@ class AmendOutcomeViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewM
 
     "provided with AmendResultDisplayModel containing notificationId: 7" should {
 
-      val doc = parseDocument(amendResultDisplayModelNotification7)
+      val doc = parseDocument(amendOutcomeDisplayModelNotification7)
 
       "contain title" in {
         doc.title() shouldBe title
@@ -821,7 +821,7 @@ class AmendOutcomeViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewM
 
     "provided with AmendResultDisplayModel containing notificationId: 8" should {
 
-      val doc = parseDocument(amendResultDisplayModelNotification8)
+      val doc = parseDocument(amendOutcomeDisplayModelNotification8)
 
       "contain title" in {
         doc.title() shouldBe title
@@ -922,7 +922,7 @@ class AmendOutcomeViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewM
 
     "provided with AmendResultDisplayModel containing notificationId: 9" should {
 
-      val doc = parseDocument(amendResultDisplayModelNotification9)
+      val doc = parseDocument(amendOutcomeDisplayModelNotification9)
 
       "contain title" in {
         doc.title() shouldBe title
@@ -1042,7 +1042,7 @@ class AmendOutcomeViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewM
 
     "provided with AmendResultDisplayModel containing notificationId: 10" should {
 
-      val doc = parseDocument(amendResultDisplayModelNotification10)
+      val doc = parseDocument(amendOutcomeDisplayModelNotification10)
 
       "contain title" in {
         doc.title() shouldBe title
@@ -1162,7 +1162,7 @@ class AmendOutcomeViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewM
 
     "provided with AmendResultDisplayModel containing notificationId: 11" should {
 
-      val doc = parseDocument(amendResultDisplayModelNotification11)
+      val doc = parseDocument(amendOutcomeDisplayModelNotification11)
 
       "contain title" in {
         doc.title() shouldBe title
@@ -1282,7 +1282,7 @@ class AmendOutcomeViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewM
 
     "provided with AmendResultDisplayModel containing notificationId: 12" should {
 
-      val doc = parseDocument(amendResultDisplayModelNotification12)
+      val doc = parseDocument(amendOutcomeDisplayModelNotification12)
 
       "contain title" in {
         doc.title() shouldBe title
@@ -1402,7 +1402,7 @@ class AmendOutcomeViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewM
 
     "provided with AmendResultDisplayModel containing notificationId: 13" should {
 
-      val doc = parseDocument(amendResultDisplayModelNotification13)
+      val doc = parseDocument(amendOutcomeDisplayModelNotification13)
 
       "contain title" in {
         doc.title() shouldBe title
@@ -1500,7 +1500,7 @@ class AmendOutcomeViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewM
 
     "provided with AmendResultDisplayModel containing notificationId: 14" should {
 
-      val doc = parseDocument(amendResultDisplayModelNotification14)
+      val doc = parseDocument(amendOutcomeDisplayModelNotification14)
 
       "contain title" in {
         doc.title() shouldBe title

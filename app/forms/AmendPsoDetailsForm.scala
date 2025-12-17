@@ -18,8 +18,9 @@ package forms
 
 import common.Validation._
 import forms.formatters.DateFormatter
-import models.amendModels.AmendPsoDetailsModel
-import models.pla.AmendProtectionLifetimeAllowanceType
+import models.amend.AmendPsoDetailsModel
+import models.pla.AmendableProtectionType
+import models.pla.AmendableProtectionType._
 import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.Messages
@@ -32,18 +33,18 @@ object AmendPsoDetailsForm extends CommonBinders {
   val key    = "pso"
   val amount = "psoAmt"
 
-  def amendPsoDetailsForm(protectionType: String)(implicit messages: Messages): Form[AmendPsoDetailsModel] = Form(
+  def amendPsoDetailsForm(
+      protectionType: AmendableProtectionType
+  )(implicit messages: Messages): Form[AmendPsoDetailsModel] = Form(
     mapping(
       key -> of(
         DateFormatter(
           key,
           optMinDate = Some(
-            if (
-              AmendProtectionLifetimeAllowanceType
-                .tryFrom(protectionType)
-                .contains(AmendProtectionLifetimeAllowanceType.IndividualProtection2016)
-            ) Constants.minIP16PsoDate
-            else Constants.minIP14PsoDate
+            protectionType match {
+              case IndividualProtection2014 | IndividualProtection2014LTA => Constants.minIP14PsoDate
+              case IndividualProtection2016 | IndividualProtection2016LTA => Constants.minIP16PsoDate
+            }
           ),
           optMaxDate = Some(LocalDate.now.plusDays(1))
         )
@@ -62,7 +63,7 @@ object AmendPsoDetailsForm extends CommonBinders {
           psoAmt => isMaxTwoDecimalPlaces(psoAmt.getOrElse(BigDecimal(0.0)).toDouble)
         )
         .verifying("pla.psoDetails.amount.errors.mandatoryError", _.isDefined)
-    )((date, amount) => AmendPsoDetailsModel(date, amount))(model => Some((model.pso, model.psoAmt)))
+    )((date, amount) => AmendPsoDetailsModel(date, amount))(model => Some((model.startDate, model.enteredAmount)))
   )
 
 }

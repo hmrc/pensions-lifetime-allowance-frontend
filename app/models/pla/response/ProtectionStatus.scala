@@ -41,8 +41,4 @@ object ProtectionStatus extends Enumerable.Implicits {
   implicit val enumerable: Enumerable[ProtectionStatus] =
     Enumerable(values.map(v => v.jsonValue -> v): _*)
 
-  private val valuesLowerCase = values.map(status => status.toString.toLowerCase -> status).toMap
-
-  def tryFrom(str: String): Option[ProtectionStatus] = valuesLowerCase.get(str.toLowerCase)
-
 }

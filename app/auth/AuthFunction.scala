@@ -58,23 +58,17 @@ trait AuthFunction extends AuthorisedFunctions with Logging {
 
   class MissingNinoException extends Exception("Nino not returned by authorised call")
 
-  def genericAuthWithoutNino(pType: String)(
-      body: => Future[Result]
-  )(implicit request: Request[AnyContent], messages: Messages, hc: HeaderCarrier): Future[Result] =
-    authorised(Enrolment(enrolmentKey).and(ConfidenceLevel.L200)) {
-      body
-    }.recover(authErrorHandling(pType))
-
-  def genericAuthWithNino(pType: String)(
+  def genericAuthWithNino(
       body: String => Future[Result]
   )(implicit request: Request[AnyContent], messages: Messages, hc: HeaderCarrier): Future[Result] =
     authorised(Enrolment(enrolmentKey).and(ConfidenceLevel.L200))
       .retrieve(Retrievals.nino)(nino => body(nino.getOrElse(throw new MissingNinoException)))
-      .recover(authErrorHandling(pType))
+      .recover(authErrorHandling)
 
   private def authErrorHandling(
-      pType: String
-  )(implicit request: Request[AnyContent], messages: Messages): PartialFunction[Throwable, Result] = {
+      implicit request: Request[AnyContent],
+      messages: Messages
+  ): PartialFunction[Throwable, Result] = {
     case _: NoActiveSession =>
       val upliftUrl = upliftEnvironmentUrl(request.uri)
       Redirect(appConfig.ggSignInUrl, Map("continue" -> Seq(upliftUrl), "origin" -> Seq(appConfig.appName)))
@@ -82,7 +76,7 @@ trait AuthFunction extends AuthorisedFunctions with Logging {
     case _: InsufficientConfidenceLevel => Redirect(IVUpliftUrl())
     case e: AuthorisationException =>
       logger.error("Unexpected auth exception ", e)
-      InternalServerError(technicalError(pType))
+      InternalServerError(technicalError())
   }
 
   def upliftEnvironmentUrl(requestUri: String): String =

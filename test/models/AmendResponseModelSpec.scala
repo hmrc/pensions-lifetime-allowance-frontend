@@ -16,41 +16,115 @@
 
 package models
 
-import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionResponseStatus}
+import models.NotificationId.NotificationId7
+import models.pla.response.{AmendProtectionResponseStatus, ProtectionStatus, ProtectionType}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import testdata.PlaConnectorTestData._
 
 class AmendResponseModelSpec extends AnyWordSpec with Matchers {
 
+  val amendResponseModel = AmendResponseModel(
+    psaCheckReference = "testPSARef",
+    identifier = lifetimeAllowanceIdentifier,
+    sequenceNumber = lifetimeAllowanceSequenceNumber + 1,
+    protectionType = AmendedProtectionType.IndividualProtection2014,
+    certificateDate = Some(DateModel.of(2025, 7, 15)),
+    certificateTime = Some(TimeModel.of(17, 43, 12)),
+    status = AmendProtectionResponseStatus.Dormant,
+    protectionReference = Some(protectionReference),
+    relevantAmount = 105_000,
+    preADayPensionInPaymentAmount = 1_500,
+    postADayBenefitCrystallisationEventAmount = 2_500,
+    uncrystallisedRightsAmount = 75_500,
+    nonUKRightsAmount = 0,
+    pensionDebit = Some(PensionDebitModel(DateModel.of(2026, 7, 9), 25_000)),
+    notificationId = Some(NotificationId7),
+    protectedAmount = Some(120_000),
+    pensionDebitTotalAmount = Some(40_000)
+  )
+
+  val protectionModel = ProtectionModel(
+    psaCheckReference = "fixedPsaRef",
+    identifier = 10101,
+    sequenceNumber = 20202,
+    protectionType = ProtectionType.IndividualProtection2014,
+    status = ProtectionStatus.Open,
+    certificateDate = Some(DateModel.of(2025, 12, 8)),
+    certificateTime = Some(TimeModel.of(15, 34, 45)),
+    protectedAmount = None,
+    relevantAmount = None,
+    postADayBenefitCrystallisationEventAmount = None,
+    preADayPensionInPaymentAmount = None,
+    uncrystallisedRightsAmount = None,
+    nonUKRightsAmount = None,
+    pensionDebitTotalAmount = None,
+    protectionReference = None,
+    lumpSumPercentage = None,
+    lumpSumAmount = None,
+    enhancementFactor = None
+  )
+
   "AmendResponseModel on from" should {
 
     "return correct AmendResponseModel" in {
-      val expectedResult = AmendResponseModel(
-        ProtectionModel(
-          psaCheckReference = Some("testPSARef"),
-          protectionID = Some(lifetimeAllowanceIdentifier),
-          version = Some(lifetimeAllowanceSequenceNumber + 1),
-          protectionType = Some(AmendProtectionLifetimeAllowanceType.IndividualProtection2014.toString),
-          certificateDate = Some("2025-07-15T174312"),
-          status = Some(AmendProtectionResponseStatus.Dormant.toString),
-          protectionReference = Some(protectionReference),
-          relevantAmount = Some(105000),
-          preADayPensionInPayment = Some(1500.00),
-          postADayBenefitCrystallisationEvents = Some(2500.00),
-          uncrystallisedRights = Some(75500.00),
-          nonUKRights = Some(0.00),
-          pensionDebitAmount = Some(25000),
-          pensionDebitEnteredAmount = Some(25000),
-          notificationId = Some(3),
-          protectedAmount = Some(120000),
-          pensionDebitStartDate = Some("2026-07-09"),
-          pensionDebitTotalAmount = Some(40000)
-        )
-      )
-
-      AmendResponseModel.from(amendProtectionResponse, Some("testPSARef")) shouldBe expectedResult
+      AmendResponseModel.from(amendProtectionResponse, "testPSARef") shouldBe amendResponseModel
     }
+  }
+
+  "toProtectionModel" should {
+    "return the correct protection model" in {
+      amendResponseModel.toProtectionModel shouldBe ProtectionModel(
+        psaCheckReference = "testPSARef",
+        identifier = lifetimeAllowanceIdentifier,
+        sequenceNumber = lifetimeAllowanceSequenceNumber + 1,
+        protectionType = ProtectionType.IndividualProtection2014,
+        certificateDate = Some(DateModel.of(2025, 7, 15)),
+        certificateTime = Some(TimeModel.of(17, 43, 12)),
+        status = ProtectionStatus.Dormant,
+        protectionReference = Some(protectionReference),
+        relevantAmount = Some(105_000),
+        preADayPensionInPaymentAmount = Some(1_500),
+        postADayBenefitCrystallisationEventAmount = Some(2_500),
+        uncrystallisedRightsAmount = Some(75_500),
+        nonUKRightsAmount = Some(0),
+        protectedAmount = Some(120_000),
+        pensionDebitTotalAmount = Some(40_000)
+      )
+    }
+  }
+
+  "combineWithFixedProtection2016" should {
+    val fixedProtectionTypes = Seq(
+      ProtectionType.FixedProtection2016    -> AmendedProtectionType.FixedProtection2016,
+      ProtectionType.FixedProtection2016LTA -> AmendedProtectionType.FixedProtection2016LTA
+    )
+    "return Some with correct fields" when
+      fixedProtectionTypes.foreach { case (protectionType, amendedProtectionType) =>
+        val protection = protectionModel.copy(
+          protectionType = protectionType
+        )
+
+        amendResponseModel.combineWithFixedProtection2016(protection) shouldBe Some(
+          amendResponseModel.copy(
+            protectionType = amendedProtectionType,
+            protectionReference = protectionModel.protectionReference,
+            certificateDate = protectionModel.certificateDate,
+            certificateTime = protectionModel.certificateTime
+          )
+        )
+      }
+
+    "return None" when
+      ProtectionType.values.diff(fixedProtectionTypes.map(_._1)).foreach { protectionType =>
+        s"provided with '$protectionType'" in {
+          val protection = protectionModel.copy(
+            protectionType = protectionType
+          )
+
+          amendResponseModel.combineWithFixedProtection2016(protection) shouldBe None
+        }
+      }
   }
 
 }

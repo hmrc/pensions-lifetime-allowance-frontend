@@ -14,8 +14,9 @@
  * limitations under the License.
  *@
 
-@import models.amendModels.AmendPensionsTakenBetweenModel
-@import common.Strings
+@import models.amend.value.AmendPensionsTakenBetweenModel
+@import models.pla.AmendableProtectionType
+@import models.pla.request.AmendProtectionRequestStatus
 
 @this(
     layout: Layout,
@@ -25,7 +26,11 @@
     errorSummary: playHelpers.templates.errorSummary
 )
 
-@(amendPensionsTakenBetweenForm: Form[AmendPensionsTakenBetweenModel], protectionType: String, status: String)(implicit request: Request[_], messages: Messages)
+@(
+    amendPensionsTakenBetweenForm: Form[AmendPensionsTakenBetweenModel],
+    protectionType: AmendableProtectionType,
+    status: AmendProtectionRequestStatus
+)(implicit request: Request[_], messages: Messages)
 
 @title = @{
     if(amendPensionsTakenBetweenForm.errors.nonEmpty){
@@ -41,7 +46,7 @@
     @errorSummary(amendPensionsTakenBetweenForm.errors)
     <h1 class="govuk-heading-xl">@Messages("pla.ip14PensionsTakenBetween.title")</h1>
 
-    @form(action = routes.AmendsPensionTakenBetweenController.submitAmendPensionsTakenBetween(Strings.protectionTypeUrlString(Some(protectionType)), status)) {
+    @form(action = routes.AmendsPensionTakenBetweenController.submitAmendPensionsTakenBetween(protectionType, status)) {
         <ul class="govuk-list govuk-list--bullet">
             <li>@Messages("pla.pensionsTakenBetween.bullet.1")</li>
             <li>@Messages("pla.pensionsTakenBetween.bullet.2")</li>

@@ -16,15 +16,16 @@
 
 package connectors
 
-import common.Exceptions
 import config.FrontendAppConfig
 import connectors.PlaConnectorError._
-import models.ProtectionModel
+import models.amend.AmendProtectionModel
 import models.pla.request.AmendProtectionRequest
 import models.pla.response.{AmendProtectionResponse, ReadProtectionsResponse}
 import play.api.Logging
 import play.api.http.Status.{CONFLICT, LOCKED}
 import play.api.libs.json.Json
+import uk.gov.hmrc.http.HttpReads.Implicits._
+import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{
   HeaderCarrier,
   JsValidationException,
@@ -32,8 +33,6 @@ import uk.gov.hmrc.http.{
   StringContextOps,
   UpstreamErrorResponse
 }
-import uk.gov.hmrc.http.client.HttpClientV2
-import uk.gov.hmrc.http.HttpReads.Implicits._
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -43,13 +42,11 @@ class PlaConnector @Inject() (
     http: HttpClientV2
 ) extends Logging {
 
-  private val serviceUrl: String = appConfig.servicesConfig.baseUrl("pensions-lifetime-allowance")
-
   def readProtections(nino: String)(
       implicit hc: HeaderCarrier,
       ex: ExecutionContext
   ): Future[Either[PlaConnectorError, ReadProtectionsResponse]] = {
-    val url = s"$serviceUrl/protect-your-lifetime-allowance/v2/individuals/$nino/protections"
+    val url = s"${appConfig.backendUrl}/protect-your-lifetime-allowance/v2/individuals/$nino/protections"
 
     http
       .get(url"$url")
@@ -78,13 +75,11 @@ class PlaConnector @Inject() (
 
   def amendProtection(
       nino: String,
-      protection: ProtectionModel
+      protection: AmendProtectionModel
   )(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[Either[PlaConnectorError, AmendProtectionResponse]] = {
-    val id = protection.protectionID.getOrElse(
-      throw Exceptions.RequiredValueNotDefinedForNinoException("amendProtection", "protectionID", nino)
-    )
+    val id          = protection.identifier
     val requestBody = AmendProtectionRequest.from(protection)
-    val url         = s"$serviceUrl/protect-your-lifetime-allowance/v2/individuals/$nino/protections/$id"
+    val url         = s"${appConfig.backendUrl}/protect-your-lifetime-allowance/v2/individuals/$nino/protections/$id"
 
     http
       .post(url"$url")

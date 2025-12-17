@@ -19,7 +19,7 @@ package constructors.display
 import models.display.PrintDisplayModel
 import models.pla.response.ProtectionStatus._
 import models.pla.response.ProtectionType._
-import models.{Person, PersonalDetailsModel, ProtectionModel}
+import models.{DateModel, Person, PersonalDetailsModel, ProtectionModel, TimeModel}
 
 class PrintDisplayModelConstructorSpec extends DisplayConstructorsTestData {
 
@@ -27,14 +27,15 @@ class PrintDisplayModelConstructorSpec extends DisplayConstructorsTestData {
     val tstPerson               = Person(firstName = "Testy", lastName = "McTestface")
     val tstPersonalDetailsModel = PersonalDetailsModel(tstPerson)
     val tstProtectionModel = ProtectionModel(
-      psaCheckReference = Some(tstPSACheckRef),
-      protectionID = Some(12345),
-      protectionType = Some(IndividualProtection2014.toString),
-      status = Some(Open.toString),
-      certificateDate = Some("2016-04-17T15:14:00"),
+      psaCheckReference = tstPsaCheckRef,
+      identifier = 12345,
+      sequenceNumber = 1,
+      protectionType = IndividualProtection2014,
+      status = Open,
+      certificateDate = Some(DateModel.of(2016, 4, 17)),
+      certificateTime = Some(TimeModel.of(15, 14, 0)),
       protectedAmount = Some(1250000),
-      protectionReference = Some("PSA123456"),
-      notificationId = Some(1)
+      protectionReference = Some("PSA123456")
     )
     val nino = "testNino"
 
@@ -42,9 +43,9 @@ class PrintDisplayModelConstructorSpec extends DisplayConstructorsTestData {
       firstName = "Testy",
       surname = "Mctestface",
       nino = nino,
-      protectionType = IndividualProtection2014.toString,
-      status = Open.toString,
-      psaCheckReference = tstPSACheckRef,
+      protectionType = IndividualProtection2014,
+      status = Open,
+      psaCheckReference = tstPsaCheckRef,
       protectionReference = "PSA123456",
       protectedAmount = Some("£1,250,000"),
       certificateDate = Some("17 April 2016"),

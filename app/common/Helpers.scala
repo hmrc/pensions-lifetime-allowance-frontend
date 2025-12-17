@@ -18,54 +18,41 @@ package common
 
 import enums.ApplicationStage
 import models.ProtectionModel
+import models.amend.AmendProtectionModel
 import play.api.mvc.Call
 
 object Helpers {
 
-  def createAmendCallIfRequired(protection: ProtectionModel): Option[Call] = {
-    val status         = Strings.statusUrlString(protection.status)
-    val protectionType = Strings.protectionTypeUrlString(protection.protectionType)
-    if (protection.isAmendable)
-      Some(controllers.routes.AmendsController.amendsSummary(protectionType, status))
-    else None
-  }
+  def createAmendCallIfRequired(model: ProtectionModel): Option[Call] =
+    model.asAmendable.map { case (protectionType, status) =>
+      controllers.routes.AmendsController.amendsSummary(protectionType, status)
+    }
 
-  def createPsoRemoveCall(protection: ProtectionModel): Option[Call] =
-    if (protection.isAmendable) {
-      val status         = Strings.statusUrlString(protection.status)
-      val protectionType = Strings.protectionTypeUrlString(protection.protectionType)
-      Some(controllers.routes.AmendsRemovePensionSharingOrderController.removePso(protectionType, status))
-    } else None
+  def createPsoRemoveCall(model: AmendProtectionModel): Call =
+    controllers.routes.AmendsRemovePensionSharingOrderController.removePso(model.protectionType, model.status)
 
-  def createAmendCall(protection: ProtectionModel, applicationSection: ApplicationStage.Value): Call = {
-    val protectionType = Strings.protectionTypeUrlString(protection.protectionType)
-    val status         = Strings.statusUrlString(protection.status)
-
+  def createAmendCall(model: AmendProtectionModel, applicationSection: ApplicationStage): Call = {
     import ApplicationStage._
     applicationSection match {
       case PensionsTakenBefore =>
-        controllers.routes.AmendsPensionTakenBeforeController.amendPensionsTakenBefore(protectionType, status)
+        controllers.routes.AmendsPensionTakenBeforeController
+          .amendPensionsTakenBefore(model.protectionType, model.status)
       case PensionsWorthBefore =>
-        controllers.routes.AmendsPensionWorthBeforeController.amendPensionsWorthBefore(protectionType, status)
+        controllers.routes.AmendsPensionWorthBeforeController
+          .amendPensionsWorthBefore(model.protectionType, model.status)
       case PensionsTakenBetween =>
-        controllers.routes.AmendsPensionTakenBetweenController.amendPensionsTakenBetween(protectionType, status)
+        controllers.routes.AmendsPensionTakenBetweenController
+          .amendPensionsTakenBetween(model.protectionType, model.status)
       case PensionsUsedBetween =>
-        controllers.routes.AmendsPensionUsedBetweenController.amendPensionsUsedBetween(protectionType, status)
+        controllers.routes.AmendsPensionUsedBetweenController
+          .amendPensionsUsedBetween(model.protectionType, model.status)
       case OverseasPensions =>
-        controllers.routes.AmendsOverseasPensionController.amendOverseasPensions(protectionType, status)
+        controllers.routes.AmendsOverseasPensionController.amendOverseasPensions(model.protectionType, model.status)
       case CurrentPensions =>
-        controllers.routes.AmendsCurrentPensionController.amendCurrentPensions(protectionType, status)
+        controllers.routes.AmendsCurrentPensionController.amendCurrentPensions(model.protectionType, model.status)
       case CurrentPsos =>
-        controllers.routes.AmendsPensionSharingOrderController.amendPsoDetails(protectionType, status)
+        controllers.routes.AmendsPensionSharingOrderController.amendPsoDetails(model.protectionType, model.status)
     }
   }
-
-  def totalValue(protection: ProtectionModel): Double =
-    List(
-      protection.preADayPensionInPayment,
-      protection.postADayBenefitCrystallisationEvents,
-      protection.nonUKRights,
-      protection.uncrystallisedRights
-    ).flatten.sum - protection.pensionDebitTotalAmount.getOrElse(0.0)
 
 }

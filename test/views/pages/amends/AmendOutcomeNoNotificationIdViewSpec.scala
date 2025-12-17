@@ -17,7 +17,7 @@
 package views.pages.amends
 
 import models.display.AmendOutcomeDisplayModelNoNotificationId
-import models.pla.AmendProtectionLifetimeAllowanceType
+import models.pla.AmendableProtectionType
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import testHelpers.CommonViewSpecHelper
@@ -36,8 +36,8 @@ class AmendOutcomeNoNotificationIdViewSpec extends CommonViewSpecHelper with Out
 
     "provided with AmendResultDisplayModel containing no notificationId".which {
       Seq(
-        AmendProtectionLifetimeAllowanceType.IndividualProtection2014 -> amendResultDisplayModelNoNotificationIdIndividualProtection2014,
-        AmendProtectionLifetimeAllowanceType.IndividualProtection2014LTA -> amendResultDisplayModelNoNotificationIdIndividualProtection2014LTA
+        AmendableProtectionType.IndividualProtection2014 -> amendOutcomeDisplayModelNoNotificationIdIndividualProtection2014,
+        AmendableProtectionType.IndividualProtection2014LTA -> amendOutcomeDisplayModelNoNotificationIdIndividualProtection2014LTA
       ).foreach { case (protectionType, amendResultDisplayModel) =>
         s"has protection type of $protectionType" should {
 
@@ -141,8 +141,8 @@ class AmendOutcomeNoNotificationIdViewSpec extends CommonViewSpecHelper with Out
       }
 
       Seq(
-        AmendProtectionLifetimeAllowanceType.IndividualProtection2016 -> amendResultDisplayModelNoNotificationIdIndividualProtection2016,
-        AmendProtectionLifetimeAllowanceType.IndividualProtection2016LTA -> amendResultDisplayModelNoNotificationIdIndividualProtection2016LTA
+        AmendableProtectionType.IndividualProtection2016 -> amendOutcomeDisplayModelNoNotificationIdIndividualProtection2016,
+        AmendableProtectionType.IndividualProtection2016LTA -> amendOutcomeDisplayModelNoNotificationIdIndividualProtection2016LTA
       ).foreach { case (protectionType, amendResultDisplayModel) =>
         s"has protection type of $protectionType" should {
 

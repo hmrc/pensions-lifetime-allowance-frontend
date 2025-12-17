@@ -17,53 +17,33 @@
 package constructors.display
 
 import common.Exceptions.OptionNotDefinedException
-import models.AmendResponseModel
 
 class AmendOutcomeDisplayModelNoNotificationIdConstructorSpec extends DisplayConstructorsTestData {
 
-  "createAmendResultDisplayModelNoNotificationId" should {
+  "createAmendOutcomeDisplayModelNoNotificationId" should {
     import testdata.AmendProtectionDisplayModelTestData._
 
-    "correctly transform AmendResponseModel into AmendResultDisplayModelNoNotificationId" in {
+    "correctly transform AmendResponseModel into amendOutcomeDisplayModelNoNotificationId" in {
       AmendOutcomeDisplayModelNoNotificationIdConstructor.createAmendOutcomeDisplayModelNoNotificationId(
         amendResponseModelNoNotificationIdIndividualProtection2014,
         Some(personalDetailsModel),
         nino
-      ) shouldBe amendResultDisplayModelNoNotificationIdIndividualProtection2014
+      ) shouldBe amendOutcomeDisplayModelNoNotificationIdIndividualProtection2014
     }
 
     "throw exception" when {
-      "protectionType is missing" in {
-        val exception =
-          the[OptionNotDefinedException] thrownBy AmendOutcomeDisplayModelNoNotificationIdConstructor
-            .createAmendOutcomeDisplayModelNoNotificationId(
-              AmendResponseModel(
-                amendResponseModelNoNotificationIdIndividualProtection2016.protection.copy(
-                  protectionType = None
-                )
-              ),
-              Some(personalDetailsModel),
-              nino
-            )
-
-        exception.functionName shouldBe "createAmendResultDisplayModelNoNotificationId"
-        exception.optionName shouldBe "protectionType"
-      }
-
       "protectedAmount is missing" in {
         val exception =
           the[OptionNotDefinedException] thrownBy AmendOutcomeDisplayModelNoNotificationIdConstructor
             .createAmendOutcomeDisplayModelNoNotificationId(
-              AmendResponseModel(
-                amendResponseModelNoNotificationIdIndividualProtection2016.protection.copy(
-                  protectedAmount = None
-                )
+              amendResponseModelNoNotificationIdIndividualProtection2016.copy(
+                protectedAmount = None
               ),
               Some(personalDetailsModel),
               nino
             )
 
-        exception.functionName shouldBe "createAmendResultDisplayModelNoNotificationId"
+        exception.functionName shouldBe "createAmendOutcomeDisplayModelNoNotificationId"
         exception.optionName shouldBe "protectedAmount"
       }
     }

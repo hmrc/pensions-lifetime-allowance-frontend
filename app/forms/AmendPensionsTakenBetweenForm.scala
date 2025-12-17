@@ -17,13 +17,16 @@
 package forms
 
 import common.Validation._
-import models.amendModels.AmendPensionsTakenBetweenModel
+import models.amend.value.AmendPensionsTakenBetweenModel
+import models.pla.AmendableProtectionType
 import play.api.data.Forms._
 import play.api.data._
 
 object AmendPensionsTakenBetweenForm extends CommonBinders {
 
-  def amendPensionsTakenBetweenForm(protectionType: String): Form[AmendPensionsTakenBetweenModel] = Form(
+  def amendPensionsTakenBetweenForm(
+      protectionType: AmendableProtectionType
+  ): Form[AmendPensionsTakenBetweenModel] = Form(
     mapping(
       "amendedPensionsTakenBetween" -> common.Validation
         .newText(s"pla.pensionsTakenBetween.errors.mandatoryError.$protectionType")

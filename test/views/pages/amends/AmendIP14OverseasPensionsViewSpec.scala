@@ -16,10 +16,10 @@
 
 package views.pages.amends
 
-import common.Strings
 import forms.AmendOverseasPensionsForm
-import models.amendModels.AmendOverseasPensionsModel
-import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
+import models.amend.value.AmendOverseasPensionsModel
+import models.pla.AmendableProtectionType.IndividualProtection2016
+import models.pla.request.AmendProtectionRequestStatus.Open
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
@@ -36,16 +36,16 @@ class AmendIP14OverseasPensionsViewSpec extends CommonViewSpecHelper with AmendI
   val view: amendIP14OverseasPensions = inject[amendIP14OverseasPensions]
 
   val form: Form[AmendOverseasPensionsModel] = AmendOverseasPensionsForm
-    .amendOverseasPensionsForm(IndividualProtection2016.toString)
+    .amendOverseasPensionsForm(IndividualProtection2016)
     .bind(Map("amendedOverseasPensions" -> "yes", "amendedOverseasPensionsAmt" -> "1234"))
 
-  val doc: Document = Jsoup.parse(view.apply(form, IndividualProtection2016.toString, "open").body)
+  val doc: Document = Jsoup.parse(view.apply(form, IndividualProtection2016, Open).body)
 
   val errorForm: Form[AmendOverseasPensionsModel] = AmendOverseasPensionsForm
-    .amendOverseasPensionsForm(IndividualProtection2016.toString)
+    .amendOverseasPensionsForm(IndividualProtection2016)
     .bind(Map("amendedOverseasPensions" -> "", "amendedOverseasPensionsAmt" -> "1234"))
 
-  val errorDoc: Document = Jsoup.parse(view.apply(errorForm, IndividualProtection2016.toString, "open").body)
+  val errorDoc: Document = Jsoup.parse(view.apply(errorForm, IndividualProtection2016, Open).body)
 
   "the AmendIP14OverseasPensionsView" should {
     "have the correct title" in {
@@ -76,7 +76,7 @@ class AmendIP14OverseasPensionsViewSpec extends CommonViewSpecHelper with AmendI
 
       formElement.attr("method") shouldBe "POST"
       formElement.attr("action") shouldBe controllers.routes.AmendsOverseasPensionController
-        .submitAmendOverseasPensions(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")
+        .submitAmendOverseasPensions(IndividualProtection2016, Open)
         .url
       formElement.select("legend.govuk-visually-hidden").text() shouldBe plaIP14OverseasPensionsLegendText
     }

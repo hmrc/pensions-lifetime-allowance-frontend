@@ -16,9 +16,11 @@
 
 package constructors.display
 
-import models.amendModels.AmendProtectionModel
-import models.{PensionDebitModel, TransformedReadResponseModel}
+import models.NotificationId.NotificationId1
+import models.amend.AmendProtectionModel
+import models.{DateModel, PensionDebitModel, TransformedReadResponseModel}
 import play.api.i18n.{Lang, MessagesApi}
+import testdata.AmendProtectionDisplayModelTestData.amendResponseModelNotification1
 
 class DisplayConstructorsSpec extends DisplayConstructorsTestData {
 
@@ -76,27 +78,20 @@ class DisplayConstructorsSpec extends DisplayConstructorsTestData {
     "use correct messages localisation" when {
 
       val protectionModel = tstProtectionModel.copy(
-        uncrystallisedRights = Some(100_000),
-        pensionDebits = None,
-        pensionDebitStartDate = None,
-        pensionDebitEnteredAmount = None
+        uncrystallisedRightsAmount = Some(100_000)
       )
 
-      val tstAmendProtectionModel = AmendProtectionModel(
-        protectionModel,
-        protectionModel.copy(
-          pensionDebits = Some(
-            List(
-              PensionDebitModel(
-                startDate = "2016-04-17",
-                amount = 100
-              )
+      val tstAmendProtectionModel = AmendProtectionModel
+        .tryFromProtection(protectionModel)
+        .get
+        .withPensionDebit(
+          Some(
+            PensionDebitModel(
+              startDate = DateModel.of(2016, 4, 17),
+              enteredAmount = 100
             )
-          ),
-          pensionDebitStartDate = Some("2016-04-17"),
-          pensionDebitEnteredAmount = Some(100)
+          )
         )
-      )
 
       "provided with English language" in {
         val result = displayConstructors.createAmendDisplayModel(tstAmendProtectionModel)(langEnglish)
@@ -115,13 +110,12 @@ class DisplayConstructorsSpec extends DisplayConstructorsTestData {
   "createAmendResultDisplayModel" should {
     "use correct messages localisation" when {
 
-      import testdata.AmendProtectionDisplayModelTestData.amendResponseModelNotification1
-
       "provided with English language" in {
         val result = displayConstructors.createAmendOutcomeDisplayModel(
           amendResponseModelNotification1,
           Some(tstPersonalDetailsModel),
-          tstNino
+          tstNino,
+          NotificationId1
         )(langEnglish)
 
         result.details.get.certificateDate shouldBe Some("14 July 2015")
@@ -131,7 +125,8 @@ class DisplayConstructorsSpec extends DisplayConstructorsTestData {
         val result = displayConstructors.createAmendOutcomeDisplayModel(
           amendResponseModelNotification1,
           Some(tstPersonalDetailsModel),
-          tstNino
+          tstNino,
+          NotificationId1
         )(langWelsh)
 
         result.details.get.certificateDate shouldBe Some("14 Gorffennaf 2015")
@@ -139,10 +134,8 @@ class DisplayConstructorsSpec extends DisplayConstructorsTestData {
     }
   }
 
-  "createAmendResultDisplayModelNoNotificationId" should {
+  "createAmendOutcomeDisplayModelNoNotificationId" should {
     "use correct messages localisation" when {
-
-      import testdata.AmendProtectionDisplayModelTestData.amendResponseModelNotification1
 
       "provided with English language" in {
         val result = displayConstructors.createAmendOutcomeDisplayModelNoNotificationId(

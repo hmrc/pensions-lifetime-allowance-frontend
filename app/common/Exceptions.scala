@@ -30,9 +30,4 @@ trait Exceptions {
         s"Value not found for $optionName in $functionName"
       )
 
-  case class RequiredValueNotDefinedForNinoException(functionName: String, optionName: String, nino: String)
-      extends Exception(
-        s"Value not found for $optionName in $functionName with nino: $nino"
-      )
-
 }

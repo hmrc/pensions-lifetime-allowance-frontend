@@ -16,13 +16,23 @@
 
 package constructors.display
 
-import common.Strings
 import enums.ApplicationStage
-import models.amendModels.AmendProtectionModel
+import models.NotificationId.NotificationId1
+import models.amend.AmendProtectionModel
 import models.display.{AmendDisplayRowModel, AmendDisplaySectionModel, AmendPrintDisplayModel}
-import models.pla.response.ProtectionStatus.Open
-import models.pla.response.ProtectionType.{IndividualProtection2014, IndividualProtection2016}
-import models.{Person, PersonalDetailsModel, ProtectionModel}
+import models.pla.AmendableProtectionType
+import models.pla.request.AmendProtectionRequestStatus
+import models.pla.response.{AmendProtectionResponseStatus, ProtectionStatus, ProtectionType}
+import models.{
+  AmendResponseModel,
+  AmendedProtectionType,
+  DateModel,
+  PensionDebitModel,
+  Person,
+  PersonalDetailsModel,
+  ProtectionModel,
+  TimeModel
+}
 import org.scalatestplus.mockito.MockitoSugar.mock
 import play.api.i18n.{Lang, Messages}
 import play.api.mvc.{AnyContentAsEmpty, MessagesControllerComponents}
@@ -37,39 +47,32 @@ trait DisplayConstructorsTestData extends FakeApplication {
   implicit val mockMessage: Messages =
     inject[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
 
-  val tstPSACheckRef = "PSA33456789"
+  val tstPsaCheckRef = "PSA33456789"
 
   val tstProtection: ProtectionModel = ProtectionModel(
-    psaCheckReference = Some("psaRef"),
-    protectionID = Some(100001),
-    protectionType = Some(IndividualProtection2016.toString),
-    status = Some(Open.toString),
-    protectedAmount = Some(1100000.34),
-    relevantAmount = Some(1100000.34),
-    preADayPensionInPayment = None,
-    postADayBenefitCrystallisationEvents = None,
-    nonUKRights = Some(100000.0),
-    uncrystallisedRights = Some(1000000.34)
+    psaCheckReference = tstPsaCheckRef,
+    identifier = 100001,
+    sequenceNumber = 1,
+    protectionType = ProtectionType.IndividualProtection2016,
+    status = ProtectionStatus.Open,
+    certificateDate = Some(DateModel.of(2016, 4, 17)),
+    certificateTime = Some(TimeModel.of(15, 14, 0)),
+    protectedAmount = Some(1_100_000),
+    preADayPensionInPaymentAmount = None,
+    postADayBenefitCrystallisationEventAmount = None,
+    nonUKRightsAmount = Some(100_000),
+    uncrystallisedRightsAmount = Some(1_000_000.34)
   )
 
-  val tstWithPsoProtection: ProtectionModel = ProtectionModel(
-    psaCheckReference = Some("psaRef"),
-    protectionID = Some(100001),
-    protectionType = Some(IndividualProtection2016.toString),
-    status = Some(Open.toString),
-    protectedAmount = Some(1100000.34),
-    relevantAmount = Some(1100000.34),
-    preADayPensionInPayment = None,
-    postADayBenefitCrystallisationEvents = None,
-    pensionDebitTotalAmount = Some(1000.00),
-    nonUKRights = Some(100000.0),
-    uncrystallisedRights = Some(1000000.34)
-  )
-
-  val tstNoPsoAmendProtectionModel: AmendProtectionModel = AmendProtectionModel(tstProtection, tstProtection)
+  val tstNoPsoAmendProtectionModel: AmendProtectionModel =
+    AmendProtectionModel.tryFromProtection(tstProtection).get
 
   val tstWithPsoAmendProtectionModel: AmendProtectionModel =
-    AmendProtectionModel(tstWithPsoProtection, tstWithPsoProtection)
+    tstNoPsoAmendProtectionModel.withPensionDebit(Some(PensionDebitModel(DateModel.of(2017, 3, 2), 1000)))
+
+  val tstWithExistingPsoAmendProtectionModel: AmendProtectionModel = tstNoPsoAmendProtectionModel.copy(
+    pensionDebitTotalAmount = Some(1000)
+  )
 
   val tstPensionContributionNoPsoDisplaySections: Seq[AmendDisplaySectionModel] = Seq(
     AmendDisplaySectionModel(
@@ -79,8 +82,8 @@ trait DisplayConstructorsTestData extends FakeApplication {
           "YesNo",
           Some(
             controllers.routes.AmendsPensionTakenBeforeController.amendPensionsTakenBefore(
-              Strings.ProtectionTypeUrl.IndividualProtection2016,
-              Strings.StatusUrl.Open
+              AmendableProtectionType.IndividualProtection2016,
+              AmendProtectionRequestStatus.Open
             )
           ),
           None,
@@ -95,8 +98,8 @@ trait DisplayConstructorsTestData extends FakeApplication {
           "YesNo",
           Some(
             controllers.routes.AmendsPensionTakenBetweenController.amendPensionsTakenBetween(
-              Strings.ProtectionTypeUrl.IndividualProtection2016,
-              Strings.StatusUrl.Open
+              AmendableProtectionType.IndividualProtection2016,
+              AmendProtectionRequestStatus.Open
             )
           ),
           None,
@@ -111,8 +114,8 @@ trait DisplayConstructorsTestData extends FakeApplication {
           "YesNo",
           Some(
             controllers.routes.AmendsOverseasPensionController.amendOverseasPensions(
-              Strings.ProtectionTypeUrl.IndividualProtection2016,
-              Strings.StatusUrl.Open
+              AmendableProtectionType.IndividualProtection2016,
+              AmendProtectionRequestStatus.Open
             )
           ),
           None,
@@ -122,8 +125,8 @@ trait DisplayConstructorsTestData extends FakeApplication {
           "Amt",
           Some(
             controllers.routes.AmendsOverseasPensionController.amendOverseasPensions(
-              Strings.ProtectionTypeUrl.IndividualProtection2016,
-              Strings.StatusUrl.Open
+              AmendableProtectionType.IndividualProtection2016,
+              AmendProtectionRequestStatus.Open
             )
           ),
           None,
@@ -138,8 +141,8 @@ trait DisplayConstructorsTestData extends FakeApplication {
           "Amt",
           Some(
             controllers.routes.AmendsCurrentPensionController.amendCurrentPensions(
-              Strings.ProtectionTypeUrl.IndividualProtection2016,
-              Strings.StatusUrl.Open
+              AmendableProtectionType.IndividualProtection2016,
+              AmendProtectionRequestStatus.Open
             )
           ),
           None,
@@ -163,8 +166,8 @@ trait DisplayConstructorsTestData extends FakeApplication {
           "YesNo",
           Some(
             controllers.routes.AmendsPensionTakenBeforeController.amendPensionsTakenBefore(
-              Strings.ProtectionTypeUrl.IndividualProtection2016,
-              Strings.StatusUrl.Open
+              AmendableProtectionType.IndividualProtection2016,
+              AmendProtectionRequestStatus.Open
             )
           ),
           None,
@@ -179,8 +182,8 @@ trait DisplayConstructorsTestData extends FakeApplication {
           "YesNo",
           Some(
             controllers.routes.AmendsPensionTakenBetweenController.amendPensionsTakenBetween(
-              Strings.ProtectionTypeUrl.IndividualProtection2016,
-              Strings.StatusUrl.Open
+              AmendableProtectionType.IndividualProtection2016,
+              AmendProtectionRequestStatus.Open
             )
           ),
           None,
@@ -195,8 +198,8 @@ trait DisplayConstructorsTestData extends FakeApplication {
           "YesNo",
           Some(
             controllers.routes.AmendsOverseasPensionController.amendOverseasPensions(
-              Strings.ProtectionTypeUrl.IndividualProtection2016,
-              Strings.StatusUrl.Open
+              AmendableProtectionType.IndividualProtection2016,
+              AmendProtectionRequestStatus.Open
             )
           ),
           None,
@@ -206,8 +209,8 @@ trait DisplayConstructorsTestData extends FakeApplication {
           "Amt",
           Some(
             controllers.routes.AmendsOverseasPensionController.amendOverseasPensions(
-              Strings.ProtectionTypeUrl.IndividualProtection2016,
-              Strings.StatusUrl.Open
+              AmendableProtectionType.IndividualProtection2016,
+              AmendProtectionRequestStatus.Open
             )
           ),
           None,
@@ -222,8 +225,8 @@ trait DisplayConstructorsTestData extends FakeApplication {
           "Amt",
           Some(
             controllers.routes.AmendsCurrentPensionController.amendCurrentPensions(
-              Strings.ProtectionTypeUrl.IndividualProtection2016,
-              Strings.StatusUrl.Open
+              AmendableProtectionType.IndividualProtection2016,
+              AmendProtectionRequestStatus.Open
             )
           ),
           None,
@@ -255,27 +258,48 @@ trait DisplayConstructorsTestData extends FakeApplication {
   val tstPerson               = Person(firstName = "Testy", lastName = "McTestface")
   val tstPersonalDetailsModel = PersonalDetailsModel(tstPerson)
 
-  val tstProtectionModel = ProtectionModel(
-    psaCheckReference = Some(tstPSACheckRef),
-    protectionID = Some(12345),
-    protectionType = Some(IndividualProtection2014.toString),
-    status = Some(Open.toString),
-    certificateDate = Some("2016-04-17T15:14:00"),
-    protectedAmount = Some(1250000),
-    protectionReference = Some("PSA123456"),
-    notificationId = Some(1)
+  val tstProtectionModel: ProtectionModel = ProtectionModel(
+    psaCheckReference = tstPsaCheckRef,
+    identifier = 12345,
+    sequenceNumber = 1,
+    protectionType = ProtectionType.IndividualProtection2014,
+    status = ProtectionStatus.Open,
+    certificateDate = Some(DateModel.of(2016, 4, 17)),
+    certificateTime = Some(TimeModel.of(15, 14, 0)),
+    protectedAmount = Some(1_250_000),
+    protectionReference = Some("PSA123456")
   )
 
   val tstNino = "testNino"
+
+  val amendResponseModel = AmendResponseModel(
+    identifier = 1,
+    sequenceNumber = 1,
+    protectionType = AmendedProtectionType.IndividualProtection2014,
+    status = AmendProtectionResponseStatus.Open,
+    certificateDate = Some(DateModel.of(2016, 4, 17)),
+    certificateTime = Some(TimeModel.of(15, 14, 0)),
+    protectionReference = Some("protectionReference"),
+    psaCheckReference = tstPsaCheckRef,
+    relevantAmount = 1_250_000,
+    preADayPensionInPaymentAmount = 375_000,
+    postADayBenefitCrystallisationEventAmount = 375_000,
+    uncrystallisedRightsAmount = 375_000,
+    nonUKRightsAmount = 375_000,
+    notificationId = Some(NotificationId1),
+    protectedAmount = Some(1_250_000),
+    pensionDebitTotalAmount = Some(0),
+    pensionDebit = None
+  )
 
   val expectedAmendPrintDisplayModel = AmendPrintDisplayModel(
     firstName = "Testy",
     surname = "Mctestface",
     nino = tstNino,
-    protectionType = IndividualProtection2014.toString,
+    protectionType = AmendedProtectionType.IndividualProtection2014,
     status = None,
-    psaCheckReference = Some(tstPSACheckRef),
-    protectionReference = Some("PSA123456"),
+    psaCheckReference = Some(tstPsaCheckRef),
+    protectionReference = Some("protectionReference"),
     fixedProtectionReference = None,
     protectedAmount = Some("£1,250,000"),
     certificateDate = Some("17 April 2016"),

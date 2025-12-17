@@ -16,14 +16,15 @@
 
 @import models.display.AmendDisplayRowModel
 @import models.display.AmendDisplaySectionModel
+@import models.pla.AmendableProtectionType
 
 @this(
     govukSummaryList : GovukSummaryList
 )
 
-@(models: Seq[AmendDisplaySectionModel], protectionType: String)(implicit messages: Messages)
+@(models: Seq[AmendDisplaySectionModel], protectionType: AmendableProtectionType)(implicit messages: Messages)
 
-@amendRow(model: AmendDisplayRowModel, protectionType: String, sectionId: String, firstRow: Boolean, hasChildItem: Boolean) = @{
+@amendRow(model: AmendDisplayRowModel, protectionType: AmendableProtectionType, sectionId: String, firstRow: Boolean, hasChildItem: Boolean) = @{
     val firstRowClass = if(hasChildItem) "has-child-item" else ""
     val changeRemoveLinks = Seq(
         model.removeLinkCall.map(removeLink =>

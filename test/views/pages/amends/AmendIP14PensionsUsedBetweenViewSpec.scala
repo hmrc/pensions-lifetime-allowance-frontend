@@ -16,10 +16,10 @@
 
 package views.pages.amends
 
-import common.Strings
 import forms.AmendPensionsUsedBetweenForm
-import models.amendModels.AmendPensionsUsedBetweenModel
-import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
+import models.amend.value.AmendPensionsUsedBetweenModel
+import models.pla.AmendableProtectionType.IndividualProtection2016
+import models.pla.request.AmendProtectionRequestStatus.Open
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
@@ -39,16 +39,16 @@ class AmendIP14PensionsUsedBetweenViewSpec
   val view: amendIP14PensionsUsedBetween = inject[amendIP14PensionsUsedBetween]
 
   val form: Form[AmendPensionsUsedBetweenModel] = AmendPensionsUsedBetweenForm
-    .amendPensionsUsedBetweenForm(IndividualProtection2016.toString)
+    .amendPensionsUsedBetweenForm(IndividualProtection2016)
     .bind(Map("amendedPensionsUsedBetweenAmt" -> "12345"))
 
-  val doc: Document = Jsoup.parse(view.apply(form, IndividualProtection2016.toString, "open").body)
+  val doc: Document = Jsoup.parse(view.apply(form, IndividualProtection2016, Open).body)
 
   val errorForm: Form[AmendPensionsUsedBetweenModel] = AmendPensionsUsedBetweenForm
-    .amendPensionsUsedBetweenForm(IndividualProtection2016.toString)
+    .amendPensionsUsedBetweenForm(IndividualProtection2016)
     .bind(Map.empty[String, String])
 
-  val errorDoc: Document = Jsoup.parse(view.apply(errorForm, IndividualProtection2016.toString, "open").body)
+  val errorDoc: Document = Jsoup.parse(view.apply(errorForm, IndividualProtection2016, Open).body)
 
   "the AmendIP14PensionsUsedBetweenView" should {
     "have the correct title" in {
@@ -95,7 +95,7 @@ class AmendIP14PensionsUsedBetweenViewSpec
 
       formElement.attr("method") shouldBe "POST"
       formElement.attr("action") shouldBe controllers.routes.AmendsPensionUsedBetweenController
-        .submitAmendPensionsUsedBetween(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")
+        .submitAmendPensionsUsedBetween(IndividualProtection2016, Open)
         .url
     }
 
