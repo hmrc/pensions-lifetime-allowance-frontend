@@ -91,7 +91,7 @@ class ReadProtectionsController @Inject() (
       activeModel: Option[ProtectionModel]
   )(implicit request: Request[AnyContent]): Future[Option[CacheMap]] =
     activeModel.map(sessionCacheService.saveOpenProtection) match {
-      case Some(future) => future.map(Some.apply)
+      case Some(future) => future.map(Some(_))
       case None         => Future.successful(None)
     }
 
