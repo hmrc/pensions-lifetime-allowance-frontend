@@ -19,7 +19,7 @@ package forms
 import play.api.data.FormError
 import play.api.data.format.Formatter
 
-import scala.util.{Failure, Success, Try}
+import scala.util.Try
 
 trait CommonBinders {
 
@@ -28,7 +28,7 @@ trait CommonBinders {
       def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Option[BigDecimal]] =
         data
           .get(key)
-          .map(validateNumber(requiredKey, invalidKey, key, _))
+          .map(CommonBinders.validateNumber(requiredKey, invalidKey, key, _))
           .getOrElse(Left(Seq(FormError(key, requiredKey, Nil))))
 
       def unbind(key: String, value: Option[BigDecimal]): Map[String, String] =
@@ -38,7 +38,9 @@ trait CommonBinders {
         }
     }
 
-  // #################HELPER METHODS#################################//
+}
+
+object CommonBinders {
 
   private def validateNumber(
       requiredKey: String,
@@ -48,23 +50,20 @@ trait CommonBinders {
   ): Either[Seq[FormError], Some[BigDecimal]] =
     number match {
       case ""    => Left(Seq(FormError(key, requiredKey, Nil)))
-      case value => checkIfValidBigDecimal(value, invalidKey, key)
+      case value => validateBigDecimal(value, invalidKey, key)
     }
 
-  private def checkIfValidBigDecimal(
-      value: String,
+  private def validateBigDecimal(
+      input: String,
       invalidKey: String,
       key: String
-  ): Either[Seq[FormError], Some[BigDecimal]] = {
-    val output              = Try(BigDecimal(value))
-    val outputWithoutCommas = Try(BigDecimal(stripCurrencyCharacters(value)))
-    (output, outputWithoutCommas) match {
-      case (Success(_), Success(_)) => Right(Some(BigDecimal(value)))
-      case (Failure(_), Success(_)) => Left(Seq(FormError(key, "pla.psoDetails.errorQuestion")))
-      case (Failure(_), Failure(_)) => Left(Seq(FormError(key, invalidKey)))
-      case _                        => Left(Seq(FormError(key, invalidKey)))
+  ): Either[Seq[FormError], Some[BigDecimal]] =
+    parseBigDecimal(input) match {
+      case Some(bigDecimal) => Right(Some(bigDecimal))
+      case None             => Left(Seq(FormError(key, invalidKey)))
     }
-  }
+
+  def parseBigDecimal(input: String): Option[BigDecimal] = Try(BigDecimal(stripCurrencyCharacters(input))).toOption
 
   private def stripCurrencyCharacters(input: String): String =
     input

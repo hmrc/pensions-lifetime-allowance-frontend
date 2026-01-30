@@ -256,7 +256,6 @@ pla.psoDetails.title                        = Gorchymyn rhannu pensiwn
 pla.psoDetails.dateQuestionText             = Dyddiad y gorchymyn rhannu pensiwn
 pla.psoDetails.dateHintText                 = Er enghraifft, 18 4 2021
 pla.psoDetails.psoAmountQuestion            = Swm y gorchymyn rhannu pensiwn
-pla.psoDetails.errorQuestion                = Nodwch rif heb comas, er enghraifft 10000.00
 pla.psoDetails.amount.errors.mandatoryError = Nodwch y swm mewn punnoedd ar gyfer y gorchymyn rhannu pensiwn, er enghraifft £10,000 neu £100,000.00
 pla.psoDetails.amount.errors.decimal        = Nodwch y swm mewn punnoedd ar gyfer y gorchymyn rhannu pensiwn, er enghraifft £10,000 neu £100,000.00
 pla.psoDetails.amount.errors.negative       = Mae''n rhaid i swm y gorchymyn rhannu pensiwn fod yn £0 neu fwy

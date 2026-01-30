@@ -38,7 +38,6 @@ object AmendOverseasPensionsForm extends CommonBinders {
         common.Validation
           .newText(s"pla.overseasPensions.amount.errors.mandatoryError.$protectionType")
           .verifying(s"pla.overseasPensions.amount.errors.notReal.$protectionType", bigDecimalCheck)
-          .verifying("pla.psoDetails.errorQuestion", commaCheck)
           .transform(stringToBigDecimal, bigDecimalToString)
           .verifying(
             stopOnFirstFail(

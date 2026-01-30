@@ -16,6 +16,7 @@
 
 package common
 
+import forms.CommonBinders
 import play.api.data.Forms.of
 import play.api.data.format.Formatter
 import play.api.data.validation.{Constraint, Invalid, Valid}
@@ -23,7 +24,7 @@ import play.api.data.{FieldMapping, FormError}
 import utils.Constants.npsMaxCurrency
 
 import java.time.LocalDate
-import scala.util.{Failure, Success, Try}
+import scala.util.Try
 
 object Validation {
 
@@ -95,25 +96,7 @@ object Validation {
       Invalid(errMsgKey)
   }
 
-  val bigDecimalCheck: String => Boolean = input =>
-    Try(BigDecimal(input)) match {
-      case Success(_)                     => true
-      case Failure(_) if input.trim == "" => true
-      case Failure(_)                     => tryBigDecimalWithoutComma(input)
-    }
-
-  val commaCheck: String => Boolean = input =>
-    (tryBigDecimalWithoutComma(input), Try(BigDecimal(input))) match {
-      case (true, Success(_))  => true
-      case (true, Failure(_))  => false
-      case (false, Failure(_)) => true
-    }
-
-  private def tryBigDecimalWithoutComma(input: String): Boolean =
-    Try(BigDecimal(input.trim().replaceAll(",", ""))) match {
-      case Success(_) => true
-      case Failure(_) => false
-    }
+  val bigDecimalCheck: String => Boolean = input => input.trim.isEmpty || CommonBinders.parseBigDecimal(input).isDefined
 
   def stopOnFirstFail[T](constraints: Constraint[T]*): Constraint[T] = Constraint { field: T =>
     constraints.toList.dropWhile(constraint => constraint(field) == Valid) match {

@@ -256,7 +256,6 @@ pla.psoDetails.title                        = Pension sharing order
 pla.psoDetails.dateQuestionText             = Date of pension sharing order
 pla.psoDetails.dateHintText                 = For example, 18 4 2021
 pla.psoDetails.psoAmountQuestion            = Amount of pension sharing order
-pla.psoDetails.errorQuestion                = Enter a number without commas, for example 10000.00
 pla.psoDetails.amount.errors.mandatoryError = Enter the amount in pounds for the pension sharing order, for example £10,000 or £100,000.00
 pla.psoDetails.amount.errors.decimal        = Enter the amount in pounds for the pension sharing order, for example £10,000 or £100,000.00
 pla.psoDetails.amount.errors.negative       = The amount of pension sharing order must be £0 or more
