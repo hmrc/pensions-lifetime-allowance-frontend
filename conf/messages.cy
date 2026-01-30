@@ -157,8 +157,8 @@ pla.pensionsUsedBetween.amount.errors.mandatoryError.IndividualProtection2016   
 pla.pensionsUsedBetween.amount.errors.mandatoryError.IndividualProtection2016LTA = Nodwch y swm mewn punnoedd ar gyfer y lwfans oes a ddefnyddiwyd, er enghraifft £10,000 neu £100,000.00
 pla.pensionsUsedBetween.amount.errors.notReal.IndividualProtection2016           = Mae''n rhaid i faint o lwfans oes rydych wedi''i ddefnyddio fod yn rhif, megis 10000.00
 pla.pensionsUsedBetween.amount.errors.notReal.IndividualProtection2016LTA        = Mae''n rhaid i faint o lwfans oes rydych wedi''i ddefnyddio fod yn rhif, megis 10000.00
-pla.pensionsUsedBetween.amount.errors.decimal.IndividualProtection2016           = Mae ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' yn cynnwys gormod o rifau ar ôl y pwynt degol
-pla.pensionsUsedBetween.amount.errors.decimal.IndividualProtection2016LTA        = Mae ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' yn cynnwys gormod o rifau ar ôl y pwynt degol
+pla.pensionsUsedBetween.amount.errors.decimal.IndividualProtection2016           = Nodwch y swm mewn punnoedd ar gyfer y lwfans oes a ddefnyddiwyd, er enghraifft £10,000 neu £100,000.00
+pla.pensionsUsedBetween.amount.errors.decimal.IndividualProtection2016LTA        = Nodwch y swm mewn punnoedd ar gyfer y lwfans oes a ddefnyddiwyd, er enghraifft £10,000 neu £100,000.00
 pla.pensionsUsedBetween.amount.errors.negative.IndividualProtection2016          = Mae''n rhaid i ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' fod yn £0 neu fwy
 pla.pensionsUsedBetween.amount.errors.negative.IndividualProtection2016LTA       = Mae''n rhaid i ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' fod yn £0 neu fwy
 pla.pensionsUsedBetween.amount.errors.max.IndividualProtection2016               = Mae''n rhaid i ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' fod yn £1,000,000,000 neu lai

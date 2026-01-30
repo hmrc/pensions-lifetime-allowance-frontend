@@ -240,12 +240,12 @@ pla.currentPensions.amount.errors.max.IndividualProtection2016LTA            = W
 pla.ip14CurrentPensions.title          = What were your UK pensions worth on 5 April 2014?
 pla.ip14CurrentPensions.hiddenTextPara = Use figures that were correct at 5 April 2014.
 
-pla.currentPensions.amount.errors.mandatoryError.IndividualProtection2014    = Enter the amount in pounds for your UK pensions on 5 April 2016, for example £10,000 or £100,000.00
-pla.currentPensions.amount.errors.mandatoryError.IndividualProtection2014LTA = Enter the amount in pounds for your UK pensions on 5 April 2016, for example £10,000 or £100,000.00
+pla.currentPensions.amount.errors.mandatoryError.IndividualProtection2014    = Enter the amount in pounds for your UK pensions on 5 April 2014, for example £10,000 or £100,000.00
+pla.currentPensions.amount.errors.mandatoryError.IndividualProtection2014LTA = Enter the amount in pounds for your UK pensions on 5 April 2014, for example £10,000 or £100,000.00
 pla.currentPensions.amount.errors.notReal.IndividualProtection2014           = What your UK pensions were worth on 5 April 2014 must be a number, like 10000.00
 pla.currentPensions.amount.errors.notReal.IndividualProtection2014LTA        = What your UK pensions were worth on 5 April 2014 must be a number, like 10000.00
-pla.currentPensions.amount.errors.decimal.IndividualProtection2014           = Enter the amount in pounds for your UK pensions on 5 April 2016, for example £10,000 or £100,000.00
-pla.currentPensions.amount.errors.decimal.IndividualProtection2014LTA        = Enter the amount in pounds for your UK pensions on 5 April 2016, for example £10,000 or £100,000.00
+pla.currentPensions.amount.errors.decimal.IndividualProtection2014           = Enter the amount in pounds for your UK pensions on 5 April 2014, for example £10,000 or £100,000.00
+pla.currentPensions.amount.errors.decimal.IndividualProtection2014LTA        = Enter the amount in pounds for your UK pensions on 5 April 2014, for example £10,000 or £100,000.00
 pla.currentPensions.amount.errors.negative.IndividualProtection2014          = What your UK pensions were worth on 5 April 2014 must be £0 or more
 pla.currentPensions.amount.errors.negative.IndividualProtection2014LTA       = What your UK pensions were worth on 5 April 2014 must be £0 or more
 pla.currentPensions.amount.errors.max.IndividualProtection2014               = What your UK pensions were worth on 5 April 2014 must be £1,000,000,000 or less
