@@ -83,6 +83,7 @@
             question = Messages("pla.pensionsUsedBetween.question"),
             hideLabel = true,
             pageHeading = false,
+            hintText = Some(Messages("pla.base.moneyInput.hint")),
             errorMessage = if (amendPensionsUsedBetweenForm.errors.nonEmpty) Some(errorMessage.head) else Some("")
         )
 
