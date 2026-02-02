@@ -20,7 +20,6 @@ common.header.protectionReferenceNumber                = Cyfeirnod y diogelwch
 common.header.pensionSchemeAdministratorCheckReference = Cyfeirnod gwiriad gweinyddwr cynlluniau pensiwn
 
 ## PLAY! Error Overrides ##
-error.real     = Nodwch rif heb comas, er enghraifft 10000.00
 error.required = Mae angen llenwi''r blwch hwn
 
 ## Timeout ##
@@ -257,6 +256,7 @@ pla.psoDetails.dateQuestionText             = Dyddiad y gorchymyn rhannu pensiwn
 pla.psoDetails.dateHintText                 = Er enghraifft, 18 4 2021
 pla.psoDetails.psoAmountQuestion            = Swm y gorchymyn rhannu pensiwn
 pla.psoDetails.amount.errors.mandatoryError = Nodwch y swm mewn punnoedd ar gyfer y gorchymyn rhannu pensiwn, er enghraifft £10,000 neu £100,000.00
+pla.psoDetails.amount.errors.notReal        = Nodwch y swm mewn punnoedd ar gyfer y gorchymyn rhannu pensiwn, er enghraifft £10,000 neu £100,000.00
 pla.psoDetails.amount.errors.decimal        = Nodwch y swm mewn punnoedd ar gyfer y gorchymyn rhannu pensiwn, er enghraifft £10,000 neu £100,000.00
 pla.psoDetails.amount.errors.negative       = Mae''n rhaid i swm y gorchymyn rhannu pensiwn fod yn £0 neu fwy
 pla.psoDetails.amount.errors.max            = Mae''n rhaid i swm y gorchymyn rhannu pensiwn fod yn £1,000,000,000 neu lai

@@ -16,36 +16,22 @@
 
 package forms
 
-import common.Validation._
+import forms.mappings.CurrencyMappings
 import models.amend.value.AmendPensionsWorthBeforeModel
 import models.pla.AmendableProtectionType
 import play.api.data.Form
-import play.api.data.Forms._
+import play.api.data.Forms.mapping
 
-object AmendPensionsWorthBeforeForm extends CommonBinders {
+object AmendPensionsWorthBeforeForm extends CurrencyMappings {
 
   def amendPensionsWorthBeforeForm(
       protectionType: AmendableProtectionType
   ): Form[AmendPensionsWorthBeforeModel] = Form(
     mapping(
-      "amendedPensionsTakenBeforeAmt" -> of(
-        decimalFormatter(
-          s"pla.pensionsWorthBefore.amount.errors.mandatoryError.$protectionType",
-          s"pla.pensionsWorthBefore.amount.errors.notReal.$protectionType"
-        )
+      "amendedPensionsTakenBeforeAmt" -> currencyMappingFromPrefixAndProtectionType(
+        messageKeyPrefix = "pla.pensionsWorthBefore.amount.errors",
+        protectionTypeSuffix = protectionType
       )
-        .verifying(
-          s"pla.pensionsWorthBefore.amount.errors.decimal.$protectionType",
-          pensionsWorthBeforeAmt => isMaxTwoDecimalPlaces(pensionsWorthBeforeAmt.getOrElse(0))
-        )
-        .verifying(
-          s"pla.pensionsWorthBefore.amount.errors.negative.$protectionType",
-          pensionsWorthBeforeAmt => isPositive(pensionsWorthBeforeAmt.getOrElse(0))
-        )
-        .verifying(
-          s"pla.pensionsWorthBefore.amount.errors.max.$protectionType",
-          pensionsWorthBeforeAmt => isLessThanMax(pensionsWorthBeforeAmt.getOrElse(0))
-        )
     )(AmendPensionsWorthBeforeModel.apply)(AmendPensionsWorthBeforeModel.unapply)
   )
 

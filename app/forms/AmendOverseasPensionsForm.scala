@@ -16,37 +16,32 @@
 
 package forms
 
-import common.Transformers.{bigDecimalToString, stringToBigDecimal}
-import uk.gov.voa.play.form.ConditionalMappings.{isEqual, mandatoryIf}
-import play.api.data.Form
-import play.api.data.Forms._
-import common.Validation._
+import forms.mappings.{CurrencyMappings, YesNoMappings}
 import models.amend.value.AmendOverseasPensionsModel
 import models.pla.AmendableProtectionType
-import utils.Constants.npsMaxCurrency
+import play.api.data.Form
+import play.api.data.Forms.mapping
+import uk.gov.voa.play.form.ConditionalMappings.{isEqual, mandatoryIf}
 
-object AmendOverseasPensionsForm extends CommonBinders {
+object AmendOverseasPensionsForm extends CurrencyMappings with YesNoMappings {
 
   def amendOverseasPensionsForm(protectionType: AmendableProtectionType) = Form(
     mapping(
-      "amendedOverseasPensions" -> common.Validation
-        .newText(s"pla.overseasPensions.errors.mandatoryError.$protectionType")
-        .verifying(s"pla.overseasPensions.errors.mandatoryError.$protectionType", mandatoryCheck)
-        .verifying(s"pla.overseasPensions.errors.mandatoryError.$protectionType", yesNoCheck),
+      "amendedOverseasPensions" -> yesNoMappingFromPrefixAndProtectionType(
+        messageKeyPrefix = "pla.overseasPensions.errors",
+        protectionTypeSuffix = protectionType
+      ),
       "amendedOverseasPensionsAmt" -> mandatoryIf(
         isEqual("amendedOverseasPensions", "yes"),
-        common.Validation
-          .newText(s"pla.overseasPensions.amount.errors.mandatoryError.$protectionType")
-          .verifying(s"pla.overseasPensions.amount.errors.notReal.$protectionType", bigDecimalCheck)
-          .transform(stringToBigDecimal, bigDecimalToString)
-          .verifying(
-            stopOnFirstFail(
-              negativeConstraint(s"pla.overseasPensions.amount.errors.negative.$protectionType"),
-              decimalPlaceConstraint(s"pla.overseasPensions.amount.errors.decimal.$protectionType"),
-              maxMoneyCheck(npsMaxCurrency, s"pla.overseasPensions.amount.errors.max.$protectionType")
-            )
-          )
+        currencyMappingFromPrefixAndProtectionType(
+          messageKeyPrefix = "pla.overseasPensions.amount.errors",
+          protectionTypeSuffix = protectionType
+        )
       )
+        .transform[Option[BigDecimal]](
+          f1 = doubleOption => doubleOption.flatten,
+          f2 = singleOption => Some(singleOption)
+        )
     )(AmendOverseasPensionsModel.apply)(AmendOverseasPensionsModel.unapply)
   )
 

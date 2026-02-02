@@ -43,7 +43,7 @@ class AmendPsoDetailsFormSpec
       "pso.day"   -> "1",
       "pso.month" -> "5",
       "pso.year"  -> "2016",
-      "psoAmt"    -> "0.0"
+      "psoAmt"    -> "0"
     )
 
     "produce a valid form with additional validation" when {
@@ -61,7 +61,7 @@ class AmendPsoDetailsFormSpec
           "pso.day"   -> "2",
           "pso.month" -> "6",
           "pso.year"  -> "2017",
-          "psoAmt"    -> "0.0"
+          "psoAmt"    -> "0"
         )
         val result =
           AmendPsoDetailsForm.amendPsoDetailsForm(IndividualProtection2014).bind(map)
@@ -95,7 +95,7 @@ class AmendPsoDetailsFormSpec
           val map    = validMap - "pso.day"
           val result = amendPsoDetailsForm(IndividualProtection2016).bind(map)
 
-          result.errors.size shouldBe 1
+          result.errors should have size 1
           result.error("pso.day").get.message shouldBe errorPsoDay
         }
 
@@ -103,7 +103,7 @@ class AmendPsoDetailsFormSpec
           val map    = validMap - "pso.month"
           val result = amendPsoDetailsForm(IndividualProtection2016).bind(map)
 
-          result.errors.size shouldBe 1
+          result.errors should have size 1
           result.error("pso.month").get.message shouldBe errorPsoMonth
         }
 
@@ -111,7 +111,7 @@ class AmendPsoDetailsFormSpec
           val map    = validMap - "pso.year"
           val result = amendPsoDetailsForm(IndividualProtection2016).bind(map)
 
-          result.errors.size shouldBe 1
+          result.errors should have size 1
           result.error("pso.year").get.message shouldBe errorPsoYear
         }
 
@@ -119,7 +119,7 @@ class AmendPsoDetailsFormSpec
           val map    = validMap - "psoAmt"
           val result = amendPsoDetailsForm(IndividualProtection2016).bind(map)
 
-          result.errors.size shouldBe 1
+          result.errors should have size 1
           result.error("psoAmt").get.message shouldBe errorAmendPsoDetailsMissingAmount
         }
 
@@ -127,7 +127,7 @@ class AmendPsoDetailsFormSpec
           val map    = validMap.updated("psoAmt", "-0.01")
           val result = amendPsoDetailsForm(IndividualProtection2016).bind(map)
 
-          result.errors.size shouldBe 1
+          result.errors should have size 1
           result.error("psoAmt").get.message shouldBe errorNegative(messageKey)
         }
 
@@ -135,7 +135,7 @@ class AmendPsoDetailsFormSpec
           val map    = validMap.updated("psoAmt", Constants.npsMaxCurrency.toString)
           val result = amendPsoDetailsForm(IndividualProtection2016).bind(map)
 
-          result.errors.size shouldBe 1
+          result.errors should have size 1
           result.error("psoAmt").get.message shouldBe errorMaximum(messageKey)
         }
 
@@ -143,7 +143,7 @@ class AmendPsoDetailsFormSpec
           val map    = validMap.updated("psoAmt", "0.001")
           val result = amendPsoDetailsForm(IndividualProtection2016).bind(map)
 
-          result.errors.size shouldBe 1
+          result.errors should have size 1
           result.error("psoAmt").get.message shouldBe errorDecimal(messageKey)
         }
       }
@@ -158,7 +158,7 @@ class AmendPsoDetailsFormSpec
           val result =
             AmendPsoDetailsForm.amendPsoDetailsForm(IndividualProtection2016).bind(map)
 
-          result.errors.size shouldBe 1
+          result.errors should have size 1
           result.error("pso.day").get.message shouldBe errorPsoNotRealDay
         }
 
@@ -171,7 +171,7 @@ class AmendPsoDetailsFormSpec
           val result =
             AmendPsoDetailsForm.amendPsoDetailsForm(IndividualProtection2016).bind(map)
 
-          result.errors.size shouldBe 1
+          result.errors should have size 1
           result.error("pso").get.message shouldBe errorPsoDateInFuture
         }
 
@@ -184,7 +184,7 @@ class AmendPsoDetailsFormSpec
           val result =
             AmendPsoDetailsForm.amendPsoDetailsForm(IndividualProtection2016).bind(map)
 
-          result.errors.size shouldBe 1
+          result.errors should have size 1
           result.error("pso").get.message shouldBe errorPsoDateBeforeMin
         }
 
@@ -197,7 +197,7 @@ class AmendPsoDetailsFormSpec
           val result =
             AmendPsoDetailsForm.amendPsoDetailsForm(IndividualProtection2014).bind(map)
 
-          result.errors.size shouldBe 1
+          result.errors should have size 1
           result.error("pso").get.message shouldBe errorPsoDateBeforeMin
         }
       }

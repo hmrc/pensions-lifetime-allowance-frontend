@@ -31,12 +31,12 @@ class AmendOverseasPensionsFormSpec extends FakeApplication with CommonErrorMess
   val messageKey = "overseasPensions"
 
   "The AmendOverseasPensionsForm" should {
-    val validMap = Map("amendedOverseasPensions" -> "yes", "amendedOverseasPensionsAmt" -> "1000.00")
+    val validMap = Map("amendedOverseasPensions" -> "yes", "amendedOverseasPensionsAmt" -> "1000.10")
 
     "produce a valid form with additional validation" when {
 
       "provided with a valid model" in {
-        val model  = AmendOverseasPensionsModel("yes", Some(1000.0))
+        val model  = AmendOverseasPensionsModel("yes", Some(1000.1))
         val result = amendOverseasPensionsForm(IndividualProtection2016).fill(model)
 
         result.data shouldBe validMap
@@ -83,7 +83,7 @@ class AmendOverseasPensionsFormSpec extends FakeApplication with CommonErrorMess
           val map    = validMap - "amendedOverseasPensions"
           val result = amendOverseasPensionsForm(IndividualProtection2016).bind(map)
 
-          result.errors.size shouldBe 1
+          result.errors should have size 1
           result.error("amendedOverseasPensions").get.message shouldBe errorQuestion(
             messageKey,
             IndividualProtection2016.toString
@@ -94,7 +94,7 @@ class AmendOverseasPensionsFormSpec extends FakeApplication with CommonErrorMess
           val map    = validMap.updated("amendedOverseasPensionsAmt", "a")
           val result = amendOverseasPensionsForm(IndividualProtection2016).bind(map)
 
-          result.errors.size shouldBe 1
+          result.errors should have size 1
           result.errors.head.message shouldBe errorReal(messageKey, IndividualProtection2016.toString)
         }
       }
@@ -108,7 +108,7 @@ class AmendOverseasPensionsFormSpec extends FakeApplication with CommonErrorMess
           val map    = validMap.updated("amendedOverseasPensionsAmt", "")
           val result = amendOverseasPensionsForm(IndividualProtection2016).bind(map)
 
-          result.errors.size shouldBe 1
+          result.errors should have size 1
           result.errors.head.message shouldBe errorMissingAmount(messageKey, IndividualProtection2016.toString)
         }
 
@@ -116,7 +116,7 @@ class AmendOverseasPensionsFormSpec extends FakeApplication with CommonErrorMess
           val map    = validMap.updated("amendedOverseasPensionsAmt", s"${Constants.npsMaxCurrency + 1}")
           val result = amendOverseasPensionsForm(IndividualProtection2016).bind(map)
 
-          result.errors.size shouldBe 1
+          result.errors should have size 1
           result.errors.head.message shouldBe errorMaximum(messageKey, IndividualProtection2016.toString)
         }
 
@@ -124,7 +124,7 @@ class AmendOverseasPensionsFormSpec extends FakeApplication with CommonErrorMess
           val map    = validMap.updated("amendedOverseasPensionsAmt", "-0.01")
           val result = amendOverseasPensionsForm(IndividualProtection2016).bind(map)
 
-          result.errors.size shouldBe 1
+          result.errors should have size 1
           result.errors.head.message shouldBe errorNegative(messageKey, IndividualProtection2016.toString)
         }
 
@@ -132,7 +132,7 @@ class AmendOverseasPensionsFormSpec extends FakeApplication with CommonErrorMess
           val map    = validMap.updated("amendedOverseasPensionsAmt", "0.001")
           val result = amendOverseasPensionsForm(IndividualProtection2016).bind(map)
 
-          result.errors.size shouldBe 1
+          result.errors should have size 1
           result.errors.head.message shouldBe errorDecimal(messageKey, IndividualProtection2016.toString)
         }
       }
@@ -143,7 +143,7 @@ class AmendOverseasPensionsFormSpec extends FakeApplication with CommonErrorMess
           .updated("amendedOverseasPensionsAmt", "-0.001")
         val result = amendOverseasPensionsForm(IndividualProtection2016).bind(map)
 
-        result.errors.size shouldBe 0
+        result.errors should have size 0
       }
     }
   }

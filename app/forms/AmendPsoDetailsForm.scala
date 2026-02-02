@@ -16,19 +16,19 @@
 
 package forms
 
-import common.Validation._
 import forms.formatters.DateFormatter
+import forms.mappings.CurrencyMappings
 import models.amend.AmendPsoDetailsModel
 import models.pla.AmendableProtectionType
 import models.pla.AmendableProtectionType._
-import play.api.data.Forms._
-import play.api.data._
+import play.api.data.Forms.{mapping, of}
+import play.api.data.Form
 import play.api.i18n.Messages
 import utils.Constants
 
 import java.time.LocalDate
 
-object AmendPsoDetailsForm extends CommonBinders {
+object AmendPsoDetailsForm extends CurrencyMappings {
 
   val key    = "pso"
   val amount = "psoAmt"
@@ -49,20 +49,7 @@ object AmendPsoDetailsForm extends CommonBinders {
           optMaxDate = Some(LocalDate.now.plusDays(1))
         )
       ),
-      amount -> optional(bigDecimal)
-        .verifying(
-          "pla.psoDetails.amount.errors.max",
-          psoAmt => isLessThanDouble(psoAmt.getOrElse(BigDecimal(0.0)).toDouble, Constants.npsMaxCurrency)
-        )
-        .verifying(
-          "pla.psoDetails.amount.errors.negative",
-          psoAmt => isPositive(psoAmt.getOrElse(BigDecimal(0.0)).toDouble)
-        )
-        .verifying(
-          "pla.psoDetails.amount.errors.decimal",
-          psoAmt => isMaxTwoDecimalPlaces(psoAmt.getOrElse(BigDecimal(0.0)).toDouble)
-        )
-        .verifying("pla.psoDetails.amount.errors.mandatoryError", _.isDefined)
+      amount -> currencyMappingFromPrefix("pla.psoDetails.amount.errors")
     )((date, amount) => AmendPsoDetailsModel(date, amount))(model => Some((model.startDate, model.enteredAmount)))
   )
 

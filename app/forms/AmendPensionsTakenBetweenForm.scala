@@ -16,22 +16,22 @@
 
 package forms
 
-import common.Validation._
+import forms.mappings.YesNoMappings
 import models.amend.value.AmendPensionsTakenBetweenModel
 import models.pla.AmendableProtectionType
-import play.api.data.Forms._
-import play.api.data._
+import play.api.data.Form
+import play.api.data.Forms.mapping
 
-object AmendPensionsTakenBetweenForm extends CommonBinders {
+object AmendPensionsTakenBetweenForm extends YesNoMappings {
 
   def amendPensionsTakenBetweenForm(
       protectionType: AmendableProtectionType
   ): Form[AmendPensionsTakenBetweenModel] = Form(
     mapping(
-      "amendedPensionsTakenBetween" -> common.Validation
-        .newText(s"pla.pensionsTakenBetween.errors.mandatoryError.$protectionType")
-        .verifying(s"pla.pensionsTakenBetween.errors.mandatoryError.$protectionType", mandatoryCheck)
-        .verifying(s"pla.pensionsTakenBetween.errors.mandatoryError.$protectionType", yesNoCheck)
+      "amendedPensionsTakenBetween" -> yesNoMappingFromPrefixAndProtectionType(
+        messageKeyPrefix = "pla.pensionsTakenBetween.errors",
+        protectionTypeSuffix = protectionType
+      )
     )(AmendPensionsTakenBetweenModel.apply)(AmendPensionsTakenBetweenModel.unapply)
   )
 

@@ -16,34 +16,20 @@
 
 package forms
 
-import play.api.data.Forms._
-import play.api.data._
-import common.Validation._
+import play.api.data.Forms.mapping
+import play.api.data.Form
+import forms.mappings.CurrencyMappings
 import models.amend.value.AmendPensionsUsedBetweenModel
 import models.pla.AmendableProtectionType
 
-object AmendPensionsUsedBetweenForm extends CommonBinders {
+object AmendPensionsUsedBetweenForm extends CurrencyMappings {
 
   def amendPensionsUsedBetweenForm(protectionType: AmendableProtectionType) = Form(
     mapping(
-      "amendedPensionsUsedBetweenAmt" -> of(
-        decimalFormatter(
-          s"pla.pensionsUsedBetween.amount.errors.mandatoryError.$protectionType",
-          s"pla.pensionsUsedBetween.amount.errors.notReal.$protectionType"
-        )
+      "amendedPensionsUsedBetweenAmt" -> currencyMappingFromPrefixAndProtectionType(
+        messageKeyPrefix = "pla.pensionsUsedBetween.amount.errors",
+        protectionTypeSuffix = protectionType
       )
-        .verifying(
-          s"pla.pensionsUsedBetween.amount.errors.decimal.$protectionType",
-          pensionsWorthBeforeAmt => isMaxTwoDecimalPlaces(pensionsWorthBeforeAmt.getOrElse(0))
-        )
-        .verifying(
-          s"pla.pensionsUsedBetween.amount.errors.negative.$protectionType",
-          pensionsWorthBeforeAmt => isPositive(pensionsWorthBeforeAmt.getOrElse(0))
-        )
-        .verifying(
-          s"pla.pensionsUsedBetween.amount.errors.max.$protectionType",
-          pensionsWorthBeforeAmt => isLessThanMax(pensionsWorthBeforeAmt.getOrElse(0))
-        )
     )(AmendPensionsUsedBetweenModel.apply)(AmendPensionsUsedBetweenModel.unapply)
   )
 
