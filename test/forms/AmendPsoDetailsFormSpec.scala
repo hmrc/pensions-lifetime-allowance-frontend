@@ -70,12 +70,12 @@ class AmendPsoDetailsFormSpec
       }
 
       "provided with a valid map and an amount below the maximum" in {
-        val map = validMap.updated("psoAmt", { Constants.npsMaxCurrency - 0.01 }.toString)
+        val map = validMap.updated("psoAmt", Constants.npsMaxCurrency.toString)
         val result =
           AmendPsoDetailsForm.amendPsoDetailsForm(IndividualProtection2016).bind(map)
 
         result.value shouldBe Some(
-          AmendPsoDetailsModel(LocalDate.of(2016, 5, 1), Some(Constants.npsMaxCurrency - 0.01))
+          AmendPsoDetailsModel(LocalDate.of(2016, 5, 1), Some(Constants.npsMaxCurrency))
         )
       }
 
@@ -132,7 +132,7 @@ class AmendPsoDetailsFormSpec
         }
 
         "provided with a psoAmt value above the maximum" in {
-          val map    = validMap.updated("psoAmt", Constants.npsMaxCurrency.toString)
+          val map    = validMap.updated("psoAmt", (Constants.npsMaxCurrency + 1).toString)
           val result = amendPsoDetailsForm(IndividualProtection2016).bind(map)
 
           result.errors should have size 1

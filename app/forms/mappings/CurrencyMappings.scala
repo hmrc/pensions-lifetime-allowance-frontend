@@ -70,7 +70,7 @@ trait CurrencyMappings {
   private[mappings] val isPositive: BigDecimal => Boolean               = amount => amount >= 0
   private[mappings] val isPositiveOption: Option[BigDecimal] => Boolean = amount => amount.forall(isPositive)
 
-  private[mappings] val isBelowMax: BigDecimal => Boolean               = amount => amount < Constants.npsMaxCurrency
+  private[mappings] val isBelowMax: BigDecimal => Boolean               = amount => amount <= Constants.npsMaxCurrency
   private[mappings] val isBelowMaxOption: Option[BigDecimal] => Boolean = amount => amount.forall(isBelowMax)
 
 }
