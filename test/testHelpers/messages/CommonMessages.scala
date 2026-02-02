@@ -35,6 +35,6 @@ trait CommonMessages {
   val plaBaseDateFieldsYear    = "Year"
 
   val errorReal       = "Enter the date of your pension sharing order"
-  val errorRealNumber = "Enter the amount in pounds for the pension sharing order, for example £10,000 or £100,000.00"
+  val errorRealNumber = "Enter the amount in pounds for the pension sharing order, for example £600 or £193.54"
 
 }

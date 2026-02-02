@@ -13,7 +13,6 @@ pla.base.add               = Add
 pla.base.newTab            = opens in new tab
 pla.base.errorSummaryLabel = There are errors on this page
 site.title.error           = Error: {0}
-pla.base.moneyInput.hint   = For example, £600 or £193.54
 
 common.header.protectedAmount                          = Protected amount
 common.header.protectionReferenceNumber                = Protection reference number
@@ -88,6 +87,7 @@ pla.pensionsTakenBefore.errors.mandatoryError.IndividualProtection2014LTA = Sele
 pla.pensionsWorthBefore.title        = What were these pensions worth on 5 April 2016?
 pla.pensionsWorthBefore.question     = What were these pensions worth on 5 April 2016?
 pla.pensionsWorthBefore.help         = How to work out the amount
+pla.pensionsWorthBefore.hint         = For example, £10,000 or £100,000.00
 pla.pensionsWorthBefore.para.1       = If you did not get an income from any other pensions since 6 April 2006:
 pla.pensionsWorthBefore.step.1       = Take only the pensions from which you got an income prior to 6 April 2006.
 pla.pensionsWorthBefore.step.2       = Work out the annual amount you were able to receive from these pensions (the annual rate) on 5 April 2016.
@@ -142,6 +142,7 @@ pla.pensionsTakenBetween.errors.mandatoryError.IndividualProtection2014LTA = Sel
 ## Pensions Used Between ##
 pla.pensionsUsedBetween.title           = How much lifetime allowance have you used?
 pla.pensionsUsedBetween.question        = How much lifetime allowance have you used?
+pla.pensionsUsedBetween.hint            = For example, £10,000 or £100,000.00
 pla.pensionsUsedBetween.para.1          = You''ll have used some of your lifetime allowance if any of these events happened.
 pla.pensionsUsedBetween.para.2          = You can ask your pension scheme administrator to tell you the amount of lifetime allowance you''ve used for individual protection 2016.
 pla.pensionsUsedBetween.step.1          = Take the lifetime allowance at 5 April 2016 (£1.25m) and divide by the value of your lifetime allowance on the date the event happened.
@@ -176,10 +177,11 @@ pla.pensionsUsedBetween.amount.errors.max.IndividualProtection2014              
 pla.pensionsUsedBetween.amount.errors.max.IndividualProtection2014LTA            = How much lifetime allowance you have used must be £1,000,000,000 or less
 
 ## Overseas Pensions ##
-pla.overseasPensions.title       = Have you put money into a pension scheme held overseas?
-pla.overseasPensions.question    = Only include contributions you made between 6 April 2006 and 5 April 2016 that you got UK tax relief on.
-pla.overseasPensions.questionTwo = How much did you contribute?
-pla.overseasPensions.legend      = Did you put money into an overseas pension scheme between 6 April 2006 and 5 April 2016?
+pla.overseasPensions.title            = Have you put money into a pension scheme held overseas?
+pla.overseasPensions.question         = Only include contributions you made between 6 April 2006 and 5 April 2016 that you got UK tax relief on.
+pla.overseasPensions.questionTwo      = How much did you contribute?
+pla.overseasPensions.questionTwo.hint = For example, £10,000 or £100,000.00
+pla.overseasPensions.legend           = Did you put money into an overseas pension scheme between 6 April 2006 and 5 April 2016?
 
 pla.overseasPensions.errors.mandatoryError.IndividualProtection2016           = Select yes if you have put money into a pension scheme held overseas
 pla.overseasPensions.errors.mandatoryError.IndividualProtection2016LTA        = Select yes if you have put money into a pension scheme held overseas
@@ -214,6 +216,7 @@ pla.overseasPensions.amount.errors.max.IndividualProtection2014LTA            = 
 ## CURRENT PENSIONS ##
 pla.currentPensions.title                 = What were your UK pensions worth on 5 April 2016?
 pla.currentPensions.hiddenLink            = How do I work out the value?
+pla.currentPensions.hint                  = For example, £10,000 or £100,000.00
 pla.currentPensions.hiddenTextPara        = Use figures that were correct at 5 April 2016.
 pla.currentPensions.hiddenText1           = Take any pensions where your employer guarantees you a specified annual income.
 pla.currentPensions.hiddenText2           = Multiply the annual income from these pensions by 20.
@@ -252,12 +255,13 @@ pla.currentPensions.amount.errors.max.IndividualProtection2014LTA            = W
 
 ## Pension Sharing Order Details ##
 pla.psoDetails.title                        = Pension sharing order
-pla.psoDetails.dateQuestionText             = Date of pension sharing order
-pla.psoDetails.dateHintText                 = For example, 18 4 2021
-pla.psoDetails.psoAmountQuestion            = Amount of pension sharing order
-pla.psoDetails.amount.errors.mandatoryError = Enter the amount in pounds for the pension sharing order, for example £10,000 or £100,000.00
-pla.psoDetails.amount.errors.notReal        = Enter the amount in pounds for the pension sharing order, for example £10,000 or £100,000.00
-pla.psoDetails.amount.errors.decimal        = Enter the amount in pounds for the pension sharing order, for example £10,000 or £100,000.00
+pla.psoDetails.date.question                = Date of pension sharing order
+pla.psoDetails.date.hint                    = For example, 18 4 2021
+pla.psoDetails.amount.question              = Amount of pension sharing order
+pla.psoDetails.amount.hint                  = For example, £600 or £193.54
+pla.psoDetails.amount.errors.mandatoryError = Enter the amount in pounds for the pension sharing order, for example £600 or £193.54
+pla.psoDetails.amount.errors.notReal        = Enter the amount in pounds for the pension sharing order, for example £600 or £193.54
+pla.psoDetails.amount.errors.decimal        = Enter the amount in pounds for the pension sharing order, for example £600 or £193.54
 pla.psoDetails.amount.errors.negative       = The amount of pension sharing order must be £0 or more
 pla.psoDetails.amount.errors.max            = The amount of pension sharing order must be £1,000,000,000 or less
 

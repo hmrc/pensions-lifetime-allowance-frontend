@@ -57,12 +57,15 @@ case class CurrencyFormatter(mandatoryMessageKey: String, invalidMessageKey: Str
     }
 
   private[formatters] def parseBigDecimal(input: String): Option[BigDecimal] = Try(
-    BigDecimal(stripCommas(input))
+    BigDecimal(stripIgnoredCharacters(input))
   ).toOption
 
-  private[formatters] def stripCommas(input: String): String =
+  private[formatters] def stripIgnoredCharacters(input: String): String =
     input
       .trim()
-      .replaceAll(",", "")
+      .stripPrefix("£")
+      .stripLeading()
+      .replace(",", "")
+      .replace(" ", "")
 
 }

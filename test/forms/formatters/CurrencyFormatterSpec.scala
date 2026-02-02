@@ -65,11 +65,26 @@ class CurrencyFormatterSpec extends AnyWordSpec with Matchers {
         }
       }
 
-    "strip whitespace from input" in {
-      currencyFormatter.bind(valueKey, Map(valueKey -> "       3000.22        ")) shouldBe Right(
-        Some(BigDecimal(3000.22))
-      )
-    }
+    "strip whitespace from input" when
+      Seq(
+        "       3000.22       " -> 3000.22,
+        "3 000 000.67"          -> 3_000_000.67,
+        "  1 2 3 4 5 . 6 7 "    -> 12_345.67
+      ).foreach { case (string, value) =>
+        s"provided with \"$string\"" in {
+          currencyFormatter.bind(valueKey, Map(valueKey -> string)) shouldBe Right(Some(BigDecimal(value)))
+        }
+      }
+
+    "strip leading pound sign from input" when
+      Seq[(String, Double)](
+        "£1,000,000" -> 1_000_000d,
+        "£23.54"     -> 23.54
+      ).foreach { case (string, value) =>
+        s"provided with \"$string\"" in {
+          currencyFormatter.bind(valueKey, Map(valueKey -> string)) shouldBe Right(Some(BigDecimal(value)))
+        }
+      }
 
     "strip commas from input" when
       Seq(

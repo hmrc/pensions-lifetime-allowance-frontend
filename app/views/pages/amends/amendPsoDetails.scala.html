@@ -54,17 +54,17 @@
     @form(action = routes.AmendsPensionSharingOrderController.submitAmendPsoDetails(protectionType, status, existingPso)) {
 
         @formInlineDateInput(
-            content = Messages("pla.psoDetails.dateQuestionText"),
+            content = Messages("pla.psoDetails.date.question"),
             field = psoDetailsForm("pso"),
-            hintContent = Some(Messages("pla.psoDetails.dateHintText")),
+            hintContent = Some(Messages("pla.psoDetails.date.hint")),
             pageHeading = false,
             labelClass = Some("govuk-label--m")
         )
 
         @formInputMoney(
             field = psoDetailsForm("psoAmt"),
-            Messages("pla.psoDetails.psoAmountQuestion"),
-            hintText = Some(Messages("pla.base.moneyInput.hint")),
+            Messages("pla.psoDetails.amount.question"),
+            hintText = Some(Messages("pla.psoDetails.amount.hint")),
             pageHeading = false,
             labelClass = Some("govuk-label--m")
         )

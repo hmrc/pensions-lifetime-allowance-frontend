@@ -13,7 +13,6 @@ pla.base.add               = Ychwanegu
 pla.base.newTab            = yn agor tab newydd
 pla.base.errorSummaryLabel = Mae gwallau ar y dudalen hon.
 site.title.error           = Gwall: {0}
-pla.base.moneyInput.hint   = Er enghraifft, £600 neu £193.54
 
 common.header.protectedAmount                          = Y swm wedi’i ddiogelu
 common.header.protectionReferenceNumber                = Cyfeirnod y diogelwch
@@ -88,6 +87,7 @@ pla.pensionsTakenBefore.errors.mandatoryError.IndividualProtection2014LTA = Dewi
 pla.pensionsWorthBefore.title        = Beth oedd gwerth y pensiynau hyn ar 5 Ebrill 2016?
 pla.pensionsWorthBefore.question     = Beth oedd gwerth y pensiynau hyn ar 5 Ebrill 2016?
 pla.pensionsWorthBefore.help         = Sut i gyfrifo''r swm
+pla.pensionsWorthBefore.hint         = Er enghraifft, £10,000 neu £100,000.00
 pla.pensionsWorthBefore.para.1       = Os na chawsoch incwm o unrhyw bensiwn arall er 6 Ebrill 2006:
 pla.pensionsWorthBefore.step.1       = Cymerwch y pensiynau y cawsoch incwm ohonynt cyn 6 Ebrill 2006 yn unig.
 pla.pensionsWorthBefore.step.2       = Cyfrifwch y swm blynyddol yr oeddech yn gallu''i gael o''r pensiynau hyn (y gyfradd flynyddol) ar 5 Ebrill 2016.
@@ -142,6 +142,7 @@ pla.pensionsTakenBetween.errors.mandatoryError.IndividualProtection2014LTA = Dew
 ## Pensions Used Between ##
 pla.pensionsUsedBetween.title           = Faint o lwfans oes a ydych wedi''i ddefnyddio?
 pla.pensionsUsedBetween.question        = Faint o lwfans oes a ydych wedi''i ddefnyddio?
+pla.pensionsUsedBetween.hint            = Er enghraifft, £10,000 neu £100,000.00
 pla.pensionsUsedBetween.para.1          = Os yw unrhyw un o''r digwyddiadau hyn wedi digwydd, byddech wedi defnyddio peth o''ch lwfans oes.
 pla.pensionsUsedBetween.para.2          = Gallwch ofyn i weinyddwr eich cynllun pensiwn roi gwybod i chi swm y lwfans oes yr ydych wedi''i ddefnyddio ar gyfer diogelwch unigol 2016.
 pla.pensionsUsedBetween.step.1          = Cymerwch y lwfans oes ar 5 Ebrill 2016 (£1.25m) a rhannwch ef â gwerth eich lwfans oes ar ddyddiad y digwyddiad.
@@ -176,10 +177,11 @@ pla.pensionsUsedBetween.amount.errors.max.IndividualProtection2014              
 pla.pensionsUsedBetween.amount.errors.max.IndividualProtection2014LTA            = Mae''n rhaid i ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' fod yn £1,000,000,000 neu lai
 
 ## Overseas Pensions ##
-pla.overseasPensions.title       = A ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor?
-pla.overseasPensions.question    = Dim ond cyfraniadau a wnaed rhwng 6 Ebrill 2006 a 5 Ebrill 2016 y cawsoch ryddhad treth y DU arnynt, y dylech eu cynnwys.
-pla.overseasPensions.questionTwo = Faint gwnaethoch gyfrannu?
-pla.overseasPensions.legend      = A wnaethoch roi arian i mewn i gynllun pensiwn dramor rhwng 6 Ebrill 2006 a 5 Ebrill 2016?
+pla.overseasPensions.title            = A ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor?
+pla.overseasPensions.question         = Dim ond cyfraniadau a wnaed rhwng 6 Ebrill 2006 a 5 Ebrill 2016 y cawsoch ryddhad treth y DU arnynt, y dylech eu cynnwys.
+pla.overseasPensions.questionTwo      = Faint gwnaethoch gyfrannu?
+pla.overseasPensions.questionTwo.hint = Er enghraifft, £10,000 neu £100,000.00
+pla.overseasPensions.legend           = A wnaethoch roi arian i mewn i gynllun pensiwn dramor rhwng 6 Ebrill 2006 a 5 Ebrill 2016?
 
 pla.overseasPensions.errors.mandatoryError.IndividualProtection2016           = Dewiswch ''Iawn'' os ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor
 pla.overseasPensions.errors.mandatoryError.IndividualProtection2016LTA        = Dewiswch ''Iawn'' os ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor
@@ -214,6 +216,7 @@ pla.overseasPensions.amount.errors.max.IndividualProtection2014LTA            = 
 ## CURRENT PENSIONS ##
 pla.currentPensions.title                 = Beth oedd gwerth eich pensiynau''r DU ar 5 Ebrill 2016?
 pla.currentPensions.hiddenLink            = Sut wyf yn cyfrifo''r gwerth?
+pla.currentPensions.hint                  = Er enghraifft, £10,000 neu £100,000.00
 pla.currentPensions.hiddenTextPara        = Defnyddiwch ffigurau a oedd yn gywir ar 5 Ebrill 2016.
 pla.currentPensions.hiddenText1           = Cymerwch unrhyw bensiynau lle roedd eich cyflogwr yn gwarantu incwm blynyddol penodol i chi.
 pla.currentPensions.hiddenText2           = Lluoswch yr incwm blynyddol o''r pensiynau hyn ag 20.
@@ -252,12 +255,13 @@ pla.currentPensions.amount.errors.max.IndividualProtection2014LTA            = M
 
 ## Pension Sharing Order Details ##
 pla.psoDetails.title                        = Gorchymyn rhannu pensiwn
-pla.psoDetails.dateQuestionText             = Dyddiad y gorchymyn rhannu pensiwn
-pla.psoDetails.dateHintText                 = Er enghraifft, 18 4 2021
-pla.psoDetails.psoAmountQuestion            = Swm y gorchymyn rhannu pensiwn
-pla.psoDetails.amount.errors.mandatoryError = Nodwch y swm mewn punnoedd ar gyfer y gorchymyn rhannu pensiwn, er enghraifft £10,000 neu £100,000.00
-pla.psoDetails.amount.errors.notReal        = Nodwch y swm mewn punnoedd ar gyfer y gorchymyn rhannu pensiwn, er enghraifft £10,000 neu £100,000.00
-pla.psoDetails.amount.errors.decimal        = Nodwch y swm mewn punnoedd ar gyfer y gorchymyn rhannu pensiwn, er enghraifft £10,000 neu £100,000.00
+pla.psoDetails.date.question                = Dyddiad y gorchymyn rhannu pensiwn
+pla.psoDetails.date.hint                    = Er enghraifft, 18 4 2021
+pla.psoDetails.amount.question              = Swm y gorchymyn rhannu pensiwn
+pla.psoDetails.amount.hint                  = Er enghraifft, £600 neu £193.54
+pla.psoDetails.amount.errors.mandatoryError = Nodwch y swm mewn punnoedd ar gyfer y gorchymyn rhannu pensiwn, er enghraifft £600 neu £193.54
+pla.psoDetails.amount.errors.notReal        = Nodwch y swm mewn punnoedd ar gyfer y gorchymyn rhannu pensiwn, er enghraifft £600 neu £193.54
+pla.psoDetails.amount.errors.decimal        = Nodwch y swm mewn punnoedd ar gyfer y gorchymyn rhannu pensiwn, er enghraifft £600 neu £193.54
 pla.psoDetails.amount.errors.negative       = Mae''n rhaid i swm y gorchymyn rhannu pensiwn fod yn £0 neu fwy
 pla.psoDetails.amount.errors.max            = Mae''n rhaid i swm y gorchymyn rhannu pensiwn fod yn £1,000,000,000 neu lai
 
