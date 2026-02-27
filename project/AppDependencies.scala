@@ -4,11 +4,12 @@ object AppDependencies {
 
   import play.sbt.PlayImport._
 
-  private val bootstrapVersion                  = "9.16.0"
-  private val playFrontendVersion               = "12.7.0"
-  private val mongoPlayVersion                  = "2.6.0"
-  private val pekkoVersion                      = "1.0.2"
-  private val playConditionalFormMappingVersion = "3.3.0"
+  private val bootstrapVersion                  = "9.19.0"
+  private val playFrontendVersion               = "12.31.0"
+  private val mongoPlayVersion                  = "2.12.0"
+  private val pekkoVersion                      = "1.4.0"
+  private val playConditionalFormMappingVersion = "3.4.0"
+  private val jsoupVersion                      = "1.22.1"
 
   val compile: Seq[ModuleID] = Seq(
     ws,
@@ -22,14 +23,14 @@ object AppDependencies {
   val testDependencies: Seq[ModuleID] = Seq(
     "uk.gov.hmrc"       %% "bootstrap-test-play-30"  % bootstrapVersion,
     "uk.gov.hmrc.mongo" %% "hmrc-mongo-test-play-30" % mongoPlayVersion,
-    "org.jsoup"          % "jsoup"                   % "1.17.2",
+    "org.jsoup"          % "jsoup"                   % jsoupVersion,
     "org.scalatestplus" %% "scalacheck-1-17"         % "3.2.18.0"
   ).map(_ % Test)
 
   val itDependencies: Seq[ModuleID] = Seq(
     "uk.gov.hmrc"       %% "bootstrap-test-play-30"  % bootstrapVersion,
     "uk.gov.hmrc.mongo" %% "hmrc-mongo-test-play-30" % mongoPlayVersion,
-    "org.jsoup"          % "jsoup"                   % "1.17.2"
+    "org.jsoup"          % "jsoup"                   % jsoupVersion
   ).map(_ % Test)
 
   def apply(): Seq[ModuleID] = compile ++ testDependencies ++ itDependencies
