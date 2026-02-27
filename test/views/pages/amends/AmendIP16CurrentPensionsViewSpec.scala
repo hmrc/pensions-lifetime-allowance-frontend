@@ -95,7 +95,10 @@ class AmendIP16CurrentPensionsViewSpec extends CommonViewSpecHelper with AmendIP
 
     "display the correct errors appropriately" in {
       errorDoc.select(".govuk-error-summary__title").text shouldBe plaBaseErrorSummaryLabel
-      errorDoc.select(".govuk-error-summary__list li").eq(0).text shouldBe plaErrorRequiredNumber
+      errorDoc
+        .select(".govuk-error-summary__list li")
+        .eq(0)
+        .text shouldBe "The amount these UK pensions were worth must be a number"
       errorDoc.select(".govuk-error-message").text shouldBe s"Error: $plaErrorRequiredNumber"
     }
 

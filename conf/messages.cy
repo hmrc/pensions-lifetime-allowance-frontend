@@ -19,11 +19,11 @@ common.header.protectionReferenceNumber                = Cyfeirnod y diogelwch
 common.header.pensionSchemeAdministratorCheckReference = Cyfeirnod gwiriad gweinyddwr cynlluniau pensiwn
 
 ## PLAY! Error Overrides ##
-error.required = Mae angen llenwi''r blwch hwn
+error.required = Mae angen llenwi’r blwch hwn
 
 ## Timeout ##
-pla.timeout.pageHeading               = Rydych wedi''ch allgofnodi o ganlyniad i anweithgarwch
-pla.timeout.returnToPTA.href.1        = Gallwch ddechrau eto o''r dudalen
+pla.timeout.pageHeading               = Rydych wedi’ch allgofnodi o ganlyniad i anweithgarwch
+pla.timeout.returnToPTA.href.1        = Gallwch ddechrau eto o’r dudalen
 pla.timeout.returnToPTA.href.linkText = gwirio’r diogelwch a’r diogelwch uwch ar gyfer eich pensiwn
 pla.timeout.returnToPTA.href.3        = .
 
@@ -41,140 +41,140 @@ pla.lockedOut.paraTwoLinkText        = gysylltu â Chyllid a Thollau EF (yn agor
 pla.lockedOut.paraTwoP2              = i gael help.
 pla.technicalIssue.title             = Problemau Technegol
 pla.technicalIssue.pageHeading       = Mae problem dechnegol wedi codi
-pla.technicalIssue.paraOne           = Mae problemau wedi codi gyda''r gwasanaeth ar-lein hwn.
+pla.technicalIssue.paraOne           = Mae problemau wedi codi gyda’r gwasanaeth ar-lein hwn.
 pla.technicalIssue.paraTwo           = Rhowch gynnig arall arni mewn 5 munud.
-pla.technicalIssue.tryAgain.p1       = Yn ôl i''r dudalen
+pla.technicalIssue.tryAgain.p1       = Yn ôl i’r dudalen
 pla.technicalIssue.tryAgain.linkText = gwirio’ch diogelwch pensiwn
 pla.technicalIssue.tryAgain.p2       = i roi cynnig arall arni.
 
 ## Technical Error ##
 pla.techError.title       = Gwall technegol
-pla.techError.pageHeading = Mae''n ddrwg gennym. Mae problem wedi codi.
-pla.techError.paraOne     = Bydd angen i chi ddechrau eich cais eto. Rydym wedi cadw''r manylion a roddwyd gennych hyd yn hyn.
+pla.techError.pageHeading = Mae’n ddrwg gennym. Mae problem wedi codi.
+pla.techError.paraOne     = Bydd angen i chi ddechrau eich cais eto. Rydym wedi cadw’r manylion a roddwyd gennych hyd yn hyn.
 pla.techError.startAgain  = Dechrau eto
 pla.techError.retry       = Ail-geisio
 
 ## Generic 400 Type Errors ##
 global.error.400.title   = Cais annilys – 400
 global.error.400.heading = Cais annilys
-global.error.400.message = Gwiriwch eich bod wedi nodi''r cyfeiriad gwe cywir.
-global.error.404.title   = Heb ddod o hyd i''r dudalen – 404
-global.error.404.heading = Ni ellir dod o hyd i''r dudalen hon
-global.error.404.message = Gwiriwch eich bod wedi nodi''r cyfeiriad gwe cywir.
+global.error.400.message = Gwiriwch eich bod wedi nodi’r cyfeiriad gwe cywir.
+global.error.404.title   = Heb ddod o hyd i’r dudalen – 404
+global.error.404.heading = Ni ellir dod o hyd i’r dudalen hon
+global.error.404.message = Gwiriwch eich bod wedi nodi’r cyfeiriad gwe cywir.
 
 ## Generic 500 Error ##
-pla.error.InternalServerError500.title   = Mae''n ddrwg gennym, mae problem gyda''r gwasanaeth
-pla.error.InternalServerError500.heading = Mae''n ddrwg gennym, mae problem gyda''r gwasanaeth
-pla.error.InternalServerError500.message = Rhowch gynnig arall arni yn nes ymlaen. Nidyw''r broblem hon yn effeithio ar eich cyfriflwfans pensiwn.
+pla.error.InternalServerError500.title   = Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth
+pla.error.InternalServerError500.heading = Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth
+pla.error.InternalServerError500.message = Rhowch gynnig arall arni yn nes ymlaen. Nidyw’r broblem hon yn effeithio ar eich cyfriflwfans pensiwn.
 
 ## IP16 Pensions Taken ##
-pla.pensionsTaken.errors.mandatoryError.IndividualProtection2016    = Dewiswch ''Iawn'' os digwyddodd unrhyw un o''r canlynol cyn 6 Ebrill 2016
-pla.pensionsTaken.errors.mandatoryError.IndividualProtection2016LTA = Dewiswch ''Iawn'' os digwyddodd unrhyw un o''r canlynol cyn 6 Ebrill 2016
+pla.pensionsTaken.errors.mandatoryError.IndividualProtection2016    = Dewiswch ’Iawn’ os digwyddodd unrhyw un o’r canlynol cyn 6 Ebrill 2016
+pla.pensionsTaken.errors.mandatoryError.IndividualProtection2016LTA = Dewiswch ’Iawn’ os digwyddodd unrhyw un o’r canlynol cyn 6 Ebrill 2016
 
 ## IP16 Pensions Taken Before ##
-pla.pensionsTakenBefore.title                                             = A gawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006?
-pla.pensionsTakenBefore.errors.mandatoryError.IndividualProtection2016    = Dewiswch ''Iawn'' os cawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006
-pla.pensionsTakenBefore.errors.mandatoryError.IndividualProtection2016LTA = Dewiswch ''Iawn'' os cawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006
+pla.pensionsTakenBefore.title                                             = A gawsoch incwm o unrhyw un o’ch pensiynau cyn 6 Ebrill 2006?
+pla.pensionsTakenBefore.errors.mandatoryError.IndividualProtection2016    = Dewiswch ’Iawn’ os cawsoch incwm o unrhyw un o’ch pensiynau cyn 6 Ebrill 2006
+pla.pensionsTakenBefore.errors.mandatoryError.IndividualProtection2016LTA = Dewiswch ’Iawn’ os cawsoch incwm o unrhyw un o’ch pensiynau cyn 6 Ebrill 2006
 
 ## IP14 Pensions Taken Before ##
 pla.ip14PensionsTakenBefore.question = Beth oedd gwerth y pensiynau hyn ar 5 Ebrill 2014?
-pla.ip14PensionsTakenBefore.step.2   = Cyfrifwch y swm blynyddol yr oeddech yn gallu''i gael o''r pensiynau hyn (y gyfradd flynyddol) ar 5 Ebrill 2014.
+pla.ip14PensionsTakenBefore.step.2   = Cyfrifwch y swm blynyddol yr oeddech yn gallu’i gael o’r pensiynau hyn (y gyfradd flynyddol) ar 5 Ebrill 2014.
 
-pla.pensionsTakenBefore.errors.mandatoryError.IndividualProtection2014    = Dewiswch ''Iawn'' os cawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006
-pla.pensionsTakenBefore.errors.mandatoryError.IndividualProtection2014LTA = Dewiswch ''Iawn'' os cawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006
+pla.pensionsTakenBefore.errors.mandatoryError.IndividualProtection2014    = Dewiswch ’Iawn’ os cawsoch incwm o unrhyw un o’ch pensiynau cyn 6 Ebrill 2006
+pla.pensionsTakenBefore.errors.mandatoryError.IndividualProtection2014LTA = Dewiswch ’Iawn’ os cawsoch incwm o unrhyw un o’ch pensiynau cyn 6 Ebrill 2006
 
 ## Pensions Worth Before ##
 pla.pensionsWorthBefore.title        = Beth oedd gwerth y pensiynau hyn ar 5 Ebrill 2016?
 pla.pensionsWorthBefore.question     = Beth oedd gwerth y pensiynau hyn ar 5 Ebrill 2016?
-pla.pensionsWorthBefore.help         = Sut i gyfrifo''r swm
+pla.pensionsWorthBefore.help         = Sut i gyfrifo’r swm
 pla.pensionsWorthBefore.hint         = Er enghraifft, £10,000 neu £100,000.00
 pla.pensionsWorthBefore.para.1       = Os na chawsoch incwm o unrhyw bensiwn arall er 6 Ebrill 2006:
 pla.pensionsWorthBefore.step.1       = Cymerwch y pensiynau y cawsoch incwm ohonynt cyn 6 Ebrill 2006 yn unig.
-pla.pensionsWorthBefore.step.2       = Cyfrifwch y swm blynyddol yr oeddech yn gallu''i gael o''r pensiynau hyn (y gyfradd flynyddol) ar 5 Ebrill 2016.
+pla.pensionsWorthBefore.step.2       = Cyfrifwch y swm blynyddol yr oeddech yn gallu’i gael o’r pensiynau hyn (y gyfradd flynyddol) ar 5 Ebrill 2016.
 pla.pensionsWorthBefore.step.3       = Lluoswch y ffigur hwn â 25.
-pla.pensionsWorthBefore.para.2       = Bydd angen i chi wneud cyfrifiad gwahanol os yw''r naill neu''r llall o''r canlynol yn gymwys:
+pla.pensionsWorthBefore.para.2       = Bydd angen i chi wneud cyfrifiad gwahanol os yw’r naill neu’r llall o’r canlynol yn gymwys:
 pla.pensionsWorthBefore.bullet.1     = rydych wedi cael incwm o bensiynau eraill er 6 Ebrill 2006
-pla.pensionsWorthBefore.bullet.2     = mae gennych bensiwn a godir o''r gronfa
+pla.pensionsWorthBefore.bullet.2     = mae gennych bensiwn a godir o’r gronfa
 pla.pensionsWorthBefore.para.3       = Darganfyddwch sut yn
-pla.pensionsWorthBefore.helpLinkText = yr arweiniad technegol hwn ar werthuso''ch pensiynau
+pla.pensionsWorthBefore.helpLinkText = yr arweiniad technegol hwn ar werthuso’ch pensiynau
 
-pla.pensionsWorthBefore.amount.errors.mandatoryError.IndividualProtection2016    = Nodwch y swm mewn punnoedd ar gyfer y pensiynau hyn ar 5 Ebrill 2016, er enghraifft £10,000 neu £100,000.00
-pla.pensionsWorthBefore.amount.errors.mandatoryError.IndividualProtection2016LTA = Nodwch y swm mewn punnoedd ar gyfer y pensiynau hyn ar 5 Ebrill 2016, er enghraifft £10,000 neu £100,000.00
-pla.pensionsWorthBefore.amount.errors.notReal.IndividualProtection2016           = Mae''n rhaid i werth y pensiynau hyn ar 5 Ebrill 2016 fod yn rhif, megis 10000.00
-pla.pensionsWorthBefore.amount.errors.notReal.IndividualProtection2016LTA        = Mae''n rhaid i werth y pensiynau hyn ar 5 Ebrill 2016 fod yn rhif, megis 10000.00
-pla.pensionsWorthBefore.amount.errors.decimal.IndividualProtection2016           = Nodwch y swm mewn punnoedd ar gyfer y pensiynau hyn ar 5 Ebrill 2016, er enghraifft £10,000 neu £100,000.00
-pla.pensionsWorthBefore.amount.errors.decimal.IndividualProtection2016LTA        = Nodwch y swm mewn punnoedd ar gyfer y pensiynau hyn ar 5 Ebrill 2016, er enghraifft £10,000 neu £100,000.00
-pla.pensionsWorthBefore.amount.errors.negative.IndividualProtection2016          = Mae''n rhaid i werth y pensiynau hyn ar 5 Ebrill 2016 fod yn £0 neu fwy
-pla.pensionsWorthBefore.amount.errors.negative.IndividualProtection2016LTA       = Mae''n rhaid i werth y pensiynau hyn ar 5 Ebrill 2016 fod yn £0 neu fwy
-pla.pensionsWorthBefore.amount.errors.max.IndividualProtection2016               = Mae''n rhaid i werth y pensiynau hyn ar 5 Ebrill 2016 fod yn £1,000,000,000 neu lai
-pla.pensionsWorthBefore.amount.errors.max.IndividualProtection2016LTA            = Mae''n rhaid i werth y pensiynau hyn ar 5 Ebrill 2016 fod yn £1,000,000,000 neu lai
+pla.pensionsWorthBefore.amount.errors.mandatoryError.IndividualProtection2016    = Nodwch, mewn punnoedd, werth y pensiynau hyn ar 5 Ebrill 2016
+pla.pensionsWorthBefore.amount.errors.mandatoryError.IndividualProtection2016LTA = Nodwch, mewn punnoedd, werth y pensiynau hyn ar 5 Ebrill 2016
+pla.pensionsWorthBefore.amount.errors.notReal.IndividualProtection2016           = Mae’n rhaid i werth y pensiynau hyn fod yn rhif
+pla.pensionsWorthBefore.amount.errors.notReal.IndividualProtection2016LTA        = Mae’n rhaid i werth y pensiynau hyn fod yn rhif
+pla.pensionsWorthBefore.amount.errors.decimal.IndividualProtection2016           = Nodwch, mewn punnoedd, werth y pensiynau hyn ar 5 Ebrill 2016
+pla.pensionsWorthBefore.amount.errors.decimal.IndividualProtection2016LTA        = Nodwch, mewn punnoedd, werth y pensiynau hyn ar 5 Ebrill 2016
+pla.pensionsWorthBefore.amount.errors.negative.IndividualProtection2016          = Mae’n rhaid i werth y pensiynau hyn ar 5 Ebrill 2016 fod yn £0 neu fwy
+pla.pensionsWorthBefore.amount.errors.negative.IndividualProtection2016LTA       = Mae’n rhaid i werth y pensiynau hyn ar 5 Ebrill 2016 fod yn £0 neu fwy
+pla.pensionsWorthBefore.amount.errors.max.IndividualProtection2016               = Mae’n rhaid i werth y pensiynau hyn ar 5 Ebrill 2016 fod yn £1,000,000,000 neu lai
+pla.pensionsWorthBefore.amount.errors.max.IndividualProtection2016LTA            = Mae’n rhaid i werth y pensiynau hyn ar 5 Ebrill 2016 fod yn £1,000,000,000 neu lai
 
 ## IP14 Pensions Worth Before ##
-pla.pensionsWorthBefore.amount.errors.mandatoryError.IndividualProtection2014    = Nodwch y swm mewn punnoedd ar gyfer y pensiynau hyn ar 5 Ebrill 2014, er enghraifft £10,000 neu £100,000.00
-pla.pensionsWorthBefore.amount.errors.mandatoryError.IndividualProtection2014LTA = Nodwch y swm mewn punnoedd ar gyfer y pensiynau hyn ar 5 Ebrill 2014, er enghraifft £10,000 neu £100,000.00
-pla.pensionsWorthBefore.amount.errors.notReal.IndividualProtection2014           = Mae''n rhaid i werth y pensiynau hyn ar 5 Ebrill 2014 fod yn rhif, megis 10000.00
-pla.pensionsWorthBefore.amount.errors.notReal.IndividualProtection2014LTA        = Mae''n rhaid i werth y pensiynau hyn ar 5 Ebrill 2014 fod yn rhif, megis 10000.00
-pla.pensionsWorthBefore.amount.errors.decimal.IndividualProtection2014           = Nodwch y swm mewn punnoedd ar gyfer y pensiynau hyn ar 5 Ebrill 2014, er enghraifft £10,000 neu £100,000.00
-pla.pensionsWorthBefore.amount.errors.decimal.IndividualProtection2014LTA        = Nodwch y swm mewn punnoedd ar gyfer y pensiynau hyn ar 5 Ebrill 2014, er enghraifft £10,000 neu £100,000.00
-pla.pensionsWorthBefore.amount.errors.negative.IndividualProtection2014          = Mae''n rhaid i werth y pensiynau hyn ar 5 Ebrill 2014 fod yn £0 neu fwy
-pla.pensionsWorthBefore.amount.errors.negative.IndividualProtection2014LTA       = Mae''n rhaid i werth y pensiynau hyn ar 5 Ebrill 2014 fod yn £0 neu fwy
-pla.pensionsWorthBefore.amount.errors.max.IndividualProtection2014               = Mae''n rhaid i werth y pensiynau hyn ar 5 Ebrill 2014 fod yn £1,000,000,000 neu lai
-pla.pensionsWorthBefore.amount.errors.max.IndividualProtection2014LTA            = Mae''n rhaid i werth y pensiynau hyn ar 5 Ebrill 2014 fod yn £1,000,000,000 neu lai
+pla.pensionsWorthBefore.amount.errors.mandatoryError.IndividualProtection2014    = Nodwch, mewn punnoedd, werth y pensiynau hyn ar 5 Ebrill 2014
+pla.pensionsWorthBefore.amount.errors.mandatoryError.IndividualProtection2014LTA = Nodwch, mewn punnoedd, werth y pensiynau hyn ar 5 Ebrill 2014
+pla.pensionsWorthBefore.amount.errors.notReal.IndividualProtection2014           = Mae’n rhaid i werth y pensiynau hyn fod yn rhif
+pla.pensionsWorthBefore.amount.errors.notReal.IndividualProtection2014LTA        = Mae’n rhaid i werth y pensiynau hyn fod yn rhif
+pla.pensionsWorthBefore.amount.errors.decimal.IndividualProtection2014           = Nodwch, mewn punnoedd, werth y pensiynau hyn ar 5 Ebrill 2014
+pla.pensionsWorthBefore.amount.errors.decimal.IndividualProtection2014LTA        = Nodwch, mewn punnoedd, werth y pensiynau hyn ar 5 Ebrill 2014
+pla.pensionsWorthBefore.amount.errors.negative.IndividualProtection2014          = Mae’n rhaid i werth y pensiynau hyn ar 5 Ebrill 2014 fod yn £0 neu fwy
+pla.pensionsWorthBefore.amount.errors.negative.IndividualProtection2014LTA       = Mae’n rhaid i werth y pensiynau hyn ar 5 Ebrill 2014 fod yn £0 neu fwy
+pla.pensionsWorthBefore.amount.errors.max.IndividualProtection2014               = Mae’n rhaid i werth y pensiynau hyn ar 5 Ebrill 2014 fod yn £1,000,000,000 neu lai
+pla.pensionsWorthBefore.amount.errors.max.IndividualProtection2014LTA            = Mae’n rhaid i werth y pensiynau hyn ar 5 Ebrill 2014 fod yn £1,000,000,000 neu lai
 
 ## Pensions Taken Between ##
-pla.pensionsTakenBetween.title    = Rhwng 6 Ebrill 2006 a 5 Ebrill 2016, a gawsoch chi arian o''ch pensiynau, a wnaethoch chi drosglwyddo pensiwn dramor, neu a gawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd?
-pla.pensionsTakenBetween.bullet.1 = cawsoch arian o''ch pensiynau
+pla.pensionsTakenBetween.title    = Rhwng 6 Ebrill 2006 a 5 Ebrill 2016, a gawsoch chi arian o’ch pensiynau, a wnaethoch chi drosglwyddo pensiwn dramor, neu a gawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd?
+pla.pensionsTakenBetween.bullet.1 = cawsoch arian o’ch pensiynau
 pla.pensionsTakenBetween.bullet.2 = trosglwyddwyd pensiwn gennych i gynllun a ddelir dramor
 pla.pensionsTakenBetween.bullet.3 = cawsoch eich pen-blwydd yn 75 ac roedd gennych gynilion pensiwn nad oeddech wedi cymryd hyd hynny
 
-pla.pensionsTakenBetween.errors.mandatoryError.IndividualProtection2016    = Dewiswch ''Iawn'' os rhwng 6 Ebrill 2006 a 5 Ebrill 2016, cawsoch arian o''ch pensiynau, gwnaethoch drosglwyddo pensiwn dramor, neu cawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd.
-pla.pensionsTakenBetween.errors.mandatoryError.IndividualProtection2016LTA = Dewiswch ''Iawn'' os rhwng 6 Ebrill 2006 a 5 Ebrill 2016, cawsoch arian o''ch pensiynau, gwnaethoch drosglwyddo pensiwn dramor, neu cawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd.
+pla.pensionsTakenBetween.errors.mandatoryError.IndividualProtection2016    = Dewiswch ’Iawn’ os rhwng 6 Ebrill 2006 a 5 Ebrill 2016, cawsoch arian o’ch pensiynau, gwnaethoch drosglwyddo pensiwn dramor, neu cawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd.
+pla.pensionsTakenBetween.errors.mandatoryError.IndividualProtection2016LTA = Dewiswch ’Iawn’ os rhwng 6 Ebrill 2006 a 5 Ebrill 2016, cawsoch arian o’ch pensiynau, gwnaethoch drosglwyddo pensiwn dramor, neu cawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd.
 
 ## IP14 Pensions Taken Between ##
-pla.ip14PensionsTakenBetween.title  = A ddigwyddodd unrhyw un o''r canlynol rhwng 6 Ebrill 2006 a 5 Ebrill 2014?
+pla.ip14PensionsTakenBetween.title  = A ddigwyddodd unrhyw un o’r canlynol rhwng 6 Ebrill 2006 a 5 Ebrill 2014?
 pla.ip14PensionsTakenBetween.step.1 = Cymerwch y lwfans oes ar 5 Ebrill 2014 (£1.5m) a rhannwch ef â gwerth eich lwfans oes ar ddyddiad y digwyddiad.
-pla.ip14PensionsTakenBetween.para.2 = Gallwch ofyn i weinyddwr eich cynllun pensiwn roi gwybod i chi swm y lwfans oes yr ydych wedi''i ddefnyddio ar gyfer diogelwch unigol 2014.
-pla.ip14PensionsTakenBetween.legend = Rhwng 6 Ebrill 2006 a 5 Ebrill 2014, a gawsoch eich pen-blwydd yn 75, a gymeroch arian o''ch pensiynau, neu a wnaethoch drosglwyddiad i bensiwn dramor?
+pla.ip14PensionsTakenBetween.para.2 = Gallwch ofyn i weinyddwr eich cynllun pensiwn roi gwybod i chi swm y lwfans oes yr ydych wedi’i ddefnyddio ar gyfer diogelwch unigol 2014.
+pla.ip14PensionsTakenBetween.legend = Rhwng 6 Ebrill 2006 a 5 Ebrill 2014, a gawsoch eich pen-blwydd yn 75, a gymeroch arian o’ch pensiynau, neu a wnaethoch drosglwyddiad i bensiwn dramor?
 
-pla.pensionsTakenBetween.errors.mandatoryError.IndividualProtection2014    = Dewiswch ''Iawn'' os rhwng 6 Ebrill 2006 a 5 Ebrill 2016, cawsoch arian o''ch pensiynau, gwnaethoch drosglwyddo pensiwn dramor, neu cawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd.
-pla.pensionsTakenBetween.errors.mandatoryError.IndividualProtection2014LTA = Dewiswch ''Iawn'' os rhwng 6 Ebrill 2006 a 5 Ebrill 2016, cawsoch arian o''ch pensiynau, gwnaethoch drosglwyddo pensiwn dramor, neu cawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd.
+pla.pensionsTakenBetween.errors.mandatoryError.IndividualProtection2014    = Dewiswch ’Iawn’ os rhwng 6 Ebrill 2006 a 5 Ebrill 2016, cawsoch arian o’ch pensiynau, gwnaethoch drosglwyddo pensiwn dramor, neu cawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd.
+pla.pensionsTakenBetween.errors.mandatoryError.IndividualProtection2014LTA = Dewiswch ’Iawn’ os rhwng 6 Ebrill 2006 a 5 Ebrill 2016, cawsoch arian o’ch pensiynau, gwnaethoch drosglwyddo pensiwn dramor, neu cawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd.
 
 ## Pensions Used Between ##
-pla.pensionsUsedBetween.title           = Faint o lwfans oes a ydych wedi''i ddefnyddio?
-pla.pensionsUsedBetween.question        = Faint o lwfans oes a ydych wedi''i ddefnyddio?
+pla.pensionsUsedBetween.title           = Faint o lwfans oes a ydych wedi’i ddefnyddio?
+pla.pensionsUsedBetween.question        = Faint o lwfans oes a ydych wedi’i ddefnyddio?
 pla.pensionsUsedBetween.hint            = Er enghraifft, £10,000 neu £100,000.00
-pla.pensionsUsedBetween.para.1          = Os yw unrhyw un o''r digwyddiadau hyn wedi digwydd, byddech wedi defnyddio peth o''ch lwfans oes.
-pla.pensionsUsedBetween.para.2          = Gallwch ofyn i weinyddwr eich cynllun pensiwn roi gwybod i chi swm y lwfans oes yr ydych wedi''i ddefnyddio ar gyfer diogelwch unigol 2016.
+pla.pensionsUsedBetween.para.1          = Os yw unrhyw un o’r digwyddiadau hyn wedi digwydd, byddech wedi defnyddio peth o’ch lwfans oes.
+pla.pensionsUsedBetween.para.2          = Gallwch ofyn i weinyddwr eich cynllun pensiwn roi gwybod i chi swm y lwfans oes yr ydych wedi’i ddefnyddio ar gyfer diogelwch unigol 2016.
 pla.pensionsUsedBetween.step.1          = Cymerwch y lwfans oes ar 5 Ebrill 2016 (£1.25m) a rhannwch ef â gwerth eich lwfans oes ar ddyddiad y digwyddiad.
 pla.pensionsUsedBetween.step.2          = Lluoswch werth eich lwfans oes ar ddyddiad y digwyddiad â chanran y lwfans oes a ddefnyddiwyd.
 pla.pensionsUsedBetween.step.3          = Lluoswch ganlyniad cam 1 gyda chanlyniad cam 2.
 pla.pensionsUsedBetween.step.4          = Ail wnewch hyn ar gyfer pob digwyddiad ac adiwch y symiau at ei gilydd.
 pla.pensionsUsedBetween.para.3.nonInput = Darllenwch arweiniad technegol ar
-pla.pensionsUsedBetween.help            = Sut wyf yn cyfrifo''r gwerth?
-pla.pensionsUsedBetween.helpLinkText    = cyfrifo faint o lwfans oes yr ydych wedi''i ddefnyddio
+pla.pensionsUsedBetween.help            = Sut wyf yn cyfrifo’r gwerth?
+pla.pensionsUsedBetween.helpLinkText    = cyfrifo faint o lwfans oes yr ydych wedi’i ddefnyddio
 
-pla.pensionsUsedBetween.amount.errors.mandatoryError.IndividualProtection2016    = Nodwch y swm mewn punnoedd ar gyfer y lwfans oes a ddefnyddiwyd, er enghraifft £10,000 neu £100,000.00
-pla.pensionsUsedBetween.amount.errors.mandatoryError.IndividualProtection2016LTA = Nodwch y swm mewn punnoedd ar gyfer y lwfans oes a ddefnyddiwyd, er enghraifft £10,000 neu £100,000.00
-pla.pensionsUsedBetween.amount.errors.notReal.IndividualProtection2016           = Mae''n rhaid i faint o lwfans oes rydych wedi''i ddefnyddio fod yn rhif, megis 10000.00
-pla.pensionsUsedBetween.amount.errors.notReal.IndividualProtection2016LTA        = Mae''n rhaid i faint o lwfans oes rydych wedi''i ddefnyddio fod yn rhif, megis 10000.00
-pla.pensionsUsedBetween.amount.errors.decimal.IndividualProtection2016           = Nodwch y swm mewn punnoedd ar gyfer y lwfans oes a ddefnyddiwyd, er enghraifft £10,000 neu £100,000.00
-pla.pensionsUsedBetween.amount.errors.decimal.IndividualProtection2016LTA        = Nodwch y swm mewn punnoedd ar gyfer y lwfans oes a ddefnyddiwyd, er enghraifft £10,000 neu £100,000.00
-pla.pensionsUsedBetween.amount.errors.negative.IndividualProtection2016          = Mae''n rhaid i ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' fod yn £0 neu fwy
-pla.pensionsUsedBetween.amount.errors.negative.IndividualProtection2016LTA       = Mae''n rhaid i ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' fod yn £0 neu fwy
-pla.pensionsUsedBetween.amount.errors.max.IndividualProtection2016               = Mae''n rhaid i ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' fod yn £1,000,000,000 neu lai
-pla.pensionsUsedBetween.amount.errors.max.IndividualProtection2016LTA            = Mae''n rhaid i ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' fod yn £1,000,000,000 neu lai
+pla.pensionsUsedBetween.amount.errors.mandatoryError.IndividualProtection2016    = Nodwch, mewn punnoedd, swm y lwfans oes a ddefnyddiwyd
+pla.pensionsUsedBetween.amount.errors.mandatoryError.IndividualProtection2016LTA = Nodwch, mewn punnoedd, swm y lwfans oes a ddefnyddiwyd
+pla.pensionsUsedBetween.amount.errors.notReal.IndividualProtection2016           = Mae’n rhaid i faint o lwfans oes a ddefnyddiwyd fod yn rhif
+pla.pensionsUsedBetween.amount.errors.notReal.IndividualProtection2016LTA        = Mae’n rhaid i faint o lwfans oes a ddefnyddiwyd fod yn rhif
+pla.pensionsUsedBetween.amount.errors.decimal.IndividualProtection2016           = Nodwch, mewn punnoedd, swm y lwfans oes a ddefnyddiwyd
+pla.pensionsUsedBetween.amount.errors.decimal.IndividualProtection2016LTA        = Nodwch, mewn punnoedd, swm y lwfans oes a ddefnyddiwyd
+pla.pensionsUsedBetween.amount.errors.negative.IndividualProtection2016          = Mae’n rhaid i’r lwfans oes fod yn £0 neu fwy
+pla.pensionsUsedBetween.amount.errors.negative.IndividualProtection2016LTA       = Mae’n rhaid i’r lwfans oes fod yn £0 neu fwy
+pla.pensionsUsedBetween.amount.errors.max.IndividualProtection2016               = Mae’n rhaid i swm y lwfans oes a ddefnyddiwyd fod yn £1,000,000,000 neu lai
+pla.pensionsUsedBetween.amount.errors.max.IndividualProtection2016LTA            = Mae’n rhaid i swm y lwfans oes a ddefnyddiwyd fod yn £1,000,000,000 neu lai
 
 ## IP14 Pensions Used Between ##
-pla.pensionsUsedBetween.amount.errors.mandatoryError.IndividualProtection2014    = Nodwch y swm mewn punnoedd ar gyfer y lwfans oes a ddefnyddiwyd, er enghraifft £10,000 neu £100,000.00
-pla.pensionsUsedBetween.amount.errors.mandatoryError.IndividualProtection2014LTA = Nodwch y swm mewn punnoedd ar gyfer y lwfans oes a ddefnyddiwyd, er enghraifft £10,000 neu £100,000.00
-pla.pensionsUsedBetween.amount.errors.notReal.IndividualProtection2014           = Mae''n rhaid i faint o lwfans oes rydych wedi''i ddefnyddio fod yn rhif, megis 10000.00
-pla.pensionsUsedBetween.amount.errors.notReal.IndividualProtection2014LTA        = Mae''n rhaid i faint o lwfans oes rydych wedi''i ddefnyddio fod yn rhif, megis 10000.00
-pla.pensionsUsedBetween.amount.errors.decimal.IndividualProtection2014           = Nodwch y swm mewn punnoedd ar gyfer y lwfans oes a ddefnyddiwyd, er enghraifft £10,000 neu £100,000.00
-pla.pensionsUsedBetween.amount.errors.decimal.IndividualProtection2014LTA        = Nodwch y swm mewn punnoedd ar gyfer y lwfans oes a ddefnyddiwyd, er enghraifft £10,000 neu £100,000.00
-pla.pensionsUsedBetween.amount.errors.negative.IndividualProtection2014          = Mae''n rhaid i ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' fod yn £0 neu fwy
-pla.pensionsUsedBetween.amount.errors.negative.IndividualProtection2014LTA       = Mae''n rhaid i ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' fod yn £0 neu fwy
-pla.pensionsUsedBetween.amount.errors.max.IndividualProtection2014               = Mae''n rhaid i ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' fod yn £1,000,000,000 neu lai
-pla.pensionsUsedBetween.amount.errors.max.IndividualProtection2014LTA            = Mae''n rhaid i ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' fod yn £1,000,000,000 neu lai
+pla.pensionsUsedBetween.amount.errors.mandatoryError.IndividualProtection2014    = Nodwch, mewn punnoedd, swm y lwfans oes a ddefnyddiwyd
+pla.pensionsUsedBetween.amount.errors.mandatoryError.IndividualProtection2014LTA = Nodwch, mewn punnoedd, swm y lwfans oes a ddefnyddiwyd
+pla.pensionsUsedBetween.amount.errors.notReal.IndividualProtection2014           = Mae’n rhaid i faint o lwfans oes a ddefnyddiwyd fod yn rhif
+pla.pensionsUsedBetween.amount.errors.notReal.IndividualProtection2014LTA        = Mae’n rhaid i faint o lwfans oes a ddefnyddiwyd fod yn rhif
+pla.pensionsUsedBetween.amount.errors.decimal.IndividualProtection2014           = Nodwch, mewn punnoedd, swm y lwfans oes a ddefnyddiwyd
+pla.pensionsUsedBetween.amount.errors.decimal.IndividualProtection2014LTA        = Nodwch, mewn punnoedd, swm y lwfans oes a ddefnyddiwyd
+pla.pensionsUsedBetween.amount.errors.negative.IndividualProtection2014          = Mae’n rhaid i’r lwfans oes fod yn £0 neu fwy
+pla.pensionsUsedBetween.amount.errors.negative.IndividualProtection2014LTA       = Mae’n rhaid i’r lwfans oes fod yn £0 neu fwy
+pla.pensionsUsedBetween.amount.errors.max.IndividualProtection2014               = Mae’n rhaid i swm y lwfans oes a ddefnyddiwyd fod yn £1,000,000,000 neu lai
+pla.pensionsUsedBetween.amount.errors.max.IndividualProtection2014LTA            = Mae’n rhaid i swm y lwfans oes a ddefnyddiwyd fod yn £1,000,000,000 neu lai
 
 ## Overseas Pensions ##
 pla.overseasPensions.title            = A ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor?
@@ -183,75 +183,75 @@ pla.overseasPensions.questionTwo      = Faint gwnaethoch gyfrannu?
 pla.overseasPensions.questionTwo.hint = Er enghraifft, £10,000 neu £100,000.00
 pla.overseasPensions.legend           = A wnaethoch roi arian i mewn i gynllun pensiwn dramor rhwng 6 Ebrill 2006 a 5 Ebrill 2016?
 
-pla.overseasPensions.errors.mandatoryError.IndividualProtection2016           = Dewiswch ''Iawn'' os ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor
-pla.overseasPensions.errors.mandatoryError.IndividualProtection2016LTA        = Dewiswch ''Iawn'' os ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor
-pla.overseasPensions.amount.errors.mandatoryError.IndividualProtection2016    = Nodwch y swm mewn punnoedd a gyfrannwyd gennych, er enghraifft £10,000 neu £100,000.00
-pla.overseasPensions.amount.errors.mandatoryError.IndividualProtection2016LTA = Nodwch y swm mewn punnoedd a gyfrannwyd gennych, er enghraifft £10,000 neu £100,000.00
-pla.overseasPensions.amount.errors.notReal.IndividualProtection2016           = Mae''n rhaid i faint y gwnaethoch ei gyfrannu fod yn rhif, megis 10000.00
-pla.overseasPensions.amount.errors.notReal.IndividualProtection2016LTA        = Mae''n rhaid i faint y gwnaethoch ei gyfrannu fod yn rhif, megis 10000.00
-pla.overseasPensions.amount.errors.decimal.IndividualProtection2016           = Nodwch y swm mewn punnoedd a gyfrannwyd gennych, er enghraifft £10,000 neu £100,000.00
-pla.overseasPensions.amount.errors.decimal.IndividualProtection2016LTA        = Nodwch y swm mewn punnoedd a gyfrannwyd gennych, er enghraifft £10,000 neu £100,000.00
-pla.overseasPensions.amount.errors.negative.IndividualProtection2016          = Mae''n rhaid i ''Faint y gwnaethoch ei gyfrannu?'' fod yn £0 neu fwy
-pla.overseasPensions.amount.errors.negative.IndividualProtection2016LTA       = Mae''n rhaid i ''Faint y gwnaethoch ei gyfrannu?'' fod yn £0 neu fwy
-pla.overseasPensions.amount.errors.max.IndividualProtection2016               = Mae''n rhaid i ''Faint y gwnaethoch ei gyfrannu?'' fod yn £1,000,000,000 neu lai
-pla.overseasPensions.amount.errors.max.IndividualProtection2016LTA            = Mae''n rhaid i ''Faint y gwnaethoch ei gyfrannu?'' fod yn £1,000,000,000 neu lai
+pla.overseasPensions.errors.mandatoryError.IndividualProtection2016           = Dewiswch ’Iawn’ os ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor
+pla.overseasPensions.errors.mandatoryError.IndividualProtection2016LTA        = Dewiswch ’Iawn’ os ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor
+pla.overseasPensions.amount.errors.mandatoryError.IndividualProtection2016    = Nodwch, mewn punnoedd, y swm y gwnaethoch ei gyfrannu
+pla.overseasPensions.amount.errors.mandatoryError.IndividualProtection2016LTA = Nodwch, mewn punnoedd, y swm y gwnaethoch ei gyfrannu
+pla.overseasPensions.amount.errors.notReal.IndividualProtection2016           = Mae’n rhaid i’r swm y gwnaethoch ei gyfrannu fod yn rhif
+pla.overseasPensions.amount.errors.notReal.IndividualProtection2016LTA        = Mae’n rhaid i’r swm y gwnaethoch ei gyfrannu fod yn rhif
+pla.overseasPensions.amount.errors.decimal.IndividualProtection2016           = Nodwch, mewn punnoedd, y swm y gwnaethoch ei gyfrannu
+pla.overseasPensions.amount.errors.decimal.IndividualProtection2016LTA        = Nodwch, mewn punnoedd, y swm y gwnaethoch ei gyfrannu
+pla.overseasPensions.amount.errors.negative.IndividualProtection2016          = Mae’n rhaid i’r swm y gwnaethoch ei gyfrannu fod yn £0 neu fwy
+pla.overseasPensions.amount.errors.negative.IndividualProtection2016LTA       = Mae’n rhaid i’r swm y gwnaethoch ei gyfrannu fod yn £0 neu fwy
+pla.overseasPensions.amount.errors.max.IndividualProtection2016               = Mae’n rhaid i’r swm y gwnaethoch ei gyfrannu fod yn £1,000,000,000 neu lai
+pla.overseasPensions.amount.errors.max.IndividualProtection2016LTA            = Mae’n rhaid i’r swm y gwnaethoch ei gyfrannu fod yn £1,000,000,000 neu lai
 
 ## IP14 Overseas Pensions ##
 pla.ip14OverseasPensions.question = Dim ond cyfraniadau a wnaed rhwng 6 Ebrill 2006 a 5 Ebrill 2014 y cawsoch ryddhad treth y DU arnynt, y dylech eu cynnwys.
 pla.ip14OverseasPensions.legend   = A wnaethoch roi arian i mewn i gynllun pensiwn dramor rhwng 6 Ebrill 2006 a 5 Ebrill 2014?
 
-pla.overseasPensions.errors.mandatoryError.IndividualProtection2014           = Dewiswch ''Iawn'' os ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor
-pla.overseasPensions.errors.mandatoryError.IndividualProtection2014LTA        = Dewiswch ''Iawn'' os ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor
-pla.overseasPensions.amount.errors.mandatoryError.IndividualProtection2014    = Nodwch y swm mewn punnoedd a gyfrannwyd gennych, er enghraifft £10,000 neu £100,000.00
-pla.overseasPensions.amount.errors.mandatoryError.IndividualProtection2014LTA = Nodwch y swm mewn punnoedd a gyfrannwyd gennych, er enghraifft £10,000 neu £100,000.00
-pla.overseasPensions.amount.errors.notReal.IndividualProtection2014           = Mae''n rhaid i faint y gwnaethoch ei gyfrannu fod yn rhif, megis 10000.00
-pla.overseasPensions.amount.errors.notReal.IndividualProtection2014LTA        = Mae''n rhaid i faint y gwnaethoch ei gyfrannu fod yn rhif, megis 10000.00
-pla.overseasPensions.amount.errors.decimal.IndividualProtection2014           = Nodwch y swm mewn punnoedd a gyfrannwyd gennych, er enghraifft £10,000 neu £100,000.00
-pla.overseasPensions.amount.errors.decimal.IndividualProtection2014LTA        = Nodwch y swm mewn punnoedd a gyfrannwyd gennych, er enghraifft £10,000 neu £100,000.00
-pla.overseasPensions.amount.errors.negative.IndividualProtection2014          = Mae''n rhaid i ''Faint y gwnaethoch ei gyfrannu?'' fod yn £0 neu fwy
-pla.overseasPensions.amount.errors.negative.IndividualProtection2014LTA       = Mae''n rhaid i ''Faint y gwnaethoch ei gyfrannu?'' fod yn £0 neu fwy
-pla.overseasPensions.amount.errors.max.IndividualProtection2014               = Mae''n rhaid i ''Faint y gwnaethoch ei gyfrannu?'' fod yn £1,000,000,000 neu lai
-pla.overseasPensions.amount.errors.max.IndividualProtection2014LTA            = Mae''n rhaid i ''Faint y gwnaethoch ei gyfrannu?'' fod yn £1,000,000,000 neu lai
+pla.overseasPensions.errors.mandatoryError.IndividualProtection2014           = Dewiswch ’Iawn’ os ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor
+pla.overseasPensions.errors.mandatoryError.IndividualProtection2014LTA        = Dewiswch ’Iawn’ os ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor
+pla.overseasPensions.amount.errors.mandatoryError.IndividualProtection2014    = Nodwch, mewn punnoedd, y swm y gwnaethoch ei gyfrannu
+pla.overseasPensions.amount.errors.mandatoryError.IndividualProtection2014LTA = Nodwch, mewn punnoedd, y swm y gwnaethoch ei gyfrannu
+pla.overseasPensions.amount.errors.notReal.IndividualProtection2014           = Mae’n rhaid i’r swm y gwnaethoch ei gyfrannu fod yn rhif
+pla.overseasPensions.amount.errors.notReal.IndividualProtection2014LTA        = Mae’n rhaid i’r swm y gwnaethoch ei gyfrannu fod yn rhif
+pla.overseasPensions.amount.errors.decimal.IndividualProtection2014           = Nodwch, mewn punnoedd, y swm y gwnaethoch ei gyfrannu
+pla.overseasPensions.amount.errors.decimal.IndividualProtection2014LTA        = Nodwch, mewn punnoedd, y swm y gwnaethoch ei gyfrannu
+pla.overseasPensions.amount.errors.negative.IndividualProtection2014          = Mae’n rhaid i’r swm y gwnaethoch ei gyfrannu fod yn £0 neu fwy
+pla.overseasPensions.amount.errors.negative.IndividualProtection2014LTA       = Mae’n rhaid i’r swm y gwnaethoch ei gyfrannu fod yn £0 neu fwy
+pla.overseasPensions.amount.errors.max.IndividualProtection2014               = Mae’n rhaid i’r swm y gwnaethoch ei gyfrannu fod yn £1,000,000,000 neu lai
+pla.overseasPensions.amount.errors.max.IndividualProtection2014LTA            = Mae’n rhaid i’r swm y gwnaethoch ei gyfrannu fod yn £1,000,000,000 neu lai
 
 ## CURRENT PENSIONS ##
-pla.currentPensions.title                 = Beth oedd gwerth eich pensiynau''r DU ar 5 Ebrill 2016?
-pla.currentPensions.hiddenLink            = Sut wyf yn cyfrifo''r gwerth?
+pla.currentPensions.title                 = Beth oedd gwerth eich pensiynau’r DU ar 5 Ebrill 2016?
+pla.currentPensions.hiddenLink            = Sut wyf yn cyfrifo’r gwerth?
 pla.currentPensions.hint                  = Er enghraifft, £10,000 neu £100,000.00
 pla.currentPensions.hiddenTextPara        = Defnyddiwch ffigurau a oedd yn gywir ar 5 Ebrill 2016.
 pla.currentPensions.hiddenText1           = Cymerwch unrhyw bensiynau lle roedd eich cyflogwr yn gwarantu incwm blynyddol penodol i chi.
-pla.currentPensions.hiddenText2           = Lluoswch yr incwm blynyddol o''r pensiynau hyn ag 20.
-pla.currentPensions.hiddenText3           = Adiwch unrhyw gyfandaliadau y cewch yn ogystal â''r incwm blynyddol hwn.
-pla.currentPensions.hiddenText4           = Adiwch y cyfanswm yr ydych wedi''i gronni yn eich cronfeydd pensiwn eraill.
+pla.currentPensions.hiddenText2           = Lluoswch yr incwm blynyddol o’r pensiynau hyn ag 20.
+pla.currentPensions.hiddenText3           = Adiwch unrhyw gyfandaliadau y cewch yn ogystal â’r incwm blynyddol hwn.
+pla.currentPensions.hiddenText4           = Adiwch y cyfanswm yr ydych wedi’i gronni yn eich cronfeydd pensiwn eraill.
 pla.currentPensions.readGuidance          = Darllenwch arweiniad technegol ar {0}
 pla.currentPensions.readGuidance.nonInput = Darllenwch arweiniad technegol ar
-pla.currentPensions.helpLinkText          = sut i werthuso pensiynau nad ydych wedi''u cymryd hyd yn hyn?
-pla.currentPensions.question              = Peidiwch â chynnwys pensiynau yr ydych eisoes wedi''u cymryd na Phensiwn y Wladwriaeth.
+pla.currentPensions.helpLinkText          = sut i werthuso pensiynau nad ydych wedi’u cymryd hyd yn hyn?
+pla.currentPensions.question              = Peidiwch â chynnwys pensiynau yr ydych eisoes wedi’u cymryd na Phensiwn y Wladwriaeth.
 
-pla.currentPensions.amount.errors.mandatoryError.IndividualProtection2016    = Nodwch y swm mewn punnoedd ar gyfer eich pensiynau yn y DU ar 5 Ebrill 2016, er enghraifft £10,000 neu £100,000.00
-pla.currentPensions.amount.errors.mandatoryError.IndividualProtection2016LTA = Nodwch y swm mewn punnoedd ar gyfer eich pensiynau yn y DU ar 5 Ebrill 2016, er enghraifft £10,000 neu £100,000.00
-pla.currentPensions.amount.errors.notReal.IndividualProtection2016           = Mae''n rhaid i werth eich pensiynau yn y DU ar 5 Ebrill 2016 fod yn rhif, megis 10000.00
-pla.currentPensions.amount.errors.notReal.IndividualProtection2016LTA        = Mae''n rhaid i werth eich pensiynau yn y DU ar 5 Ebrill 2016 fod yn rhif, megis 10000.00
-pla.currentPensions.amount.errors.decimal.IndividualProtection2016           = Nodwch y swm mewn punnoedd ar gyfer eich pensiynau yn y DU ar 5 Ebrill 2016, er enghraifft £10,000 neu £100,000.00
-pla.currentPensions.amount.errors.decimal.IndividualProtection2016LTA        = Nodwch y swm mewn punnoedd ar gyfer eich pensiynau yn y DU ar 5 Ebrill 2016, er enghraifft £10,000 neu £100,000.00
-pla.currentPensions.amount.errors.negative.IndividualProtection2016          = Mae''n rhaid i werth eich pensiynau yn y DU ar 5 Ebrill 2016 fod yn £0 neu fwy
-pla.currentPensions.amount.errors.negative.IndividualProtection2016LTA       = Mae''n rhaid i werth eich pensiynau yn y DU ar 5 Ebrill 2016 fod yn £0 neu fwy
-pla.currentPensions.amount.errors.max.IndividualProtection2016               = Mae''n rhaid i werth eich pensiynau yn y DU ar 5 Ebrill 2016 fod yn £1,000,000,000 neu lai
-pla.currentPensions.amount.errors.max.IndividualProtection2016LTA            = Mae''n rhaid i werth eich pensiynau yn y DU ar 5 Ebrill 2016 fod yn £1,000,000,000 neu lai
+pla.currentPensions.amount.errors.mandatoryError.IndividualProtection2016    = Nodwch, mewn punnoedd, werth y pensiynau hyn yn y DU ar 5 Ebrill 2016
+pla.currentPensions.amount.errors.mandatoryError.IndividualProtection2016LTA = Nodwch, mewn punnoedd, werth y pensiynau hyn yn y DU ar 5 Ebrill 2016
+pla.currentPensions.amount.errors.notReal.IndividualProtection2016           = Mae’n rhaid i werth y pensiynau hyn yn y DU fod yn rhif
+pla.currentPensions.amount.errors.notReal.IndividualProtection2016LTA        = Mae’n rhaid i werth y pensiynau hyn yn y DU fod yn rhif
+pla.currentPensions.amount.errors.decimal.IndividualProtection2016           = Nodwch, mewn punnoedd, werth y pensiynau hyn yn y DU ar 5 Ebrill 2016
+pla.currentPensions.amount.errors.decimal.IndividualProtection2016LTA        = Nodwch, mewn punnoedd, werth y pensiynau hyn yn y DU ar 5 Ebrill 2016
+pla.currentPensions.amount.errors.negative.IndividualProtection2016          = Mae’n rhaid i werth y pensiynau hyn yn y DU ar 5 Ebrill 2016 fod yn £0 neu fwy
+pla.currentPensions.amount.errors.negative.IndividualProtection2016LTA       = Mae’n rhaid i werth y pensiynau hyn yn y DU ar 5 Ebrill 2016 fod yn £0 neu fwy
+pla.currentPensions.amount.errors.max.IndividualProtection2016               = Mae’n rhaid i werth y pensiynau hyn yn y DU ar 5 Ebrill 2016 fod yn £1,000,000,000 neu lai
+pla.currentPensions.amount.errors.max.IndividualProtection2016LTA            = Mae’n rhaid i werth y pensiynau hyn yn y DU ar 5 Ebrill 2016 fod yn £1,000,000,000 neu lai
 
 ## IP14 CURRENT PENSIONS ##
-pla.ip14CurrentPensions.title          = Beth oedd gwerth eich pensiynau''r DU ar 5 Ebrill 2014?
+pla.ip14CurrentPensions.title          = Beth oedd gwerth eich pensiynau’r DU ar 5 Ebrill 2014?
 pla.ip14CurrentPensions.hiddenTextPara = Defnyddiwch ffigurau a oedd yn gywir ar 5 Ebrill 2014.
 
-pla.currentPensions.amount.errors.mandatoryError.IndividualProtection2014    = Nodwch y swm mewn punnoedd ar gyfer eich pensiynau yn y DU ar 5 Ebrill 2014, er enghraifft £10,000 neu £100,000.00
-pla.currentPensions.amount.errors.mandatoryError.IndividualProtection2014LTA = Nodwch y swm mewn punnoedd ar gyfer eich pensiynau yn y DU ar 5 Ebrill 2014, er enghraifft £10,000 neu £100,000.00
-pla.currentPensions.amount.errors.notReal.IndividualProtection2014           = Mae''n rhaid i werth eich pensiynau yn y DU ar 5 Ebrill 2014 fod yn rhif, megis 10000.00
-pla.currentPensions.amount.errors.notReal.IndividualProtection2014LTA        = Mae''n rhaid i werth eich pensiynau yn y DU ar 5 Ebrill 2014 fod yn rhif, megis 10000.00
-pla.currentPensions.amount.errors.decimal.IndividualProtection2014           = Nodwch y swm mewn punnoedd ar gyfer eich pensiynau yn y DU ar 5 Ebrill 2014, er enghraifft £10,000 neu £100,000.00
-pla.currentPensions.amount.errors.decimal.IndividualProtection2014LTA        = Nodwch y swm mewn punnoedd ar gyfer eich pensiynau yn y DU ar 5 Ebrill 2014, er enghraifft £10,000 neu £100,000.00
-pla.currentPensions.amount.errors.negative.IndividualProtection2014          = Mae''n rhaid i werth eich pensiynau yn y DU ar 5 Ebrill 2014 fod yn £0 neu fwy
-pla.currentPensions.amount.errors.negative.IndividualProtection2014LTA       = Mae''n rhaid i werth eich pensiynau yn y DU ar 5 Ebrill 2014 fod yn £0 neu fwy
-pla.currentPensions.amount.errors.max.IndividualProtection2014               = Mae''n rhaid i werth eich pensiynau yn y DU ar 5 Ebrill 2014 fod yn £1,000,000,000 neu lai
-pla.currentPensions.amount.errors.max.IndividualProtection2014LTA            = Mae''n rhaid i werth eich pensiynau yn y DU ar 5 Ebrill 2014 fod yn £1,000,000,000 neu lai
+pla.currentPensions.amount.errors.mandatoryError.IndividualProtection2014    = Nodwch, mewn punnoedd, werth y pensiynau hyn yn y DU ar 5 Ebrill 2014
+pla.currentPensions.amount.errors.mandatoryError.IndividualProtection2014LTA = Nodwch, mewn punnoedd, werth y pensiynau hyn yn y DU ar 5 Ebrill 2014
+pla.currentPensions.amount.errors.notReal.IndividualProtection2014           = Mae’n rhaid i werth y pensiynau hyn yn y DU fod yn rhif
+pla.currentPensions.amount.errors.notReal.IndividualProtection2014LTA        = Mae’n rhaid i werth y pensiynau hyn yn y DU fod yn rhif
+pla.currentPensions.amount.errors.decimal.IndividualProtection2014           = Nodwch, mewn punnoedd, werth y pensiynau hyn yn y DU ar 5 Ebrill 2014
+pla.currentPensions.amount.errors.decimal.IndividualProtection2014LTA        = Nodwch, mewn punnoedd, werth y pensiynau hyn yn y DU ar 5 Ebrill 2014
+pla.currentPensions.amount.errors.negative.IndividualProtection2014          = Mae’n rhaid i werth y pensiynau hyn yn y DU ar 5 Ebrill 2014 fod yn £0 neu fwy
+pla.currentPensions.amount.errors.negative.IndividualProtection2014LTA       = Mae’n rhaid i werth y pensiynau hyn yn y DU ar 5 Ebrill 2014 fod yn £0 neu fwy
+pla.currentPensions.amount.errors.max.IndividualProtection2014               = Mae’n rhaid i werth y pensiynau hyn yn y DU ar 5 Ebrill 2014 fod yn £1,000,000,000 neu lai
+pla.currentPensions.amount.errors.max.IndividualProtection2014LTA            = Mae’n rhaid i werth y pensiynau hyn yn y DU ar 5 Ebrill 2014 fod yn £1,000,000,000 neu lai
 
 ## Pension Sharing Order Details ##
 pla.psoDetails.title                        = Gorchymyn rhannu pensiwn
@@ -259,11 +259,11 @@ pla.psoDetails.date.question                = Dyddiad y gorchymyn rhannu pensiwn
 pla.psoDetails.date.hint                    = Er enghraifft, 18 4 2021
 pla.psoDetails.amount.question              = Swm y gorchymyn rhannu pensiwn
 pla.psoDetails.amount.hint                  = Er enghraifft, £600 neu £193.54
-pla.psoDetails.amount.errors.mandatoryError = Nodwch y swm mewn punnoedd ar gyfer y gorchymyn rhannu pensiwn, er enghraifft £600 neu £193.54
-pla.psoDetails.amount.errors.notReal        = Nodwch y swm mewn punnoedd ar gyfer y gorchymyn rhannu pensiwn, er enghraifft £600 neu £193.54
-pla.psoDetails.amount.errors.decimal        = Nodwch y swm mewn punnoedd ar gyfer y gorchymyn rhannu pensiwn, er enghraifft £600 neu £193.54
-pla.psoDetails.amount.errors.negative       = Mae''n rhaid i swm y gorchymyn rhannu pensiwn fod yn £0 neu fwy
-pla.psoDetails.amount.errors.max            = Mae''n rhaid i swm y gorchymyn rhannu pensiwn fod yn £1,000,000,000 neu lai
+pla.psoDetails.amount.errors.mandatoryError = Nodwch, mewn punnoedd, swm y Gorchymyn Rhannu Pensiwn
+pla.psoDetails.amount.errors.notReal        = Mae’n rhaid i swm y Gorchymyn Rhannu Pensiwn fod yn rhif
+pla.psoDetails.amount.errors.decimal        = Nodwch, mewn punnoedd, swm y Gorchymyn Rhannu Pensiwn
+pla.psoDetails.amount.errors.negative       = Mae’n rhaid i swm y Gorchymyn Rhannu Pensiwn fod yn £0 neu fwy
+pla.psoDetails.amount.errors.max            = Mae’n rhaid i swm y Gorchymyn Rhannu Pensiwn fod yn £1,000,000,000 neu lai
 
 pso.error.required           = Nodwch ddyddiad eich gorchymyn rhannu pensiwn
 pso.error.required.day       = Mae’n rhaid i ddyddiad eich gorchymyn rhannu pensiwn gynnwys diwrnod
@@ -311,10 +311,10 @@ pla.existingProtections.other.protections.linkText.before_2016ShutterEnabled = D
 
 ## PROTECTION INFORMATION ##
 pla.protection.statuses.dormant                   = Diogelwch segur
-pla.protection.statuses.withdrawn                 = Diogelwch sydd wedi''i dynnu''n ôl
+pla.protection.statuses.withdrawn                 = Diogelwch sydd wedi’i dynnu’n ôl
 pla.protection.statuses.expired                   = Ceisiadau sydd wedi dod i ben
 pla.protection.statuses.unsuccessful              = Ceisiadau aflwyddiannus
-pla.protection.statuses.rejected                  = Ceisiadau wedi''u gwrthod
+pla.protection.statuses.rejected                  = Ceisiadau wedi’u gwrthod
 pla.protection.types.FixedProtection2016          = Diogelwch penodol 2016
 pla.protection.types.FixedProtection2016LTA       = Diogelwch penodol 2016
 pla.protection.types.FixedProtection2014          = Diogelwch penodol 2014
@@ -338,7 +338,7 @@ pla.protection.protectionReference                = Dim un
 ## Visually Hidden Content
 pla.hidden.activeProtection = ar gyfer diogelwch sydd ar waith
 pla.hidden.Dormant          = ar gyfer diogelwch segur
-pla.hidden.Withdrawn        = ar gyfer diogelwch sydd wedi''i dynnu''n ôl
+pla.hidden.Withdrawn        = ar gyfer diogelwch sydd wedi’i dynnu’n ôl
 pla.hidden.Unsuccessful     = ar gyfer ceisiadau aflwyddiannus
 pla.hidden.Rejected         = ar gyfer ceisiadau aflwyddiannus
 pla.hidden.Expired          = ar gyfer ceisiadau sydd wedi dod i ben
@@ -351,12 +351,12 @@ pla.resultSuccess.psaRef                      = cyfeirnod gweinyddwr y cynllun
 pla.resultSuccess.applicationDate             = dyddiad y cais
 pla.resultSuccess.print                       = Adolygwch fanylion eich diogelwch a’u hargraffu
 pla.resultSuccess.IPChangeDetails             = Newid eich manylion diogelwch
-pla.resultSuccess.IPPensionSharing.beforeLink = Os yw''ch pensiwn yn cael ei rannu o ganlyniad i ysgariad neu pan fo partneriaeth sifil yn gwahanu, cysylltwch â
+pla.resultSuccess.IPPensionSharing.beforeLink = Os yw’ch pensiwn yn cael ei rannu o ganlyniad i ysgariad neu pan fo partneriaeth sifil yn gwahanu, cysylltwch â
 pla.resultSuccess.IPPensionSharing.linkText   = Gwasanaethau Cynlluniau Pensiwn
 pla.resultSuccess.IPPensionSharing.afterLink  = cyn pen 60 diwrnod.
 pla.resultSuccess.giveFeedback                = Rhoi adborth i ni
 pla.resultSuccess.exitSurveyLinkText          = Beth oedd eich barn am y gwasanaeth hwn?
-pla.resultSuccess.exitSurvey                  = Rydym yn defnyddio''ch adborth i wella ein gwasanaethau.
+pla.resultSuccess.exitSurvey                  = Rydym yn defnyddio’ch adborth i wella ein gwasanaethau.
 pla.resultSuccess.yourName                    = eich enw llawn
 pla.resultSuccess.yourNino                    = eich rhif Yswiriant Gwladol
 pla.resultSuccess.table.fullName              = Enw llawn
@@ -372,23 +372,23 @@ pla.resultRejection.viewDetails.afterLink  = ar unrhyw adeg.
 
 ## Manual Correspondence Needed ##
 pla.mcNeeded.pageHeading      = Mae problem wedi codi wrth i chi fewngofnodi
-pla.mcNeeded.needToSpeakToYou = Mae''n rhaid i ni siarad â chi cyn y gallwch fewngofnodi i''ch cyfrif.
+pla.mcNeeded.needToSpeakToYou = Mae’n rhaid i ni siarad â chi cyn y gallwch fewngofnodi i’ch cyfrif.
 pla.mcNeeded.howToFix         = Sut i unioni hyn
 pla.mcNeeded.telephone        = Ffôn 0300 200 1900
-pla.mcNeeded.sayCantLogIn     = Dywedwch ''Ni allaf fewngofnodi''
-pla.mcNeeded.sayYes           = Dywedwch ''Ydw'' pan ofynnir i chi a ydych yn cael problem wrth fewngofnodi
-pla.mcNeeded.advisorHelp      = Byddwch yn clywed neges sydd wedi''i recordio yn dweud wrthych ffonio rhif arall – peidiwch â rhoi''r ffôn i lawr a deialu eto. Arhoswch ar y ffôn a bydd ymgynghorydd yn eich helpu.
-pla.mcNeeded.tellAdvisor      = Rhowch wybod i''r ymgynghorydd bod gennych "MCI issue"
+pla.mcNeeded.sayCantLogIn     = Dywedwch ’Ni allaf fewngofnodi’
+pla.mcNeeded.sayYes           = Dywedwch ’Ydw’ pan ofynnir i chi a ydych yn cael problem wrth fewngofnodi
+pla.mcNeeded.advisorHelp      = Byddwch yn clywed neges sydd wedi’i recordio yn dweud wrthych ffonio rhif arall – peidiwch â rhoi’r ffôn i lawr a deialu eto. Arhoswch ar y ffôn a bydd ymgynghorydd yn eich helpu.
+pla.mcNeeded.tellAdvisor      = Rhowch wybod i’r ymgynghorydd bod gennych "MCI issue"
 pla.mcNeeded.otherContact     = Dulliau eraill o gysylltu â ni
 pla.mcNeeded.textphone        = Ffôn testun: 0300 200 3319
-pla.mcNeeded.nonUKPhone       = Y tu allan i''r DU: +44 135 535 9022
+pla.mcNeeded.nonUKPhone       = Y tu allan i’r DU: +44 135 535 9022
 pla.mcNeeded.linesOpen        = Yr oriau agor yw 08:00 tan 17:00, dydd Llun i ddydd Gwener.
-pla.mcNeeded.linesClosed      = Ar gau ar ddydd Sadwrn, dydd Sul a gwyliau''r banc.
+pla.mcNeeded.linesClosed      = Ar gau ar ddydd Sadwrn, dydd Sul a gwyliau’r banc.
 pla.mcNeeded.linesBusy        = Mae llinellau ffôn yn llai prysur cyn 10:00 ar ddydd Llun i ddydd Gwener.
 pla.mcNeeded.callCharges      = Gwybodaeth am gost galwadau
 
 ## Printing ##
-pla.print.title                 = Argraffu''ch diogelwch sydd ar waith
+pla.print.title                 = Argraffu’ch diogelwch sydd ar waith
 pla.print.nino                  = Rhif Yswiriant Gwladol
 pla.print.protectionDetails     = Manylion diogelwch
 pla.print.applicationDate       = Dyddiad y cais
@@ -398,9 +398,9 @@ pla.print.lumpSumPercentage     = Canran y cyfandaliad
 pla.print.lumpSumAmount         = Swm y cyfandaliad
 pla.print.enhancementFactor     = Ffactor Diogelwch uwch
 pla.print.factor                = Ffactor
-pla.print.giveToPensionProvider = Rhowch y manylion hyn i''ch darparwr pensiwn pan fyddwch yn penderfynu cymryd arian o''ch pensiwn.
-pla.print.contactHMRC           = Os yw''ch pensiwn yn cael ei rannu o ganlyniad i ysgariad neu pan fo partneriaeth sifil yn gwahanu, cysylltwch â Gwasanaethau Cynlluniau Pensiwn CThEF cyn pen 60 diwrnod.
-pla.print.FP2016.contactHMRC    = Os ydych chi neu''ch cyflogwr yn ychwanegu i''ch pensiwn, cysylltwch â Gwasanaethau Cynlluniau Pensiwn CThEF cyn pen 90 diwrnod.
+pla.print.giveToPensionProvider = Rhowch y manylion hyn i’ch darparwr pensiwn pan fyddwch yn penderfynu cymryd arian o’ch pensiwn.
+pla.print.contactHMRC           = Os yw’ch pensiwn yn cael ei rannu o ganlyniad i ysgariad neu pan fo partneriaeth sifil yn gwahanu, cysylltwch â Gwasanaethau Cynlluniau Pensiwn CThEF cyn pen 60 diwrnod.
+pla.print.FP2016.contactHMRC    = Os ydych chi neu’ch cyflogwr yn ychwanegu i’ch pensiwn, cysylltwch â Gwasanaethau Cynlluniau Pensiwn CThEF cyn pen 90 diwrnod.
 
 pla.printAmend.fullName                            = Enw llawn
 pla.printAmend.nino                                = Rhif Yswiriant Gwladol
@@ -413,8 +413,8 @@ pla.printAmend.protectionReferenceNumber           = Cyfeirnod y diogelwch
 pla.printAmend.fixedProtectionReferenceNumber      = Cyfeirnod diogelwch penodol 2016
 pla.printAmend.pensionSchemeAdministratorReference = Cyfeirnod gwiriad gweinyddwr cynlluniau pensiwn
 pla.printAmend.status                              = Statws
-pla.printAmend.withdrawn                           = Wedi’i dynnu''n ôl
-pla.printAmend.Withdrawn                           = Wedi’i dynnu''n ôl
+pla.printAmend.withdrawn                           = Wedi’i dynnu’n ôl
+pla.printAmend.Withdrawn                           = Wedi’i dynnu’n ôl
 pla.printAmend.dormant                             = Segur
 pla.printAmend.Dormant                             = Segur
 pla.printAmend.Open                                = Ar waith
@@ -432,26 +432,26 @@ pla.amends.heading.IndividualProtection2014.changed    = Gwiriwch eich atebion a
 pla.amends.heading.IndividualProtection2014LTA.changed = Gwiriwch eich atebion a chyflwynwch y newidiadau
 
 pla.amends.cancelPara.1    = Fel arall, gallwch
-pla.amends.cancelPara.link = ganslo''r newidiadau
+pla.amends.cancelPara.link = ganslo’r newidiadau
 pla.amends.cancelPara.2    = a mynd yn ôl.
 
-pla.amends.CurrentPensions.IndividualProtection2016.Amt               = Beth oedd gwerth eich pensiynau''r DU ar 5 Ebrill 2016?
-pla.amends.CurrentPensions.IndividualProtection2016LTA.Amt            = Beth oedd gwerth eich pensiynau''r DU ar 5 Ebrill 2016?
-pla.amends.CurrentPensions.IndividualProtection2016.Amt.changeHint    = Newidiwch beth oedd gwerth eich pensiynau''r DU ar 5 Ebrill 2016
-pla.amends.CurrentPensions.IndividualProtection2016LTA.Amt.changeHint = Newidiwch beth oedd gwerth eich pensiynau''r DU ar 5 Ebrill 2016
-pla.amends.CurrentPensions.IndividualProtection2014.Amt               = Beth oedd gwerth eich pensiynau''r DU ar 5 Ebrill 2014?
-pla.amends.CurrentPensions.IndividualProtection2014LTA.Amt            = Beth oedd gwerth eich pensiynau''r DU ar 5 Ebrill 2014?
-pla.amends.CurrentPensions.IndividualProtection2014.Amt.changeHint    = Newidiwch beth oedd gwerth eich pensiynau''r DU ar 5 Ebrill 2014
-pla.amends.CurrentPensions.IndividualProtection2014LTA.Amt.changeHint = Newidiwch beth oedd gwerth eich pensiynau''r DU ar 5 Ebrill 2014
+pla.amends.CurrentPensions.IndividualProtection2016.Amt               = Beth oedd gwerth eich pensiynau’r DU ar 5 Ebrill 2016?
+pla.amends.CurrentPensions.IndividualProtection2016LTA.Amt            = Beth oedd gwerth eich pensiynau’r DU ar 5 Ebrill 2016?
+pla.amends.CurrentPensions.IndividualProtection2016.Amt.changeHint    = Newidiwch beth oedd gwerth eich pensiynau’r DU ar 5 Ebrill 2016
+pla.amends.CurrentPensions.IndividualProtection2016LTA.Amt.changeHint = Newidiwch beth oedd gwerth eich pensiynau’r DU ar 5 Ebrill 2016
+pla.amends.CurrentPensions.IndividualProtection2014.Amt               = Beth oedd gwerth eich pensiynau’r DU ar 5 Ebrill 2014?
+pla.amends.CurrentPensions.IndividualProtection2014LTA.Amt            = Beth oedd gwerth eich pensiynau’r DU ar 5 Ebrill 2014?
+pla.amends.CurrentPensions.IndividualProtection2014.Amt.changeHint    = Newidiwch beth oedd gwerth eich pensiynau’r DU ar 5 Ebrill 2014
+pla.amends.CurrentPensions.IndividualProtection2014LTA.Amt.changeHint = Newidiwch beth oedd gwerth eich pensiynau’r DU ar 5 Ebrill 2014
 
-pla.amends.PensionsTakenBefore.IndividualProtection2016.YesNo               = A gawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006?
-pla.amends.PensionsTakenBefore.IndividualProtection2016LTA.YesNo            = A gawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006?
-pla.amends.PensionsTakenBefore.IndividualProtection2016.YesNo.changeHint    = Newidiwch p''un a gawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006
-pla.amends.PensionsTakenBefore.IndividualProtection2016LTA.YesNo.changeHint = Newidiwch p''un a gawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006
-pla.amends.PensionsTakenBefore.IndividualProtection2014.YesNo               = A gawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006?
-pla.amends.PensionsTakenBefore.IndividualProtection2014LTA.YesNo            = A gawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006?
-pla.amends.PensionsTakenBefore.IndividualProtection2014.YesNo.changeHint    = Newidiwch p''un a gawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006
-pla.amends.PensionsTakenBefore.IndividualProtection2014LTA.YesNo.changeHint = Newidiwch p''un a gawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006
+pla.amends.PensionsTakenBefore.IndividualProtection2016.YesNo               = A gawsoch incwm o unrhyw un o’ch pensiynau cyn 6 Ebrill 2006?
+pla.amends.PensionsTakenBefore.IndividualProtection2016LTA.YesNo            = A gawsoch incwm o unrhyw un o’ch pensiynau cyn 6 Ebrill 2006?
+pla.amends.PensionsTakenBefore.IndividualProtection2016.YesNo.changeHint    = Newidiwch p’un a gawsoch incwm o unrhyw un o’ch pensiynau cyn 6 Ebrill 2006
+pla.amends.PensionsTakenBefore.IndividualProtection2016LTA.YesNo.changeHint = Newidiwch p’un a gawsoch incwm o unrhyw un o’ch pensiynau cyn 6 Ebrill 2006
+pla.amends.PensionsTakenBefore.IndividualProtection2014.YesNo               = A gawsoch incwm o unrhyw un o’ch pensiynau cyn 6 Ebrill 2006?
+pla.amends.PensionsTakenBefore.IndividualProtection2014LTA.YesNo            = A gawsoch incwm o unrhyw un o’ch pensiynau cyn 6 Ebrill 2006?
+pla.amends.PensionsTakenBefore.IndividualProtection2014.YesNo.changeHint    = Newidiwch p’un a gawsoch incwm o unrhyw un o’ch pensiynau cyn 6 Ebrill 2006
+pla.amends.PensionsTakenBefore.IndividualProtection2014LTA.YesNo.changeHint = Newidiwch p’un a gawsoch incwm o unrhyw un o’ch pensiynau cyn 6 Ebrill 2006
 
 pla.amends.PensionsWorthBefore.IndividualProtection2016.Amt               = Beth yw gwerth y pensiynau a gymerwyd gennych cyn 6 Ebrill 2006?
 pla.amends.PensionsWorthBefore.IndividualProtection2016LTA.Amt            = Beth yw gwerth y pensiynau a gymerwyd gennych cyn 6 Ebrill 2006?
@@ -462,41 +462,41 @@ pla.amends.PensionsWorthBefore.IndividualProtection2014LTA.Amt            = Beth
 pla.amends.PensionsWorthBefore.IndividualProtection2014.Amt.changeHint    = Newidiwch werth y pensiynau a gymerwyd gennych cyn 6 Ebrill 2006
 pla.amends.PensionsWorthBefore.IndividualProtection2014LTA.Amt.changeHint = Newidiwch werth y pensiynau a gymerwyd gennych cyn 6 Ebrill 2006
 
-pla.amends.PensionsTakenBetween.IndividualProtection2016.YesNo               = Rhwng 6 Ebrill 2006 a 5 Ebrill 2016, a gawsoch arian o''ch pensiynau, a wnaethoch drosglwyddo pensiwn dramor, neu a gawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd?
-pla.amends.PensionsTakenBetween.IndividualProtection2016LTA.YesNo            = Rhwng 6 Ebrill 2006 a 5 Ebrill 2016, a gawsoch arian o''ch pensiynau, a wnaethoch drosglwyddo pensiwn dramor, neu a gawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd?
-pla.amends.PensionsTakenBetween.IndividualProtection2016.YesNo.changeHint    = Newidiwch p''un a gawsoch unrhyw arian o''ch pensiynau cyn 5 Ebrill 2016
-pla.amends.PensionsTakenBetween.IndividualProtection2016LTA.YesNo.changeHint = Newidiwch p''un a gawsoch unrhyw arian o''ch pensiynau cyn 5 Ebrill 2016
-pla.amends.PensionsTakenBetween.IndividualProtection2014.YesNo               = Rhwng 6 Ebrill 2006 a 5 Ebrill 2014, a gawsoch arian o''ch pensiynau, a wnaethoch drosglwyddo pensiwn dramor, neu a gawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd?
-pla.amends.PensionsTakenBetween.IndividualProtection2014LTA.YesNo            = Rhwng 6 Ebrill 2006 a 5 Ebrill 2014, a gawsoch arian o''ch pensiynau, a wnaethoch drosglwyddo pensiwn dramor, neu a gawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd?
-pla.amends.PensionsTakenBetween.IndividualProtection2014.YesNo.changeHint    = Newidiwch p''un a gawsoch unrhyw arian o''ch pensiynau cyn 5 Ebrill 2014
-pla.amends.PensionsTakenBetween.IndividualProtection2014LTA.YesNo.changeHint = Newidiwch p''un a gawsoch unrhyw arian o''ch pensiynau cyn 5 Ebrill 2014
+pla.amends.PensionsTakenBetween.IndividualProtection2016.YesNo               = Rhwng 6 Ebrill 2006 a 5 Ebrill 2016, a gawsoch arian o’ch pensiynau, a wnaethoch drosglwyddo pensiwn dramor, neu a gawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd?
+pla.amends.PensionsTakenBetween.IndividualProtection2016LTA.YesNo            = Rhwng 6 Ebrill 2006 a 5 Ebrill 2016, a gawsoch arian o’ch pensiynau, a wnaethoch drosglwyddo pensiwn dramor, neu a gawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd?
+pla.amends.PensionsTakenBetween.IndividualProtection2016.YesNo.changeHint    = Newidiwch p’un a gawsoch unrhyw arian o’ch pensiynau cyn 5 Ebrill 2016
+pla.amends.PensionsTakenBetween.IndividualProtection2016LTA.YesNo.changeHint = Newidiwch p’un a gawsoch unrhyw arian o’ch pensiynau cyn 5 Ebrill 2016
+pla.amends.PensionsTakenBetween.IndividualProtection2014.YesNo               = Rhwng 6 Ebrill 2006 a 5 Ebrill 2014, a gawsoch arian o’ch pensiynau, a wnaethoch drosglwyddo pensiwn dramor, neu a gawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd?
+pla.amends.PensionsTakenBetween.IndividualProtection2014LTA.YesNo            = Rhwng 6 Ebrill 2006 a 5 Ebrill 2014, a gawsoch arian o’ch pensiynau, a wnaethoch drosglwyddo pensiwn dramor, neu a gawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd?
+pla.amends.PensionsTakenBetween.IndividualProtection2014.YesNo.changeHint    = Newidiwch p’un a gawsoch unrhyw arian o’ch pensiynau cyn 5 Ebrill 2014
+pla.amends.PensionsTakenBetween.IndividualProtection2014LTA.YesNo.changeHint = Newidiwch p’un a gawsoch unrhyw arian o’ch pensiynau cyn 5 Ebrill 2014
 
-pla.amends.PensionsUsedBetween.IndividualProtection2016.Amt               = Faint o lwfans oes a ydych wedi''i ddefnyddio?
-pla.amends.PensionsUsedBetween.IndividualProtection2016LTA.Amt            = Faint o lwfans oes a ydych wedi''i ddefnyddio?
+pla.amends.PensionsUsedBetween.IndividualProtection2016.Amt               = Faint o lwfans oes a ydych wedi’i ddefnyddio?
+pla.amends.PensionsUsedBetween.IndividualProtection2016LTA.Amt            = Faint o lwfans oes a ydych wedi’i ddefnyddio?
 pla.amends.PensionsUsedBetween.IndividualProtection2016.Amt.changeHint    = Newidiwch swm y lwfans oes a ddefnyddiwyd gennych
 pla.amends.PensionsUsedBetween.IndividualProtection2016LTA.Amt.changeHint = Newidiwch swm y lwfans oes a ddefnyddiwyd gennych
-pla.amends.PensionsUsedBetween.IndividualProtection2014.Amt               = Faint o lwfans oes a ydych wedi''i ddefnyddio?
-pla.amends.PensionsUsedBetween.IndividualProtection2014LTA.Amt            = Faint o lwfans oes a ydych wedi''i ddefnyddio?
+pla.amends.PensionsUsedBetween.IndividualProtection2014.Amt               = Faint o lwfans oes a ydych wedi’i ddefnyddio?
+pla.amends.PensionsUsedBetween.IndividualProtection2014LTA.Amt            = Faint o lwfans oes a ydych wedi’i ddefnyddio?
 pla.amends.PensionsUsedBetween.IndividualProtection2014.Amt.changeHint    = Newidiwch swm y lwfans oes a ddefnyddiwyd gennych
 pla.amends.PensionsUsedBetween.IndividualProtection2014LTA.Amt.changeHint = Newidiwch swm y lwfans oes a ddefnyddiwyd gennych
 
 pla.amends.OverseasPensions.IndividualProtection2016.YesNo               = A ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor?
 pla.amends.OverseasPensions.IndividualProtection2016LTA.YesNo            = A ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor?
-pla.amends.OverseasPensions.IndividualProtection2016.YesNo.changeHint    = Newidiwch p''un a ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor
-pla.amends.OverseasPensions.IndividualProtection2016LTA.YesNo.changeHint = Newidiwch p''un a ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor
+pla.amends.OverseasPensions.IndividualProtection2016.YesNo.changeHint    = Newidiwch p’un a ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor
+pla.amends.OverseasPensions.IndividualProtection2016LTA.YesNo.changeHint = Newidiwch p’un a ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor
 pla.amends.OverseasPensions.IndividualProtection2016.Amt                 = Faint gwnaethoch gyfrannu?
 pla.amends.OverseasPensions.IndividualProtection2016LTA.Amt              = Faint gwnaethoch gyfrannu?
-pla.amends.OverseasPensions.IndividualProtection2016.Amt.changeHint      = Newidiwch faint yr ydych wedi''i gyfrannu i''ch pensiwn dramor
-pla.amends.OverseasPensions.IndividualProtection2016LTA.Amt.changeHint   = Newidiwch faint yr ydych wedi''i gyfrannu i''ch pensiwn dramor
+pla.amends.OverseasPensions.IndividualProtection2016.Amt.changeHint      = Newidiwch faint yr ydych wedi’i gyfrannu i’ch pensiwn dramor
+pla.amends.OverseasPensions.IndividualProtection2016LTA.Amt.changeHint   = Newidiwch faint yr ydych wedi’i gyfrannu i’ch pensiwn dramor
 
 pla.amends.OverseasPensions.IndividualProtection2014.YesNo               = A ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor?
 pla.amends.OverseasPensions.IndividualProtection2014LTA.YesNo            = A ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor?
-pla.amends.OverseasPensions.IndividualProtection2014.YesNo.changeHint    = Newidiwch p''un a ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor
-pla.amends.OverseasPensions.IndividualProtection2014LTA.YesNo.changeHint = Newidiwch p''un a ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor
+pla.amends.OverseasPensions.IndividualProtection2014.YesNo.changeHint    = Newidiwch p’un a ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor
+pla.amends.OverseasPensions.IndividualProtection2014LTA.YesNo.changeHint = Newidiwch p’un a ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor
 pla.amends.OverseasPensions.IndividualProtection2014.Amt                 = Faint gwnaethoch gyfrannu?
 pla.amends.OverseasPensions.IndividualProtection2014LTA.Amt              = Faint gwnaethoch gyfrannu?
-pla.amends.OverseasPensions.IndividualProtection2014.Amt.changeHint      = Newidiwch faint yr ydych wedi''i gyfrannu i''ch pensiwn dramor
-pla.amends.OverseasPensions.IndividualProtection2014LTA.Amt.changeHint   = Newidiwch faint yr ydych wedi''i gyfrannu i''ch pensiwn dramor
+pla.amends.OverseasPensions.IndividualProtection2014.Amt.changeHint      = Newidiwch faint yr ydych wedi’i gyfrannu i’ch pensiwn dramor
+pla.amends.OverseasPensions.IndividualProtection2014LTA.Amt.changeHint   = Newidiwch faint yr ydych wedi’i gyfrannu i’ch pensiwn dramor
 
 pla.amends.pensionDebits.IndividualProtection2014.CurrentPsos-psoDetails.removeHint    = Dilëwch eich ateb i swm neu ddyddiad eich gorchymyn rhannu pensiwn
 pla.amends.pensionDebits.IndividualProtection2014LTA.CurrentPsos-psoDetails.removeHint = Dilëwch eich ateb i swm neu ddyddiad eich gorchymyn rhannu pensiwn
@@ -504,11 +504,11 @@ pla.amends.pensionDebits.IndividualProtection2014.CurrentPsos-psoDetails.changeH
 pla.amends.pensionDebits.IndividualProtection2014LTA.CurrentPsos-psoDetails.changeHint = Newidiwch fanylion eich gorchymyn rhannu pensiwn
 
 pla.amends.totalValueOfPensions = Cyfanswm gwerth pensiynau
-pla.amends.declaration          = Mae''r wybodaeth a roddwyd gennyf yn gywir ac yn gyflawn hyd eithaf fy ngwybodaeth a''m cred.
-pla.amends.submit               = Cyflwyno''ch newidiadau
+pla.amends.declaration          = Mae’r wybodaeth a roddwyd gennyf yn gywir ac yn gyflawn hyd eithaf fy ngwybodaeth a’m cred.
+pla.amends.submit               = Cyflwyno’ch newidiadau
 
-pla.amends.CurrentPsos.IndividualProtection2016.YesNo                                  = A oes unrhyw un o''ch pensiynau wedi''i rannu mewn ysgariad er 5 Ebrill 2016?
-pla.amends.CurrentPsos.IndividualProtection2016LTA.YesNo                               = A oes unrhyw un o''ch pensiynau wedi''i rannu mewn ysgariad er 5 Ebrill 2016?
+pla.amends.CurrentPsos.IndividualProtection2016.YesNo                                  = A oes unrhyw un o’ch pensiynau wedi’i rannu mewn ysgariad er 5 Ebrill 2016?
+pla.amends.CurrentPsos.IndividualProtection2016LTA.YesNo                               = A oes unrhyw un o’ch pensiynau wedi’i rannu mewn ysgariad er 5 Ebrill 2016?
 pla.amends.CurrentPsos.IndividualProtection2016.Amt                                    = Gwerth gorchmynion rhannu pensiwn
 pla.amends.CurrentPsos.IndividualProtection2016LTA.Amt                                 = Gwerth gorchmynion rhannu pensiwn
 pla.amends.pensionDebits.IndividualProtection2016.CurrentPsos-psoDetails.removeHint    = Dilëwch eich ateb i swm neu ddyddiad eich gorchymyn rhannu pensiwn
@@ -517,11 +517,11 @@ pla.amends.pensionDebits.IndividualProtection2016.CurrentPsos-psoDetails.changeH
 pla.amends.pensionDebits.IndividualProtection2016LTA.CurrentPsos-psoDetails.changeHint = Newidiwch fanylion eich gorchymyn rhannu pensiwn
 pla.amends.pensionDebits.IndividualProtection2016.CurrentPsos-psoDetails               = Dyddiad a swm y gorchymyn rhannu pensiwn
 pla.amends.pensionDebits.IndividualProtection2016LTA.CurrentPsos-psoDetails            = Dyddiad a swm y gorchymyn rhannu pensiwn
-pla.amends.pensionDebits.removePso                                                     = Bydd hyn yn dileu''ch gorchymyn rhannu pensiwn
+pla.amends.pensionDebits.removePso                                                     = Bydd hyn yn dileu’ch gorchymyn rhannu pensiwn
 pla.amends.pensionDebits.cancelRemove                                                  = Peidiwch â dileu
 
-pla.amends.CurrentPsos.IndividualProtection2014.YesNo                       = A oes unrhyw un o''ch pensiynau wedi''i rannu mewn ysgariad er 5 Ebrill 2014?
-pla.amends.CurrentPsos.IndividualProtection2014LTA.YesNo                    = A oes unrhyw un o''ch pensiynau wedi''i rannu mewn ysgariad er 5 Ebrill 2014?
+pla.amends.CurrentPsos.IndividualProtection2014.YesNo                       = A oes unrhyw un o’ch pensiynau wedi’i rannu mewn ysgariad er 5 Ebrill 2014?
+pla.amends.CurrentPsos.IndividualProtection2014LTA.YesNo                    = A oes unrhyw un o’ch pensiynau wedi’i rannu mewn ysgariad er 5 Ebrill 2014?
 pla.amends.CurrentPsos.IndividualProtection2014.Amt                         = Gwerth gorchmynion rhannu pensiwn
 pla.amends.CurrentPsos.IndividualProtection2014LTA.Amt                      = Gwerth gorchmynion rhannu pensiwn
 pla.amends.pensionDebits.IndividualProtection2014.CurrentPsos-psoDetails    = Dyddiad a swm y gorchymyn rhannu pensiwn
@@ -647,14 +647,14 @@ amendCode.noNotificationId.IndividualProtection2016LTA.heading   = Rydych wedi d
 amendCode.noNotificationId.IndividualProtection2016LTA.insetText = Mae cyfanswm gwerth eich pensiynau yn uwch na’r terfyn o £1,250,000. Nid yw unrhyw swm dros £1,250,000 yn dod o dan eich Diogelwch Unigol.
 
 ## 2014 Application Period Ended ##
-pla.applicationClosed.2014.title            = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2014 wedi dod i ben
-pla.applicationClosed.2014.pageHeading      = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2014 wedi dod i ben
+pla.applicationClosed.2014.title            = Mae’n ddrwg gennym, mae ceisiadau am ddiogelwch 2014 wedi dod i ben
+pla.applicationClosed.2014.pageHeading      = Mae’n ddrwg gennym, mae ceisiadau am ddiogelwch 2014 wedi dod i ben
 pla.applicationClosed.2014.paraOne          = Gallwch dal i
-pla.applicationClosed.2014.paraOne.linkText = weld ceisiadau sy''n bodoli eisoes.
+pla.applicationClosed.2014.paraOne.linkText = weld ceisiadau sy’n bodoli eisoes.
 
 ## 2016 Application Period Ended ##
-pla.applicationClosed.2016.title            = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2016 wedi dod i ben
-pla.applicationClosed.2016.pageHeading      = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2016 wedi dod i ben
+pla.applicationClosed.2016.title            = Mae’n ddrwg gennym, mae ceisiadau am ddiogelwch 2016 wedi dod i ben
+pla.applicationClosed.2016.pageHeading      = Mae’n ddrwg gennym, mae ceisiadau am ddiogelwch 2016 wedi dod i ben
 pla.applicationClosed.2016.paraOne          = Gallwch dal
 pla.applicationClosed.2016.paraOne.linkText = bwrw golwg dros geisiadau blaenorol
 
@@ -673,7 +673,7 @@ psa.lookup.form.psaref.required                       = Nodwch Gyfeirnod Gweinyd
 psa.lookup.form.psaref.invalid                        = Nid ydych wedi nodi Cyfeirnod Gweinyddwr y Cynllun cywir
 psa.lookup.form.pnn.hint                              = Enghraifft: IP141000000000A
 psa.lookup.form.pnn.required                          = Nodwch Rif Hysbysu Diogelwch
-psa.lookup.form.pnn.invalid                           = Nid ydych wedi nodi''r Rhif Hysbysu Diogelwch cywir
+psa.lookup.form.pnn.invalid                           = Nid ydych wedi nodi’r Rhif Hysbysu Diogelwch cywir
 psa.lookup.form.pnn.back                              = Yn ôl
 psa.lookup.form.button                                = Cyflwyno
 
@@ -682,10 +682,10 @@ psa.lookup.results.title               = Canlyniadau gwiriad diogelwch ar gyfer 
 psa.lookup.results.table.row.1         = Cyfeirnod Gweinyddwr y Cynllun:
 psa.lookup.results.table.row.2         = Rhif Hysbysu Diogelwch:
 psa.lookup.results.table.row.3         = Y math o ddiogelwch:
-psa.lookup.results.table.row.4         = Y swm wedi''i ddiogelu:
+psa.lookup.results.table.row.4         = Y swm wedi’i ddiogelu:
 psa.lookup.results.table.row.5         = Statws:
-psa.lookup.results.table.row.5.valid   = Mae''r diogelwch hwn yn ddilys
-psa.lookup.results.table.row.5.invalid = Nid yw''r diogelwch hwn yn ddilys mwyach
+psa.lookup.results.table.row.5.valid   = Mae’r diogelwch hwn yn ddilys
+psa.lookup.results.table.row.5.invalid = Nid yw’r diogelwch hwn yn ddilys mwyach
 psa.lookup.results.table.row.6         = Gwiriwyd ar:
 
 psa.lookup.results.ltatype.1  = Diogelwch sefydlog 2016
@@ -712,16 +712,16 @@ psa.lookup.results.check-another = Gwirio tystysgrif arall
 psa.lookup.not-found.results.title                   = Gwiriwch y manylion a nodwyd gennych
 psa.lookup.not-found.results.table.row.1             = Cyfeirnod Gweinyddwr y Cynllun:
 psa.lookup.not-found.results.table.row.2             = Rhif Hysbysu Diogelwch:
-psa.lookup.not-found.results.detail                  = Nid yw''r manylion a nodwyd gennych yn cyd-fynd â thystysgrif diogelwch sydd eisoes yn bodoli.
+psa.lookup.not-found.results.detail                  = Nid yw’r manylion a nodwyd gennych yn cyd-fynd â thystysgrif diogelwch sydd eisoes yn bodoli.
 psa.lookup.not-found.results.possible-causes         = Gallai hyn fod oherwydd i chi wedi:
 psa.lookup.not-found.results.possible-causes.bullet1 = cael yr wybodaeth anghywir gan eich cleient
-psa.lookup.not-found.results.possible-causes.bullet2 = nodi un o''r rhifau''n anghywir
+psa.lookup.not-found.results.possible-causes.bullet2 = nodi un o’r rhifau’n anghywir
 psa.lookup.not-found.results.suggested-resolution    = Gwiriwch yr wybodaeth a roddwyd i chi a rhowch gynnig arall arni.
 psa.lookup.not-found.results.table.try-again         = Rhowch gynnig arall arni
 
 psa.lookup.protection-guidance.title                                    = Gwiriwch werth y math o ddiogelwch
 psa.lookup.protection-guidance.table-heading-left                       = Y math o ddiogelwch
-psa.lookup.protection-guidance.table-heading-right                      = Y swm wedi''i ddiogelu
+psa.lookup.protection-guidance.table-heading-right                      = Y swm wedi’i ddiogelu
 psa.lookup.protection-guidance.protection-type-enhanced-label           = Uwch
 psa.lookup.protection-guidance.protection-type-enhanced-value           = £1,500,000 neu uwch
 psa.lookup.protection-guidance.protection-type-fixed12-label            = Sefydlog 2012
