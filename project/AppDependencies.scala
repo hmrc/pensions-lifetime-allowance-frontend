@@ -7,7 +7,7 @@ object AppDependencies {
   private val bootstrapVersion                  = "9.19.0"
   private val playFrontendVersion               = "12.31.0"
   private val mongoPlayVersion                  = "2.12.0"
-  private val pekkoVersion                      = "1.4.0"
+  private val pekkoVersion                      = "1.0.3"
   private val playConditionalFormMappingVersion = "3.4.0"
   private val jsoupVersion                      = "1.22.1"
 
