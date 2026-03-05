@@ -62,10 +62,7 @@ case class CurrencyFormatter(mandatoryMessageKey: String, invalidMessageKey: Str
 
   private[formatters] def stripIgnoredCharacters(input: String): String =
     input
-      .trim()
+      .replaceAll("[,\\s]", "")
       .stripPrefix("£")
-      .stripLeading()
-      .replace(",", "")
-      .replace(" ", "")
 
 }
