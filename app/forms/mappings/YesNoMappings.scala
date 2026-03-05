@@ -45,9 +45,7 @@ trait YesNoMappings {
 
   private[mappings] val isYesOrNo: String => Boolean = value =>
     value.trim match {
-      case ""    => true
-      case "yes" => true
-      case "no"  => true
+      case "" | "yes" | "no" => true
       case _     => false
     }
 
