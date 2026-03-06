@@ -16,39 +16,20 @@
 
 package forms
 
-import common.Validation._
+import forms.mappings.CurrencyMappings
 import models.amend.value.AmendCurrentPensionModel
 import models.pla.AmendableProtectionType
 import play.api.data.Form
-import play.api.data.Forms._
-import utils.Constants._
+import play.api.data.Forms.mapping
 
-object AmendCurrentPensionForm extends CommonBinders {
+object AmendCurrentPensionForm extends CurrencyMappings {
 
   def amendCurrentPensionForm(protectionType: AmendableProtectionType) = Form(
     mapping(
-      "amendedUKPensionAmt" -> of(
-        decimalFormatter(
-          s"pla.currentPensions.amount.errors.mandatoryError.$protectionType",
-          s"pla.currentPensions.amount.errors.notReal.$protectionType"
-        )
+      "amendedUKPensionAmt" -> currencyMappingFromPrefixAndProtectionType(
+        messageKeyPrefix = "pla.currentPensions.amount.errors",
+        protectionTypeSuffix = protectionType
       )
-        .verifying(
-          s"pla.currentPensions.amount.errors.mandatoryError.$protectionType",
-          currentPensionsAmt => currentPensionsAmt.isDefined
-        )
-        .verifying(
-          s"pla.currentPensions.amount.errors.negative.$protectionType",
-          currentPensionsAmt => isPositive(currentPensionsAmt.getOrElse(0))
-        )
-        .verifying(
-          s"pla.currentPensions.amount.errors.decimal.$protectionType",
-          currentPensionsAmt => isMaxTwoDecimalPlaces(currentPensionsAmt.getOrElse(0))
-        )
-        .verifying(
-          s"pla.currentPensions.amount.errors.max.$protectionType",
-          currentPensionsAmt => isLessThanDouble(currentPensionsAmt.getOrElse(BigDecimal(0)).toDouble, npsMaxCurrency)
-        )
     )(AmendCurrentPensionModel.apply)(AmendCurrentPensionModel.unapply)
   )
 

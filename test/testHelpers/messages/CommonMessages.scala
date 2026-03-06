@@ -29,12 +29,12 @@ trait CommonMessages {
   val plaBaseAdd               = "Add"
   val plaBaseNewTab            = "opens in new tab"
   val plaBaseErrorSummaryLabel = "There are errors on this page"
-  val plaErrorRequiredNumber   = "What your UK pensions were worth on 5 April 2016 must be a number, like 10000.00"
+  val plaErrorRequiredNumber   = "The amount these UK pensions were worth must be a number"
   val plaBaseDateFieldsDay     = "Day"
   val plaBaseDateFieldsMonth   = "Month"
   val plaBaseDateFieldsYear    = "Year"
 
   val errorReal       = "Enter the date of your pension sharing order"
-  val errorRealNumber = "Enter a number without commas, for example 10000.00"
+  val errorRealNumber = "The amount of the Pension Sharing Order must be a number"
 
 }

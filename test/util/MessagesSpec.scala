@@ -48,7 +48,7 @@ class MessagesSpec extends AnyWordSpecLike with Matchers with OptionValues {
       assertCorrectUseOfQuotes("Welsh", welshMessages)
     }
     "have a resolvable message for keys which take args" in {
-      countMessagesWithArgs(welshMessages).size shouldBe countMessagesWithArgs(englishMessages).size
+      countMessagesWithArgs(welshMessages) should have size countMessagesWithArgs(englishMessages).size
     }
   }
 

@@ -113,7 +113,7 @@ class AmendIP14PensionsUsedBetweenViewSpec
       errorDoc
         .select(".govuk-error-summary__body li")
         .get(0)
-        .text shouldBe "Enter how much lifetime allowance you have used"
+        .text shouldBe "Enter the amount in pounds for lifetime allowance used"
     }
 
     "not have errors on valid pages" in {

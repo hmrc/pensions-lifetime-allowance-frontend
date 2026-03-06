@@ -16,22 +16,22 @@
 
 package forms
 
-import common.Validation._
+import forms.mappings.YesNoMappings
 import models.amend.value.AmendPensionsTakenBeforeModel
 import models.pla.AmendableProtectionType
 import play.api.data.Form
-import play.api.data.Forms._
+import play.api.data.Forms.mapping
 
-object AmendPensionsTakenBeforeForm extends CommonBinders {
+object AmendPensionsTakenBeforeForm extends YesNoMappings {
 
   def amendPensionsTakenBeforeForm(
       protectionType: AmendableProtectionType
   ): Form[AmendPensionsTakenBeforeModel] = Form(
     mapping(
-      "amendedPensionsTakenBefore" -> common.Validation
-        .newText(s"pla.pensionsTakenBefore.errors.mandatoryError.$protectionType")
-        .verifying(s"pla.pensionsTakenBefore.errors.mandatoryError.$protectionType", mandatoryCheck)
-        .verifying(s"pla.pensionsTakenBefore.errors.mandatoryError.$protectionType", yesNoCheck)
+      "amendedPensionsTakenBefore" -> yesNoMappingFromPrefixAndProtectionType(
+        messageKeyPrefix = "pla.pensionsTakenBefore.errors",
+        protectionTypeSuffix = protectionType
+      )
     )(AmendPensionsTakenBeforeModel.apply)(AmendPensionsTakenBeforeModel.unapply)
   )
 

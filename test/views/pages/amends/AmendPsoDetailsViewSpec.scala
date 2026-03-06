@@ -117,7 +117,10 @@ class AmendPsoDetailsViewSpec
       errorDoc.select(".govuk-error-summary__title").text shouldBe plaBaseErrorSummaryLabel
       errorDoc.select(".govuk-button").text shouldBe plaBaseAdd
       errorDoc.select(".govuk-error-summary__list li").eq(0).text shouldBe errorReal
-      errorDoc.select(".govuk-error-summary__list li").eq(1).text shouldBe errorRealNumber
+      errorDoc
+        .select(".govuk-error-summary__list li")
+        .eq(1)
+        .text shouldBe "The amount of the Pension Sharing Order must be a number"
     }
 
     "not have errors on valid pages" in {

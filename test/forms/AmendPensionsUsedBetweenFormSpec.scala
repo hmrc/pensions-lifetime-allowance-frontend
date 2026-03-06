@@ -31,7 +31,7 @@ class AmendPensionsUsedBetweenFormSpec extends FakeApplication with CommonErrorM
   val messageKey = "pensionsUsedBetween"
 
   "The AmendPensionsUsedBetweenForm" should {
-    val validMap = Map("amendedPensionsUsedBetweenAmt" -> "1000.0")
+    val validMap = Map("amendedPensionsUsedBetweenAmt" -> "1000")
 
     "produce a valid form with additional validation" when {
 
@@ -43,10 +43,10 @@ class AmendPensionsUsedBetweenFormSpec extends FakeApplication with CommonErrorM
       }
 
       "provided with a valid map with an amount equal to the maximum" in {
-        val map    = validMap.updated("amendedPensionsUsedBetweenAmt", { Constants.npsMaxCurrency - 1 }.toString)
+        val map    = validMap.updated("amendedPensionsUsedBetweenAmt", Constants.npsMaxCurrency.toString)
         val result = amendPensionsUsedBetweenForm(IndividualProtection2016).bind(map)
 
-        result.value shouldBe Some(AmendPensionsUsedBetweenModel(Some(Constants.npsMaxCurrency - 1)))
+        result.value shouldBe Some(AmendPensionsUsedBetweenModel(Some(Constants.npsMaxCurrency)))
       }
 
       "provided with a valid map with an amount equal zero" in {
@@ -71,7 +71,7 @@ class AmendPensionsUsedBetweenFormSpec extends FakeApplication with CommonErrorM
           val map    = validMap.updated("amendedPensionsUsedBetweenAmt", "-1")
           val result = amendPensionsUsedBetweenForm(IndividualProtection2016).bind(map)
 
-          result.errors.size shouldBe 1
+          result.errors should have size 1
           result.errors.head.message shouldBe errorNegative(messageKey, IndividualProtection2016.toString)
         }
       }
@@ -85,7 +85,7 @@ class AmendPensionsUsedBetweenFormSpec extends FakeApplication with CommonErrorM
           val map    = validMap.updated("amendedPensionsUsedBetweenAmt", "")
           val result = amendPensionsUsedBetweenForm(IndividualProtection2016).bind(map)
 
-          result.errors.size shouldBe 1
+          result.errors should have size 1
           result.errors.head.message shouldBe errorMissingAmount(messageKey, IndividualProtection2016.toString)
         }
 
@@ -94,7 +94,7 @@ class AmendPensionsUsedBetweenFormSpec extends FakeApplication with CommonErrorM
 
           val result = amendPensionsUsedBetweenForm(IndividualProtection2016).bind(map)
 
-          result.errors.size shouldBe 1
+          result.errors should have size 1
           result.errors.head.message shouldBe errorMaximum(messageKey, IndividualProtection2016.toString)
         }
 
@@ -102,7 +102,7 @@ class AmendPensionsUsedBetweenFormSpec extends FakeApplication with CommonErrorM
           val map    = validMap.updated("amendedPensionsUsedBetweenAmt", "-0.01")
           val result = amendPensionsUsedBetweenForm(IndividualProtection2016).bind(map)
 
-          result.errors.size shouldBe 1
+          result.errors should have size 1
           result.errors.head.message shouldBe errorNegative(messageKey, IndividualProtection2016.toString)
         }
 
@@ -110,7 +110,7 @@ class AmendPensionsUsedBetweenFormSpec extends FakeApplication with CommonErrorM
           val map    = validMap.updated("amendedPensionsUsedBetweenAmt", "0.001")
           val result = amendPensionsUsedBetweenForm(IndividualProtection2016).bind(map)
 
-          result.errors.size shouldBe 1
+          result.errors should have size 1
           result.errors.head.message shouldBe errorDecimal(messageKey, IndividualProtection2016.toString)
         }
       }

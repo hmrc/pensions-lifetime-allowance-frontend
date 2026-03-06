@@ -57,7 +57,7 @@ class AmendPensionsTakenBetweenFormSpec extends FakeApplication with CommonError
           val map    = validMap - "amendedPensionsTakenBetween"
           val result = amendPensionsTakenBetweenForm(IndividualProtection2016).bind(map)
 
-          result.errors.size shouldBe 1
+          result.errors should have size 1
           result.error("amendedPensionsTakenBetween").get.message shouldBe errorQuestion(
             messageKey,
             IndividualProtection2016.toString
