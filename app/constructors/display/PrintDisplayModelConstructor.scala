@@ -51,7 +51,7 @@ object PrintDisplayModelConstructor {
       protectionModel.protectionReference.getOrElse(Messages("pla.protection.protectionReference"))
 
     val protectedAmount = if (protectionType.isFixedProtection2016) {
-      Some(Display.currencyDisplayString(Constants.fpProtectedAmount))
+      Some(Display.currencyDisplayString(Constants.fixedProtection2016FixedAmount))
     } else {
       protectionModel.protectedAmount.map(amt => Display.currencyDisplayString(amt))
     }

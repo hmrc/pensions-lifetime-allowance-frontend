@@ -21,7 +21,7 @@ import models.amend.{AmendProtectionModel, AmendsGAModel}
 import models.cache.CacheMap
 import models.pla.AmendableProtectionType
 import models.pla.request.AmendProtectionRequestStatus
-import models.{AmendResponseModel, DateModel, PensionDebitModel, ProtectionModel, PsaLookupRequest, PsaLookupResult}
+import models.{AmendResponseModel, DateModel, PensionDebitModel, ProtectionModel}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
@@ -57,9 +57,7 @@ class SessionCacheServiceSpec
   val testAmendProtectionModel: AmendProtectionModel = tstNoPsoAmendProtectionModel
   val testAmendsGAModel: AmendsGAModel               = amendsGAModel
   val testAmendResponseModel: AmendResponseModel     = amendResponseModel
-  val testPsaLookupRequest                 = PsaLookupRequest("psaCheckReference", Some("protectionReference"))
-  val testPsaLookupResult                  = PsaLookupResult("protectionReference", 6, 7, None, None)
-  val testPreviousTechnicalIssues: Boolean = false
+  val testPreviousTechnicalIssues: Boolean           = false
 
   override def beforeEach(): Unit =
     reset(mockSessionRepository)
@@ -188,45 +186,6 @@ class SessionCacheServiceSpec
     }
   }
 
-  "savePsaLookupRequest" should {
-    "call saveFormData with correct key" in {
-
-      when(
-        mockSessionRepository
-          .putInSession[PsaLookupRequest](DataKey[PsaLookupRequest](any()), any())(any(), any(), any())
-      )
-        .thenReturn(Future.successful(testCacheMap))
-
-      val result = sessionCacheService.savePsaLookupRequest(testPsaLookupRequest)
-
-      await(result) shouldBe testCacheMap
-
-      verify(mockSessionRepository).putInSession[PsaLookupRequest](
-        DataKey[PsaLookupRequest]("psa-lookup-request"),
-        testPsaLookupRequest
-      )(PsaLookupRequest.format, fakeRequest, executionContext)
-    }
-  }
-
-  "savePsaLookupResult" should {
-    "call saveFormData with correct key" in {
-
-      when(
-        mockSessionRepository.putInSession[PsaLookupResult](DataKey[PsaLookupResult](any()), any())(any(), any(), any())
-      )
-        .thenReturn(Future.successful(testCacheMap))
-
-      val result = sessionCacheService.savePsaLookupResult(testPsaLookupResult)
-
-      await(result) shouldBe testCacheMap
-
-      verify(mockSessionRepository).putInSession[PsaLookupResult](
-        DataKey[PsaLookupResult]("psa-lookup-result"),
-        testPsaLookupResult
-      )(PsaLookupResult.format, fakeRequest, executionContext)
-    }
-  }
-
   "savePreviousTechnicalIssues" should {
     "call saveFormData with correct key" in {
 
@@ -324,38 +283,6 @@ class SessionCacheServiceSpec
         DataKey[AmendResponseModel]("amendResponseModel")
       )(
         AmendResponseModel.format,
-        fakeRequest
-      )
-    }
-  }
-
-  "fetchPsaLookupRequest" should {
-    "call getFromSession with correct key" in {
-      when(mockSessionRepository.getFromSession[PsaLookupRequest](DataKey[PsaLookupRequest](any()))(any(), any()))
-        .thenReturn(Future.successful(Some(testPsaLookupRequest)))
-
-      val result = sessionCacheService.fetchPsaLookupRequest
-
-      await(result) shouldBe Some(testPsaLookupRequest)
-
-      verify(mockSessionRepository).getFromSession[PsaLookupRequest](DataKey[PsaLookupRequest]("psa-lookup-request"))(
-        PsaLookupRequest.format,
-        fakeRequest
-      )
-    }
-  }
-
-  "fetchPsaLookupResult" should {
-    "call getFromSession with correct key" in {
-      when(mockSessionRepository.getFromSession[PsaLookupResult](DataKey[PsaLookupResult](any()))(any(), any()))
-        .thenReturn(Future.successful(Some(testPsaLookupResult)))
-
-      val result = sessionCacheService.fetchPsaLookupResult
-
-      await(result) shouldBe Some(testPsaLookupResult)
-
-      verify(mockSessionRepository).getFromSession[PsaLookupResult](DataKey[PsaLookupResult]("psa-lookup-result"))(
-        PsaLookupResult.format,
         fakeRequest
       )
     }

@@ -84,7 +84,7 @@ object ExistingProtectionsDisplayModelConstructor {
 
     val strippedPsaRef = model.psaCheckReference.stripPrefix(""""""").stripSuffix(""""""")
 
-    val amendCall = Helpers.createAmendCallIfRequired(model)
+    val amendCall = Helpers.createAmendCallIfAmendable(model)
 
     val factor = model.enhancementFactor
       .filter(_ => shouldDisplayFactor(protectionType))

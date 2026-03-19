@@ -45,7 +45,7 @@ object IdentityVerificationResult extends Logging {
 
   case object UnknownOutcome extends IdentityVerificationResult
 
-  val values = Seq(
+  val values: Seq[IdentityVerificationResult] = Seq(
     Success,
     Incomplete,
     FailedMatching,

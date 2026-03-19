@@ -18,7 +18,6 @@ package controllers
 
 import auth.{AuthFunction, AuthFunctionImpl}
 import config.FrontendAppConfig
-import connectors.PsaLookupConnector
 import constructors.display.DisplayConstructors
 import mocks.AuthMock
 import models.pla.AmendableProtectionType
@@ -73,7 +72,6 @@ class AmendsOverseasPensionControllerSpec
 
   val mockDisplayConstructors: DisplayConstructors = mock[DisplayConstructors]
   val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
-  val mockPlaConnector: PsaLookupConnector         = mock[PsaLookupConnector]
   val mockAuthFunction: AuthFunction               = mock[AuthFunction]
 
   val manualCorrespondenceNeededView: manualCorrespondenceNeeded       = inject[manualCorrespondenceNeeded]
@@ -98,7 +96,6 @@ class AmendsOverseasPensionControllerSpec
 
   override def beforeEach(): Unit = {
     reset(mockSessionCacheService)
-    reset(mockPlaConnector)
     reset(mockDisplayConstructors)
     reset(mockAuthConnector)
     reset(mockEnv)

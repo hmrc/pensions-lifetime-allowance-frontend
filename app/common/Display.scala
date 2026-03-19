@@ -22,29 +22,22 @@ import play.api.i18n.{Lang, Messages}
 import java.text.DecimalFormat
 import java.time.format.DateTimeFormatter
 
-case class MoneyPounds(value: BigDecimal, decimalPlaces: Int = 2, roundUp: Boolean = false) {
-
-  def isNegative: Boolean = value < 0
-
-  def quantity: String =
-    s"%,.${decimalPlaces}f".format(
-      value
-        .setScale(decimalPlaces, if (roundUp) BigDecimal.RoundingMode.CEILING else BigDecimal.RoundingMode.FLOOR)
-        .abs
-    )
-
-}
-
 object Display {
 
-  def currencyDisplayString(amt: BigDecimal): String = {
-    val amount = MoneyPounds(amt)
-    val minus  = if (amount.isNegative) "-" else ""
-    val str    = s"£$minus${amount.quantity}"
+  def currencyDisplayString(amount: BigDecimal): String = {
+    val minus = if (amount < 0) "-" else ""
+    val str   = s"£$minus${format2DecimalPlaces(amount)}"
     if (str.endsWith(".00")) {
       str.takeWhile(_ != '.')
     } else str
   }
+
+  private def format2DecimalPlaces(amount: BigDecimal): String =
+    "%,.2f".format(
+      amount
+        .setScale(2, BigDecimal.RoundingMode.FLOOR)
+        .abs
+    )
 
   private val englishDateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
 

@@ -70,12 +70,12 @@ class AmendPsoDetailsFormSpec
       }
 
       "provided with a valid map and an amount below the maximum" in {
-        val map = validMap.updated("psoAmt", Constants.npsMaxCurrency.toString)
+        val map = validMap.updated("psoAmt", Constants.maximumCurrencyAmount.toString)
         val result =
           AmendPsoDetailsForm.amendPsoDetailsForm(IndividualProtection2016).bind(map)
 
         result.value shouldBe Some(
-          AmendPsoDetailsModel(LocalDate.of(2016, 5, 1), Some(Constants.npsMaxCurrency))
+          AmendPsoDetailsModel(LocalDate.of(2016, 5, 1), Some(Constants.maximumCurrencyAmount))
         )
       }
 
@@ -132,7 +132,7 @@ class AmendPsoDetailsFormSpec
         }
 
         "provided with a psoAmt value above the maximum" in {
-          val map    = validMap.updated("psoAmt", (Constants.npsMaxCurrency + 1).toString)
+          val map    = validMap.updated("psoAmt", (Constants.maximumCurrencyAmount + 1).toString)
           val result = amendPsoDetailsForm(IndividualProtection2016).bind(map)
 
           result.errors should have size 1
@@ -176,7 +176,7 @@ class AmendPsoDetailsFormSpec
         }
 
         "provided with a date before the minimum for ip2016" in {
-          val date = Constants.minIP16PsoDate.minusDays(1)
+          val date = Constants.minIndividualProtection2016PsoDate.minusDays(1)
           val map = validMap
             .updated("pso.day", date.getDayOfMonth.toString)
             .updated("pso.month", date.getMonthValue.toString)
@@ -189,7 +189,7 @@ class AmendPsoDetailsFormSpec
         }
 
         "provided with a date before the minimum for ip2014" in {
-          val date = Constants.minIP14PsoDate.minusDays(1)
+          val date = Constants.minIndividualProtection2014PsoDate.minusDays(1)
           val map = validMap
             .updated("pso.day", date.getDayOfMonth.toString)
             .updated("pso.month", date.getMonthValue.toString)

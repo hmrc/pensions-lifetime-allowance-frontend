@@ -18,7 +18,6 @@ package controllers
 
 import auth.{AuthFunction, AuthFunctionImpl}
 import config._
-import connectors.PsaLookupConnector
 import mocks.AuthMock
 import models._
 import models.amend.AmendProtectionModel
@@ -73,7 +72,6 @@ class AmendsRemovePensionSharingOrderControllerSpec
 
   override val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
 
-  val mockPlaConnector: PsaLookupConnector = mock[PsaLookupConnector]
   val mockAuthFunction: AuthFunction       = mock[AuthFunction]
   val technicalErrorView: technicalError   = inject[technicalError]
   val removePsoDebitsView: removePsoDebits = inject[removePsoDebits]
@@ -81,7 +79,6 @@ class AmendsRemovePensionSharingOrderControllerSpec
 
   override def beforeEach(): Unit = {
     reset(mockSessionCacheService)
-    reset(mockPlaConnector)
     reset(mockAuthConnector)
     reset(mockEnv)
     super.beforeEach()

@@ -23,7 +23,7 @@ import play.api.mvc.Call
 
 object Helpers {
 
-  def createAmendCallIfRequired(model: ProtectionModel): Option[Call] =
+  def createAmendCallIfAmendable(model: ProtectionModel): Option[Call] =
     model.asAmendable.map { case (protectionType, status) =>
       controllers.routes.AmendsController.amendsSummary(protectionType, status)
     }

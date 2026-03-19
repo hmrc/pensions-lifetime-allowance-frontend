@@ -43,10 +43,10 @@ class AmendPensionsWorthBeforeFormSpec extends FakeApplication with CommonErrorM
       }
 
       "provided with a valid map with an amount equal to the maximum" in {
-        val map    = validMap.updated("amendedPensionsTakenBeforeAmt", Constants.npsMaxCurrency.toString)
+        val map    = validMap.updated("amendedPensionsTakenBeforeAmt", Constants.maximumCurrencyAmount.toString)
         val result = amendPensionsWorthBeforeForm(IndividualProtection2016).bind(map)
 
-        result.value shouldBe Some(AmendPensionsWorthBeforeModel(Some(Constants.npsMaxCurrency)))
+        result.value shouldBe Some(AmendPensionsWorthBeforeModel(Some(Constants.maximumCurrencyAmount)))
       }
 
       "provided with a valid map with an amount equal zero" in {
@@ -90,7 +90,7 @@ class AmendPensionsWorthBeforeFormSpec extends FakeApplication with CommonErrorM
         }
 
         "provided an answer of yes for amendedPensionsWorthBefore with a value for amendedPensionsTakenBeforeAmt larger than the maximum" in {
-          val map = validMap.updated("amendedPensionsTakenBeforeAmt", s"${Constants.npsMaxCurrency + 1}")
+          val map = validMap.updated("amendedPensionsTakenBeforeAmt", s"${Constants.maximumCurrencyAmount + 1}")
 
           val result = amendPensionsWorthBeforeForm(IndividualProtection2016).bind(map)
 

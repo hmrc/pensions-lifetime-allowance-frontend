@@ -19,7 +19,7 @@ package forms.mappings
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.data.{FormError, Mapping}
-import utils.Constants.npsMaxCurrency
+import utils.Constants.maximumCurrencyAmount
 
 class CurrencyMappingsSpec extends AnyWordSpec with Matchers {
 
@@ -94,7 +94,7 @@ class CurrencyMappingsSpec extends AnyWordSpec with Matchers {
 
     "return tooHighError" when
       Seq(
-        (npsMaxCurrency + 1).toString,
+        (maximumCurrencyAmount + 1).toString,
         10_000_000_000L.toString
       ).foreach { value =>
         s"provided with $value" in {
@@ -104,12 +104,12 @@ class CurrencyMappingsSpec extends AnyWordSpec with Matchers {
 
     "return correct value" when
       Seq[(String, BigDecimal)](
-        "0"                     -> BigDecimal(0),
-        "1"                     -> BigDecimal(1),
-        "10"                    -> BigDecimal(10),
-        "3.14"                  -> BigDecimal(3.14),
-        "43,345,762.22"         -> BigDecimal(43_345_762.22),
-        npsMaxCurrency.toString -> BigDecimal(npsMaxCurrency)
+        "0"                            -> BigDecimal(0),
+        "1"                            -> BigDecimal(1),
+        "10"                           -> BigDecimal(10),
+        "3.14"                         -> BigDecimal(3.14),
+        "43,345,762.22"                -> BigDecimal(43_345_762.22),
+        maximumCurrencyAmount.toString -> BigDecimal(maximumCurrencyAmount)
       ).foreach { case (string, value) =>
         s"provided with $string" in {
           currencyMappings.bind(Map(valueKey -> string)) shouldBe Right(Some(value))
@@ -177,7 +177,7 @@ class CurrencyMappingsSpec extends AnyWordSpec with Matchers {
     "return true" when
       Seq(
         10,
-        npsMaxCurrency,
+        maximumCurrencyAmount,
         0,
         -1
       ).foreach { value =>
@@ -188,7 +188,7 @@ class CurrencyMappingsSpec extends AnyWordSpec with Matchers {
 
     "return false" when
       Seq(
-        npsMaxCurrency + 0.01,
+        maximumCurrencyAmount + 0.01,
         10_000_000_000L,
         Int.MaxValue
       ).foreach { value =>
