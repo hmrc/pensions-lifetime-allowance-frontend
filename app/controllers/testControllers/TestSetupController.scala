@@ -30,15 +30,24 @@ class TestSetupController @Inject() (connector: StubConnector, mcc: MessagesCont
 
   def insertProtections(): Action[JsValue] = Action.async(parse.json) { implicit request =>
     val payload: JsValue = request.body
-    connector.insertProtections(payload).map { case OK => Ok }
+    connector.insertProtections(payload).map {
+      case OK     => Ok("Successfully inserted protections")
+      case status => InternalServerError(s"Error inserting protections: received $status from stub")
+    }
   }
 
   def removeAllProtections(): Action[AnyContent] = Action.async { implicit request =>
-    connector.deleteProtections().map { case OK => Ok("All protections deleted") }
+    connector.deleteProtections().map {
+      case OK     => Ok("All protections deleted")
+      case status => InternalServerError(s"Error deleting all protections: received $status from stub")
+    }
   }
 
   def removeProtections(nino: String): Action[AnyContent] = Action.async { implicit request =>
-    connector.deleteProtectionByNino(nino).map { case OK => Ok(s"$nino deleted") }
+    connector.deleteProtectionByNino(nino).map {
+      case OK     => Ok(s"$nino deleted")
+      case status => InternalServerError(s"Error deleting protections for nino $nino: received $status from stub")
+    }
   }
 
 }
