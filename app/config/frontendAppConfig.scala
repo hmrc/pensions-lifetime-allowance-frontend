@@ -23,14 +23,12 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import javax.inject.Inject
 
 trait AppConfig {
-  val citizenAuthHost: Option[String]
   val notAuthorisedRedirectUrl: String
   val ivUpliftUrl: String
   val ggSignInUrl: String
   val feedbackSurvey: String
   val appName: String
   val sessionMissingUpliftUrlPrefix: Option[String]
-  val configuration: Configuration
   val basGatewaySignOutUrl: String
   val backendUrl: String
   def accessibilityFrontendUrl(implicit requestHeader: RequestHeader): String
@@ -45,17 +43,12 @@ class FrontendAppConfig @Inject() (
     accessibilityStatementConfig: AccessibilityStatementConfig
 ) extends AppConfig {
 
-  private def loadConfig(key: String) =
-    configuration.getOptional[String](key).getOrElse(throw new Exception(s"Missing key: $key"))
-
   val signOutUrl = "/check-your-pension-protections-and-enhancements/sign-out"
 
-  val psaLookupWithdrawLinkUrl: String = configuration.get[String]("psa.lookup.withdrawLink.url")
+  val psaLookupWithdrawLinkUrl: String = servicesConfig.getString("psa.lookup.withdrawLink.url")
 
   val urBannerLink =
     "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=PLA_success&utm_source=Survey_Banner&utm_medium=other&t=HMRC&id=113"
-
-  override val citizenAuthHost: Option[String] = configuration.getOptional[String]("citizen-auth.host")
 
   override val notAuthorisedRedirectUrl: String = servicesConfig.getString("not-authorised-callback.url")
 
@@ -69,7 +62,7 @@ class FrontendAppConfig @Inject() (
 
   override val feedbackSurvey: String = servicesConfig.getString("feedback-frontend.url")
 
-  override val appName: String = loadConfig("appName")
+  override val appName: String = servicesConfig.getString("appName")
 
   override def accessibilityFrontendUrl(implicit requestHeader: RequestHeader): String =
     accessibilityStatementConfig.url.getOrElse("")

@@ -19,25 +19,28 @@ package common
 import models.{DateModel, TimeModel}
 import play.api.i18n.{Lang, Messages}
 
-import java.text.DecimalFormat
 import java.time.format.DateTimeFormatter
 
 object Display {
 
+  private def format2DecimalPlaces(amount: BigDecimal): String =
+    "%,.2f".format(scaleBigDecimal(amount).abs)
+
+  private def scaleBigDecimal(amount: BigDecimal): BigDecimal =
+    if (amount.isWhole) {
+      amount.setScale(0)
+    } else {
+      amount.setScale(2, BigDecimal.RoundingMode.FLOOR)
+    }
+
+  private def format2DecimalPlacesOrWholeNumber(amount: BigDecimal): String =
+    format2DecimalPlaces(amount)
+      .stripSuffix(".00")
+
   def currencyDisplayString(amount: BigDecimal): String = {
     val minus = if (amount < 0) "-" else ""
-    val str   = s"£$minus${format2DecimalPlaces(amount)}"
-    if (str.endsWith(".00")) {
-      str.takeWhile(_ != '.')
-    } else str
+    s"£$minus${format2DecimalPlacesOrWholeNumber(amount)}"
   }
-
-  private def format2DecimalPlaces(amount: BigDecimal): String =
-    "%,.2f".format(
-      amount
-        .setScale(2, BigDecimal.RoundingMode.FLOOR)
-        .abs
-    )
 
   private val englishDateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
 
@@ -55,14 +58,11 @@ object Display {
   def timeDisplayString(time: TimeModel): String =
     time.time.format(timeFormatter).toLowerCase
 
-  def currencyInputDisplayFormat(amt: BigDecimal): BigDecimal = {
-    def df(n: BigDecimal): String = new DecimalFormat("0.00").format(n).replace(".00", "")
-
-    BigDecimal(df(amt))
-  }
+  def currencyInputDisplayFormat(amt: BigDecimal): BigDecimal =
+    scaleBigDecimal(amt)
 
   def percentageDisplayString(percentage: Int): String = s"$percentage%"
 
-  def factorDisplayString(factor: Double): String = new DecimalFormat("0.00").format(factor)
+  def factorDisplayString(factor: Double): String = format2DecimalPlaces(factor)
 
 }

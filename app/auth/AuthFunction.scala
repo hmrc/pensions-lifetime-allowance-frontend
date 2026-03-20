@@ -56,13 +56,13 @@ trait AuthFunction extends AuthorisedFunctions with Logging {
     s"$completionUrl${request.uri}" +
     s"$failureUrl${appConfig.notAuthorisedRedirectUrl}"
 
-  class MissingNinoException extends Exception("Nino not returned by authorised call")
+  case object MissingNinoException extends Exception("Nino not returned by authorised call")
 
   def genericAuthWithNino(
       body: String => Future[Result]
   )(implicit request: Request[AnyContent], messages: Messages, hc: HeaderCarrier): Future[Result] =
     authorised(Enrolment(enrolmentKey).and(ConfidenceLevel.L200))
-      .retrieve(Retrievals.nino)(nino => body(nino.getOrElse(throw new MissingNinoException)))
+      .retrieve(Retrievals.nino)(nino => body(nino.getOrElse(throw MissingNinoException)))
       .recover(authErrorHandling)
 
   private def authErrorHandling(

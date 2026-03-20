@@ -17,22 +17,17 @@
 package auth
 
 import config.AppConfig
-import play.api.Configuration
 import play.api.mvc.RequestHeader
 
 object MockConfig extends AppConfig {
 
-  val NoConfiguration: Null = null
-
   override def accessibilityFrontendUrl(implicit requestHeader: RequestHeader): String = "_"
-  override val citizenAuthHost: Option[String]                                         = None
   override val notAuthorisedRedirectUrl: String                                        = "/pla/not-authorised"
   override val ivUpliftUrl: String                                                     = "/iv/uplift"
   override val ggSignInUrl: String                                                     = "/gg/sign-in"
   override val feedbackSurvey: String                        = "http://localhost:9514/feedback/PLA"
-  override val appName: String                               = ""
+  override val appName: String                               = "check-your-pension-protections-and-enhancements"
   override val sessionMissingUpliftUrlPrefix: Option[String] = None
-  override val configuration: Configuration                  = NoConfiguration
   override val basGatewaySignOutUrl: String = "http://localhost:9553/bas-gateway/sign-out-without-state"
   override val backendUrl: String           = "http://localhost:9011"
 
