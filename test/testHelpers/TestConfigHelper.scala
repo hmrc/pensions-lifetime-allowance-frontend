@@ -18,7 +18,6 @@ package testHelpers
 
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
-import connectors.PsaLookupConnector
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.{Configuration, Environment}
 import services.SessionCacheService
@@ -33,5 +32,4 @@ trait TestConfigHelper extends FakeApplication with MockitoSugar {
 
 trait TestControllerHelper extends MockitoSugar with TestConfigHelper {
   val sessionCacheService: SessionCacheService = mock[SessionCacheService]
-  val plaConnector: PsaLookupConnector         = mock[PsaLookupConnector]
 }

@@ -84,14 +84,10 @@ POST        /amend-protection/submit-amendment/:protectionType/:status          
 GET         /amend-protection/amendment-outcome                                           @controllers.AmendsController.amendmentOutcome
 GET         /amend-protection/:protectionType/:status                                     @controllers.AmendsController.amendsSummary(protectionType: models.pla.AmendableProtectionType, status: models.pla.request.AmendProtectionRequestStatus)
 
-## PSA Lookup routes ##
-GET         /psalookup/protection-notification-number                                     @controllers.LookupProtectionNotificationController.displayProtectionNotificationNoForm
-POST        /psalookup/protection-notification-number                                     @controllers.LookupProtectionNotificationController.submitProtectionNotificationNoForm
-
-GET         /psalookup/scheme-administrator-reference                                     @controllers.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm
-POST        /psalookup/scheme-administrator-reference                                     @controllers.LookupSchemeAdministratorReferenceController.submitSchemeAdministratorReferenceForm
-
-GET         /psalookup/not-found-results                                                  @controllers.LookupController.displayNotFoundResults
-GET         /psalookup/results                                                            @controllers.LookupController.displayLookupResults
-GET         /psalookup/results/clear                                                      @controllers.LookupController.redirectToStart
-GET         /psalookup/protection-guidance                                                @controllers.LookupController.displayProtectionTypeGuidance
+## PSA Lookup routes - journey now closed ##
+GET         /psalookup/protection-notification-number                                     @controllers.PsaLookupClosedController.psaLookupClosed
+GET         /psalookup/scheme-administrator-reference                                     @controllers.PsaLookupClosedController.psaLookupClosed
+GET         /psalookup/not-found-results                                                  @controllers.PsaLookupClosedController.psaLookupClosed
+GET         /psalookup/results                                                            @controllers.PsaLookupClosedController.psaLookupClosed
+GET         /psalookup/results/clear                                                      @controllers.PsaLookupClosedController.psaLookupClosed
+GET         /psalookup/protection-guidance                                                @controllers.PsaLookupClosedController.psaLookupClosed

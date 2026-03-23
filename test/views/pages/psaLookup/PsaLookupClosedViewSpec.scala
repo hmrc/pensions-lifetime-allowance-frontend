@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package views.pages.lookup
+package views.pages.psaLookup
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.mockito.Mockito.when
 import testHelpers.CommonViewSpecHelper
-import views.html.pages.lookup.withdrawnPSALookupJourney
+import views.html.pages.psaLookup.psaLookupClosed
 
-class WithdrawnPSALookupJourneySpec extends CommonViewSpecHelper {
+class PsaLookupClosedViewSpec extends CommonViewSpecHelper {
 
-  def view: withdrawnPSALookupJourney = inject[withdrawnPSALookupJourney]
+  def view: psaLookupClosed = inject[psaLookupClosed]
 
   def doc: Document = Jsoup.parse(view()(fakeRequest, messages).body)
 

@@ -19,31 +19,27 @@ package common
 import models.{DateModel, TimeModel}
 import play.api.i18n.{Lang, Messages}
 
-import java.text.DecimalFormat
 import java.time.format.DateTimeFormatter
-
-case class MoneyPounds(value: BigDecimal, decimalPlaces: Int = 2, roundUp: Boolean = false) {
-
-  def isNegative: Boolean = value < 0
-
-  def quantity: String =
-    s"%,.${decimalPlaces}f".format(
-      value
-        .setScale(decimalPlaces, if (roundUp) BigDecimal.RoundingMode.CEILING else BigDecimal.RoundingMode.FLOOR)
-        .abs
-    )
-
-}
 
 object Display {
 
-  def currencyDisplayString(amt: BigDecimal): String = {
-    val amount = MoneyPounds(amt)
-    val minus  = if (amount.isNegative) "-" else ""
-    val str    = s"£$minus${amount.quantity}"
-    if (str.endsWith(".00")) {
-      str.takeWhile(_ != '.')
-    } else str
+  private def format2DecimalPlaces(amount: BigDecimal): String =
+    "%,.2f".format(scaleBigDecimal(amount).abs)
+
+  private def scaleBigDecimal(amount: BigDecimal): BigDecimal =
+    if (amount.isWhole) {
+      amount.setScale(0)
+    } else {
+      amount.setScale(2, BigDecimal.RoundingMode.FLOOR)
+    }
+
+  private def format2DecimalPlacesOrWholeNumber(amount: BigDecimal): String =
+    format2DecimalPlaces(amount)
+      .stripSuffix(".00")
+
+  def currencyDisplayString(amount: BigDecimal): String = {
+    val minus = if (amount < 0) "-" else ""
+    s"£$minus${format2DecimalPlacesOrWholeNumber(amount)}"
   }
 
   private val englishDateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
@@ -62,14 +58,11 @@ object Display {
   def timeDisplayString(time: TimeModel): String =
     time.time.format(timeFormatter).toLowerCase
 
-  def currencyInputDisplayFormat(amt: BigDecimal): BigDecimal = {
-    def df(n: BigDecimal): String = new DecimalFormat("0.00").format(n).replace(".00", "")
-
-    BigDecimal(df(amt))
-  }
+  def currencyInputDisplayFormat(amt: BigDecimal): BigDecimal =
+    scaleBigDecimal(amt)
 
   def percentageDisplayString(percentage: Int): String = s"$percentage%"
 
-  def factorDisplayString(factor: Double): String = new DecimalFormat("0.00").format(factor)
+  def factorDisplayString(factor: Double): String = format2DecimalPlaces(factor)
 
 }

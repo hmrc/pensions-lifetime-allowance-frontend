@@ -48,6 +48,11 @@ class DisplaySpec extends FakeApplication with MockitoSugar {
       currencyDisplayString(tstAmt) shouldBe "£7"
     }
 
+    "create a currency string for 7.00" in {
+      val tstAmt = BigDecimal(7.00)
+      currencyDisplayString(tstAmt) shouldBe "£7"
+    }
+
     "create a currency string for 3.9" in {
       val tstAmt = BigDecimal(3.9)
       currencyDisplayString(tstAmt) shouldBe "£3.90"

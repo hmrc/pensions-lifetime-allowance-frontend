@@ -36,7 +36,6 @@ import services.SessionCacheService
 import testHelpers._
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
-import utils.ActionWithSessionId
 import views.html.pages.ivFailure.{lockedOut, technicalIssue, unauthorised}
 import views.html.pages.timeout
 
@@ -50,7 +49,6 @@ class UnauthorisedControllerSpec
     with MockSessionCacheService {
 
   val mockMCC: MessagesControllerComponents                            = inject[MessagesControllerComponents]
-  val mockActionWithSessionId: ActionWithSessionId                     = mock[ActionWithSessionId]
   val mockHttp: HttpClientV2                                           = mock[HttpClientV2]
   val fakeRequest                                                      = FakeRequest("GET", "/")
   val mockAppConfig: FrontendAppConfig                                 = inject[FrontendAppConfig]

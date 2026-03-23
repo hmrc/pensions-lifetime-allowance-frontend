@@ -17,17 +17,17 @@
 package controllers
 
 import config.FrontendAppConfig
-import javax.inject.Inject
 import play.api.Application
 import play.api.mvc._
-
-import scala.concurrent.Future
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+
+import javax.inject.Inject
 
 class TimeoutController @Inject() (mcc: MessagesControllerComponents, Timeout: views.html.pages.timeout)(
     implicit val appConfig: FrontendAppConfig,
     implicit val application: Application
 ) extends FrontendController(mcc) {
 
-  def timeout: Action[AnyContent] = Action.async(implicit request => Future.successful(Ok(Timeout())))
+  def timeout: Action[AnyContent] = Action(implicit request => Ok(Timeout()))
+
 }

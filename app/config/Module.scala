@@ -36,7 +36,6 @@ import auth.{AuthFunction, AuthFunctionImpl}
 import com.google.inject.AbstractModule
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.bootstrap.auth.DefaultAuthConnector
-import utils.{ActionWithSessionId, ActionWithSessionImpl}
 
 class Module extends AbstractModule {
 
@@ -44,7 +43,6 @@ class Module extends AbstractModule {
     bindControllers()
 
   private def bindControllers() = {
-    bind(classOf[ActionWithSessionId]).to(classOf[ActionWithSessionImpl])
     bind(classOf[PlaContext]).to(classOf[PlaContextImpl])
     bind(classOf[AuthConnector]).to(classOf[DefaultAuthConnector])
     bind(classOf[AuthFunction]).to(classOf[AuthFunctionImpl])

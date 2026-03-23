@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-package models
+package controllers
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.i18n.I18nSupport
+import play.api.mvc._
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-case class PsaLookupResult(
-    pensionSchemeAdministratorCheckReference: String,
-    ltaType: Int,
-    psaCheckResult: Int,
-    protectedAmount: Option[BigDecimal],
-    protectionNotificationNumber: Option[String] = None
-)
+import javax.inject.Inject
 
-object PsaLookupResult {
-  implicit val format: OFormat[PsaLookupResult] = Json.format[PsaLookupResult]
+class PsaLookupClosedController @Inject() (
+    mcc: MessagesControllerComponents,
+    psaLookupClosedView: views.html.pages.psaLookup.psaLookupClosed
+) extends FrontendController(mcc)
+    with I18nSupport {
+
+  val psaLookupClosed: Action[AnyContent] = Action(implicit request => Ok(psaLookupClosedView()))
+
 }

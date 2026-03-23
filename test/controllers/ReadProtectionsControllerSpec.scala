@@ -50,7 +50,6 @@ import testdata.PlaConnectorTestData.readProtectionsResponse
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.HttpResponse
-import utils.ActionWithSessionId
 import views.html.pages.existingProtections.existingProtections
 import views.html.pages.fallback.technicalError
 import views.html.pages.result.manualCorrespondenceNeeded
@@ -83,7 +82,6 @@ class ReadProtectionsControllerSpec
   val mockPlaConnector: PlaConnector               = mock[PlaConnector]
   val mockAppConfig: FrontendAppConfig             = mock[FrontendAppConfig]
   val mockMCC: MessagesControllerComponents        = inject[MessagesControllerComponents]
-  val mockActionWithSessionId: ActionWithSessionId = mock[ActionWithSessionId]
   val mockAuthFunction: AuthFunction               = inject[AuthFunction]
   val mockEnv: Environment                         = mock[Environment]
   val mockCacheMap: CacheMap                       = mock[CacheMap]

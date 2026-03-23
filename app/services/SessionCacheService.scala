@@ -20,7 +20,7 @@ import models.amend.{AmendProtectionModel, AmendsGAModel}
 import models.cache.CacheMap
 import models.pla.AmendableProtectionType
 import models.pla.request.AmendProtectionRequestStatus
-import models.{AmendResponseModel, ProtectionModel, PsaLookupRequest, PsaLookupResult}
+import models.{AmendResponseModel, ProtectionModel}
 import play.api.libs.json.{Reads, Writes}
 import play.api.mvc.Request
 import repositories.SessionRepository
@@ -45,8 +45,6 @@ class SessionCacheService @Inject() (sessionRepository: SessionRepository)(
   private val amendsGAModelKey: String = "AmendsGA"
 
   private val amendResponseModelKey: String = "amendResponseModel"
-  private val psaLookupRequestKey           = "psa-lookup-request"
-  private val psaLookupResultKey            = "psa-lookup-result"
   private val previousTechnicalIssuesKey    = "previous-technical-issues"
 
   def saveOpenProtection(openProtection: ProtectionModel)(implicit request: Request[_]): Future[CacheMap] =
@@ -67,12 +65,6 @@ class SessionCacheService @Inject() (sessionRepository: SessionRepository)(
       implicit request: Request[_]
   ): Future[CacheMap] =
     saveFormData[AmendResponseModel](amendResponseModelKey, amendResponseModel)
-
-  def savePsaLookupRequest(psaLookupRequest: PsaLookupRequest)(implicit request: Request[_]): Future[CacheMap] =
-    saveFormData[PsaLookupRequest](psaLookupRequestKey, psaLookupRequest)
-
-  def savePsaLookupResult(psaLookupResult: PsaLookupResult)(implicit request: Request[_]): Future[CacheMap] =
-    saveFormData[PsaLookupResult](psaLookupResultKey, psaLookupResult)
 
   def savePreviousTechnicalIssues(previousTechnicalIssues: Boolean)(implicit request: Request[_]): Future[CacheMap] =
     saveFormData[Boolean](previousTechnicalIssuesKey, previousTechnicalIssues)
@@ -96,12 +88,6 @@ class SessionCacheService @Inject() (sessionRepository: SessionRepository)(
 
   def fetchAmendResponseModel(implicit request: Request[_]): Future[Option[AmendResponseModel]] =
     fetchAndGetFormData[AmendResponseModel](amendResponseModelKey)
-
-  def fetchPsaLookupRequest(implicit request: Request[_]): Future[Option[PsaLookupRequest]] =
-    fetchAndGetFormData[PsaLookupRequest](psaLookupRequestKey)
-
-  def fetchPsaLookupResult(implicit request: Request[_]): Future[Option[PsaLookupResult]] =
-    fetchAndGetFormData[PsaLookupResult](psaLookupResultKey)
 
   def fetchPreviousTechnicalIssues(implicit request: Request[_]): Future[Option[Boolean]] =
     fetchAndGetFormData[Boolean](previousTechnicalIssuesKey)
