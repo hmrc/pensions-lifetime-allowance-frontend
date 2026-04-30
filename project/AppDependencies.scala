@@ -23,7 +23,7 @@ object AppDependencies {
     "uk.gov.hmrc"       %% "bootstrap-test-play-30"  % bootstrapVersion,
     "uk.gov.hmrc.mongo" %% "hmrc-mongo-test-play-30" % mongoPlayVersion,
     "org.jsoup"          % "jsoup"                   % jsoupVersion,
-    "org.scalatestplus" %% "scalacheck-1-17"         % "3.2.18.0",
+    "org.scalatestplus" %% "scalacheck-1-18"         % "3.2.19.0",
     "org.apache.pekko"  %% "pekko-actor-typed"                     % pekkoVersion,
     // These 3 were pulling in the wrong version as transitive dependencies, so have been manually pinned to the same version as above
     "org.apache.pekko"  %% "pekko-protobuf-v3"                     % pekkoVersion,
