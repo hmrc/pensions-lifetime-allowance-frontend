@@ -61,6 +61,11 @@ class AmendOutcomeViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewM
         val tableHeadings = doc.select("tr th")
         val tableData     = doc.select("tr td")
 
+        "contains exactly 7 rows" in {
+          tableHeadings should have size 7
+          tableData should have size 7
+        }
+
         "contains row for name" in {
           val rowIndex = 0
           tableHeadings.get(rowIndex).text shouldBe tableAmendName
@@ -165,6 +170,11 @@ class AmendOutcomeViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewM
 
         val tableHeadings = doc.select("tr th")
         val tableData     = doc.select("tr td")
+
+        "contains exactly 6 rows" in {
+          tableHeadings should have size 6
+          tableData should have size 6
+        }
 
         "contains row for name" in {
           val rowIndex = 0
@@ -286,6 +296,11 @@ class AmendOutcomeViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewM
         val tableHeadings = doc.select("tr th")
         val tableData     = doc.select("tr td")
 
+        "contains exactly 6 rows" in {
+          tableHeadings should have size 6
+          tableData should have size 6
+        }
+
         "contains row for name" in {
           val rowIndex = 0
           tableHeadings.get(rowIndex).text shouldBe tableAmendName
@@ -406,6 +421,11 @@ class AmendOutcomeViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewM
         val tableHeadings = doc.select("tr th")
         val tableData     = doc.select("tr td")
 
+        "contains exactly 6 rows" in {
+          tableHeadings should have size 6
+          tableData should have size 6
+        }
+
         "contains row for name" in {
           val rowIndex = 0
           tableHeadings.get(rowIndex).text shouldBe tableAmendName
@@ -522,6 +542,11 @@ class AmendOutcomeViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewM
         val tableHeadings = doc.select("tr th")
         val tableData     = doc.select("tr td")
 
+        "contains exactly 7 rows" in {
+          tableHeadings should have size 7
+          tableData should have size 7
+        }
+
         "contains row for name" in {
           val rowIndex = 0
           tableHeadings.get(rowIndex).text shouldBe tableAmendName
@@ -627,6 +652,11 @@ class AmendOutcomeViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewM
         val tableHeadings = doc.select("tr th")
         val tableData     = doc.select("tr td")
 
+        "contains exactly 6 rows" in {
+          tableHeadings should have size 6
+          tableData should have size 6
+        }
+
         "contains row for name" in {
           val rowIndex = 0
           tableHeadings.get(rowIndex).text shouldBe tableAmendName
@@ -726,6 +756,11 @@ class AmendOutcomeViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewM
         val tableHeadings = doc.select("tr th")
         val tableData     = doc.select("tr td")
 
+        "contains exactly 4 rows" in {
+          tableHeadings should have size 4
+          tableData should have size 4
+        }
+
         "contains row for name" in {
           val rowIndex = 0
           tableHeadings.get(rowIndex).text shouldBe tableAmendName
@@ -752,20 +787,6 @@ class AmendOutcomeViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewM
           tableHeadings.get(rowIndex).text shouldBe tableAmendFixedProtectionRef
           tableData.get(rowIndex).attr("id") shouldBe "fixedProtectionRefNum"
           tableData.get(rowIndex).text shouldBe protectionReferenceFixedProtection2016
-        }
-
-        "contains row for Application Date" in {
-          val rowIndex = 4
-          tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationDate
-          tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-          tableData.get(rowIndex).text shouldBe "14 July 2015"
-        }
-
-        "contains row for Application Time" in {
-          val rowIndex = 5
-          tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationTime
-          tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
-          tableData.get(rowIndex).text shouldBe "3:14pm"
         }
       }
 
@@ -841,6 +862,11 @@ class AmendOutcomeViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewM
 
         val tableHeadings = doc.select("tr th")
         val tableData     = doc.select("tr td")
+
+        "contains exactly 7 rows" in {
+          tableHeadings should have size 7
+          tableData should have size 7
+        }
 
         "contains row for name" in {
           val rowIndex = 0
@@ -946,6 +972,11 @@ class AmendOutcomeViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewM
 
         val tableHeadings = doc.select("tr th")
         val tableData     = doc.select("tr td")
+
+        "contains exactly 6 rows" in {
+          tableHeadings should have size 6
+          tableData should have size 6
+        }
 
         "contains row for name" in {
           val rowIndex = 0
@@ -1067,6 +1098,11 @@ class AmendOutcomeViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewM
         val tableHeadings = doc.select("tr th")
         val tableData     = doc.select("tr td")
 
+        "contains exactly 6 rows" in {
+          tableHeadings should have size 6
+          tableData should have size 6
+        }
+
         "contains row for name" in {
           val rowIndex = 0
           tableHeadings.get(rowIndex).text shouldBe tableAmendName
@@ -1186,6 +1222,11 @@ class AmendOutcomeViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewM
 
         val tableHeadings = doc.select("tr th")
         val tableData     = doc.select("tr td")
+
+        "contains exactly 6 rows" in {
+          tableHeadings should have size 6
+          tableData should have size 6
+        }
 
         "contains row for name" in {
           val rowIndex = 0
@@ -1307,6 +1348,11 @@ class AmendOutcomeViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewM
         val tableHeadings = doc.select("tr th")
         val tableData     = doc.select("tr td")
 
+        "contains exactly 6 rows" in {
+          tableHeadings should have size 6
+          tableData should have size 6
+        }
+
         "contains row for name" in {
           val rowIndex = 0
           tableHeadings.get(rowIndex).text shouldBe tableAmendName
@@ -1427,6 +1473,11 @@ class AmendOutcomeViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewM
         val tableHeadings = doc.select("tr th")
         val tableData     = doc.select("tr td")
 
+        "contains exactly 6 rows" in {
+          tableHeadings should have size 6
+          tableData should have size 6
+        }
+
         "contains row for name" in {
           val rowIndex = 0
           tableHeadings.get(rowIndex).text shouldBe tableAmendName
@@ -1526,6 +1577,11 @@ class AmendOutcomeViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewM
         val tableHeadings = doc.select("tr th")
         val tableData     = doc.select("tr td")
 
+        "contains exactly 4 rows" in {
+          tableHeadings should have size 4
+          tableData should have size 4
+        }
+
         "contains row for name" in {
           val rowIndex = 0
           tableHeadings.get(rowIndex).text shouldBe tableAmendName
@@ -1554,19 +1610,6 @@ class AmendOutcomeViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewM
           tableData.get(rowIndex).text shouldBe protectionReferenceFixedProtection2016
         }
 
-        "contains row for Application Date" in {
-          val rowIndex = 4
-          tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationDate
-          tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-          tableData.get(rowIndex).text shouldBe "14 July 2017"
-        }
-
-        "contains row for Application Time" in {
-          val rowIndex = 5
-          tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationTime
-          tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
-          tableData.get(rowIndex).text shouldBe "3:14pm"
-        }
       }
 
       "contain print info section" in {

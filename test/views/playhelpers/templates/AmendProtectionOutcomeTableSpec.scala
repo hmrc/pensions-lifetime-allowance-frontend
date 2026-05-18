@@ -76,6 +76,11 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
           val tableHeadings = doc.select("tr th")
           val tableData     = doc.select("tr td")
 
+          "should have exactly 7 rows" in {
+            tableHeadings should have size 7
+            tableData should have size 7
+          }
+
           "contain row for name" in {
             val rowIndex = 0
             tableHeadings.get(rowIndex).text shouldBe NameHeader
@@ -132,6 +137,11 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
 
           val tableHeadings = doc.select("tr th")
           val tableData     = doc.select("tr td")
+
+          "should have exactly 8 rows" in {
+            tableHeadings should have size 8
+            tableData should have size 8
+          }
 
           "contain row for name" in {
             val rowIndex = 0
@@ -204,6 +214,11 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
           val tableHeadings = doc.select("tr th")
           val tableData     = doc.select("tr td")
 
+          "contain exactly 6 rows" in {
+            tableHeadings should have size 6
+            tableData should have size 6
+          }
+
           "contain row for name" in {
             val rowIndex = 0
             tableHeadings.get(rowIndex).text shouldBe NameHeader
@@ -253,6 +268,11 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
 
           val tableHeadings = doc.select("tr th")
           val tableData     = doc.select("tr td")
+
+          "contain exactly 7 rows" in {
+            tableHeadings should have size 7
+            tableData should have size 7
+          }
 
           "contain row for name" in {
             val rowIndex = 0
@@ -317,6 +337,11 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
         val tableHeadings = doc.select("tr th")
         val tableData     = doc.select("tr td")
 
+        "contain exactly 6 rows" in {
+          tableHeadings should have size 6
+          tableData should have size 6
+        }
+
         "contain row for name" in {
           val rowIndex = 0
           tableHeadings.get(rowIndex).text shouldBe NameHeader
@@ -366,6 +391,11 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
 
         val tableHeadings = doc.select("tr th")
         val tableData     = doc.select("tr td")
+
+        "contain exactly 7 rows" in {
+          tableHeadings should have size 7
+          tableData should have size 7
+        }
 
         "contain row for name" in {
           val rowIndex = 0
@@ -429,6 +459,11 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
         val tableHeadings = doc.select("tr th")
         val tableData     = doc.select("tr td")
 
+        "contain exactly 4 rows" in {
+          tableHeadings should have size 4
+          tableData should have size 4
+        }
+
         "contain row for name" in {
           val rowIndex = 0
           tableHeadings.get(rowIndex).text shouldBe NameHeader
@@ -456,20 +491,6 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
           tableData.get(rowIndex).attr("id") shouldBe "fixedProtectionRefNum"
           tableData.get(rowIndex).text shouldBe protectionReferenceFixedProtection2016
         }
-
-        "contain row for Application Date" in {
-          val rowIndex = 4
-          tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
-          tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-          tableData.get(rowIndex).text shouldBe "14 July 2015"
-        }
-
-        "contain row for Application Time" in {
-          val rowIndex = 5
-          tableHeadings.get(rowIndex).text shouldBe ApplicationTimeHeader
-          tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
-          tableData.get(rowIndex).text shouldBe "3:14pm"
-        }
       }
 
       "includeProtectedAmount is set to true" should {
@@ -478,6 +499,11 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
 
         val tableHeadings = doc.select("tr th")
         val tableData     = doc.select("tr td")
+
+        "contain exactly 5 rows" in {
+          tableHeadings should have size 5
+          tableData should have size 5
+        }
 
         "contain row for name" in {
           val rowIndex = 0
@@ -514,19 +540,6 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
           tableData.get(rowIndex).text shouldBe protectionReferenceFixedProtection2016
         }
 
-        "contain row for Application Date" in {
-          val rowIndex = 5
-          tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
-          tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-          tableData.get(rowIndex).text shouldBe "14 July 2015"
-        }
-
-        "contain row for Application Time" in {
-          val rowIndex = 6
-          tableHeadings.get(rowIndex).text shouldBe ApplicationTimeHeader
-          tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
-          tableData.get(rowIndex).text shouldBe "3:14pm"
-        }
       }
     }
 
@@ -540,6 +553,11 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
 
         val tableHeadings = doc.select("tr th")
         val tableData     = doc.select("tr td")
+
+        "contain exactly 7 rows" in {
+          tableHeadings should have size 7
+          tableHeadings should have size 7
+        }
 
         "contain row for name" in {
           val rowIndex = 0
@@ -597,6 +615,11 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
 
         val tableHeadings = doc.select("tr th")
         val tableData     = doc.select("tr td")
+
+        "contain exactly 8 rows" in {
+          tableHeadings should have size 8
+          tableHeadings should have size 8
+        }
 
         "contain row for name" in {
           val rowIndex = 0
@@ -668,6 +691,11 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
           val tableHeadings = doc.select("tr th")
           val tableData     = doc.select("tr td")
 
+          "contain exactly 6 rows" in {
+            tableHeadings should have size 6
+            tableHeadings should have size 6
+          }
+
           "contain row for name" in {
             val rowIndex = 0
             tableHeadings.get(rowIndex).text shouldBe NameHeader
@@ -717,6 +745,11 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
 
           val tableHeadings = doc.select("tr th")
           val tableData     = doc.select("tr td")
+
+          "contain exactly 7 rows" in {
+            tableHeadings should have size 7
+            tableHeadings should have size 7
+          }
 
           "contain row for name" in {
             val rowIndex = 0
@@ -781,6 +814,11 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
         val tableHeadings = doc.select("tr th")
         val tableData     = doc.select("tr td")
 
+        "contain exactly 6 rows" in {
+          tableHeadings should have size 6
+          tableHeadings should have size 6
+        }
+
         "contain row for name" in {
           val rowIndex = 0
           tableHeadings.get(rowIndex).text shouldBe NameHeader
@@ -830,6 +868,11 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
 
         val tableHeadings = doc.select("tr th")
         val tableData     = doc.select("tr td")
+
+        "contain exactly 7 rows" in {
+          tableHeadings should have size 7
+          tableHeadings should have size 7
+        }
 
         "contain row for name" in {
           val rowIndex = 0
@@ -893,6 +936,11 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
         val tableHeadings = doc.select("tr th")
         val tableData     = doc.select("tr td")
 
+        "contain exactly 4 rows" in {
+          tableHeadings should have size 4
+          tableHeadings should have size 4
+        }
+
         "contain row for name" in {
           val rowIndex = 0
           tableHeadings.get(rowIndex).text shouldBe NameHeader
@@ -920,20 +968,6 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
           tableData.get(rowIndex).attr("id") shouldBe "fixedProtectionRefNum"
           tableData.get(rowIndex).text shouldBe protectionReferenceFixedProtection2016
         }
-
-        "contain row for Application Date" in {
-          val rowIndex = 4
-          tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
-          tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-          tableData.get(rowIndex).text shouldBe "14 July 2017"
-        }
-
-        "contain row for Application Time" in {
-          val rowIndex = 5
-          tableHeadings.get(rowIndex).text shouldBe ApplicationTimeHeader
-          tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
-          tableData.get(rowIndex).text shouldBe "3:14pm"
-        }
       }
 
       "includeProtectedAmount is set to true" should {
@@ -942,6 +976,11 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
 
         val tableHeadings = doc.select("tr th")
         val tableData     = doc.select("tr td")
+
+        "contain exactly 5 rows" in {
+          tableHeadings should have size 5
+          tableHeadings should have size 5
+        }
 
         "contain row for name" in {
           val rowIndex = 0
@@ -976,20 +1015,6 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
           tableHeadings.get(rowIndex).text shouldBe FixedProtectionRefHeader
           tableData.get(rowIndex).attr("id") shouldBe "fixedProtectionRefNum"
           tableData.get(rowIndex).text shouldBe protectionReferenceFixedProtection2016
-        }
-
-        "contain row for Application Date" in {
-          val rowIndex = 5
-          tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
-          tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-          tableData.get(rowIndex).text shouldBe "14 July 2017"
-        }
-
-        "contain row for Application Time" in {
-          val rowIndex = 6
-          tableHeadings.get(rowIndex).text shouldBe ApplicationTimeHeader
-          tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
-          tableData.get(rowIndex).text shouldBe "3:14pm"
         }
       }
     }

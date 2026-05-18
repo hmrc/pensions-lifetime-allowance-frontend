@@ -18,6 +18,7 @@ package constructors.display
 
 import common.{Display, Exceptions}
 import constructors.display.ExistingProtectionsDisplayModelConstructor.{
+  shouldDisplayCertificateDateAndTime,
   shouldDisplayEnhancementFactor,
   shouldDisplayFactor,
   shouldDisplayLumpSumAmount,
@@ -56,8 +57,12 @@ object PrintDisplayModelConstructor {
       protectionModel.protectedAmount.map(amt => Display.currencyDisplayString(amt))
     }
 
-    val certificateDate = protectionModel.certificateDate.map(Display.dateDisplayString)
-    val certificateTime = protectionModel.certificateTime.map(Display.timeDisplayString)
+    val certificateDate = protectionModel.certificateDate
+      .filter(_ => shouldDisplayCertificateDateAndTime(protectionType))
+      .map(Display.dateDisplayString)
+    val certificateTime = protectionModel.certificateTime
+      .filter(_ => shouldDisplayCertificateDateAndTime(protectionType))
+      .map(Display.timeDisplayString)
 
     val lumpSumPercentage = protectionModel.lumpSumPercentage
       .filter(_ => shouldDisplayLumpSumPercentage(protectionType))

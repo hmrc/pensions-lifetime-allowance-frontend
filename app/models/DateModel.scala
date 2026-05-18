@@ -22,7 +22,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import scala.util.Try
 
-case class DateModel(date: LocalDate)
+case class DateModel(date: LocalDate) extends AnyVal
 
 object DateModel {
 

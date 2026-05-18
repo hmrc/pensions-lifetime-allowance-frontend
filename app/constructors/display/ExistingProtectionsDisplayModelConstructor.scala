@@ -79,8 +79,12 @@ object ExistingProtectionsDisplayModelConstructor {
     val protectedAmount =
       model.protectedAmount.map(protectedAmount => Display.currencyDisplayString(BigDecimal(protectedAmount)))
 
-    val certificateDate = model.certificateDate.map(Display.dateDisplayString)
-    val certificateTime = model.certificateTime.map(Display.timeDisplayString)
+    val certificateDate = model.certificateDate
+      .filter(_ => shouldDisplayCertificateDateAndTime(protectionType))
+      .map(Display.dateDisplayString)
+    val certificateTime = model.certificateTime
+      .filter(_ => shouldDisplayCertificateDateAndTime(protectionType))
+      .map(Display.timeDisplayString)
 
     val strippedPsaRef = model.psaCheckReference.stripPrefix(""""""").stripSuffix(""""""")
 
@@ -116,6 +120,16 @@ object ExistingProtectionsDisplayModelConstructor {
       enhancementFactor = enhancementFactor,
       factor = factor
     )
+  }
+
+  def shouldDisplayCertificateDateAndTime: ProtectionType => Boolean = {
+    case ProtectionType.FixedProtection        => false
+    case ProtectionType.FixedProtectionLTA     => false
+    case ProtectionType.FixedProtection2014    => false
+    case ProtectionType.FixedProtection2014LTA => false
+    case ProtectionType.FixedProtection2016    => false
+    case ProtectionType.FixedProtection2016LTA => false
+    case _                                     => true
   }
 
   def shouldDisplayLumpSumPercentage(protectionType: ProtectionType): Boolean =

@@ -304,8 +304,10 @@ object AmendProtectionDisplayModelTestData {
       status = None,
       psaCheckReference = None,
       protectionReference = None,
+      fixedProtectionReference = Some(protectionReferenceFixedProtection2016),
       protectedAmount = Some(protectedAmountIndividualProtection2014Below),
-      fixedProtectionReference = Some(protectionReferenceFixedProtection2016)
+      certificateDate = None,
+      certificateTime = None
     )
 
   val amendOutcomeDisplayModelNotification7 = AmendOutcomeDisplayModel(
@@ -431,8 +433,10 @@ object AmendProtectionDisplayModelTestData {
       status = None,
       psaCheckReference = None,
       protectionReference = None,
+      fixedProtectionReference = Some(protectionReferenceFixedProtection2016),
       protectedAmount = Some(protectedAmountIndividualProtection2016Below),
-      fixedProtectionReference = Some(protectionReferenceFixedProtection2016)
+      certificateDate = None,
+      certificateTime = None
     )
 
   val amendOutcomeDisplayModelNotification14 = AmendOutcomeDisplayModel(
