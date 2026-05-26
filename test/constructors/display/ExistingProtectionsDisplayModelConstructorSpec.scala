@@ -611,8 +611,8 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
             sequenceNumber = 1,
             protectionType = protectionType,
             status = Withdrawn,
-            certificateDate = Some(DateModel.of(2016, 4, 17)),
-            certificateTime = Some(TimeModel.of(15, 14, 0)),
+            certificateDate = None,
+            certificateTime = None,
             protectedAmount = Some(1250000),
             protectionReference = Some("PSA654321")
           )
@@ -629,8 +629,8 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
             psaCheckReference = tstPsaCheckRef,
             protectionReference = "PSA654321",
             protectedAmount = Some("£1,250,000"),
-            certificateDate = Some("17 April 2016"),
-            certificateTime = Some("3:14pm")
+            certificateDate = None,
+            certificateTime = None
           )
 
           val existingProtectionsDisplayModel = ExistingProtectionsDisplayModel(
@@ -656,171 +656,117 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
 
   }
 
-  "shouldDisplayLumpSumAmount" should {
-    "return true" when {
-      val types = Seq(
-        PrimaryProtection,
-        PrimaryProtectionLTA
-      )
+  "shouldDisplayCertificateDateAndTime" should {
+    val falseTypes: Set[ProtectionType] = Set(
+      FixedProtection,
+      FixedProtectionLTA,
+      FixedProtection2014,
+      FixedProtection2014LTA,
+      FixedProtection2016,
+      FixedProtection2016LTA
+    )
 
-      types.foreach(protectionType =>
+    "return false" when
+      falseTypes.foreach { protectionType =>
+        s"protection type is $protectionType" in {
+          ExistingProtectionsDisplayModelConstructor.shouldDisplayCertificateDateAndTime(protectionType) shouldBe false
+        }
+      }
+
+    "return true" when
+      (ProtectionType.values.toSet -- falseTypes).foreach { protectionType =>
+        s"protection type is $protectionType" in {
+          ExistingProtectionsDisplayModelConstructor.shouldDisplayCertificateDateAndTime(protectionType) shouldBe true
+        }
+      }
+  }
+
+  "shouldDisplayLumpSumAmount" should {
+    val trueTypes: Set[ProtectionType] = Set(
+      PrimaryProtection,
+      PrimaryProtectionLTA
+    )
+
+    "return true" when
+      trueTypes.foreach(protectionType =>
         s"the protection type is $protectionType" in {
           ExistingProtectionsDisplayModelConstructor.shouldDisplayLumpSumAmount(protectionType) shouldBe true
         }
       )
-    }
 
-    "return false" when {
-      val types = Seq(
-        EnhancedProtection,
-        EnhancedProtectionLTA,
-        FixedProtection,
-        FixedProtection2014,
-        FixedProtection2014LTA,
-        FixedProtection2016,
-        FixedProtection2016LTA,
-        FixedProtectionLTA,
-        IndividualProtection2014,
-        IndividualProtection2014LTA,
-        IndividualProtection2016,
-        IndividualProtection2016LTA,
-        InternationalEnhancementS221,
-        InternationalEnhancementS224,
-        PensionCreditRights
-      )
-
-      types.foreach(protectionType =>
+    "return false" when
+      (ProtectionType.values.toSet -- trueTypes).foreach(protectionType =>
         s"the protection type is $protectionType" in {
           ExistingProtectionsDisplayModelConstructor.shouldDisplayLumpSumAmount(protectionType) shouldBe false
         }
       )
-    }
 
   }
 
   "shouldDisplayLumpSumPercentage" should {
-    "return true" when {
-      val types = Seq(
-        EnhancedProtection,
-        EnhancedProtectionLTA
-      )
+    val trueTypes: Set[ProtectionType] = Set(
+      EnhancedProtection,
+      EnhancedProtectionLTA
+    )
 
-      types.foreach(protectionType =>
+    "return true" when
+      trueTypes.foreach(protectionType =>
         s"the protection type is $protectionType" in {
           ExistingProtectionsDisplayModelConstructor.shouldDisplayLumpSumPercentage(protectionType) shouldBe true
         }
       )
-    }
 
-    "return false" when {
-      val types = Seq(
-        PrimaryProtection,
-        PrimaryProtectionLTA,
-        FixedProtection,
-        FixedProtection2014,
-        FixedProtection2014LTA,
-        FixedProtection2016,
-        FixedProtection2016LTA,
-        FixedProtectionLTA,
-        IndividualProtection2014,
-        IndividualProtection2014LTA,
-        IndividualProtection2016,
-        IndividualProtection2016LTA,
-        InternationalEnhancementS221,
-        InternationalEnhancementS224,
-        PensionCreditRights
-      )
-
-      types.foreach(protectionType =>
+    "return false" when
+      (ProtectionType.values.toSet -- trueTypes).foreach(protectionType =>
         s"the protection type is $protectionType" in {
           ExistingProtectionsDisplayModelConstructor.shouldDisplayLumpSumPercentage(protectionType) shouldBe false
         }
       )
-    }
 
   }
 
   "shouldDisplayEnhancementFactor" should {
-    "return true" when {
-      val types = Seq(
-        PensionCreditRights,
-        InternationalEnhancementS221,
-        InternationalEnhancementS224
-      )
+    val trueTypes: Set[ProtectionType] = Set(
+      PensionCreditRights,
+      InternationalEnhancementS221,
+      InternationalEnhancementS224
+    )
 
-      types.foreach(protectionType =>
+    "return true" when
+      trueTypes.foreach(protectionType =>
         s"the protection type is $protectionType" in {
           ExistingProtectionsDisplayModelConstructor.shouldDisplayEnhancementFactor(protectionType) shouldBe true
         }
       )
-    }
 
-    "return false" when {
-      val types = Seq(
-        EnhancedProtection,
-        EnhancedProtectionLTA,
-        FixedProtection,
-        FixedProtection2014,
-        FixedProtection2014LTA,
-        FixedProtection2016,
-        FixedProtection2016LTA,
-        FixedProtectionLTA,
-        IndividualProtection2014,
-        IndividualProtection2014LTA,
-        IndividualProtection2016,
-        IndividualProtection2016LTA,
-        PrimaryProtection,
-        PrimaryProtectionLTA
-      )
-
-      types.foreach(protectionType =>
+    "return false" when
+      (ProtectionType.values.toSet -- trueTypes).foreach(protectionType =>
         s"the protection type is $protectionType" in {
           ExistingProtectionsDisplayModelConstructor.shouldDisplayEnhancementFactor(protectionType) shouldBe false
         }
       )
-    }
 
   }
 
   "shouldDisplayFactor" should {
-    "return true" when {
-      val types = Seq(
-        PrimaryProtection,
-        PrimaryProtectionLTA
-      )
+    val trueTypes: Set[ProtectionType] = Set(
+      PrimaryProtection,
+      PrimaryProtectionLTA
+    )
 
-      types.foreach(protectionType =>
+    "return true" when
+      trueTypes.foreach(protectionType =>
         s"the protection type is $protectionType" in {
           ExistingProtectionsDisplayModelConstructor.shouldDisplayFactor(protectionType) shouldBe true
         }
       )
-    }
 
-    "return false" when {
-      val types = Seq(
-        EnhancedProtection,
-        EnhancedProtectionLTA,
-        FixedProtection,
-        FixedProtection2014,
-        FixedProtection2014LTA,
-        FixedProtection2016,
-        FixedProtection2016LTA,
-        FixedProtectionLTA,
-        IndividualProtection2014,
-        IndividualProtection2014LTA,
-        IndividualProtection2016,
-        IndividualProtection2016LTA,
-        InternationalEnhancementS221,
-        InternationalEnhancementS224,
-        PensionCreditRights
-      )
-
-      types.foreach(protectionType =>
+    "return false" when
+      (ProtectionType.values.toSet -- trueTypes).foreach(protectionType =>
         s"the protection type is $protectionType" in {
           ExistingProtectionsDisplayModelConstructor.shouldDisplayFactor(protectionType) shouldBe false
         }
       )
-    }
 
   }
 
