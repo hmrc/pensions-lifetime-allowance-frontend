@@ -16,7 +16,7 @@
 
 @import config.FrontendAppConfig
 
-@this(layout: Layout,
+@this(layout: UnauthenticatedLayout,
     appConfig: FrontendAppConfig,
 )
 
@@ -25,7 +25,6 @@
 @layout(
     pageTitle = messages("psa.lookup.withdraw.title"),
     isPsaLookupPage = true,
-    backLinkEnabled = false
 ) {
     <h1 class="govuk-heading-xl" id="pageHeading">@messages("psa.lookup.withdraw.pageHeading")</h1>
 

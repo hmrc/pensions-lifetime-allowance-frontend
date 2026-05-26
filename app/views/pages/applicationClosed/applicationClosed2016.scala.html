@@ -14,13 +14,12 @@
  * limitations under the License.
  *@
 
-@this(layout: Layout)
+@this(layout: AuthenticatedLayout)
 
 @()(implicit request: Request[_], messages: Messages)
 
 @layout(
      pageTitle = messages("pla.applicationClosed.2016.title"),
-     backLinkEnabled = false
 ) {
     <h1 class="govuk-heading-xl" id="pageHeading">@messages("pla.applicationClosed.2016.pageHeading")</h1>
 

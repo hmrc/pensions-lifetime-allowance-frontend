@@ -15,27 +15,19 @@
  *@
 
 @import config.FrontendAppConfig
-@import uk.gov.hmrc.hmrcfrontend.config.AccountMenuConfig
-@import uk.gov.hmrc.hmrcfrontend.views.Implicits
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage.{Banners, HmrcStandardPageParams, ServiceURLs, TemplateOverrides}
+@import uk.gov.hmrc.sca.services.WrapperService
 
 @this(
     hmrcStandardPage: HmrcStandardPage,
     twoThirdsMainContent: TwoThirdsMainContent,
     hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
-    hmrcTimeoutDialogHelper: HmrcTimeoutDialogHelper,
     appConfig: FrontendAppConfig,
-    govukBackLink: GovukBackLink
-)(implicit accountMenuConfig: AccountMenuConfig)
+)
 
 @(
     pageTitle: String,
     isPsaLookupPage: Boolean = false,
-    backLinkEnabled: Boolean = true,
-    isUserResearchBannerVisible: Boolean = false,
-    timeoutEnabled: Boolean = true,
-    additionalPrintCss: Boolean = false,
-    fullGrid: Boolean = false
 )(
     contentBlock: Html
 )(
@@ -51,17 +43,6 @@
     }
 }
 
-@head = {
-    @if(timeoutEnabled) {
-        @hmrcTimeoutDialogHelper(
-            signOutUrl = routes.TimeoutController.timeout.url
-        )
-    }
-    @if(additionalPrintCss) {
-        <link href='@routes.Assets.versioned("stylesheets/pla-print.css")' media="print" rel="stylesheet" type="text/css" />
-    }
-}
-
 @mainContent = {
     @contentBlock
     @hmrcReportTechnicalIssueHelper()
@@ -72,23 +53,10 @@
         serviceURLs = ServiceURLs(
             serviceUrl = None
         ),
-        banners = Banners(
-            userResearchBanner = Option.when(isUserResearchBannerVisible){ UserResearchBanner(url = appConfig.urBannerLink) }
-        ),
         serviceName = serviceName.toOption,
         pageTitle = Some(s"""$pageTitle - $serviceName - GOV.UK"""),
-        backLink = if (backLinkEnabled) {
-            Some(BackLink.mimicsBrowserBackButtonViaJavaScript)
-        } else {
-            None
-        },
         templateOverrides = TemplateOverrides(
-            additionalHeadBlock = Some(head),
-            mainContentLayout = if (fullGrid) {
-                Some(content => Html(s"<div class='govuk-grid-row'><div class='govuk-grid-column-full'>$content</div></div>"))
-            } else {
-                Some(twoThirdsMainContent(_))
-            }
+            mainContentLayout = Some(twoThirdsMainContent(_)),
         ),
         isWelshTranslationAvailable = true,
     )
