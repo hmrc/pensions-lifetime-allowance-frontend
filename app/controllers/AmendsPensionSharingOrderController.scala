@@ -18,7 +18,7 @@ package controllers
 
 import auth.AuthFunction
 import common._
-import config.FrontendAppConfig
+import config.AppConfig
 import forms.AmendPsoDetailsForm._
 import models.amend.AmendPsoDetailsModel
 import models.pla.AmendableProtectionType
@@ -32,9 +32,10 @@ import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class AmendsPensionSharingOrderController @Inject() (
     val sessionCacheService: SessionCacheService,
     mcc: MessagesControllerComponents,
@@ -42,7 +43,7 @@ class AmendsPensionSharingOrderController @Inject() (
     amendPsoDetails: pages.amends.amendPsoDetails,
     technicalError: views.html.pages.fallback.technicalError
 )(
-    implicit val appConfig: FrontendAppConfig,
+    implicit val appConfig: AppConfig,
     val formWithCSRF: FormWithCSRF,
     val ec: ExecutionContext
 ) extends FrontendController(mcc)

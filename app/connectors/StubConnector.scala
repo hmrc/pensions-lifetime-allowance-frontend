@@ -16,22 +16,23 @@
 
 package connectors
 
-import config.FrontendAppConfig
+import config.AppConfig
 import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
-class StubConnector @Inject() (appConfig: FrontendAppConfig, http: HttpClientV2)(implicit ec: ExecutionContext) {
+@Singleton
+class StubConnector @Inject() (appConfig: AppConfig, http: HttpClientV2)(implicit ec: ExecutionContext) {
 
-  val serviceUrl: String = appConfig.servicesConfig.baseUrl("pla-dynamic-stub")
+  val stubBaseUrl: String = appConfig.stubBaseUrl
 
-  private def deleteProtectionByNinoUrl(nino: String) = s"$serviceUrl/test-only/individuals/$nino/protections"
-  private val deleteProtectionsUrl                    = s"$serviceUrl/test-only/protections/removeAll"
-  private val insertProtectionsUrl                    = s"$serviceUrl/test-only/protections/insert"
+  private def deleteProtectionByNinoUrl(nino: String) = s"$stubBaseUrl/test-only/individuals/$nino/protections"
+  private val deleteProtectionsUrl                    = s"$stubBaseUrl/test-only/protections/removeAll"
+  private val insertProtectionsUrl                    = s"$stubBaseUrl/test-only/protections/insert"
 
   def deleteProtectionByNino(nino: String)(implicit hc: HeaderCarrier): Future[Int] = {
     val dpUrl = deleteProtectionByNinoUrl(nino)

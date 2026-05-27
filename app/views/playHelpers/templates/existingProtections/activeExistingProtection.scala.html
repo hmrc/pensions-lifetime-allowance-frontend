@@ -14,13 +14,13 @@
  * limitations under the License.
  *@
 
-@import config.FrontendAppConfig
+@import config.AppConfig
 @import models.display.ExistingProtectionDisplayModel
 @import play.api.i18n._
 @import views.HeaderContent
 @import views.html.playHelpers.templates.existingProtections.protectionDetails
 
-@this(appConfig: FrontendAppConfig)
+@this(appConfig: AppConfig)
 
 @(protection: ExistingProtectionDisplayModel, statusGroup: String, protectionNum: Int)(implicit messages: Messages)
 

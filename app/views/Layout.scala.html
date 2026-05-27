@@ -14,22 +14,17 @@
  * limitations under the License.
  *@
 
-@import config.FrontendAppConfig
-@import uk.gov.hmrc.hmrcfrontend.config.AccountMenuConfig
-@import uk.gov.hmrc.hmrcfrontend.views.html.components.implicits.RichAccountMenu
+@import config.AppConfig
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage.{Banners, HmrcStandardPageParams, ServiceURLs, TemplateOverrides}
-
 
 @this(
     hmrcStandardPage: HmrcStandardPage,
     twoThirdsMainContent: TwoThirdsMainContent,
     hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
     hmrcTimeoutDialogHelper: HmrcTimeoutDialogHelper,
-    appConfig: FrontendAppConfig,
-    hmrcAccountMenu: HmrcAccountMenu,
-    hmrcLanguageSelectHelper: HmrcLanguageSelectHelper,
+    appConfig: AppConfig,
     govukBackLink: GovukBackLink
-)(implicit accountMenuConfig: AccountMenuConfig)
+)
 
 @(
     pageTitle: String,
@@ -37,8 +32,7 @@
     backLinkEnabled: Boolean = true,
     isUserResearchBannerVisible: Boolean = false,
     timeoutEnabled: Boolean = true,
-    additionalPrintCss: Boolean = false,
-    fullGrid: Boolean = false
+    additionalPrintCss: Boolean = false
 )(
     contentBlock: Html
 )(
@@ -65,14 +59,40 @@
     }
 }
 
-@beforeContentBlock = {
-@if(request.session.get("authToken")){
-    @hmrcAccountMenu(AccountMenu(
-        signOut = SignOut(appConfig.signOutUrl)
-    ).withUrlsFromConfig())
+@signedIn = @{
+    request.session.get("authToken").isDefined
 }
-@hmrcLanguageSelectHelper()
-@if(backLinkEnabled) { @govukBackLink(BackLink.mimicsBrowserBackButtonViaJavaScript) }
+
+@signOutUrl = @{
+    Option.when(signedIn) {
+        controllers.routes.AccountController.signOut.url
+    }
+}
+
+@serviceNavigation = @{
+    Option.when(signedIn) {
+        ServiceNavigation(
+            serviceName = Some(serviceName),
+            navigation = Seq(
+                ServiceNavigationItem(
+                    content = Text(messages("pla.service-navigation.home")),
+                    href = appConfig.serviceNavigationAccountHomeUrl,
+                ),
+                ServiceNavigationItem(
+                    content = Text(messages("pla.service-navigation.messages")),
+                    href = appConfig.serviceNavigationMessagesUrl,
+                ),
+                ServiceNavigationItem(
+                    content = Text(messages("pla.service-navigation.progress")),
+                    href = appConfig.serviceNavigationCheckProgressUrl,
+                ),
+                ServiceNavigationItem(
+                    content = Text(messages("pla.service-navigation.profile")),
+                    href = appConfig.serviceNavigationProfileAndSettingsUrl
+                )
+            )
+        ).withLanguageToggle()
+    }
 }
 
 @mainContent = {
@@ -80,19 +100,36 @@
     @hmrcReportTechnicalIssueHelper()
 }
 
+@backLink = @{
+    Option.when(backLinkEnabled) {
+        BackLink.mimicsBrowserBackButtonViaJavaScript
+    }
+}
+
+@userResearchBanner = @{
+    Option.when(isUserResearchBannerVisible){
+        UserResearchBanner(
+            url = appConfig.urBannerLink
+        )
+    }
+}
+
 @hmrcStandardPage(
     HmrcStandardPageParams(
         serviceURLs = ServiceURLs(
-            serviceUrl = None
+            serviceUrl = None,
+            signOutUrl = signOutUrl
         ),
         banners = Banners(
-            userResearchBanner = Option.when(isUserResearchBannerVisible){ UserResearchBanner(url = appConfig.urBannerLink) }
+            userResearchBanner = userResearchBanner
         ),
+        backLink = backLink,
         serviceName = serviceName.toOption,
         pageTitle = Some(s"""$pageTitle - $serviceName - GOV.UK"""),
         templateOverrides = TemplateOverrides(
             additionalHeadBlock = Some(head),
-            beforeContentBlock = Some(beforeContentBlock),
-            mainContentLayout = if (fullGrid) Some(content => Html(s"<div class='govuk-grid-row'><div class='govuk-grid-column-full'>$content</div></div>")) else Some(twoThirdsMainContent(_))
-        )
-    ))(mainContent)
+        ),
+        isWelshTranslationAvailable = true,
+        serviceNavigation = serviceNavigation
+    )
+)(mainContent)

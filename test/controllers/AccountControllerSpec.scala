@@ -17,7 +17,7 @@
 package controllers
 
 import auth.MockConfig
-import config.FrontendAppConfig
+import config.AppConfig
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.http.Status
 import play.api.mvc.MessagesControllerComponents
@@ -26,7 +26,7 @@ import testHelpers._
 
 class AccountControllerSpec extends FakeApplication with MockitoSugar {
 
-  val mockAppConfig: FrontendAppConfig      = inject[FrontendAppConfig]
+  val mockAppConfig: AppConfig              = inject[AppConfig]
   val mockMCC: MessagesControllerComponents = inject[MessagesControllerComponents]
 
   val controller = new AccountController(mockAppConfig, mockMCC)

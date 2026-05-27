@@ -16,17 +16,18 @@
 
 package config
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.RequestHeader
 import play.twirl.api.Html
+
 import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 
+@Singleton
 class PlaFrontendErrorHandler @Inject() (errorTemplate: views.html.error_template)(
     implicit val messagesApi: MessagesApi,
-    val appConfig: FrontendAppConfig,
-    val plaContext: PlaContext,
+    val appConfig: AppConfig,
     val ec: ExecutionContext
 ) extends FrontendErrorHandler {
 

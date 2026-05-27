@@ -16,7 +16,7 @@
 
 package auth
 
-import config.FrontendAppConfig
+import config.AppConfig
 import mocks.AuthMock
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
@@ -39,10 +39,10 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class AuthFunctionSpec extends FakeApplication with MockitoSugar with BeforeAndAfterEach with AuthMock {
 
-  implicit val system: ActorSystem              = ActorSystem()
-  implicit val materializer: Materializer       = mock[Materializer]
-  implicit val mockAppConfig: FrontendAppConfig = inject[FrontendAppConfig]
-  implicit val hc: HeaderCarrier                = HeaderCarrier()
+  implicit val system: ActorSystem        = ActorSystem()
+  implicit val materializer: Materializer = mock[Materializer]
+  implicit val mockAppConfig: AppConfig   = inject[AppConfig]
+  implicit val hc: HeaderCarrier          = HeaderCarrier()
 
   val mockPlayAuthConnector: PlayAuthConnector = mock[PlayAuthConnector]
 
@@ -62,7 +62,7 @@ class AuthFunctionSpec extends FakeApplication with MockitoSugar with BeforeAndA
 
   class TestAuthFunction extends AuthFunction {
 
-    val appConfig: FrontendAppConfig                              = mockAppConfig
+    val appConfig: AppConfig                                      = mockAppConfig
     override val authConnector: AuthConnector                     = mockAuthConnector
     override def upliftEnvironmentUrl(requestUri: String): String = requestUri
     override implicit val technicalError: technicalError          = inject[technicalError]

@@ -20,8 +20,9 @@ import play.api.Configuration
 import play.api.mvc.RequestHeader
 
 import java.net.URLEncoder
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
+@Singleton
 class AccessibilityStatementConfig @Inject() (config: Configuration) {
 
   private val platformHost: Option[String] =

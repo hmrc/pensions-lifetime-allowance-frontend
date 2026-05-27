@@ -16,29 +16,27 @@
 
 package repositories
 
+import config.AppConfig
 import models.cache.CacheMap
-import play.api.Configuration
 import play.api.libs.json.Writes
 import play.api.mvc.Request
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.mongo.cache.{DataKey, SessionCacheRepository}
 import uk.gov.hmrc.mongo.{MongoComponent, TimestampSupport}
 
-import java.util.concurrent.TimeUnit
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.duration.Duration
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class SessionRepository @Inject() (
     mongoComponent: MongoComponent,
-    config: Configuration,
+    appConfig: AppConfig,
     timestampSupport: TimestampSupport
 )(implicit ec: ExecutionContext)
     extends SessionCacheRepository(
       mongoComponent = mongoComponent,
-      collectionName = config.get[String]("appName"),
-      ttl = Duration(config.get[Int]("mongodb.timeToLiveInSeconds"), TimeUnit.SECONDS),
+      collectionName = appConfig.appName,
+      ttl = appConfig.mongoTtl,
       timestampSupport = timestampSupport,
       sessionIdKey = SessionKeys.sessionId
     ) {

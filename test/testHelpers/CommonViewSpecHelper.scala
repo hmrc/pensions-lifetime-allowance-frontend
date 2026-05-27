@@ -16,7 +16,9 @@
 
 package testHelpers
 
-import config.FrontendAppConfig
+import config.AppConfig
+import org.jsoup.nodes.Element
+import org.jsoup.select.Elements
 import org.mockito.Mockito.reset
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
@@ -28,12 +30,14 @@ import play.api.Application
 import testHelpers.messages.CommonMessages
 import uk.gov.hmrc.http.client.HttpClientV2
 
+import scala.jdk.CollectionConverters
+
 trait CommonViewSpecHelper extends FakeApplication with CommonMessages with MockitoSugar with BeforeAndAfterEach {
 
-  implicit val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
+  implicit val mockAppConfig: AppConfig = mock[AppConfig]
 
   override implicit lazy val app: Application = GuiceApplicationBuilder()
-    .overrides(play.api.inject.bind[FrontendAppConfig].toInstance(mockAppConfig))
+    .overrides(play.api.inject.bind[AppConfig].toInstance(mockAppConfig))
     .build()
 
   val http: HttpClientV2 = mock[HttpClientV2]
@@ -44,8 +48,20 @@ trait CommonViewSpecHelper extends FakeApplication with CommonMessages with Mock
     inject[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
 
   override def beforeEach(): Unit = {
-    reset(mockAppConfig)
     super.beforeEach()
+    reset(mockAppConfig)
+  }
+
+  implicit class ElementsExtension(elements: Elements) {
+
+    def toSeq: Seq[Element] = {
+      import CollectionConverters._
+
+      elements.asScala.toSeq
+    }
+
+    def textSeq: Seq[String] = toSeq.map(_.text)
+
   }
 
 }

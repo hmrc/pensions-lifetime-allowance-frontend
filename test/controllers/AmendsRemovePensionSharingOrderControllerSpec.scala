@@ -63,12 +63,12 @@ class AmendsRemovePensionSharingOrderControllerSpec
 
   implicit val messages: Messages = messagesApi.preferred(fakeRequest)
 
-  implicit val mockAppConfig: FrontendAppConfig = inject[FrontendAppConfig]
-  implicit val system: ActorSystem              = ActorSystem()
-  implicit val materializer: Materializer       = mock[Materializer]
-  implicit val mockLang: Lang                   = mock[Lang]
-  implicit val formWithCSRF: FormWithCSRF       = inject[FormWithCSRF]
-  implicit val ec: ExecutionContext             = inject[ExecutionContext]
+  implicit val mockAppConfig: AppConfig   = inject[AppConfig]
+  implicit val system: ActorSystem        = ActorSystem()
+  implicit val materializer: Materializer = mock[Materializer]
+  implicit val mockLang: Lang             = mock[Lang]
+  implicit val formWithCSRF: FormWithCSRF = inject[FormWithCSRF]
+  implicit val ec: ExecutionContext       = inject[ExecutionContext]
 
   override val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
 

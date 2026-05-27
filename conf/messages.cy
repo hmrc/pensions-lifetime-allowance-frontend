@@ -14,6 +14,12 @@ pla.base.newTab            = yn agor tab newydd
 pla.base.errorSummaryLabel = Mae gwallau ar y dudalen hon.
 site.title.error           = Gwall: {0}
 
+## Service Navigation ##
+pla.service-navigation.home     = Hafan y cyfrif
+pla.service-navigation.messages = Negeseuon
+pla.service-navigation.progress = Gwirio cynnydd
+pla.service-navigation.profile  = Proffil a gosodiadau
+
 common.header.protectedAmount                          = Y swm wedi’i ddiogelu
 common.header.protectionReferenceNumber                = Cyfeirnod y diogelwch
 common.header.pensionSchemeAdministratorCheckReference = Cyfeirnod gwiriad gweinyddwr cynlluniau pensiwn

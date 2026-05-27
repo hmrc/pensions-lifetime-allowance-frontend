@@ -73,7 +73,7 @@ class AmendsControllerSpec
   private val displayConstructors: DisplayConstructors         = mock[DisplayConstructors]
   private val citizenDetailsConnector: CitizenDetailsConnector = mock[CitizenDetailsConnector]
   private val plaConnector: PlaConnector                       = mock[PlaConnector]
-  private val appConfig: FrontendAppConfig                     = mock[FrontendAppConfig]
+  private val appConfig: AppConfig                             = mock[AppConfig]
 
   private val messagesControllerComponents: MessagesControllerComponents =
     inject[MessagesControllerComponents]

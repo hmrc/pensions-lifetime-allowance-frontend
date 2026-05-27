@@ -25,6 +25,7 @@ import models.pla.AmendableProtectionType
 import models.pla.response.ProtectionStatus.Dormant
 import models.pla.response.{AmendProtectionResponseStatus, ReadProtectionsResponse}
 import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.time.{Millis, Seconds, Span}
 import play.api.http.Status.CONFLICT
 import play.api.libs.json.Json
 import play.api.test.Helpers.{INTERNAL_SERVER_ERROR, LOCKED, NOT_FOUND, OK}
@@ -41,6 +42,7 @@ class PlaConnectorISpec extends IntegrationBaseSpec with ScalaFutures {
 
   private implicit val hc: HeaderCarrier    = HeaderCarrier()
   private implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
+  private implicit val defaultPatience: PatienceConfig = PatienceConfig(timeout = Span(1, Seconds), interval = Span(5, Millis))
 
   private val testNino          = "AB999999C"
   private val protectionId      = PlaConnectorTestData.lifetimeAllowanceIdentifier

@@ -25,9 +25,10 @@ import services.SessionCacheService
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class UnauthorisedController @Inject() (
     identityVerificationConnector: IdentityVerificationConnector,
     sessionCacheService: SessionCacheService,

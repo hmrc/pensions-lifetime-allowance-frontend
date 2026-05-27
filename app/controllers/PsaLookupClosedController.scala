@@ -20,8 +20,9 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
+@Singleton
 class PsaLookupClosedController @Inject() (
     mcc: MessagesControllerComponents,
     psaLookupClosedView: views.html.pages.psaLookup.psaLookupClosed

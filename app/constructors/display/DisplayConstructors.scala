@@ -27,8 +27,9 @@ import models.display.{
 import models.{AmendResponseModel, NotificationId, PersonalDetailsModel, ProtectionModel, TransformedReadResponseModel}
 import play.api.i18n.{Lang, Messages, MessagesApi}
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
+@Singleton
 class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) {
 
   def createPrintDisplayModel(

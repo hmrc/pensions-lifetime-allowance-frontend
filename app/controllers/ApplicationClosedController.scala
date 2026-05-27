@@ -20,8 +20,9 @@ import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.applicationClosed.{applicationClosed2014, applicationClosed2016}
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
+@Singleton
 class ApplicationClosedController @Inject() (
     mcc: MessagesControllerComponents,
     applicationClosed2014: applicationClosed2014,

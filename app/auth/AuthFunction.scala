@@ -16,7 +16,7 @@
 
 package auth
 
-import config.FrontendAppConfig
+import config.AppConfig
 import play.api.Logging
 import play.api.i18n.Messages
 import play.api.mvc.Results._
@@ -26,14 +26,15 @@ import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class AuthFunctionImpl @Inject() (
     mcc: MessagesControllerComponents,
     authClientConnector: AuthConnector,
     val technicalError: views.html.pages.fallback.technicalError
-)(implicit val appConfig: FrontendAppConfig, implicit val ec: ExecutionContext)
+)(implicit val appConfig: AppConfig, implicit val ec: ExecutionContext)
     extends FrontendController(mcc)
     with AuthFunction
     with Logging {
@@ -41,7 +42,7 @@ class AuthFunctionImpl @Inject() (
 }
 
 trait AuthFunction extends AuthorisedFunctions with Logging {
-  implicit val appConfig: FrontendAppConfig
+  implicit val appConfig: AppConfig
   implicit val ec: ExecutionContext
   val technicalError: views.html.pages.fallback.technicalError
   val enrolmentKey: String    = "HMRC-NI"

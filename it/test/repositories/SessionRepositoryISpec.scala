@@ -16,16 +16,17 @@
 
 package repositories
 
-import models.{DateModel, PensionDebitModel}
+import config.AppConfig
 import models.cache.CacheMap
+import models.{DateModel, PensionDebitModel}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
+import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{Json, OFormat}
 import play.api.mvc.{AnyContent, Request}
 import play.api.test.{FakeRequest, Injecting}
-import play.api.{Application, Configuration}
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.mongo.TimestampSupport
 import uk.gov.hmrc.mongo.cache.DataKey
@@ -48,7 +49,7 @@ class SessionRepositoryISpec
 
   implicit val pensionsTakenModelFormat: OFormat[PensionDebitModel] = Json.format[PensionDebitModel]
 
-  val repository = new SessionRepository(mongoComponent, inject[Configuration], inject[TimestampSupport])
+  val repository = new SessionRepository(mongoComponent, inject[AppConfig], inject[TimestampSupport])
 
   val session1: String                      = UUID.randomUUID.toString
   val session2: String                      = UUID.randomUUID.toString

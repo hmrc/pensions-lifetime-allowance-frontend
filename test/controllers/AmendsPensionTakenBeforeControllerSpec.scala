@@ -61,7 +61,7 @@ class AmendsPensionTakenBeforeControllerSpec
 
   implicit val messages: Messages = messagesApi.preferred(fakeRequest)
 
-  implicit val appConfig: FrontendAppConfig   = inject[FrontendAppConfig]
+  implicit val appConfig: AppConfig           = inject[AppConfig]
   implicit val system: ActorSystem            = ActorSystem()
   implicit val mockMaterializer: Materializer = mock[Materializer]
   implicit val mockLang: Lang                 = mock[Lang]

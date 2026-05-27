@@ -43,9 +43,9 @@ class Module extends AbstractModule {
     bindControllers()
 
   private def bindControllers() = {
-    bind(classOf[PlaContext]).to(classOf[PlaContextImpl])
     bind(classOf[AuthConnector]).to(classOf[DefaultAuthConnector])
     bind(classOf[AuthFunction]).to(classOf[AuthFunctionImpl])
+    bind(classOf[AppConfig]).to(classOf[FrontendAppConfig])
 
   }
 

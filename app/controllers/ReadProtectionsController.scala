@@ -17,7 +17,7 @@
 package controllers
 
 import auth.AuthFunction
-import config.FrontendAppConfig
+import config.AppConfig
 import connectors.PlaConnectorError.LockedResponseError
 import connectors.{PlaConnector, PlaConnectorError}
 import constructors.display.DisplayConstructors
@@ -32,9 +32,10 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html._
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class ReadProtectionsController @Inject() (
     plaConnector: PlaConnector,
     sessionCacheService: SessionCacheService,
@@ -46,7 +47,7 @@ class ReadProtectionsController @Inject() (
     existingProtections: pages.existingProtections.existingProtections
 )(
     implicit val application: Application,
-    implicit val appConfig: FrontendAppConfig,
+    implicit val appConfig: AppConfig,
     implicit val ec: ExecutionContext
 ) extends FrontendController(mcc)
     with I18nSupport
