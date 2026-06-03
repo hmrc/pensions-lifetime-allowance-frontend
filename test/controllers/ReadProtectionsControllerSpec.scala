@@ -80,7 +80,7 @@ class ReadProtectionsControllerSpec
   val mockDisplayConstructors: DisplayConstructors = mock[DisplayConstructors]
   val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
   val mockPlaConnector: PlaConnector               = mock[PlaConnector]
-  val mockAppConfig: FrontendAppConfig             = mock[FrontendAppConfig]
+  val mockAppConfig: AppConfig                     = mock[AppConfig]
   val mockMCC: MessagesControllerComponents        = inject[MessagesControllerComponents]
   val mockAuthFunction: AuthFunction               = inject[AuthFunction]
   val mockEnv: Environment                         = mock[Environment]
@@ -109,7 +109,7 @@ class ReadProtectionsControllerSpec
   }
 
   val authFunction: AuthFunction = new AuthFunction {
-    override implicit val appConfig: FrontendAppConfig   = mockAppConfig
+    override implicit val appConfig: AppConfig           = mockAppConfig
     override implicit val technicalError: technicalError = mockTechnicalError
     override implicit val ec: ExecutionContext           = executionContext
 

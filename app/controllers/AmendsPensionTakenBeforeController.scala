@@ -17,7 +17,7 @@
 package controllers
 
 import auth.AuthFunction
-import config.FrontendAppConfig
+import config.AppConfig
 import forms.AmendPensionsTakenBeforeForm._
 import models.amend.value.AmendPensionsTakenBeforeModel
 import models.pla.AmendableProtectionType
@@ -31,9 +31,10 @@ import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class AmendsPensionTakenBeforeController @Inject() (
     val sessionCacheService: SessionCacheService,
     mcc: MessagesControllerComponents,
@@ -42,7 +43,7 @@ class AmendsPensionTakenBeforeController @Inject() (
     amendIP16PensionsTakenBefore: pages.amends.amendIP16PensionsTakenBefore,
     amendIP14PensionsTakenBefore: pages.amends.amendIP14PensionsTakenBefore
 )(
-    implicit val appConfig: FrontendAppConfig,
+    implicit val appConfig: AppConfig,
     val formWithCSRF: FormWithCSRF,
     val ec: ExecutionContext
 ) extends FrontendController(mcc)

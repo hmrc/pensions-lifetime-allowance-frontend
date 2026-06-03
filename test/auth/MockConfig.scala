@@ -19,6 +19,8 @@ package auth
 import config.AppConfig
 import play.api.mvc.RequestHeader
 
+import scala.concurrent.duration.{Duration, DurationInt}
+
 object MockConfig extends AppConfig {
 
   override def accessibilityFrontendUrl(implicit requestHeader: RequestHeader): String = "_"
@@ -28,7 +30,20 @@ object MockConfig extends AppConfig {
   override val feedbackSurvey: String                        = "http://localhost:9514/feedback/PLA"
   override val appName: String                               = "check-your-pension-protections-and-enhancements"
   override val sessionMissingUpliftUrlPrefix: Option[String] = None
-  override val basGatewaySignOutUrl: String = "http://localhost:9553/bas-gateway/sign-out-without-state"
-  override val backendUrl: String           = "http://localhost:9011"
+  override val basGatewaySignOutUrl: String              = "http://localhost:9553/bas-gateway/sign-out-without-state"
+  override val backendUrl: String                        = "http://localhost:9011"
+  override val serviceNavigationAccountHomeUrl: String   = "http://localhost:9232/personal-account"
+  override val serviceNavigationMessagesUrl: String      = "http://localhost:9232/personal-account/messages"
+  override val serviceNavigationCheckProgressUrl: String = "http://localhost:9100/track"
 
+  override val serviceNavigationProfileAndSettingsUrl: String =
+    "http://localhost:9232/personal-account/profile-and-settings"
+
+  override val psaLookupWithdrawLinkUrl: String =
+    "https://tax.service.gov.uk/members-protections-and-enhancements/start"
+
+  override val citizenDetailsBaseUrl: String       = "http://localhost:9337"
+  override val identityVerificationBaseUrl: String = "http://localhost:9938"
+  override val stubBaseUrl: String                 = "http://localhost:9012"
+  override val mongoTtl: Duration                  = 3600.seconds
 }

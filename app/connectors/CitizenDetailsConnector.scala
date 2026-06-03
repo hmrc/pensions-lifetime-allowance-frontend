@@ -16,22 +16,25 @@
 
 package connectors
 
-import config.FrontendAppConfig
-import javax.inject.Inject
+import config.AppConfig
+
+import javax.inject.{Inject, Singleton}
 import models.PersonalDetailsModel
 import play.api.Logging
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.HttpReads.Implicits._
+
 import scala.concurrent.{ExecutionContext, Future}
 
-class CitizenDetailsConnector @Inject() (appConfig: FrontendAppConfig, http: HttpClientV2)(
+@Singleton
+class CitizenDetailsConnector @Inject() (appConfig: AppConfig, http: HttpClientV2)(
     implicit ec: ExecutionContext
 ) extends Logging {
 
-  private val serviceUrl: String = appConfig.servicesConfig.baseUrl("citizen-details")
+  private val citizenDetailsBaseUrl: String = appConfig.citizenDetailsBaseUrl
 
-  private def url(nino: String) = s"$serviceUrl/citizen-details/$nino/designatory-details"
+  private def url(nino: String) = s"$citizenDetailsBaseUrl/citizen-details/$nino/designatory-details"
 
   def getPersonDetails(nino: String)(implicit hc: HeaderCarrier): Future[Option[PersonalDetailsModel]] = {
     val cdUrl = url(nino)

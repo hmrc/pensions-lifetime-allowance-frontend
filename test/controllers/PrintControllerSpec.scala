@@ -17,7 +17,7 @@
 package controllers
 
 import auth.AuthFunction
-import config.FrontendAppConfig
+import config.AppConfig
 import connectors.CitizenDetailsConnector
 import constructors.display.DisplayConstructors
 import mocks.AuthMock
@@ -52,11 +52,11 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
   private val messagesControllerComponents: MessagesControllerComponents =
     inject[MessagesControllerComponents]
 
-  private implicit val executionContext: ExecutionContext   = inject[ExecutionContext]
-  private implicit val frontendAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
+  private implicit val executionContext: ExecutionContext = inject[ExecutionContext]
+  private implicit val AppConfig: AppConfig               = mock[AppConfig]
 
   private val authFunction = new AuthFunction {
-    override implicit val appConfig: FrontendAppConfig   = frontendAppConfig
+    override implicit val appConfig: AppConfig           = AppConfig
     override implicit val technicalError: technicalError = inject[technicalError]
     override implicit val ec: ExecutionContext           = executionContext
 
@@ -79,7 +79,7 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
     reset(sessionCacheService)
     reset(citizenDetailsConnector)
     reset(printProtectionView)
-    reset(frontendAppConfig)
+    reset(AppConfig)
 
     when(printProtectionView.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
   }

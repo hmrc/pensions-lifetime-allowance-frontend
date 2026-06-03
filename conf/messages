@@ -14,6 +14,12 @@ pla.base.newTab            = opens in new tab
 pla.base.errorSummaryLabel = There are errors on this page
 site.title.error           = Error: {0}
 
+## Service Navigation ##
+pla.service-navigation.home     = Account home
+pla.service-navigation.messages = Messages
+pla.service-navigation.progress = Check progress
+pla.service-navigation.profile  = Profile and settings
+
 common.header.protectedAmount                          = Protected amount
 common.header.protectionReferenceNumber                = Protection reference number
 common.header.pensionSchemeAdministratorCheckReference = Pension scheme administrator check reference

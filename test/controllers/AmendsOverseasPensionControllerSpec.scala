@@ -17,7 +17,7 @@
 package controllers
 
 import auth.{AuthFunction, AuthFunctionImpl}
-import config.FrontendAppConfig
+import config.AppConfig
 import constructors.display.DisplayConstructors
 import mocks.AuthMock
 import models.pla.AmendableProtectionType
@@ -63,7 +63,7 @@ class AmendsOverseasPensionControllerSpec
 
   implicit val messages: Messages = messagesApi.preferred(fakeRequest)
 
-  implicit val appConfig: FrontendAppConfig   = inject[FrontendAppConfig]
+  implicit val appConfig: AppConfig           = inject[AppConfig]
   implicit val system: ActorSystem            = ActorSystem()
   implicit val mockMaterializer: Materializer = mock[Materializer]
   implicit val mockLang: Lang                 = mock[Lang]

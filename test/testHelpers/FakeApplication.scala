@@ -22,14 +22,13 @@ import org.scalatest.wordspec.AnyWordSpecLike
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.test.Injecting
 
-import scala.reflect.ClassTag
+trait FakeApplication extends AnyWordSpecLike with Matchers with OptionValues with GuiceOneAppPerSuite with Injecting {
 
-trait FakeApplication extends AnyWordSpecLike with Matchers with OptionValues with GuiceOneAppPerSuite {
-
-  override lazy val app: Application = new GuiceApplicationBuilder().build()
+  override lazy val app: Application =
+    new GuiceApplicationBuilder().configure("metrics.jvm" -> "false", "metrics.logback" -> "false").build()
 
   override def fakeApplication(): Application = app
 
-  def inject[T: ClassTag]: T = app.injector.instanceOf[T]
 }

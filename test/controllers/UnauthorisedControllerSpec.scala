@@ -16,7 +16,7 @@
 
 package controllers
 
-import config.FrontendAppConfig
+import config.AppConfig
 import connectors.IdentityVerificationConnector
 import enums.IdentityVerificationResult
 import models.cache.CacheMap
@@ -51,22 +51,22 @@ class UnauthorisedControllerSpec
   val mockMCC: MessagesControllerComponents                            = inject[MessagesControllerComponents]
   val mockHttp: HttpClientV2                                           = mock[HttpClientV2]
   val fakeRequest                                                      = FakeRequest("GET", "/")
-  val mockAppConfig: FrontendAppConfig                                 = inject[FrontendAppConfig]
+  val mockAppConfig: AppConfig                                         = inject[AppConfig]
   val mockIdentityVerificationConnector: IdentityVerificationConnector = mock[IdentityVerificationConnector]
   val requestBuilder: RequestBuilder                                   = mock[RequestBuilder]
 
   override val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
 
-  implicit val ec: ExecutionContext                 = inject[ExecutionContext]
-  implicit val mockImplAppConfig: FrontendAppConfig = inject[FrontendAppConfig]
-  implicit val system: ActorSystem                  = ActorSystem()
-  implicit val materializer: Materializer           = mock[Materializer]
-  implicit val hc: HeaderCarrier                    = mock[HeaderCarrier]
-  implicit val application: Application             = mock[Application]
-  implicit val mockLockedOut: lockedOut             = inject[lockedOut]
-  implicit val mockTechnicalIssue: technicalIssue   = inject[technicalIssue]
-  implicit val mockUnauthorised: unauthorised       = inject[unauthorised]
-  implicit val mockTimeout: timeout                 = inject[timeout]
+  implicit val ec: ExecutionContext               = inject[ExecutionContext]
+  implicit val mockImplAppConfig: AppConfig       = inject[AppConfig]
+  implicit val system: ActorSystem                = ActorSystem()
+  implicit val materializer: Materializer         = mock[Materializer]
+  implicit val hc: HeaderCarrier                  = mock[HeaderCarrier]
+  implicit val application: Application           = mock[Application]
+  implicit val mockLockedOut: lockedOut           = inject[lockedOut]
+  implicit val mockTechnicalIssue: technicalIssue = inject[technicalIssue]
+  implicit val mockUnauthorised: unauthorised     = inject[unauthorised]
+  implicit val mockTimeout: timeout               = inject[timeout]
 
   object MockIdentityVerificationHttp extends MockitoSugar {
 

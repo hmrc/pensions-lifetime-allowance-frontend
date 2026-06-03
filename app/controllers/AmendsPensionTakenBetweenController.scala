@@ -17,7 +17,7 @@
 package controllers
 
 import auth.AuthFunction
-import config.FrontendAppConfig
+import config.AppConfig
 import forms.AmendPensionsTakenBetweenForm._
 import models.amend.value.AmendPensionsTakenBetweenModel
 import models.pla.AmendableProtectionType
@@ -31,9 +31,10 @@ import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class AmendsPensionTakenBetweenController @Inject() (
     val sessionCacheService: SessionCacheService,
     mcc: MessagesControllerComponents,
@@ -42,7 +43,7 @@ class AmendsPensionTakenBetweenController @Inject() (
     amendIP16PensionsTakenBetween: pages.amends.amendIP16PensionsTakenBetween,
     amendIP14PensionsTakenBetween: pages.amends.amendIP14PensionsTakenBetween
 )(
-    implicit val appConfig: FrontendAppConfig,
+    implicit val appConfig: AppConfig,
     val formWithCSRF: FormWithCSRF,
     val ec: ExecutionContext
 ) extends FrontendController(mcc)

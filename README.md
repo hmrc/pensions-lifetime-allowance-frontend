@@ -16,7 +16,7 @@ This is the repository for the pensions lifetime allowance frontend. This servic
 ### Start dependencies via Service Manager
 
 To start all dependencies and services for pensions lifetime allowance, use the following command:
-```
+```shell
 sm2 --start PLA_ALL
 ```
 Please note that the performance tests require running this frontend with test routes enabled.

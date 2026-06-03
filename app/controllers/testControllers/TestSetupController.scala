@@ -17,13 +17,15 @@
 package controllers.testControllers
 
 import connectors.StubConnector
-import javax.inject.Inject
+
+import javax.inject.{Inject, Singleton}
 import play.api.libs.json._
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import scala.concurrent.ExecutionContext
 
+@Singleton
 class TestSetupController @Inject() (connector: StubConnector, mcc: MessagesControllerComponents)(
     implicit ec: ExecutionContext
 ) extends FrontendController(mcc) {

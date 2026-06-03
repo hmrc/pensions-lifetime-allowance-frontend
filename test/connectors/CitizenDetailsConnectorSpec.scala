@@ -16,7 +16,7 @@
 
 package connectors
 
-import config.FrontendAppConfig
+import config.AppConfig
 import models.{Person, PersonalDetailsModel}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
@@ -33,8 +33,8 @@ class CitizenDetailsConnectorSpec extends FakeApplication with MockitoSugar {
 
   implicit val ec: ExecutionContext = inject[ExecutionContext]
 
-  val mockAppConfig: FrontendAppConfig = inject[FrontendAppConfig]
-  val mockHttp: HttpClientV2           = mock[HttpClientV2]
+  val mockAppConfig: AppConfig = inject[AppConfig]
+  val mockHttp: HttpClientV2   = mock[HttpClientV2]
 
   val tstDetails                     = PersonalDetailsModel(Person("McTestFace", "Testy"))
   val x: JsValue                     = Json.toJson(tstDetails)

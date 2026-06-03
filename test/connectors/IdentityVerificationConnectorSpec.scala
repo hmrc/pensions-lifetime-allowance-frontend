@@ -16,7 +16,7 @@
 
 package connectors
 
-import config.FrontendAppConfig
+import config.AppConfig
 import enums.IdentityVerificationResult
 import org.mockito.ArgumentMatchers.{any, eq => eqs}
 import org.mockito.Mockito._
@@ -37,7 +37,7 @@ class IdentityVerificationConnectorSpec extends FakeApplication with ScalaFuture
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
 
   implicit val executionContext: ExecutionContext  = inject[ExecutionContext]
-  val mockAppConfig: FrontendAppConfig             = inject[FrontendAppConfig]
+  val mockAppConfig: AppConfig                     = inject[AppConfig]
   val mockHttp: HttpClientV2                       = mock[HttpClientV2]
   val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
 
@@ -61,7 +61,7 @@ class IdentityVerificationConnectorSpec extends FakeApplication with ScalaFuture
   def mockJourneyId(journeyId: String): Unit = {
     val fileContents                   = Source.fromFile(possibleJournies(journeyId)).mkString
     val requestBuilder: RequestBuilder = mock[RequestBuilder]
-    val serviceUrl                     = identityVerificationConstructor.serviceUrl
+    val serviceUrl                     = identityVerificationConstructor.identityVerificationBaseUrl
     val journeyIdUrl                   = s"$serviceUrl/mdtp/journey/journeyId/$journeyId"
     when(mockHttp.get(eqs(new URL(journeyIdUrl)))(any)).thenReturn(requestBuilder)
     when(requestBuilder.execute[HttpResponse](any, any))

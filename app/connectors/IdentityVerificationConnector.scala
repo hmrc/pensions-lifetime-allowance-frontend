@@ -16,23 +16,25 @@
 
 package connectors
 
-import config.FrontendAppConfig
+import config.AppConfig
 import enums.IdentityVerificationResult
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import play.api.libs.json.{Json, OFormat}
 import services.MetricsService
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpReadsInstances, HttpResponse, StringContextOps}
 import uk.gov.hmrc.http.client.HttpClientV2
+
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
-class IdentityVerificationConnector @Inject() (appConfig: FrontendAppConfig, http: HttpClientV2)(
+@Singleton
+class IdentityVerificationConnector @Inject() (appConfig: AppConfig, http: HttpClientV2)(
     implicit executionContext: ExecutionContext
 ) {
-  val serviceUrl: String = appConfig.servicesConfig.baseUrl("identity-verification")
+  val identityVerificationBaseUrl: String = appConfig.identityVerificationBaseUrl
 
-  private def url(journeyId: String) = s"$serviceUrl/mdtp/journey/journeyId/$journeyId"
+  private def url(journeyId: String) = s"$identityVerificationBaseUrl/mdtp/journey/journeyId/$journeyId"
   private[connectors] case class IdentityVerificationResponse(result: IdentityVerificationResult)
   private implicit val formats: OFormat[IdentityVerificationResponse] = Json.format[IdentityVerificationResponse]
 

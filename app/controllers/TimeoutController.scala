@@ -16,15 +16,16 @@
 
 package controllers
 
-import config.FrontendAppConfig
+import config.AppConfig
 import play.api.Application
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
+@Singleton
 class TimeoutController @Inject() (mcc: MessagesControllerComponents, Timeout: views.html.pages.timeout)(
-    implicit val appConfig: FrontendAppConfig,
+    implicit val appConfig: AppConfig,
     implicit val application: Application
 ) extends FrontendController(mcc) {
 

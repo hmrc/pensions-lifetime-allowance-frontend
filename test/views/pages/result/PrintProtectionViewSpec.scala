@@ -57,7 +57,7 @@ class PrintProtectionViewSpec extends CommonViewSpecHelper with ResultPrintPageC
     }
 
     "have correct service name" in {
-      val serviceName = doc().getElementsByClass("govuk-header__service-name")
+      val serviceName = doc().getElementsByClass("govuk-service-navigation__text")
       serviceName.text shouldBe plaPrintServiceName
     }
 

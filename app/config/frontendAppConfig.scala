@@ -20,9 +20,15 @@ import play.api.Configuration
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.duration.{Duration, DurationInt}
 
 trait AppConfig {
+  val psaLookupWithdrawLinkUrl: String
+
+  val urBannerLink: String =
+    "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=PLA_success&utm_source=Survey_Banner&utm_medium=other&t=HMRC&id=113"
+
   val notAuthorisedRedirectUrl: String
   val ivUpliftUrl: String
   val ggSignInUrl: String
@@ -31,24 +37,28 @@ trait AppConfig {
   val sessionMissingUpliftUrlPrefix: Option[String]
   val basGatewaySignOutUrl: String
   val backendUrl: String
+  val citizenDetailsBaseUrl: String
+  val identityVerificationBaseUrl: String
+  val stubBaseUrl: String
+  val serviceNavigationAccountHomeUrl: String
+  val serviceNavigationMessagesUrl: String
+  val serviceNavigationCheckProgressUrl: String
+  val serviceNavigationProfileAndSettingsUrl: String
+  val mongoTtl: Duration
   def accessibilityFrontendUrl(implicit requestHeader: RequestHeader): String
 
-  def fullSignOutUrl: String = s"$basGatewaySignOutUrl?continue=$feedbackSurvey"
+  val fullSignOutUrl: String = s"$basGatewaySignOutUrl?continue=$feedbackSurvey"
 
 }
 
+@Singleton
 class FrontendAppConfig @Inject() (
     val configuration: Configuration,
     val servicesConfig: ServicesConfig,
     accessibilityStatementConfig: AccessibilityStatementConfig
 ) extends AppConfig {
 
-  val signOutUrl = "/check-your-pension-protections-and-enhancements/sign-out"
-
-  val psaLookupWithdrawLinkUrl: String = servicesConfig.getString("psa.lookup.withdrawLink.url")
-
-  val urBannerLink =
-    "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=PLA_success&utm_source=Survey_Banner&utm_medium=other&t=HMRC&id=113"
+  override val psaLookupWithdrawLinkUrl: String = servicesConfig.getString("psa.lookup.withdrawLink.url")
 
   override val notAuthorisedRedirectUrl: String = servicesConfig.getString("not-authorised-callback.url")
 
@@ -70,5 +80,34 @@ class FrontendAppConfig @Inject() (
   override val basGatewaySignOutUrl: String = servicesConfig.getString("bas-gateway-frontend.sign-out-url")
 
   override val backendUrl: String = servicesConfig.baseUrl("pensions-lifetime-allowance")
+
+  override val citizenDetailsBaseUrl: String = servicesConfig.baseUrl("citizen-details")
+
+  override val identityVerificationBaseUrl: String = servicesConfig.baseUrl("identity-verification")
+
+  override val stubBaseUrl: String = servicesConfig.baseUrl("pla-dynamic-stub")
+
+  private val pertaxFrontendBaseUrl = servicesConfig.baseUrl("pertax-frontend")
+
+  override val serviceNavigationAccountHomeUrl: String =
+    pertaxFrontendBaseUrl + getStringOrThrow("microservice.services.pertax-frontend.urls.home")
+
+  override val serviceNavigationMessagesUrl: String =
+    pertaxFrontendBaseUrl + getStringOrThrow("microservice.services.pertax-frontend.urls.messages")
+
+  private val trackingFrontendBaseUrl = servicesConfig.baseUrl("tracking-frontend")
+
+  override val serviceNavigationCheckProgressUrl: String =
+    trackingFrontendBaseUrl + getStringOrThrow("microservice.services.tracking-frontend.urls.home")
+
+  override val serviceNavigationProfileAndSettingsUrl: String =
+    pertaxFrontendBaseUrl + getStringOrThrow("microservice.services.pertax-frontend.urls.profile-and-settings")
+
+  override val mongoTtl: Duration = configuration.get[Int]("mongodb.timeToLiveInSeconds").seconds
+
+  private def getStringOrThrow(path: String): String =
+    configuration.getOptional[String](path).getOrElse {
+      throw new RuntimeException(s"Missing config value for '$path'")
+    }
 
 }

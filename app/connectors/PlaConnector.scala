@@ -16,7 +16,7 @@
 
 package connectors
 
-import config.FrontendAppConfig
+import config.AppConfig
 import connectors.PlaConnectorError._
 import models.amend.AmendProtectionModel
 import models.pla.request.AmendProtectionRequest
@@ -34,11 +34,12 @@ import uk.gov.hmrc.http.{
   UpstreamErrorResponse
 }
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class PlaConnector @Inject() (
-    appConfig: FrontendAppConfig,
+    appConfig: AppConfig,
     http: HttpClientV2
 ) extends Logging {
 

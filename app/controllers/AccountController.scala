@@ -16,14 +16,15 @@
 
 package controllers
 
-import config.FrontendAppConfig
+import config.AppConfig
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
+@Singleton
 class AccountController @Inject() (
-    config: FrontendAppConfig,
+    config: AppConfig,
     mcc: MessagesControllerComponents
 ) extends FrontendController(mcc) {
 

@@ -27,9 +27,10 @@ import services.SessionCacheService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.result.printProtection
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class PrintController @Inject() (
     sessionCacheService: SessionCacheService,
     citizenDetailsConnector: CitizenDetailsConnector,

@@ -16,7 +16,7 @@
 
 package controllers
 
-import config.FrontendAppConfig
+import config.AppConfig
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{reset, verify, when}
 import org.scalatest.BeforeAndAfterEach
@@ -38,7 +38,7 @@ class PsaLookupClosedControllerSpec extends FakeApplication with BeforeAndAfterE
 
   private val mockPsaLookupClosed: psaLookupClosed = mock[psaLookupClosed]
 
-  private implicit val appConfig: FrontendAppConfig = mock[FrontendAppConfig]
+  private implicit val appConfig: AppConfig = mock[AppConfig]
 
   private val controller = new PsaLookupClosedController(
     mockMCC,
