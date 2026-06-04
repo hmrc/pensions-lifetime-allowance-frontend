@@ -16,7 +16,6 @@
 
 package controllers
 
-import auth.MockConfig
 import config.AppConfig
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.http.Status
@@ -26,10 +25,10 @@ import testHelpers._
 
 class AccountControllerSpec extends FakeApplication with MockitoSugar {
 
-  val mockAppConfig: AppConfig              = inject[AppConfig]
-  val mockMCC: MessagesControllerComponents = inject[MessagesControllerComponents]
+  val appConfig: AppConfig              = inject[AppConfig]
+  val mcc: MessagesControllerComponents = inject[MessagesControllerComponents]
 
-  val controller = new AccountController(mockAppConfig, mockMCC)
+  val controller = new AccountController(appConfig, mcc)
 
   "navigating to signout with an existing session" in {
 
@@ -41,7 +40,7 @@ class AccountControllerSpec extends FakeApplication with MockitoSugar {
   "redirect to the feedback survey with the origin token PLA" in {
     val result = FakeRequests.get("/", controller.signOut, Some("sessionId"))
 
-    redirectLocation(result).get shouldBe MockConfig.fullSignOutUrl
+    redirectLocation(result).get shouldBe appConfig.fullSignOutUrl
   }
 
 }

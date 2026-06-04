@@ -45,8 +45,6 @@ class Module extends AbstractModule {
   private def bindControllers() = {
     bind(classOf[AuthConnector]).to(classOf[DefaultAuthConnector])
     bind(classOf[AuthFunction]).to(classOf[AuthFunctionImpl])
-    bind(classOf[AppConfig]).to(classOf[FrontendAppConfig])
-
   }
 
 }
