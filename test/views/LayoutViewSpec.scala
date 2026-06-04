@@ -16,7 +16,6 @@
 
 package views
 
-import auth.MockConfig
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.mockito.Mockito.when
@@ -58,13 +57,13 @@ class LayoutViewSpec extends CommonViewSpecHelper {
   override def beforeEach(): Unit = {
     super.beforeEach()
 
-    when(mockAppConfig.serviceNavigationAccountHomeUrl).thenReturn(MockConfig.serviceNavigationAccountHomeUrl)
-    when(mockAppConfig.serviceNavigationMessagesUrl).thenReturn(MockConfig.serviceNavigationMessagesUrl)
-    when(mockAppConfig.serviceNavigationCheckProgressUrl).thenReturn(MockConfig.serviceNavigationCheckProgressUrl)
+    when(mockAppConfig.serviceNavigationAccountHomeUrl).thenReturn("https://account-home.url")
+    when(mockAppConfig.serviceNavigationMessagesUrl).thenReturn("https://messages.url")
+    when(mockAppConfig.serviceNavigationCheckProgressUrl).thenReturn("https://check-progress.url")
     when(mockAppConfig.serviceNavigationProfileAndSettingsUrl).thenReturn(
-      MockConfig.serviceNavigationProfileAndSettingsUrl
+      "https://profile-and-settings.url"
     )
-    when(mockAppConfig.urBannerLink).thenReturn(MockConfig.urBannerLink)
+    when(mockAppConfig.urBannerLink).thenReturn("https://user-research-banner.url")
   }
 
   "Layout view" should {
