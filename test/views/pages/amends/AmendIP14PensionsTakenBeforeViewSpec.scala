@@ -55,7 +55,7 @@ class AmendIP14PensionsTakenBeforeViewSpec extends CommonViewSpecHelper with Ame
     }
 
     "have the correct and properly formatted header" in {
-      doc.select("h1.govuk-heading-xl").text shouldBe plaPensionsTakenBeforeHeading
+      doc.select("h1.govuk-fieldset__heading").text shouldBe plaPensionsTakenBeforeHeading
     }
 
     "have a valid form" in {
@@ -65,7 +65,7 @@ class AmendIP14PensionsTakenBeforeViewSpec extends CommonViewSpecHelper with Ame
       formElement.attr("action") shouldBe controllers.routes.AmendsPensionTakenBeforeController
         .submitAmendPensionsTakenBefore(IndividualProtection2016, Open)
         .url
-      formElement.select("legend.govuk-visually-hidden").text() shouldBe plaPensionsTakenBeforeLegendText
+      formElement.select("h1.govuk-fieldset__heading").text() shouldBe plaPensionsTakenBeforeLegendText
     }
 
     "have a pair of yes/no buttons" in {
