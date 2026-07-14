@@ -150,7 +150,9 @@ class AmendsPensionTakenBeforeControllerSpec
         )(fakeRequest)
       val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
 
-      jsoupDoc.body.getElementsByClass("govuk-fieldset__heading").text shouldEqual Messages("pla.pensionsTakenBefore.title")
+      jsoupDoc.body.getElementsByClass("govuk-fieldset__heading").text shouldEqual Messages(
+        "pla.pensionsTakenBefore.title"
+      )
     }
 
     "return some HTML that" should {
