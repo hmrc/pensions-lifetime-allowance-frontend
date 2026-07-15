@@ -45,18 +45,15 @@
 
     @errorSummary(amendPensionsTakenBeforeForm.errors)
 
-    <h1 class="govuk-heading-xl">@Messages("pla.pensionsTakenBefore.title")</h1>
-
     @form(action = routes.AmendsPensionTakenBeforeController.submitAmendPensionsTakenBefore(protectionType, status)) {
 
         @plaInputRadioGroup(
             legend = Messages("pla.pensionsTakenBefore.title"),
-            legendClass = Some("govuk-visually-hidden"),
+            legendClass = Some("govuk-fieldset__legend--xl"),
             items = Seq(
                 RadioItem(content = Text(Messages("pla.base.yes")), value = Option("yes")),
                 RadioItem(content = Text(Messages("pla.base.no")), value = Option("no"))
             ),
-            isPageHeading = false,
             inLine = true,
             field = amendPensionsTakenBeforeForm("amendedPensionsTakenBefore")
         )

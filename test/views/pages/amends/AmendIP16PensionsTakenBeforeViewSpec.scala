@@ -52,7 +52,7 @@ class AmendIP16PensionsTakenBeforeViewSpec extends CommonViewSpecHelper with Ame
     }
 
     "have the correct and properly formatted header" in {
-      doc.getElementsByClass("govuk-heading-xl").text shouldBe plaPensionsTakenBeforeHeading
+      doc.select("h1.govuk-fieldset__heading").text shouldBe plaPensionsTakenBeforeHeading
     }
 
     "have a valid form" in {

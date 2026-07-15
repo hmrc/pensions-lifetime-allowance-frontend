@@ -69,7 +69,6 @@ class AmendIP14PensionsTakenBetweenViewSpec
 
     "have a valid form" in {
       val formElement: Elements = doc.select("form")
-
       formElement.attr("method") shouldBe "POST"
       formElement.attr("action") shouldBe controllers.routes.AmendsPensionTakenBetweenController
         .submitAmendPensionsTakenBetween(IndividualProtection2016, Open)

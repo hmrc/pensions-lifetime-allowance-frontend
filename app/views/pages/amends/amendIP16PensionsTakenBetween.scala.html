@@ -52,7 +52,7 @@
     @form(action = routes.AmendsPensionTakenBetweenController.submitAmendPensionsTakenBetween(protectionType, status)) {
         @plaInputRadioGroup(
             legend = Messages("pla.pensionsTakenBetween.title"),
-            legendClass = Some("govuk-visually-hidden"),
+            legendClass = Some("govuk-visually-hidden govuk-!-display-block"),
             items = Seq(
                 RadioItem(content = Text(Messages("pla.base.yes")), value = Option("yes")),
                 RadioItem(content = Text(Messages("pla.base.no")), value = Option("no"))
