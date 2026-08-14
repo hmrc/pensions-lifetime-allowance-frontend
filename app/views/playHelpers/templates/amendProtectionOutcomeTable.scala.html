@@ -21,32 +21,32 @@
 @(details: AmendPrintDisplayModel, includeProtectedAmount: Boolean = false)(implicit messages: Messages)
 
 <table class="govuk-table">
-	<caption class="govuk-visually-hidden">@messages("pla.printAmend.protectionDetails")</caption>
-	<tbody class="govuk-table__body">
+    <caption class="govuk-visually-hidden">@messages("pla.printAmend.protectionDetails")</caption>
+    <tbody class="govuk-table__body">
 
-		<tr class="govuk-table__row">
-			<th scope="row" class="govuk-table__header">@messages("pla.printAmend.fullName")</th>
-			<td class="govuk-table__cell" id="yourFullName">@{details.firstName} @{details.surname}</td>
-		</tr>
+        <tr class="govuk-table__row">
+            <th scope="row" class="govuk-table__header">@messages("pla.printAmend.fullName")</th>
+            <td class="govuk-table__cell" id="yourFullName">@{details.firstName} @{details.surname}</td>
+        </tr>
 
-		<tr class="govuk-table__row">
-			<th scope="row" class="govuk-table__header">@messages("pla.printAmend.nino")</th>
-			<td class="govuk-table__cell" id="yourNino">@{details.nino}</td>
-		</tr>
+        <tr class="govuk-table__row">
+            <th scope="row" class="govuk-table__header">@messages("pla.printAmend.nino")</th>
+            <td class="govuk-table__cell" id="yourNino">@{details.nino}</td>
+        </tr>
 
-		@if(includeProtectedAmount) {
-			@details.protectedAmount.map { pAmount =>
-				<tr class="govuk-table__row">
-					<th scope="row" class="govuk-table__header">@messages("pla.printAmend.protectedAmount")</th>
-					<td class="govuk-table__cell" id="protectedAmount">@pAmount</td>
-				</tr>
-			}
-		}
+        @if(includeProtectedAmount) {
+            @details.protectedAmount.map { pAmount =>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">@messages("pla.printAmend.protectedAmount")</th>
+                    <td class="govuk-table__cell" id="protectedAmount">@pAmount</td>
+                </tr>
+            }
+        }
 
-		<tr class="govuk-table__row">
-			<th scope="row" class="govuk-table__header">@messages("pla.printAmend.protectionType")</th>
-			<td class="govuk-table__cell" id="protectionType">@messages(s"pla.protection.types.${details.protectionType}")</td>
-		</tr>
+        <tr class="govuk-table__row">
+            <th scope="row" class="govuk-table__header">@messages("pla.printAmend.protectionType")</th>
+            <td class="govuk-table__cell" id="protectionType">@messages(s"pla.protection.types.${details.protectionType}")</td>
+        </tr>
 
         @details.protectionReference.map { protectionReference =>
             <tr class="govuk-table__row">
@@ -69,12 +69,12 @@
             </tr>
         }
 
-		@details.certificateDate.map { cDate =>
-			<tr class="govuk-table__row">
-				<th scope="row" class="govuk-table__header">@messages("pla.printAmend.applicationDate")</th>
-				<td class="govuk-table__cell" id="applicationDate">@{cDate}</td>
-			</tr>
-		}
+        @details.certificateDate.map { cDate =>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">@messages("pla.printAmend.applicationDate")</th>
+                <td class="govuk-table__cell" id="applicationDate">@{cDate}</td>
+            </tr>
+        }
 
         @details.certificateTime.map { certificateTime =>
             <tr class="govuk-table__row">
@@ -89,5 +89,5 @@
                 <td class="govuk-table__cell" id="status">@messages(s"pla.printAmend.$status")</td>
             </tr>
         }
-	</tbody>
+    </tbody>
 </table>
