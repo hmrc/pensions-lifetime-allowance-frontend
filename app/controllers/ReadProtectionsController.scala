@@ -45,7 +45,7 @@ class ReadProtectionsController @Inject() (
     manualCorrespondenceNeeded: views.html.pages.result.manualCorrespondenceNeeded,
     existingProtections: pages.existingProtections.existingProtections
 )(
-    using ExecutionContext
+    implicit executionContext: ExecutionContext
 ) extends FrontendController(mcc)
     with Logging {
 
