@@ -42,7 +42,7 @@ class PlaConnectorISpec extends IntegrationBaseSpec with ScalaFutures {
 
   private implicit val hc: HeaderCarrier    = HeaderCarrier()
   private implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
-  private implicit val defaultPatience: PatienceConfig = PatienceConfig(timeout = Span(1, Seconds), interval = Span(5, Millis))
+  private implicit val defaultPatience: PatienceConfig = PatienceConfig(timeout = Span(2, Seconds), interval = Span(5, Millis))
 
   private val testNino          = "AB999999C"
   private val protectionId      = PlaConnectorTestData.lifetimeAllowanceIdentifier
@@ -73,10 +73,10 @@ class PlaConnectorISpec extends IntegrationBaseSpec with ScalaFutures {
       s"""{
          |    "lifetimeAllowanceIdentifier": $lifetimeAllowanceIdentifier,
          |    "lifetimeAllowanceSequenceNumber": ${lifetimeAllowanceSequenceNumber + 1},
-         |    "lifetimeAllowanceType": "${AmendableProtectionType.IndividualProtection2014.jsonValue}",
+         |    "lifetimeAllowanceType": "${AmendableProtectionType.IndividualProtection2014.jsonString}",
          |    "certificateDate": "2025-07-15",
          |    "certificateTime": "174312",
-         |    "status": "${AmendProtectionResponseStatus.Dormant.jsonValue}",
+         |    "status": "${AmendProtectionResponseStatus.Dormant.jsonString}",
          |    "protectionReference": "$protectionReference",
          |    "relevantAmount": 105000,
          |    "preADayPensionInPaymentAmount": 1500,

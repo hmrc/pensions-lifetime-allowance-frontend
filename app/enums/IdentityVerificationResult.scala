@@ -19,45 +19,32 @@ package enums
 import play.api.Logging
 import play.api.libs.json.*
 
-sealed trait IdentityVerificationResult
+enum IdentityVerificationResult {
+
+  case Success extends IdentityVerificationResult
+
+  case Incomplete extends IdentityVerificationResult
+
+  case FailedMatching extends IdentityVerificationResult
+
+  case InsufficientEvidence extends IdentityVerificationResult
+
+  case LockedOut extends IdentityVerificationResult
+
+  case UserAborted extends IdentityVerificationResult
+
+  case Timeout extends IdentityVerificationResult
+
+  case TechnicalIssue extends IdentityVerificationResult
+
+  case PreconditionFailed extends IdentityVerificationResult
+
+  case FailedIV extends IdentityVerificationResult
+
+  case UnknownOutcome extends IdentityVerificationResult
+}
 
 object IdentityVerificationResult extends Logging {
-
-  case object Success extends IdentityVerificationResult
-
-  case object Incomplete extends IdentityVerificationResult
-
-  case object FailedMatching extends IdentityVerificationResult
-
-  case object InsufficientEvidence extends IdentityVerificationResult
-
-  case object LockedOut extends IdentityVerificationResult
-
-  case object UserAborted extends IdentityVerificationResult
-
-  case object Timeout extends IdentityVerificationResult
-
-  case object TechnicalIssue extends IdentityVerificationResult
-
-  case object PreconditionFailed extends IdentityVerificationResult
-
-  case object FailedIV extends IdentityVerificationResult
-
-  case object UnknownOutcome extends IdentityVerificationResult
-
-  val values: Seq[IdentityVerificationResult] = Seq(
-    Success,
-    Incomplete,
-    FailedMatching,
-    InsufficientEvidence,
-    LockedOut,
-    UserAborted,
-    Timeout,
-    TechnicalIssue,
-    PreconditionFailed,
-    FailedIV,
-    UnknownOutcome
-  )
 
   implicit val formats: Format[IdentityVerificationResult] = new Format[IdentityVerificationResult] {
     def reads(json: JsValue): JsResult[IdentityVerificationResult] =

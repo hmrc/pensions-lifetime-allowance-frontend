@@ -20,30 +20,30 @@ import models.pla.response.AmendProtectionResponseStatus.*
 import models.pla.response.AmendProtectionResponseStatus
 import play.api.libs.json.{Format, JsError, JsNumber, JsSuccess, Reads, Writes}
 
-sealed abstract class NotificationId(
+enum NotificationId(
     val toInt: Int,
     val status: AmendProtectionResponseStatus
 ) {
   override val toString: String = toInt.toString
+
+  case NotificationId1 extends NotificationId(1, Open)
+  case NotificationId2 extends NotificationId(2, Dormant)
+  case NotificationId3 extends NotificationId(3, Dormant)
+  case NotificationId4 extends NotificationId(4, Dormant)
+  case NotificationId5 extends NotificationId(5, Open)
+  case NotificationId6 extends NotificationId(6, Withdrawn)
+  case NotificationId7 extends NotificationId(7, Withdrawn)
+
+  case NotificationId8  extends NotificationId(8, Open)
+  case NotificationId9  extends NotificationId(9, Dormant)
+  case NotificationId10 extends NotificationId(10, Dormant)
+  case NotificationId11 extends NotificationId(11, Dormant)
+  case NotificationId12 extends NotificationId(12, Dormant)
+  case NotificationId13 extends NotificationId(13, Withdrawn)
+  case NotificationId14 extends NotificationId(14, Withdrawn)
 }
 
 object NotificationId {
-
-  case object NotificationId1 extends NotificationId(1, Open)
-  case object NotificationId2 extends NotificationId(2, Dormant)
-  case object NotificationId3 extends NotificationId(3, Dormant)
-  case object NotificationId4 extends NotificationId(4, Dormant)
-  case object NotificationId5 extends NotificationId(5, Open)
-  case object NotificationId6 extends NotificationId(6, Withdrawn)
-  case object NotificationId7 extends NotificationId(7, Withdrawn)
-
-  case object NotificationId8  extends NotificationId(8, Open)
-  case object NotificationId9  extends NotificationId(9, Dormant)
-  case object NotificationId10 extends NotificationId(10, Dormant)
-  case object NotificationId11 extends NotificationId(11, Dormant)
-  case object NotificationId12 extends NotificationId(12, Dormant)
-  case object NotificationId13 extends NotificationId(13, Withdrawn)
-  case object NotificationId14 extends NotificationId(14, Withdrawn)
 
   implicit val reads: Reads[NotificationId] = {
     case JsNumber(number) =>
@@ -70,22 +70,5 @@ object NotificationId {
   implicit val writes: Writes[NotificationId] = notificationIdentifier => JsNumber(notificationIdentifier.toInt)
 
   implicit val format: Format[NotificationId] = Format(reads, writes)
-
-  val values: List[NotificationId] = List(
-    NotificationId1,
-    NotificationId2,
-    NotificationId3,
-    NotificationId4,
-    NotificationId5,
-    NotificationId6,
-    NotificationId7,
-    NotificationId8,
-    NotificationId9,
-    NotificationId10,
-    NotificationId11,
-    NotificationId12,
-    NotificationId13,
-    NotificationId14
-  )
 
 }

@@ -16,29 +16,19 @@
 
 package models.pla.response
 
-import util.{Enumerable, EnumerableInstance}
+import util.{JsonEnum, JsonEnumFormat}
 
-sealed abstract class ProtectionStatus(name: String, override val jsonValue: String) extends EnumerableInstance(name)
+enum ProtectionStatus(
+    override val toString: String,
+    override val jsonString: String
+) extends JsonEnum {
 
-object ProtectionStatus extends Enumerable.Implicits {
-
-  case object Open         extends ProtectionStatus("Open", "OPEN")
-  case object Dormant      extends ProtectionStatus("Dormant", "DORMANT")
-  case object Withdrawn    extends ProtectionStatus("Withdrawn", "WITHDRAWN")
-  case object Expired      extends ProtectionStatus("Expired", "EXPIRED")
-  case object Unsuccessful extends ProtectionStatus("Unsuccessful", "UNSUCCESSFUL")
-  case object Rejected     extends ProtectionStatus("Rejected", "REJECTED")
-
-  val values: Seq[ProtectionStatus] = Seq(
-    Open,
-    Dormant,
-    Withdrawn,
-    Expired,
-    Unsuccessful,
-    Rejected
-  )
-
-  implicit val enumerable: Enumerable[ProtectionStatus] =
-    Enumerable(values.map(v => v.jsonValue -> v)*)
-
+  case Open         extends ProtectionStatus("Open", "OPEN")
+  case Dormant      extends ProtectionStatus("Dormant", "DORMANT")
+  case Withdrawn    extends ProtectionStatus("Withdrawn", "WITHDRAWN")
+  case Expired      extends ProtectionStatus("Expired", "EXPIRED")
+  case Unsuccessful extends ProtectionStatus("Unsuccessful", "UNSUCCESSFUL")
+  case Rejected     extends ProtectionStatus("Rejected", "REJECTED")
 }
+
+object ProtectionStatus extends JsonEnumFormat[ProtectionStatus]

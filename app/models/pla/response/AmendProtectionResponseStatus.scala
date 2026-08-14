@@ -16,24 +16,17 @@
 
 package models.pla.response
 
-import util.{Enumerable, EnumerableInstance}
+import util.{JsonEnum, JsonEnumFormat}
 
-sealed abstract class AmendProtectionResponseStatus(
-    name: String,
-    override val jsonValue: String,
+enum AmendProtectionResponseStatus(
+    override val toString: String,
+    override val jsonString: String,
     val toProtectionStatus: ProtectionStatus
-) extends EnumerableInstance(name) {}
+) extends JsonEnum {
 
-object AmendProtectionResponseStatus extends Enumerable.Implicits {
-
-  case object Open      extends AmendProtectionResponseStatus("Open", "OPEN", ProtectionStatus.Open)
-  case object Dormant   extends AmendProtectionResponseStatus("Dormant", "DORMANT", ProtectionStatus.Dormant)
-  case object Withdrawn extends AmendProtectionResponseStatus("Withdrawn", "WITHDRAWN", ProtectionStatus.Withdrawn)
-
-  private val allValues: Seq[AmendProtectionResponseStatus] =
-    Seq(Open, Dormant, Withdrawn)
-
-  implicit val toEnumerable: Enumerable[AmendProtectionResponseStatus] =
-    Enumerable(allValues.map(v => v.jsonValue -> v)*)
-
+  case Open      extends AmendProtectionResponseStatus("Open", "OPEN", ProtectionStatus.Open)
+  case Dormant   extends AmendProtectionResponseStatus("Dormant", "DORMANT", ProtectionStatus.Dormant)
+  case Withdrawn extends AmendProtectionResponseStatus("Withdrawn", "WITHDRAWN", ProtectionStatus.Withdrawn)
 }
+
+object AmendProtectionResponseStatus extends JsonEnumFormat[AmendProtectionResponseStatus]

@@ -31,28 +31,26 @@ object Helpers {
   def createPsoRemoveCall(model: AmendProtectionModel): Call =
     controllers.routes.AmendsRemovePensionSharingOrderController.removePso(model.protectionType, model.status)
 
-  def createAmendCall(model: AmendProtectionModel, applicationSection: ApplicationStage): Call = {
-    import ApplicationStage.*
+  def createAmendCall(model: AmendProtectionModel, applicationSection: ApplicationStage): Call =
     applicationSection match {
-      case PensionsTakenBefore =>
+      case ApplicationStage.PensionsTakenBefore =>
         controllers.routes.AmendsPensionTakenBeforeController
           .amendPensionsTakenBefore(model.protectionType, model.status)
-      case PensionsWorthBefore =>
+      case ApplicationStage.PensionsWorthBefore =>
         controllers.routes.AmendsPensionWorthBeforeController
           .amendPensionsWorthBefore(model.protectionType, model.status)
-      case PensionsTakenBetween =>
+      case ApplicationStage.PensionsTakenBetween =>
         controllers.routes.AmendsPensionTakenBetweenController
           .amendPensionsTakenBetween(model.protectionType, model.status)
-      case PensionsUsedBetween =>
+      case ApplicationStage.PensionsUsedBetween =>
         controllers.routes.AmendsPensionUsedBetweenController
           .amendPensionsUsedBetween(model.protectionType, model.status)
-      case OverseasPensions =>
+      case ApplicationStage.OverseasPensions =>
         controllers.routes.AmendsOverseasPensionController.amendOverseasPensions(model.protectionType, model.status)
-      case CurrentPensions =>
+      case ApplicationStage.CurrentPensions =>
         controllers.routes.AmendsCurrentPensionController.amendCurrentPensions(model.protectionType, model.status)
-      case CurrentPsos =>
+      case ApplicationStage.CurrentPsos =>
         controllers.routes.AmendsPensionSharingOrderController.amendPsoDetails(model.protectionType, model.status)
     }
-  }
 
 }

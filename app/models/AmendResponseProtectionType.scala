@@ -18,10 +18,28 @@ package models
 
 import models.pla.AmendableProtectionType
 import models.pla.response.ProtectionType
-import util.{Enumerable, EnumerableInstance}
+import util.{JsonEnum, JsonEnumFormat}
 
-sealed abstract class AmendResponseProtectionType(name: String, val toProtectionType: ProtectionType)
-    extends EnumerableInstance(name) {
+enum AmendResponseProtectionType(override val jsonString: String, val toProtectionType: ProtectionType)
+    extends JsonEnum {
+
+  case IndividualProtection2014
+      extends AmendResponseProtectionType("IndividualProtection2014", ProtectionType.IndividualProtection2014)
+
+  case IndividualProtection2014LTA
+      extends AmendResponseProtectionType("IndividualProtection2014LTA", ProtectionType.IndividualProtection2014LTA)
+
+  case IndividualProtection2016
+      extends AmendResponseProtectionType("IndividualProtection2016", ProtectionType.IndividualProtection2016)
+
+  case IndividualProtection2016LTA
+      extends AmendResponseProtectionType("IndividualProtection2016LTA", ProtectionType.IndividualProtection2016LTA)
+
+  case FixedProtection2016
+      extends AmendResponseProtectionType("FixedProtection2016", ProtectionType.FixedProtection2016)
+
+  case FixedProtection2016LTA
+      extends AmendResponseProtectionType("FixedProtection2016LTA", ProtectionType.FixedProtection2016LTA)
 
   def isFixedProtection2016: Boolean =
     this match {
@@ -32,37 +50,7 @@ sealed abstract class AmendResponseProtectionType(name: String, val toProtection
 
 }
 
-object AmendResponseProtectionType extends Enumerable.Implicits {
-
-  case object IndividualProtection2014
-      extends AmendResponseProtectionType("IndividualProtection2014", ProtectionType.IndividualProtection2014)
-
-  case object IndividualProtection2014LTA
-      extends AmendResponseProtectionType("IndividualProtection2014LTA", ProtectionType.IndividualProtection2014LTA)
-
-  case object IndividualProtection2016
-      extends AmendResponseProtectionType("IndividualProtection2016", ProtectionType.IndividualProtection2016)
-
-  case object IndividualProtection2016LTA
-      extends AmendResponseProtectionType("IndividualProtection2016LTA", ProtectionType.IndividualProtection2016LTA)
-
-  case object FixedProtection2016
-      extends AmendResponseProtectionType("FixedProtection2016", ProtectionType.FixedProtection2016)
-
-  case object FixedProtection2016LTA
-      extends AmendResponseProtectionType("FixedProtection2016LTA", ProtectionType.FixedProtection2016LTA)
-
-  val values = Seq(
-    IndividualProtection2014,
-    IndividualProtection2014LTA,
-    IndividualProtection2016,
-    IndividualProtection2016LTA,
-    FixedProtection2016,
-    FixedProtection2016LTA
-  )
-
-  implicit val toEnumerable: Enumerable[AmendResponseProtectionType] =
-    Enumerable(values.map(v => v.toString -> v)*)
+object AmendResponseProtectionType extends JsonEnumFormat[AmendResponseProtectionType] {
 
   def from(protectionType: AmendableProtectionType): AmendResponseProtectionType =
     protectionType match {
