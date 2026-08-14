@@ -35,7 +35,7 @@
         </legend>
     }
     <ul>
-    @checkboxOptions.zipWithIndex.map { case ((value, label), count) => {
+    @checkboxOptions.zipWithIndex.map { case ((value, label), _) => {
         @defining(s"${elements.field.id}-${value.toLowerCase.replace(" ","_")}")  { inputId =>
             <li>
                 <label class="block-label" for="@inputId"

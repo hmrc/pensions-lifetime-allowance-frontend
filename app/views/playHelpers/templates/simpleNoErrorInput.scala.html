@@ -20,7 +20,7 @@
 
 
 @elements = @{ FieldElements(field.id, field, null, args.toMap, messages) }
-@value = @{ field.value match { case Some(x) => x case None => "" case x => x }}
+@value = @{ field.value match { case Some(x) => x case None => "" }}
 @labelAfter = @{ elements.args.getOrElse(Symbol("_labelAfter"), false).asInstanceOf[Boolean] }
 @labelHighlight = @{ elements.args.getOrElse(Symbol("_labelHighlight"), false).asInstanceOf[Boolean] }
 
