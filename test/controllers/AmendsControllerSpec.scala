@@ -37,7 +37,7 @@ import models.pla.response.{
   ReadProtectionsResponse
 }
 import models.{DateModel, Person, PersonalDetailsModel, TimeModel}
-import org.mockito.ArgumentMatchers.{any, anyString, eq => eqTo}
+import org.mockito.ArgumentMatchers.{any, anyString, eq as eqTo}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures

@@ -30,7 +30,7 @@ import models.pla.response.ProtectionType.IndividualProtection2016
 import models.display.{ExistingInactiveProtectionsDisplayModel, ExistingProtectionsDisplayModel}
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
-import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
 import org.mockito.Mockito._
 import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.BeforeAndAfterEach
