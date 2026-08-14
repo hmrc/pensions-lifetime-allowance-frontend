@@ -56,7 +56,7 @@
 
 @errorMessage = @{
     for(error <- amendPensionsWorthBeforeForm.errors) yield {
-        if(error.key.equals("amendedPensionsTakenBefore")) "" else messages(error.message, error.args:_*)
+        if(error.key.equals("amendedPensionsTakenBefore")) "" else messages(error.message, error.args*)
     }
 }
 

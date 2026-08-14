@@ -62,7 +62,7 @@ object AmendResponseProtectionType extends Enumerable.Implicits {
   )
 
   implicit val toEnumerable: Enumerable[AmendResponseProtectionType] =
-    Enumerable(values.map(v => v.toString -> v): _*)
+    Enumerable(values.map(v => v.toString -> v)*)
 
   def from(protectionType: AmendableProtectionType): AmendResponseProtectionType =
     protectionType match {

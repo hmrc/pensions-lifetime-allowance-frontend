@@ -282,7 +282,7 @@ class AmendsPensionSharingOrderControllerSpec
             protectionType = testData.protectionType,
             status = AmendProtectionRequestStatus.Open,
             existingPSO = true
-          )(authenticatedFakeRequest().withFormUrlEncodedBody(requestData: _*).withMethod("POST"))
+          )(authenticatedFakeRequest().withFormUrlEncodedBody(requestData*).withMethod("POST"))
 
           status(result) shouldBe 303
           redirectLocation(result) shouldBe Some(
@@ -300,7 +300,7 @@ class AmendsPensionSharingOrderControllerSpec
               protectionType = testData.protectionType,
               status = AmendProtectionRequestStatus.Open,
               existingPSO = true
-            )(authenticatedFakeRequest().withFormUrlEncodedBody(requestData: _*).withMethod("POST"))
+            )(authenticatedFakeRequest().withFormUrlEncodedBody(requestData*).withMethod("POST"))
             .futureValue
 
           val expectedAmendProtectionModel = testData.amendProtectionModel.withPensionDebit(
@@ -328,7 +328,7 @@ class AmendsPensionSharingOrderControllerSpec
           protectionType = AmendableProtectionType.IndividualProtection2014,
           status = AmendProtectionRequestStatus.Open,
           existingPSO = true
-        )(authenticatedFakeRequest().withFormUrlEncodedBody(data: _*).withMethod("POST"))
+        )(authenticatedFakeRequest().withFormUrlEncodedBody(data*).withMethod("POST"))
 
         status(result) shouldBe 400
       }
@@ -353,7 +353,7 @@ class AmendsPensionSharingOrderControllerSpec
             protectionType = AmendableProtectionType.IndividualProtection2014,
             status = AmendProtectionRequestStatus.Open,
             existingPSO = true
-          )(authenticatedFakeRequest().withFormUrlEncodedBody(requestData: _*).withMethod("POST"))
+          )(authenticatedFakeRequest().withFormUrlEncodedBody(requestData*).withMethod("POST"))
           .failed
           .futureValue
 

@@ -59,7 +59,7 @@ object AmendableProtectionType extends Enumerable.Implicits {
   )
 
   implicit val toEnumerable: Enumerable[AmendableProtectionType] =
-    Enumerable(values.map(v => v.jsonValue -> v): _*)
+    Enumerable(values.map(v => v.jsonValue -> v)*)
 
   def tryFromProtectionType(protectionType: ProtectionType): Option[AmendableProtectionType] =
     protectionType match {

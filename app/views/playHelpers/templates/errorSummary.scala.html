@@ -31,7 +31,7 @@
             val suffix = errorSuffixes.flatMap(_.get(error.key).map(str => s".$str")).getOrElse("")
             ErrorLink(
                 href    = if(error.key.equals("")) Some(s"#${errorKey.get}") else Some(s"#${error.key + suffix}"),
-                content = Text(messages(error.message, error.args:_*))
+                content = Text(messages(error.message, error.args*))
             )
         }
     ))

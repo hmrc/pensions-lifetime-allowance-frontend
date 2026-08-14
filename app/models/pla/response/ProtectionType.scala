@@ -80,6 +80,6 @@ object ProtectionType extends Enumerable.Implicits {
   )
 
   implicit val enumerable: Enumerable[ProtectionType] =
-    Enumerable(values.map(v => v.jsonValue -> v): _*)
+    Enumerable(values.map(v => v.jsonValue -> v)*)
 
 }

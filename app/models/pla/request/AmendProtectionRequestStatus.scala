@@ -31,7 +31,7 @@ object AmendProtectionRequestStatus extends Enumerable.Implicits {
   val values: Seq[AmendProtectionRequestStatus] = Seq(Open, Dormant)
 
   implicit val toEnumerable: Enumerable[AmendProtectionRequestStatus] =
-    Enumerable(values.map(v => v.jsonValue -> v): _*)
+    Enumerable(values.map(v => v.jsonValue -> v)*)
 
   def tryFromProtectionStatus(protectionStatus: ProtectionStatus): Option[AmendProtectionRequestStatus] =
     protectionStatus match {

@@ -53,7 +53,7 @@
 
 @errorMessage = @{
     for(error <- amendPensionsUsedBetweenForm.errors) yield {
-        if(error.key.equals("amendedPensionsUsedBetweenAmt")) "" else messages(error.message, error.args:_*)
+        if(error.key.equals("amendedPensionsUsedBetweenAmt")) "" else messages(error.message, error.args*)
     }
 }
 

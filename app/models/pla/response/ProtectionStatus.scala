@@ -39,6 +39,6 @@ object ProtectionStatus extends Enumerable.Implicits {
   )
 
   implicit val enumerable: Enumerable[ProtectionStatus] =
-    Enumerable(values.map(v => v.jsonValue -> v): _*)
+    Enumerable(values.map(v => v.jsonValue -> v)*)
 
 }

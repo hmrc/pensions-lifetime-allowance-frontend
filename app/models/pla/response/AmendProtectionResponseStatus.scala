@@ -34,6 +34,6 @@ object AmendProtectionResponseStatus extends Enumerable.Implicits {
     Seq(Open, Dormant, Withdrawn)
 
   implicit val toEnumerable: Enumerable[AmendProtectionResponseStatus] =
-    Enumerable(allValues.map(v => v.jsonValue -> v): _*)
+    Enumerable(allValues.map(v => v.jsonValue -> v)*)
 
 }
