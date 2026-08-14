@@ -24,9 +24,10 @@ lazy val scoverageSettings = {
     ScoverageKeys.coverageFailOnMinimum    := true,
     ScoverageKeys.coverageHighlighting     := true,
     scalacOptions ++= Seq(
-      "-Wconf:cat=unused-imports&src=html/.*:s",
-      "-Wconf:cat=unused-imports&src=routes/.*:s",
-      "-Wconf:cat=unused&src=routes/.*:s"
+      "-Wconf:msg=unused-imports&src=html/.*:s",
+      "-Wconf:msg=unused-imports&src=routes/.*:s",
+      "-Wconf:msg=unused&src=routes/.*:s",
+      "-Wconf:msg=Flag.*repeatedly:s"
     )
   )
 }
