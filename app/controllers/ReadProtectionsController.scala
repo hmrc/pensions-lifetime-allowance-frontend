@@ -44,11 +44,10 @@ class ReadProtectionsController @Inject() (
     authActions: AuthActions,
     technicalError: views.html.pages.fallback.technicalError,
     manualCorrespondenceNeeded: views.html.pages.result.manualCorrespondenceNeeded,
-    existingProtections: pages.existingProtections.existingProtections
+    existingProtections: pages.existingProtections.existingProtections,
+    appConfig: AppConfig
 )(
-    implicit val application: Application,
-    implicit val appConfig: AppConfig,
-    implicit val ec: ExecutionContext
+    using ExecutionContext
 ) extends FrontendController(mcc)
     with Logging {
 

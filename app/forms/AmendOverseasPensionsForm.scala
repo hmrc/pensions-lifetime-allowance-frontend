@@ -42,7 +42,7 @@ object AmendOverseasPensionsForm extends CurrencyMappings with YesNoMappings {
           f1 = doubleOption => doubleOption.flatten,
           f2 = singleOption => Some(singleOption)
         )
-    )(AmendOverseasPensionsModel.apply)(AmendOverseasPensionsModel.unapply)
+    )(AmendOverseasPensionsModel.apply)(x => Some(Tuple.fromProductTyped(x)))
   )
 
 }

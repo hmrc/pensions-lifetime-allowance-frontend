@@ -30,7 +30,7 @@ object AmendPensionsUsedBetweenForm extends CurrencyMappings {
         messageKeyPrefix = "pla.pensionsUsedBetween.amount.errors",
         protectionTypeSuffix = protectionType
       )
-    )(AmendPensionsUsedBetweenModel.apply)(AmendPensionsUsedBetweenModel.unapply)
+    )(AmendPensionsUsedBetweenModel.apply)(x => Some(x.amendedPensionsUsedBetweenAmt))
   )
 
 }

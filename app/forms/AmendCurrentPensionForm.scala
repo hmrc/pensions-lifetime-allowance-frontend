@@ -30,7 +30,7 @@ object AmendCurrentPensionForm extends CurrencyMappings {
         messageKeyPrefix = "pla.currentPensions.amount.errors",
         protectionTypeSuffix = protectionType
       )
-    )(AmendCurrentPensionModel.apply)(AmendCurrentPensionModel.unapply)
+    )(AmendCurrentPensionModel.apply)(x => Some(x.amendedUKPensionAmt))
   )
 
 }

@@ -37,8 +37,7 @@ class UnauthorisedController @Inject() (
     unauthorised: views.html.pages.ivFailure.unauthorised,
     timeout: views.html.pages.timeout
 )(
-    implicit val application: Application,
-    implicit val ec: ExecutionContext
+    using ExecutionContext
 ) extends FrontendController(mcc)
     with Logging {
 

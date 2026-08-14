@@ -32,7 +32,7 @@ object AmendPensionsWorthBeforeForm extends CurrencyMappings {
         messageKeyPrefix = "pla.pensionsWorthBefore.amount.errors",
         protectionTypeSuffix = protectionType
       )
-    )(AmendPensionsWorthBeforeModel.apply)(AmendPensionsWorthBeforeModel.unapply)
+    )(AmendPensionsWorthBeforeModel.apply)(x => Some(x.amendedPensionsTakenBeforeAmt))
   )
 
 }
