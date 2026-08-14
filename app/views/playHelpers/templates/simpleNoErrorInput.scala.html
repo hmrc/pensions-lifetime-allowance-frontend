@@ -16,7 +16,7 @@
 
 @(field: play.api.data.Field, args: (Symbol,Any)*)(implicit messages: Messages)
 
-@import views.html.helper._
+@import views.html.helper.*
 
 
 @elements = @{ FieldElements(field.id, field, null, args.toMap, messages) }

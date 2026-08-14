@@ -19,8 +19,8 @@ package controllers.testControllers
 import connectors.StubConnector
 
 import javax.inject.{Inject, Singleton}
-import play.api.libs.json._
-import play.api.mvc._
+import play.api.libs.json.*
+import play.api.mvc.*
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import scala.concurrent.ExecutionContext

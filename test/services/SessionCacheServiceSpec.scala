@@ -23,12 +23,12 @@ import models.pla.AmendableProtectionType
 import models.pla.request.AmendProtectionRequestStatus
 import models.{AmendResponseModel, DateModel, PensionDebitModel, ProtectionModel}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito._
+import org.mockito.Mockito.*
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.libs.json.{Json, Reads, Writes}
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import repositories.SessionRepository
 import testHelpers.FakeApplication
 import testdata.AmendProtectionOutcomeViewsTestData.amendsGAModel

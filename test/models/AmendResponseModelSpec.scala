@@ -20,7 +20,7 @@ import models.NotificationId.NotificationId7
 import models.pla.response.{AmendProtectionResponseStatus, ProtectionStatus, ProtectionType}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import testdata.PlaConnectorTestData._
+import testdata.PlaConnectorTestData.*
 
 class AmendResponseModelSpec extends AnyWordSpec with Matchers {
 

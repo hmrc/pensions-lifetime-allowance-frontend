@@ -23,9 +23,9 @@ import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.{AnyContent, MessagesControllerComponents, Result}
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.twirl.api.Html
-import testHelpers._
+import testHelpers.*
 import views.html.pages.applicationClosed.applicationClosed2014
 import views.html.pages.applicationClosed.applicationClosed2016
 

@@ -16,7 +16,7 @@
 
 package forms
 
-import forms.AmendPensionsTakenBetweenForm._
+import forms.AmendPensionsTakenBetweenForm.*
 import models.amend.value.AmendPensionsTakenBetweenModel
 import models.pla.AmendableProtectionType.IndividualProtection2016
 import org.scalatestplus.mockito.MockitoSugar

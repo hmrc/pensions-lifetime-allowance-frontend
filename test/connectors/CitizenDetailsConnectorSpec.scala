@@ -19,10 +19,10 @@ package connectors
 import config.AppConfig
 import models.{Person, PersonalDetailsModel}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito._
+import org.mockito.Mockito.*
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.libs.json.{JsValue, Json}
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import testHelpers.FakeApplication
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}

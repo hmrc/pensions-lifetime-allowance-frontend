@@ -16,21 +16,21 @@
 
 package controllers
 
+import auth.helpers.AuthMocks
 import config.AppConfig
 import connectors.CitizenDetailsConnector
 import constructors.display.DisplayConstructors
-import auth.helpers.AuthMocks
-import models._
+import models.*
 import models.display.PrintDisplayModel
 import models.pla.response.{ProtectionStatus, ProtectionType}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito._
+import org.mockito.Mockito.*
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.twirl.api.HtmlFormat
 import services.SessionCacheService
 import testHelpers.FakeApplication

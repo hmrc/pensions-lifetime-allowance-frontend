@@ -16,7 +16,7 @@
 
 package controllers
 
-import play.api.mvc._
+import play.api.mvc.*
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.applicationClosed.{applicationClosed2014, applicationClosed2016}
 

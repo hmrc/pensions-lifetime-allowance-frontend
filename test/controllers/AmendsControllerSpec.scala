@@ -17,11 +17,11 @@
 package controllers
 
 import auth.helpers.AuthMocks
-import config._
+import config.*
 import connectors.PlaConnectorError.{ConflictResponseError, LockedResponseError}
 import connectors.{CitizenDetailsConnector, PlaConnector}
 import constructors.display.DisplayConstructors
-import models.NotificationId._
+import models.NotificationId.*
 import models.amend.AmendsGAModel
 import models.cache.CacheMap
 import models.display.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel}
@@ -38,20 +38,20 @@ import models.pla.response.{
 }
 import models.{DateModel, Person, PersonalDetailsModel, TimeModel}
 import org.mockito.ArgumentMatchers.{any, anyString, eq as eqTo}
-import org.mockito.Mockito._
+import org.mockito.Mockito.*
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.twirl.api.HtmlFormat
 import services.SessionCacheService
-import testHelpers._
-import testdata.AmendProtectionDisplayModelTestData._
+import testHelpers.*
+import testdata.AmendProtectionDisplayModelTestData.*
 import testdata.AmendProtectionModelTestData
 import testdata.PlaConnectorTestData.amendProtectionResponse
-import views.html.pages.amends._
+import views.html.pages.amends.*
 import views.html.pages.fallback.technicalError
 import views.html.pages.result.manualCorrespondenceNeeded
 
@@ -458,7 +458,7 @@ class AmendsControllerSpec
       }
 
     "AmendResponseModel stored in cache contains no notification ID" should {
-      import testdata.AmendProtectionDisplayModelTestData._
+      import testdata.AmendProtectionDisplayModelTestData.*
 
       "return Ok status with amendOutcomeNoNotificationId view" in {
         val amendResponseModel = amendResponseModelNoNotificationIdIndividualProtection2014

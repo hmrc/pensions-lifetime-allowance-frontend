@@ -16,7 +16,7 @@
 
 package common
 
-import common.Display._
+import common.Display.*
 import models.{DateModel, TimeModel}
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}

@@ -25,7 +25,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.DefaultAwaitTimeout
 import play.api.{Application, Configuration}
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 trait IntegrationBaseSpec
     extends AnyWordSpecLike

@@ -26,7 +26,7 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers.CACHE_CONTROL
 import play.twirl.api.HtmlFormat
-import testHelpers._
+import testHelpers.*
 import views.html.pages.fallback.technicalError
 
 class AmendControllerErrorHelperSpec

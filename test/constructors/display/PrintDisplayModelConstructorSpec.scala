@@ -17,8 +17,8 @@
 package constructors.display
 
 import models.display.PrintDisplayModel
-import models.pla.response.ProtectionStatus._
-import models.pla.response.ProtectionType._
+import models.pla.response.ProtectionStatus.*
+import models.pla.response.ProtectionType.*
 import models.{DateModel, Person, PersonalDetailsModel, ProtectionModel, TimeModel}
 
 class PrintDisplayModelConstructorSpec extends DisplayConstructorsTestData {

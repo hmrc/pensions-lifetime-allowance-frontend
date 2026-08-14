@@ -16,7 +16,7 @@
 
 package constructors.display
 
-import common._
+import common.*
 import enums.ApplicationStage
 import models.amend.AmendProtectionModel
 import models.display.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel}

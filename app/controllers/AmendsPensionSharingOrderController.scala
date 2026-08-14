@@ -17,15 +17,15 @@
 package controllers
 
 import auth.AuthActions
-import common._
+import common.*
 import config.AppConfig
-import forms.AmendPsoDetailsForm._
+import forms.AmendPsoDetailsForm.*
 import models.amend.AmendPsoDetailsModel
 import models.pla.AmendableProtectionType
 import models.pla.request.AmendProtectionRequestStatus
 import models.{DateModel, PensionDebitModel}
 import play.api.Logging
-import play.api.mvc._
+import play.api.mvc.*
 import services.SessionCacheService
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController

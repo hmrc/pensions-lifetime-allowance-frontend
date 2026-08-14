@@ -20,16 +20,16 @@ import auth.AuthActions
 import connectors.PlaConnectorError.LockedResponseError
 import connectors.{PlaConnector, PlaConnectorError}
 import constructors.display.DisplayConstructors
-import models._
+import models.*
 import models.amend.AmendProtectionModel
 import models.cache.CacheMap
 import play.api.i18n.Messages
-import play.api.mvc._
+import play.api.mvc.*
 import play.api.Logging
 import services.SessionCacheService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import views.html._
+import views.html.*
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}

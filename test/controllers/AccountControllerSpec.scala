@@ -20,8 +20,8 @@ import config.AppConfig
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.http.Status
 import play.api.mvc.MessagesControllerComponents
-import play.api.test.Helpers._
-import testHelpers._
+import play.api.test.Helpers.*
+import testHelpers.*
 
 class AccountControllerSpec extends FakeApplication with MockitoSugar {
 

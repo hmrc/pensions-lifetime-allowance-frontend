@@ -19,7 +19,7 @@ package connectors
 import config.AppConfig
 import enums.IdentityVerificationResult
 import org.mockito.ArgumentMatchers.{any, eq as eqs}
-import org.mockito.Mockito._
+import org.mockito.Mockito.*
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.http.Status

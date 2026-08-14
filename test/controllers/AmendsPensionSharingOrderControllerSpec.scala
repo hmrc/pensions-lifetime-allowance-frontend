@@ -19,7 +19,7 @@ package controllers
 import auth.authenticatedFakeRequest
 import auth.helpers.AuthMocks
 import common.Exceptions
-import config._
+import config.*
 import constructors.display.DisplayConstructors
 import models.amend.AmendProtectionModel
 import models.display.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel}
@@ -31,7 +31,7 @@ import org.apache.pekko.stream.Materializer
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.mockito.ArgumentMatchers.{any, eq as eqTo}
-import org.mockito.Mockito._
+import org.mockito.Mockito.*
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
@@ -40,12 +40,12 @@ import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.i18n.{Lang, Messages}
 import play.api.mvc.{AnyContent, Result}
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import services.SessionCacheService
-import testHelpers._
+import testHelpers.*
 import testdata.AmendProtectionModelTestData
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
-import views.html.pages.amends._
+import views.html.pages.amends.*
 import views.html.pages.fallback.technicalError
 
 import java.util.UUID

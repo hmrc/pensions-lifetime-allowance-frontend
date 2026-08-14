@@ -16,7 +16,7 @@
 
 package forms
 
-import forms.AmendCurrentPensionForm._
+import forms.AmendCurrentPensionForm.*
 import models.amend.value.AmendCurrentPensionModel
 import models.pla.AmendableProtectionType.IndividualProtection2016
 import org.scalatestplus.mockito.MockitoSugar

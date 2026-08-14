@@ -17,7 +17,7 @@
 import connectors.IdentityVerificationConnector
 import play.api.{Application, Configuration}
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.mvc.Http.Status.NOT_FOUND
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import util.{IntegrationBaseSpec, MockedAudit, WiremockHelper}

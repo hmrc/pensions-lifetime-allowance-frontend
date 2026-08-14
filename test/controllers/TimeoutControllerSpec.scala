@@ -23,8 +23,8 @@ import org.scalatestplus.mockito.MockitoSugar
 import play.api.Application
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import testHelpers._
+import play.api.test.Helpers.*
+import testHelpers.*
 import views.html.pages.timeout
 
 class TimeoutControllerSpec extends FakeApplication with MockitoSugar {

@@ -17,7 +17,7 @@
 package enums
 
 import play.api.Logging
-import play.api.libs.json._
+import play.api.libs.json.*
 
 sealed trait IdentityVerificationResult
 

@@ -20,9 +20,9 @@ import auth.AuthActions
 import connectors.CitizenDetailsConnector
 import constructors.display.DisplayConstructors
 import models.ProtectionModel
-import play.api.Logging
 import play.api.i18n.Messages
-import play.api.mvc._
+import play.api.Logging
+import play.api.mvc.*
 import services.SessionCacheService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.result.printProtection

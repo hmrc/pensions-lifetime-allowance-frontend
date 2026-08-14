@@ -55,7 +55,7 @@ trait CommonViewSpecHelper extends FakeApplication with CommonMessages with Mock
   implicit class ElementsExtension(elements: Elements) {
 
     def toSeq: Seq[Element] = {
-      import CollectionConverters._
+      import CollectionConverters.*
 
       elements.asScala.toSeq
     }

@@ -20,7 +20,7 @@ import models.display.AmendOutcomeDisplayModel
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import testHelpers.CommonViewSpecHelper
-import testdata.AmendProtectionDisplayModelTestData._
+import testdata.AmendProtectionDisplayModelTestData.*
 import testHelpers.messages.amends.OutcomeAmendedViewMessages
 import views.html.pages.amends.amendOutcome
 

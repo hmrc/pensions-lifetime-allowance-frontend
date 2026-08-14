@@ -16,12 +16,12 @@
 
 package controllers
 
+import auth.helpers.AuthMocks
 import config._
 import connectors.PlaConnectorError.{IncorrectResponseBodyError, LockedResponseError, UnexpectedResponseError}
 import connectors.PlaConnector
 import constructors.display.DisplayConstructors
 import generators.ModelGenerators
-import auth.helpers.AuthMocks
 import models.amend.AmendProtectionModel
 import models.{DateModel, ProtectionModel, TimeModel, TransformedReadResponseModel}
 import models.cache.CacheMap
@@ -31,7 +31,7 @@ import models.display.{ExistingInactiveProtectionsDisplayModel, ExistingProtecti
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import org.mockito.ArgumentMatchers.{any, eq as eqTo}
-import org.mockito.Mockito._
+import org.mockito.Mockito.*
 import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
@@ -41,7 +41,7 @@ import play.api.i18n.Lang
 import play.api.libs.json.Json
 import play.api.mvc.{AnyContent, Result}
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.api.{Application, Environment}
 import services.SessionCacheService
 import testHelpers.FakeApplication

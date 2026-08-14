@@ -17,12 +17,12 @@
 package constructors.display
 
 import common.Exceptions.OptionNotDefinedException
-import models.NotificationId._
+import models.NotificationId.*
 
 class AmendOutcomeDisplayModelConstructorSpec extends DisplayConstructorsTestData {
 
   "createAmendResultDisplayModel" should {
-    import testdata.AmendProtectionDisplayModelTestData._
+    import testdata.AmendProtectionDisplayModelTestData.*
 
     "correctly transform an AmendResponseModel into an AmendResultDisplayModel" when
       Seq(

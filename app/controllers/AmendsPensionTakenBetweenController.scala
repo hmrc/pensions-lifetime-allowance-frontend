@@ -18,13 +18,13 @@ package controllers
 
 import auth.AuthActions
 import config.AppConfig
-import forms.AmendPensionsTakenBetweenForm._
+import forms.AmendPensionsTakenBetweenForm.*
 import models.amend.value.AmendPensionsTakenBetweenModel
 import models.pla.AmendableProtectionType
-import models.pla.AmendableProtectionType._
+import models.pla.AmendableProtectionType.*
 import models.pla.request.AmendProtectionRequestStatus
 import play.api.Logging
-import play.api.mvc._
+import play.api.mvc.*
 import services.SessionCacheService
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController

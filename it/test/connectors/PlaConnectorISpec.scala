@@ -16,7 +16,7 @@
 
 package connectors
 
-import com.github.tomakehurst.wiremock.client.WireMock._
+import com.github.tomakehurst.wiremock.client.WireMock.*
 import connectors.PlaConnectorError.{ConflictResponseError, IncorrectResponseBodyError, LockedResponseError, UnexpectedResponseError}
 import models.amend.AmendProtectionModel
 import models.pla.response.ProtectionType.IndividualProtection2014
@@ -30,7 +30,7 @@ import play.api.http.Status.CONFLICT
 import play.api.libs.json.Json
 import play.api.test.Helpers.{INTERNAL_SERVER_ERROR, LOCKED, NOT_FOUND, OK}
 import testdata.PlaConnectorTestData
-import testdata.PlaConnectorTestData._
+import testdata.PlaConnectorTestData.*
 import uk.gov.hmrc.http.HeaderCarrier
 import util.IntegrationBaseSpec
 

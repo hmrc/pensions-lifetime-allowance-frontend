@@ -19,7 +19,7 @@ package controllers
 import connectors.IdentityVerificationConnector
 import enums.IdentityVerificationResult
 import play.api.Logging
-import play.api.mvc._
+import play.api.mvc.*
 import services.SessionCacheService
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController

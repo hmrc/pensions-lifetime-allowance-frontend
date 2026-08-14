@@ -21,7 +21,7 @@ import models.pla.response.{ProtectionStatus, ProtectionType}
 import models.{DateModel, PensionDebitModel, ProtectionModel, TimeModel}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import testdata.PlaConnectorTestData._
+import testdata.PlaConnectorTestData.*
 
 class AmendProtectionRequestSpec extends AnyWordSpec with Matchers {
 

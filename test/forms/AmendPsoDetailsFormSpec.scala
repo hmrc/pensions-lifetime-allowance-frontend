@@ -17,7 +17,7 @@
 package forms
 
 import controllers.helpers.FakeRequestHelper
-import forms.AmendPsoDetailsForm._
+import forms.AmendPsoDetailsForm.*
 import models.amend.AmendPsoDetailsModel
 import models.pla.AmendableProtectionType.{IndividualProtection2014, IndividualProtection2016}
 import org.scalatestplus.mockito.MockitoSugar

@@ -16,7 +16,7 @@
 
 package models
 
-import models.pla.response.AmendProtectionResponseStatus._
+import models.pla.response.AmendProtectionResponseStatus.*
 import models.pla.response.AmendProtectionResponseStatus
 import play.api.libs.json.{Format, JsError, JsNumber, JsSuccess, Reads, Writes}
 

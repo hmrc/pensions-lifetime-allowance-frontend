@@ -20,7 +20,7 @@ import forms.formatters.DateFormatter
 import forms.mappings.CurrencyMappings
 import models.amend.AmendPsoDetailsModel
 import models.pla.AmendableProtectionType
-import models.pla.AmendableProtectionType._
+import models.pla.AmendableProtectionType.*
 import play.api.data.Forms.{mapping, of}
 import play.api.data.Form
 import play.api.i18n.Messages

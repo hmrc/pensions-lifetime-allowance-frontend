@@ -16,8 +16,8 @@
 
 package models
 
-import models.NotificationId._
-import models.pla.response.AmendProtectionResponseStatus._
+import models.NotificationId.*
+import models.pla.response.AmendProtectionResponseStatus.*
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.{JsBoolean, JsError, JsNull, JsNumber, JsString, JsSuccess, JsValue, Json}

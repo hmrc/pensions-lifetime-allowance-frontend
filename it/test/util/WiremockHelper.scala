@@ -18,7 +18,7 @@ package util
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
-import com.github.tomakehurst.wiremock.client.WireMock._
+import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
@@ -33,7 +33,7 @@ object WiremockHelper {
 trait WiremockHelper {
   self: GuiceOneServerPerSuite =>
 
-  import WiremockHelper._
+  import WiremockHelper.*
 
   val wmConfig: WireMockConfiguration = wireMockConfig().port(wiremockPort)
   val wireMockServer                  = new WireMockServer(wmConfig)

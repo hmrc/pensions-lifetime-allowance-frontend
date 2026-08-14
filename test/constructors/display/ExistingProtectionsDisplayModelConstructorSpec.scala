@@ -24,9 +24,9 @@ import models.display.{
 }
 import models.pla.AmendableProtectionType
 import models.pla.request.AmendProtectionRequestStatus
-import models.pla.response.ProtectionStatus._
+import models.pla.response.ProtectionStatus.*
 import models.pla.response.ProtectionType
-import models.pla.response.ProtectionType._
+import models.pla.response.ProtectionType.*
 import models.{DateModel, ProtectionModel, TimeModel, TransformedReadResponseModel}
 import play.api.i18n.Messages
 

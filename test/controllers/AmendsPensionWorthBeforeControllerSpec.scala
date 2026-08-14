@@ -16,26 +16,26 @@
 
 package controllers
 
-import config._
 import auth.helpers.AuthMocks
+import config.*
 import models.pla.AmendableProtectionType
 import models.pla.request.AmendProtectionRequestStatus
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito._
+import org.mockito.Mockito.*
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Environment
 import play.api.i18n.{Lang, Messages}
 import play.api.mvc.{AnyContent, Result}
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import services.SessionCacheService
-import testHelpers._
+import testHelpers.*
 import testdata.AmendProtectionModelTestData
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
-import views.html.pages.amends._
+import views.html.pages.amends.*
 import views.html.pages.fallback.technicalError
 
 import java.util.UUID
