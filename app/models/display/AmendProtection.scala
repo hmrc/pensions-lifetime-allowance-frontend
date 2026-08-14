@@ -17,7 +17,7 @@
 package models.display
 
 import models.pla.AmendableProtectionType
-import models.{AmendedProtectionType, NotificationId}
+import models.{AmendResponseProtectionType, NotificationId}
 import models.pla.response.AmendProtectionResponseStatus
 import play.api.mvc.Call
 
@@ -25,7 +25,7 @@ case class AmendPrintDisplayModel(
     firstName: String,
     surname: String,
     nino: String,
-    protectionType: AmendedProtectionType,
+    protectionType: AmendResponseProtectionType,
     status: Option[AmendProtectionResponseStatus],
     psaCheckReference: Option[String],
     protectionReference: Option[String],
@@ -64,6 +64,6 @@ case class AmendOutcomeDisplayModel(
 
 case class AmendOutcomeDisplayModelNoNotificationId(
     protectedAmount: String,
-    protectionType: AmendedProtectionType,
+    protectionType: AmendResponseProtectionType,
     details: Option[AmendPrintDisplayModel]
 )

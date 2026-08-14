@@ -18,7 +18,7 @@ package testdata
 
 import models.NotificationId._
 import models.display.{AmendOutcomeDisplayModel, AmendOutcomeDisplayModelNoNotificationId, AmendPrintDisplayModel}
-import models.AmendedProtectionType.{
+import models.AmendResponseProtectionType.{
   FixedProtection2016,
   IndividualProtection2014,
   IndividualProtection2014LTA,

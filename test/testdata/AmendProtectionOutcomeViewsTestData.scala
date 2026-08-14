@@ -16,7 +16,7 @@
 
 package testdata
 
-import models.AmendedProtectionType.IndividualProtection2014
+import models.AmendResponseProtectionType.IndividualProtection2014
 import models.NotificationId.NotificationId1
 import models.amend.AmendsGAModel
 import models.display.{AmendOutcomeDisplayModel, AmendPrintDisplayModel}

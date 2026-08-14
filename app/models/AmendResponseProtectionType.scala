@@ -20,37 +20,37 @@ import models.pla.AmendableProtectionType
 import models.pla.response.ProtectionType
 import util.{Enumerable, EnumerableInstance}
 
-sealed abstract class AmendedProtectionType(name: String, val toProtectionType: ProtectionType)
+sealed abstract class AmendResponseProtectionType(name: String, val toProtectionType: ProtectionType)
     extends EnumerableInstance(name) {
 
   def isFixedProtection2016: Boolean =
     this match {
-      case AmendedProtectionType.FixedProtection2016    => true
-      case AmendedProtectionType.FixedProtection2016LTA => true
-      case _                                            => false
+      case AmendResponseProtectionType.FixedProtection2016    => true
+      case AmendResponseProtectionType.FixedProtection2016LTA => true
+      case _                                                  => false
     }
 
 }
 
-object AmendedProtectionType extends Enumerable.Implicits {
+object AmendResponseProtectionType extends Enumerable.Implicits {
 
   case object IndividualProtection2014
-      extends AmendedProtectionType("IndividualProtection2014", ProtectionType.IndividualProtection2014)
+      extends AmendResponseProtectionType("IndividualProtection2014", ProtectionType.IndividualProtection2014)
 
   case object IndividualProtection2014LTA
-      extends AmendedProtectionType("IndividualProtection2014LTA", ProtectionType.IndividualProtection2014LTA)
+      extends AmendResponseProtectionType("IndividualProtection2014LTA", ProtectionType.IndividualProtection2014LTA)
 
   case object IndividualProtection2016
-      extends AmendedProtectionType("IndividualProtection2016", ProtectionType.IndividualProtection2016)
+      extends AmendResponseProtectionType("IndividualProtection2016", ProtectionType.IndividualProtection2016)
 
   case object IndividualProtection2016LTA
-      extends AmendedProtectionType("IndividualProtection2016LTA", ProtectionType.IndividualProtection2016LTA)
+      extends AmendResponseProtectionType("IndividualProtection2016LTA", ProtectionType.IndividualProtection2016LTA)
 
   case object FixedProtection2016
-      extends AmendedProtectionType("FixedProtection2016", ProtectionType.FixedProtection2016)
+      extends AmendResponseProtectionType("FixedProtection2016", ProtectionType.FixedProtection2016)
 
   case object FixedProtection2016LTA
-      extends AmendedProtectionType("FixedProtection2016LTA", ProtectionType.FixedProtection2016LTA)
+      extends AmendResponseProtectionType("FixedProtection2016LTA", ProtectionType.FixedProtection2016LTA)
 
   val values = Seq(
     IndividualProtection2014,
@@ -61,10 +61,10 @@ object AmendedProtectionType extends Enumerable.Implicits {
     FixedProtection2016LTA
   )
 
-  implicit val toEnumerable: Enumerable[AmendedProtectionType] =
+  implicit val toEnumerable: Enumerable[AmendResponseProtectionType] =
     Enumerable(values.map(v => v.toString -> v): _*)
 
-  def from(protectionType: AmendableProtectionType): AmendedProtectionType =
+  def from(protectionType: AmendableProtectionType): AmendResponseProtectionType =
     protectionType match {
       case AmendableProtectionType.IndividualProtection2014    => IndividualProtection2014
       case AmendableProtectionType.IndividualProtection2014LTA => IndividualProtection2014LTA
@@ -72,7 +72,7 @@ object AmendedProtectionType extends Enumerable.Implicits {
       case AmendableProtectionType.IndividualProtection2016LTA => IndividualProtection2016LTA
     }
 
-  def tryFrom(protectionType: ProtectionType): Option[AmendedProtectionType] =
+  def tryFrom(protectionType: ProtectionType): Option[AmendResponseProtectionType] =
     protectionType match {
       case ProtectionType.IndividualProtection2014    => Some(IndividualProtection2014)
       case ProtectionType.IndividualProtection2014LTA => Some(IndividualProtection2014LTA)

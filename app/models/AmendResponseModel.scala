@@ -23,7 +23,7 @@ case class AmendResponseModel(
     identifier: Long,
     sequenceNumber: Int,
     status: AmendProtectionResponseStatus,
-    protectionType: AmendedProtectionType,
+    protectionType: AmendResponseProtectionType,
     certificateDate: Option[DateModel],
     certificateTime: Option[TimeModel],
     protectionReference: Option[String],
@@ -61,7 +61,7 @@ case class AmendResponseModel(
   )
 
   def combineWithFixedProtection2016(protectionModel: ProtectionModel): Option[AmendResponseModel] =
-    AmendedProtectionType.tryFrom(protectionModel.protectionType) match {
+    AmendResponseProtectionType.tryFrom(protectionModel.protectionType) match {
       case Some(amendedProtectionType) if amendedProtectionType.isFixedProtection2016 =>
         Some(
           copy(
@@ -88,7 +88,7 @@ object AmendResponseModel {
     AmendResponseModel(
       identifier = amendResponse.lifetimeAllowanceIdentifier,
       sequenceNumber = amendResponse.lifetimeAllowanceSequenceNumber,
-      protectionType = AmendedProtectionType.from(amendResponse.lifetimeAllowanceType),
+      protectionType = AmendResponseProtectionType.from(amendResponse.lifetimeAllowanceType),
       certificateDate = amendResponse.certificateDate,
       certificateTime = amendResponse.certificateTime,
       status = amendResponse.status,
