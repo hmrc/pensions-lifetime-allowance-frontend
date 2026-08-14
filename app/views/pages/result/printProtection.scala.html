@@ -14,14 +14,12 @@
  * limitations under the License.
  *@
 
-@import config.AppConfig
 @import models.display.PrintDisplayModel
 @import views.HeaderContent
 @import views.html.helper.CSPNonce
 
 @this(
     layout: Layout,
-    appConfig: AppConfig
 )
 
 @(model: PrintDisplayModel)(implicit request: RequestHeader, messages: Messages)

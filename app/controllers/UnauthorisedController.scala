@@ -18,7 +18,7 @@ package controllers
 
 import connectors.IdentityVerificationConnector
 import enums.IdentityVerificationResult
-import play.api.{Application, Logging}
+import play.api.Logging
 import play.api.mvc._
 import services.SessionCacheService
 import uk.gov.hmrc.http.UpstreamErrorResponse

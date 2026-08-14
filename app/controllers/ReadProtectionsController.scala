@@ -17,7 +17,6 @@
 package controllers
 
 import auth.AuthActions
-import config.AppConfig
 import connectors.PlaConnectorError.LockedResponseError
 import connectors.{PlaConnector, PlaConnectorError}
 import constructors.display.DisplayConstructors
@@ -26,7 +25,7 @@ import models.amend.AmendProtectionModel
 import models.cache.CacheMap
 import play.api.i18n.Messages
 import play.api.mvc._
-import play.api.{Application, Logging}
+import play.api.Logging
 import services.SessionCacheService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -44,8 +43,7 @@ class ReadProtectionsController @Inject() (
     authActions: AuthActions,
     technicalError: views.html.pages.fallback.technicalError,
     manualCorrespondenceNeeded: views.html.pages.result.manualCorrespondenceNeeded,
-    existingProtections: pages.existingProtections.existingProtections,
-    appConfig: AppConfig
+    existingProtections: pages.existingProtections.existingProtections
 )(
     using ExecutionContext
 ) extends FrontendController(mcc)

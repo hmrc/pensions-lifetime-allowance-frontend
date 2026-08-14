@@ -20,13 +20,11 @@
 @import models.pla.request.AmendProtectionRequestStatus
 
 @this(
-        layout: Layout,
-        errorSummary: playHelpers.templates.errorSummary,
-        form: uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF,
-        helpTextAccordion: playHelpers.templates.helpTextAccordion,
-        formInputMoney: playHelpers.templates.formInputMoney,
-        plaInputRadioGroup: playHelpers.templates.plaInputRadioGroup,
-        submitButton: playHelpers.templates.submitButton
+    layout: Layout,
+    errorSummary: playHelpers.templates.errorSummary,
+    form: uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF,
+    plaInputRadioGroup: playHelpers.templates.plaInputRadioGroup,
+    submitButton: playHelpers.templates.submitButton
 )
 
 @(
@@ -36,8 +34,8 @@
 )(implicit request: RequestHeader, messages: Messages)
 
 @title = @{
-        if(amendPensionsTakenBeforeForm.errors.nonEmpty) Messages("site.title.error", Messages("pla.pensionsTakenBefore.title")) else Messages("pla.pensionsTakenBefore.title")
- }
+    if(amendPensionsTakenBeforeForm.errors.nonEmpty) Messages("site.title.error", Messages("pla.pensionsTakenBefore.title")) else Messages("pla.pensionsTakenBefore.title")
+}
 
 @layout(
     pageTitle = title

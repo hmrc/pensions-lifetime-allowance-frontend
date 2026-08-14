@@ -14,15 +14,14 @@
  * limitations under the License.
  *@
 
-@import config.AppConfig
 @import models.display.ExistingProtectionDisplayModel
 @import play.api.i18n._
 @import views.HeaderContent
 @import views.html.playHelpers.templates.existingProtections.protectionDetails
 
-@this(appConfig: AppConfig)
+@this()
 
-@(protection: ExistingProtectionDisplayModel, statusGroup: String, protectionNum: Int)(implicit messages: Messages)
+@(protection: ExistingProtectionDisplayModel, protectionNum: Int)(implicit messages: Messages)
 
 @changeLink = {
     @protection.amendCall.map{ call =>

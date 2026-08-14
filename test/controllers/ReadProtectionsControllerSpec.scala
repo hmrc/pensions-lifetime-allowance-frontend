@@ -111,8 +111,7 @@ class ReadProtectionsControllerSpec
     authActions,
     mockTechnicalError,
     mockManualCorrespondenceNeeded,
-    mockExistingProtections,
-    mockAppConfig
+    mockExistingProtections
   )(
     using executionContext
   )

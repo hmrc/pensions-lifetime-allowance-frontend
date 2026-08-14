@@ -14,22 +14,26 @@
  * limitations under the License.
  *@
 
-@import config.AppConfig
-
 @this(
  layout: Layout,
- appConfig: AppConfig
 )
 
-@(pageTitle: String, heading: String, message: String)(implicit request: RequestHeader, messages: Messages)
+@(
+    pageTitle: String,
+    heading: String,
+    message: String
+)(
+    implicit request: RequestHeader,
+    messages: Messages
+)
 
 @mainContent = {
- <h1 class="govuk-heading-xl">@heading</h1>
- <p class="govuk-body">@message</p>
+    <h1 class="govuk-heading-xl">@heading</h1>
+    <p class="govuk-body">@message</p>
 }
 
 @layout(
- pageTitle = pageTitle
+    pageTitle = pageTitle
 ){
-  @mainContent
+    @mainContent
 }

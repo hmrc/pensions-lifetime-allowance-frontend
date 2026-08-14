@@ -34,13 +34,13 @@
             </span>
         </h3>
         @for((protection, index) <- protections.zipWithIndex) {
-            @inactiveExistingProtection(protection, "other", index + 1)
+            @inactiveExistingProtection(protection, index + 1)
         }
     }
 }
 
 @protectionsFor(protectionsByType: ExistingInactiveProtectionsByType) = {
-    @for((protectionType, protections) <- protectionsByType.protections) {
+    @for((_, protections) <- protectionsByType.protections) {
         @protectionsOfType(protections)
     }
 }
@@ -62,7 +62,7 @@
                 <h2 class="govuk-heading-l">@Messages("pla.existingProtections.active.heading")</h2>
                 @protections.activeProtection.map { protection =>
                     <div class="protection-detail">
-                        @activeExistingProtection(protection, "active", 1)
+                        @activeExistingProtection(protection, 1)
                     </div>
                 }
 
