@@ -18,7 +18,7 @@ package models.pla
 
 import models.pla.response.ProtectionType
 import play.api.mvc.PathBindable
-import utils.{Enumerable, EnumerableInstance}
+import util.{Enumerable, EnumerableInstance}
 
 sealed abstract class AmendableProtectionType(
     name: String,

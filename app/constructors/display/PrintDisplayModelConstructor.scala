@@ -27,7 +27,7 @@ import constructors.display.ExistingProtectionsDisplayModelConstructor.{
 import models.display.PrintDisplayModel
 import models.{PersonalDetailsModel, ProtectionModel}
 import play.api.i18n.Messages
-import utils.Constants
+import util.Constants
 
 object PrintDisplayModelConstructor {
 

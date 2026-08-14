@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package utils
+package util
 
 import org.apache.pekko.util.Timeout
 import org.scalatest.matchers.should.Matchers

@@ -19,7 +19,7 @@ import play.api.libs.json.Json
 import play.api.libs.ws.WSResponse
 import play.api.test.Helpers._
 import play.api.libs.ws.{writeableOf_JsValue, readableAsString}
-import utils.{IntegrationBaseSpec, MockedAudit}
+import util.{IntegrationBaseSpec, MockedAudit}
 
 import scala.concurrent.Future
 

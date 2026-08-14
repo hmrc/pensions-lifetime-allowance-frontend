@@ -32,7 +32,7 @@ import play.api.test.Helpers.{INTERNAL_SERVER_ERROR, LOCKED, NOT_FOUND, OK}
 import testdata.PlaConnectorTestData
 import testdata.PlaConnectorTestData._
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.IntegrationBaseSpec
+import util.IntegrationBaseSpec
 
 import scala.concurrent.ExecutionContext
 

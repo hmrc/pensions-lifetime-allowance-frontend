@@ -19,7 +19,7 @@ package forms.mappings
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.data.{FormError, Mapping}
-import utils.Constants.maximumCurrencyAmount
+import util.Constants.maximumCurrencyAmount
 
 class CurrencyMappingsSpec extends AnyWordSpec with Matchers {
 

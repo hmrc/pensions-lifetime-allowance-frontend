@@ -19,7 +19,7 @@ package forms.mappings
 import forms.formatters.CurrencyFormatter
 import models.pla.AmendableProtectionType
 import play.api.data.{Forms, Mapping}
-import utils.Constants
+import util.Constants
 
 trait CurrencyMappings {
 

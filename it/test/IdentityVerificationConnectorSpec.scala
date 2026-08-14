@@ -20,7 +20,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
 import play.mvc.Http.Status.NOT_FOUND
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
-import utils.{IntegrationBaseSpec, MockedAudit, WiremockHelper}
+import util.{IntegrationBaseSpec, MockedAudit, WiremockHelper}
 
 class IdentityVerificationConnectorSpec extends IntegrationBaseSpec with MockedAudit {
 

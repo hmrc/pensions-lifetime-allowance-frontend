@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package utils
+package util
 
 import play.api.libs.json._
 

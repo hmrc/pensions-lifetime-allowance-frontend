@@ -18,7 +18,7 @@ package models
 
 import models.pla.AmendableProtectionType
 import models.pla.response.ProtectionType
-import utils.{Enumerable, EnumerableInstance}
+import util.{Enumerable, EnumerableInstance}
 
 sealed abstract class AmendedProtectionType(name: String, val toProtectionType: ProtectionType)
     extends EnumerableInstance(name) {

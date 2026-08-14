@@ -32,7 +32,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, RequestHe
 import services.SessionCacheService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import utils.NotificationIds
+import util.NotificationIds
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}

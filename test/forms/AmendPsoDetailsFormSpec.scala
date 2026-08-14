@@ -24,7 +24,7 @@ import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.{Messages, MessagesApi}
 import testHelpers.FakeApplication
 import testHelpers.messages.PsoDetailsErrorMessages
-import utils.Constants
+import util.Constants
 
 import java.time.LocalDate
 

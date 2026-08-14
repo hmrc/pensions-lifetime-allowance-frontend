@@ -23,7 +23,7 @@ import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Lang
 import testHelpers.FakeApplication
 import testHelpers.messages.CommonErrorMessages
-import utils.Constants
+import util.Constants
 
 class AmendCurrentPensionFormSpec extends FakeApplication with CommonErrorMessages with MockitoSugar {
   implicit val lang: Lang = mock[Lang]

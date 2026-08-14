@@ -18,7 +18,7 @@ package models.pla.request
 
 import models.pla.response.ProtectionStatus
 import play.api.mvc.PathBindable
-import utils.{Enumerable, EnumerableInstance}
+import util.{Enumerable, EnumerableInstance}
 
 sealed abstract class AmendProtectionRequestStatus(name: String, override val jsonValue: String)
     extends EnumerableInstance(name) {}

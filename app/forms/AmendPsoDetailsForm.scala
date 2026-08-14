@@ -24,7 +24,7 @@ import models.pla.AmendableProtectionType._
 import play.api.data.Forms.{mapping, of}
 import play.api.data.Form
 import play.api.i18n.Messages
-import utils.Constants
+import util.Constants
 
 import java.time.LocalDate
 

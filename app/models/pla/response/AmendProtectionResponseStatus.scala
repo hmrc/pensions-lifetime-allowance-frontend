@@ -16,7 +16,7 @@
 
 package models.pla.response
 
-import utils.{Enumerable, EnumerableInstance}
+import util.{Enumerable, EnumerableInstance}
 
 sealed abstract class AmendProtectionResponseStatus(
     name: String,
