@@ -16,7 +16,7 @@
 
 package controllers
 
-import auth.AuthFunction
+import auth.AuthActions
 import connectors.PlaConnectorError.{ConflictResponseError, IncorrectResponseBodyError, LockedResponseError}
 import connectors.{CitizenDetailsConnector, PlaConnector, PlaConnectorError}
 import constructors.AmendsGAConstructor
@@ -27,8 +27,8 @@ import models.pla.AmendableProtectionType
 import models.pla.request.AmendProtectionRequestStatus
 import models.{AmendResponseModel, NotificationId, PersonalDetailsModel, TransformedReadResponseModel}
 import play.api.Logging
-import play.api.i18n.{I18nSupport, Lang}
-import play.api.mvc._
+import play.api.i18n.I18nSupport
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, Result}
 import services.SessionCacheService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -44,7 +44,7 @@ class AmendsController @Inject() (
     plaConnector: PlaConnector,
     displayConstructors: DisplayConstructors,
     mcc: MessagesControllerComponents,
-    authFunction: AuthFunction,
+    authActions: AuthActions,
     manualCorrespondenceNeeded: views.html.pages.result.manualCorrespondenceNeeded,
     technicalError: views.html.pages.fallback.technicalError,
     amendOutcome: views.html.pages.amends.amendOutcome,
@@ -59,10 +59,8 @@ class AmendsController @Inject() (
   def amendsSummary(
       protectionType: AmendableProtectionType,
       status: AmendProtectionRequestStatus
-  ): Action[AnyContent] = Action.async { implicit request =>
-    implicit val lang: Lang = mcc.messagesApi.preferred(request).lang
-
-    authFunction.genericAuthWithNino { nino =>
+  ): Action[AnyContent] =
+    authActions.authenticateWithNino.async { implicit request =>
       sessionCacheService.fetchAmendProtectionModel(protectionType, status).map {
         case Some(amendModel) =>
           Ok(
@@ -73,22 +71,21 @@ class AmendsController @Inject() (
             )
           )
         case _ =>
-          logger.warn(couldNotRetrieveModelForNino(nino, "when loading the amend summary page"))
+          logger.warn(couldNotRetrieveModelForNino(request.nino, "when loading the amend summary page"))
           buildTechnicalError(technicalError)
       }
     }
-  }
 
   def amendProtection(
       protectionType: AmendableProtectionType,
       status: AmendProtectionRequestStatus
-  ): Action[AnyContent] = Action.async { implicit request =>
-    authFunction.genericAuthWithNino { nino =>
+  ): Action[AnyContent] =
+    authActions.authenticateWithNino.async { implicit request =>
       for {
         protectionAmendment <- sessionCacheService.fetchAmendProtectionModel(protectionType, status)
         _                   <- saveAmendsGA(protectionAmendment)
 
-        response <- sendAmendProtectionRequest(nino, protectionAmendment.get)
+        response <- sendAmendProtectionRequest(request.nino, protectionAmendment.get)
 
         result <- response match {
 
@@ -109,7 +106,6 @@ class AmendsController @Inject() (
         }
       } yield result
     }
-  }
 
   private def saveAmendsGA(
       protectionAmendment: Option[AmendProtectionModel]
@@ -135,8 +131,10 @@ class AmendsController @Inject() (
       Redirect(routes.AmendsController.amendmentOutcome)
     }
 
-  def amendmentOutcome: Action[AnyContent] = Action.async { implicit request =>
-    authFunction.genericAuthWithNino { nino =>
+  def amendmentOutcome: Action[AnyContent] =
+    authActions.authenticateWithNino.async { implicit request =>
+      val nino = request.nino
+
       for {
         modelAR                 <- sessionCacheService.fetchAmendResponseModel
         modelGA                 <- sessionCacheService.fetchAmendsGAModel
@@ -145,7 +143,6 @@ class AmendsController @Inject() (
         result <- amendmentOutcomeResult(modelAR, modelGA, personalDetailsModelOpt, nino)
       } yield result
     }
-  }
 
   private def amendmentOutcomeResult(
       modelAR: Option[AmendResponseModel],
@@ -153,8 +150,6 @@ class AmendsController @Inject() (
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       nino: String
   )(implicit request: Request[AnyContent]): Future[Result] = {
-    implicit val lang: Lang = mcc.messagesApi.preferred(request).lang
-
     if (modelGA.isEmpty) {
       logger.warn(s"Unable to retrieve amendsGAModel from cache for user nino :$nino")
     }

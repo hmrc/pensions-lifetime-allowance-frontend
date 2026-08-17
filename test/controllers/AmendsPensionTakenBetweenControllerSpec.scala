@@ -16,9 +16,8 @@
 
 package controllers
 
-import auth.{AuthFunction, AuthFunctionImpl}
 import config._
-import mocks.AuthMock
+import auth.helpers.AuthMocks
 import models.pla.AmendableProtectionType
 import models.pla.request.AmendProtectionRequestStatus
 import org.apache.pekko.actor.ActorSystem
@@ -37,7 +36,6 @@ import play.api.test.Helpers._
 import services.SessionCacheService
 import testHelpers._
 import testdata.AmendProtectionModelTestData
-import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends._
 import views.html.pages.fallback.technicalError
@@ -50,7 +48,7 @@ class AmendsPensionTakenBetweenControllerSpec
     with MockitoSugar
     with MockSessionCacheService
     with BeforeAndAfterEach
-    with AuthMock
+    with AuthMocks
     with AmendProtectionModelTestData
     with I18nSupport {
 
@@ -69,7 +67,6 @@ class AmendsPensionTakenBetweenControllerSpec
   implicit val ec: ExecutionContext           = inject[ExecutionContext]
 
   val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
-  val mockAuthFunction: AuthFunction               = mock[AuthFunction]
   val technicalErrorView: technicalError           = inject[technicalError]
 
   val amendIP16PensionsTakenBetweenView: amendIP16PensionsTakenBetween =
@@ -81,22 +78,16 @@ class AmendsPensionTakenBetweenControllerSpec
   val mockEnv: Environment = mock[Environment]
 
   override def beforeEach(): Unit = {
-    reset(mockSessionCacheService)
-    reset(mockAuthConnector)
-    reset(mockEnv)
     super.beforeEach()
-  }
 
-  val authFunction = new AuthFunctionImpl(
-    mcc,
-    mockAuthConnector,
-    technicalErrorView
-  )
+    reset(mockSessionCacheService)
+    reset(mockEnv)
+  }
 
   val controller = new AmendsPensionTakenBetweenController(
     mockSessionCacheService,
     mcc,
-    authFunction,
+    authActions,
     technicalErrorView,
     amendIP16PensionsTakenBetweenView,
     amendIP14PensionsTakenBetweenView
@@ -108,7 +99,7 @@ class AmendsPensionTakenBetweenControllerSpec
 
   "In AmendsPensionTakenBetweenController calling the .amendPensionsTakenBetween action" when {
     "not supplied with a stored model" in {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      mockAuthSuccess("AB123456A")
       mockFetchAmendProtectionModel(any(), any())(None)
 
       val result: Future[Result] =
@@ -122,7 +113,7 @@ class AmendsPensionTakenBetweenControllerSpec
     }
 
     "supplied with the stored test model for (dormant, IndividualProtection2016, preADay = £0.0)" in {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      mockAuthSuccess("AB123456A")
       mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2016))
 
       val result: Future[Result] =
@@ -136,7 +127,7 @@ class AmendsPensionTakenBetweenControllerSpec
     }
 
     "supplied with the stored test model for (dormant, IndividualProtection2016, preADay = £2000)" in {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      mockAuthSuccess("AB123456A")
       mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2016))
 
       val result: Future[Result] =
@@ -151,7 +142,7 @@ class AmendsPensionTakenBetweenControllerSpec
   }
 
   "should take the user to the pensions taken before page" in {
-    mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+    mockAuthSuccess("AB123456A")
     mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2016))
 
     val result: Future[Result] =
@@ -167,7 +158,7 @@ class AmendsPensionTakenBetweenControllerSpec
   "return some HTML that" should {
 
     "contain some text and use the character set utf-8" in {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      mockAuthSuccess("AB123456A")
       mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2016))
 
       val result: Future[Result] =
@@ -181,7 +172,7 @@ class AmendsPensionTakenBetweenControllerSpec
     }
 
     "have the value of the check box set as 'Yes' by default" in {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      mockAuthSuccess("AB123456A")
       mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2016))
 
       val result: Future[Result] =
@@ -197,7 +188,7 @@ class AmendsPensionTakenBetweenControllerSpec
   }
 
   "supplied with the stored test model for (dormant, IndividualProtection2014, preADay = £2000))" in {
-    mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+    mockAuthSuccess("AB123456A")
     mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2014))
 
     val result: Future[Result] =
@@ -212,7 +203,7 @@ class AmendsPensionTakenBetweenControllerSpec
   "Submitting Amend IndividualProtection2016 Pensions Taken Between data" when {
 
     "the model can't be fetched from cache" in {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      mockAuthSuccess("AB123456A")
       mockFetchAmendProtectionModel(any(), any())(None)
 
       val result = FakeRequests.authorisedPost(
@@ -227,7 +218,7 @@ class AmendsPensionTakenBetweenControllerSpec
     }
 
     "the data is valid with a no response" in {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      mockAuthSuccess("AB123456A")
       mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2016))
       mockSaveAmendProtectionModel()
 
@@ -248,7 +239,7 @@ class AmendsPensionTakenBetweenControllerSpec
     }
 
     "the data is valid with a yes response" in {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      mockAuthSuccess("AB123456A")
       mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2016))
       mockSaveAmendProtectionModel()
 
@@ -268,7 +259,7 @@ class AmendsPensionTakenBetweenControllerSpec
     }
 
     "the data is invalid" in {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      mockAuthSuccess("AB123456A")
 
       val result = FakeRequests.authorisedPost(
         controller.submitAmendPensionsTakenBetween(
@@ -283,7 +274,7 @@ class AmendsPensionTakenBetweenControllerSpec
     }
 
     "the data is invalid on additional validation" in {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      mockAuthSuccess("AB123456A")
 
       val result = FakeRequests.authorisedPost(
         controller.submitAmendPensionsTakenBetween(
@@ -300,7 +291,7 @@ class AmendsPensionTakenBetweenControllerSpec
   "Submitting Amend IndividualProtection2016LTA Pensions Taken Between data" when {
 
     "the model can't be fetched from cache" in {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      mockAuthSuccess("AB123456A")
       mockFetchAmendProtectionModel(any(), any())(None)
 
       val result = FakeRequests.authorisedPost(
@@ -316,7 +307,7 @@ class AmendsPensionTakenBetweenControllerSpec
     }
 
     "the data is valid with a no response" in {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      mockAuthSuccess("AB123456A")
       mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2016LTA))
       mockSaveAmendProtectionModel()
 
@@ -338,7 +329,7 @@ class AmendsPensionTakenBetweenControllerSpec
     }
 
     "the data is valid with a yes response" in {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      mockAuthSuccess("AB123456A")
       mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2016LTA))
       mockSaveAmendProtectionModel()
 
@@ -359,7 +350,7 @@ class AmendsPensionTakenBetweenControllerSpec
     }
 
     "the data is invalid" in {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      mockAuthSuccess("AB123456A")
 
       val result = FakeRequests.authorisedPost(
         controller
@@ -375,7 +366,7 @@ class AmendsPensionTakenBetweenControllerSpec
     }
 
     "the data is invalid on additional validation" in {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      mockAuthSuccess("AB123456A")
 
       val result = FakeRequests.authorisedPost(
         controller
@@ -393,7 +384,7 @@ class AmendsPensionTakenBetweenControllerSpec
   "Submitting Amend IndividualProtection2014 Pensions Taken Between data" when {
 
     "the model can't be fetched from cache" in {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      mockAuthSuccess("AB123456A")
       mockFetchAmendProtectionModel(any(), any())(None)
 
       val result = FakeRequests.authorisedPost(
@@ -408,7 +399,7 @@ class AmendsPensionTakenBetweenControllerSpec
     }
 
     "the data is valid with a no response" in {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      mockAuthSuccess("AB123456A")
       mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2014))
       mockSaveAmendProtectionModel()
 
@@ -429,7 +420,7 @@ class AmendsPensionTakenBetweenControllerSpec
     }
 
     "the data is valid with a yes response" in {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      mockAuthSuccess("AB123456A")
       mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2014))
       mockSaveAmendProtectionModel()
 
@@ -449,7 +440,7 @@ class AmendsPensionTakenBetweenControllerSpec
     }
 
     "the data is invalid" in {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      mockAuthSuccess("AB123456A")
 
       val result = FakeRequests.authorisedPost(
         controller.submitAmendPensionsTakenBetween(
@@ -464,7 +455,7 @@ class AmendsPensionTakenBetweenControllerSpec
     }
 
     "the data is invalid on additional validation" in {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      mockAuthSuccess("AB123456A")
 
       val result = FakeRequests.authorisedPost(
         controller.submitAmendPensionsTakenBetween(
@@ -481,7 +472,7 @@ class AmendsPensionTakenBetweenControllerSpec
   "Submitting Amend IndividualProtection2014LTA Pensions Taken Between data" when {
 
     "the model can't be fetched from cache" in {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      mockAuthSuccess("AB123456A")
       mockFetchAmendProtectionModel(any(), any())(None)
 
       val result = FakeRequests.authorisedPost(
@@ -497,7 +488,7 @@ class AmendsPensionTakenBetweenControllerSpec
     }
 
     "the data is valid with a no response" in {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      mockAuthSuccess("AB123456A")
       mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2014LTA))
       mockSaveAmendProtectionModel()
 
@@ -519,7 +510,7 @@ class AmendsPensionTakenBetweenControllerSpec
     }
 
     "the data is valid with a yes response" in {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      mockAuthSuccess("AB123456A")
       mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2014LTA))
       mockSaveAmendProtectionModel()
 
@@ -540,7 +531,7 @@ class AmendsPensionTakenBetweenControllerSpec
     }
 
     "the data is invalid" in {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      mockAuthSuccess("AB123456A")
 
       val result = FakeRequests.authorisedPost(
         controller
@@ -556,7 +547,7 @@ class AmendsPensionTakenBetweenControllerSpec
     }
 
     "the data is invalid on additional validation" in {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      mockAuthSuccess("AB123456A")
 
       val result = FakeRequests.authorisedPost(
         controller

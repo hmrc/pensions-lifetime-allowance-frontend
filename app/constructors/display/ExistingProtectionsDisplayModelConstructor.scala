@@ -25,13 +25,13 @@ import models.display.{
 }
 import models.pla.response.{ProtectionStatus, ProtectionType}
 import models.{ProtectionModel, TransformedReadResponseModel}
-import play.api.i18n.{Lang, Messages}
+import play.api.i18n.Messages
 
 object ExistingProtectionsDisplayModelConstructor {
 
   def createExistingProtectionsDisplayModel(
       model: TransformedReadResponseModel
-  )(implicit lang: Lang, messages: Messages): ExistingProtectionsDisplayModel = {
+  )(implicit messages: Messages): ExistingProtectionsDisplayModel = {
     val activeProtection = model.activeProtection.map(createExistingProtectionDisplayModel)
 
     val dormantProtections      = protectionsOfStatusByType(ProtectionStatus.Dormant, model.inactiveProtections)
@@ -58,7 +58,7 @@ object ExistingProtectionsDisplayModelConstructor {
   private def protectionsOfStatusByType(
       status: ProtectionStatus,
       protections: Seq[ProtectionModel]
-  )(implicit lang: Lang, messages: Messages): ExistingInactiveProtectionsByType = {
+  )(implicit messages: Messages): ExistingInactiveProtectionsByType = {
     val grouped = protections
       .filter(_.status == status)
       .map(createExistingProtectionDisplayModel)
@@ -70,7 +70,7 @@ object ExistingProtectionsDisplayModelConstructor {
 
   private def createExistingProtectionDisplayModel(
       model: ProtectionModel
-  )(implicit lang: Lang, messages: Messages): ExistingProtectionDisplayModel = {
+  )(implicit messages: Messages): ExistingProtectionDisplayModel = {
 
     val status              = model.status
     val protectionType      = model.protectionType

@@ -16,12 +16,12 @@
 
 package controllers
 
-import auth.AuthFunction
+import auth.AuthActions
 import connectors.CitizenDetailsConnector
 import constructors.display.DisplayConstructors
 import models.ProtectionModel
 import play.api.Logging
-import play.api.i18n.{I18nSupport, Lang}
+import play.api.i18n.I18nSupport
 import play.api.mvc._
 import services.SessionCacheService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -37,27 +37,23 @@ class PrintController @Inject() (
     displayConstructors: DisplayConstructors,
     printProtectionView: printProtection,
     mcc: MessagesControllerComponents,
-    authFunction: AuthFunction
+    authActions: AuthActions
 )(implicit val ec: ExecutionContext)
     extends FrontendController(mcc)
     with I18nSupport
     with Logging {
 
-  val printView: Action[AnyContent] = Action.async { implicit request =>
-    authFunction.genericAuthWithNino { nino =>
-      for {
-        protectionModel <- sessionCacheService.fetchOpenProtection
-        result          <- routePrintView(protectionModel, nino)
-      } yield result
-    }
+  def printView: Action[AnyContent] = authActions.authenticateWithNino.async { implicit request =>
+    for {
+      protectionModel <- sessionCacheService.fetchOpenProtection
+      result          <- routePrintView(protectionModel, request.nino)
+    } yield result
   }
 
   private def routePrintView(
       protectionModel: Option[ProtectionModel],
       nino: String
-  )(implicit request: Request[AnyContent]): Future[Result] = {
-    implicit val lang: Lang = mcc.messagesApi.preferred(request).lang
-
+  )(implicit request: Request[AnyContent]): Future[Result] =
     protectionModel match {
       case Some(model) =>
         citizenDetailsConnector.getPersonDetails(nino).map { personalDetailsModel =>
@@ -68,6 +64,5 @@ class PrintController @Inject() (
         logger.warn(s"Forced redirect to PrintView for $nino")
         Future.successful(Redirect(routes.ReadProtectionsController.currentProtections))
     }
-  }
 
 }

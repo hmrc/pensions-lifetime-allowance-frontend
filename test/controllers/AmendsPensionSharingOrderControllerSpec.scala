@@ -16,11 +16,11 @@
 
 package controllers
 
-import auth.{AuthFunction, AuthFunctionImpl, authenticatedFakeRequest}
+import auth.authenticatedFakeRequest
+import auth.helpers.AuthMocks
 import common.Exceptions
 import config._
 import constructors.display.DisplayConstructors
-import mocks.AuthMock
 import models.amend.AmendProtectionModel
 import models.display.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel}
 import models.pla.AmendableProtectionType
@@ -44,7 +44,6 @@ import play.api.test.Helpers._
 import services.SessionCacheService
 import testHelpers._
 import testdata.AmendProtectionModelTestData
-import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends._
 import views.html.pages.fallback.technicalError
@@ -57,7 +56,7 @@ class AmendsPensionSharingOrderControllerSpec
     with MockitoSugar
     with MockSessionCacheService
     with BeforeAndAfterEach
-    with AuthMock
+    with AuthMocks
     with I18nSupport
     with AmendProtectionModelTestData
     with ScalaFutures {
@@ -78,30 +77,23 @@ class AmendsPensionSharingOrderControllerSpec
 
   val mockDisplayConstructors: DisplayConstructors = mock[DisplayConstructors]
   val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
-  val mockAuthFunction: AuthFunction               = mock[AuthFunction]
   val mockEnv: Environment                         = mock[Environment]
 
   val amendPsoDetailsView: amendPsoDetails = inject[amendPsoDetails]
   val technicalErrorView: technicalError   = inject[technicalError]
 
   override def beforeEach(): Unit = {
+    super.beforeEach()
+
     reset(mockSessionCacheService)
     reset(mockDisplayConstructors)
-    reset(mockAuthConnector)
     reset(mockEnv)
-    super.beforeEach()
   }
-
-  val authFunction = new AuthFunctionImpl(
-    mcc,
-    mockAuthConnector,
-    technicalErrorView
-  )
 
   val controller = new AmendsPensionSharingOrderController(
     mockSessionCacheService,
     mcc,
-    authFunction,
+    authActions,
     amendPsoDetailsView,
     technicalErrorView
   )
@@ -110,7 +102,7 @@ class AmendsPensionSharingOrderControllerSpec
   val mockUsername       = "mockuser"
   val mockUserId: String = "/auth/oid/" + mockUsername
 
-  val tstPensionContributionNoPsoDisplaySections = Seq(
+  val tstPensionContributionNoPsoDisplaySections: Seq[AmendDisplaySectionModel] = Seq(
     AmendDisplaySectionModel(
       "OverseasPensions",
       Seq(
@@ -173,7 +165,7 @@ class AmendsPensionSharingOrderControllerSpec
 
   "Calling the amendPsoDetails action" when {
     "there is no amendment model fetched from cache" in {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      mockAuthSuccess("AB123456A")
       mockFetchAmendProtectionModel(any(), any())(None)
 
       val result: Future[Result] =
@@ -184,7 +176,7 @@ class AmendsPensionSharingOrderControllerSpec
       status(result) shouldBe 500
     }
     "show the technical error page for existing protections" in {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      mockAuthSuccess("AB123456A")
       mockFetchAmendProtectionModel(any(), any())(None)
 
       val result: Future[Result] =
@@ -201,7 +193,7 @@ class AmendsPensionSharingOrderControllerSpec
     }
 
     "there is no PSO stored in the AmendProtectionModel" in {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      mockAuthSuccess("AB123456A")
       mockFetchAmendProtectionModel(any(), any())(
         Some(amendDormantIndividualProtection2016)
       )
@@ -224,7 +216,7 @@ class AmendsPensionSharingOrderControllerSpec
       val amendDormantIndividualProtection2014WithPensionDebit =
         amendDormantIndividualProtection2014.withPensionDebit(Some(PensionDebitModel(DateModel.of(2016, 12, 23), 1000)))
 
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      mockAuthSuccess("AB123456A")
       mockFetchAmendProtectionModel(any(), any())(
         Some(amendDormantIndividualProtection2014WithPensionDebit)
       )
@@ -286,7 +278,7 @@ class AmendsPensionSharingOrderControllerSpec
         )
 
         "return 303 (Redirect) and amendsSummary view" in {
-          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+          mockAuthSuccess("AB123456A")
           mockFetchAmendProtectionModel(any(), any())(Some(testData.amendProtectionModel))
           mockSaveAmendProtectionModel()
 
@@ -303,7 +295,7 @@ class AmendsPensionSharingOrderControllerSpec
         }
 
         "save correct data into cache" in {
-          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+          mockAuthSuccess("AB123456A")
           mockFetchAmendProtectionModel(any(), any())(Some(testData.amendProtectionModel))
           mockSaveAmendProtectionModel()
 
@@ -327,7 +319,7 @@ class AmendsPensionSharingOrderControllerSpec
     "provided with invalid data" should {
 
       "return 400 (Bad Request)" in {
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        mockAuthSuccess("AB123456A")
 
         val data = Seq(
           ("pso.day", ""),
@@ -349,7 +341,7 @@ class AmendsPensionSharingOrderControllerSpec
     "AmendProtectionModel is NOT found in cache" should {
 
       "return " in {
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        mockAuthSuccess("AB123456A")
         mockFetchAmendProtectionModel(any(), any())(None)
         mockSaveAmendProtectionModel()
 

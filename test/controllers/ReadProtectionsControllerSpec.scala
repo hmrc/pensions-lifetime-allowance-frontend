@@ -16,13 +16,12 @@
 
 package controllers
 
-import auth.AuthFunction
 import config._
 import connectors.PlaConnectorError.{IncorrectResponseBodyError, LockedResponseError, UnexpectedResponseError}
 import connectors.PlaConnector
 import constructors.display.DisplayConstructors
 import generators.ModelGenerators
-import mocks.AuthMock
+import auth.helpers.AuthMocks
 import models.amend.AmendProtectionModel
 import models.{DateModel, ProtectionModel, TimeModel, TransformedReadResponseModel}
 import models.cache.CacheMap
@@ -47,8 +46,6 @@ import play.api.{Application, Environment}
 import services.SessionCacheService
 import testHelpers.FakeApplication
 import testdata.PlaConnectorTestData.readProtectionsResponse
-import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.HttpResponse
 import views.html.pages.existingProtections.existingProtections
 import views.html.pages.fallback.technicalError
@@ -59,7 +56,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class ReadProtectionsControllerSpec
     extends FakeApplication
     with MockitoSugar
-    with AuthMock
+    with AuthMocks
     with ScalaFutures
     with ModelGenerators
     with BeforeAndAfterEach {
@@ -82,7 +79,6 @@ class ReadProtectionsControllerSpec
   val mockPlaConnector: PlaConnector               = mock[PlaConnector]
   val mockAppConfig: AppConfig                     = mock[AppConfig]
   val mockMCC: MessagesControllerComponents        = inject[MessagesControllerComponents]
-  val mockAuthFunction: AuthFunction               = inject[AuthFunction]
   val mockEnv: Environment                         = mock[Environment]
   val mockCacheMap: CacheMap                       = mock[CacheMap]
 
@@ -108,20 +104,12 @@ class ReadProtectionsControllerSpec
     reset(mockSessionCacheService)
   }
 
-  val authFunction: AuthFunction = new AuthFunction {
-    override implicit val appConfig: AppConfig           = mockAppConfig
-    override implicit val technicalError: technicalError = mockTechnicalError
-    override implicit val ec: ExecutionContext           = executionContext
-
-    override def authConnector: AuthConnector = mockAuthConnector
-  }
-
   val controller = new ReadProtectionsController(
     mockPlaConnector,
     mockSessionCacheService,
     mockDisplayConstructors,
     mockMCC,
-    authFunction,
+    authActions,
     mockTechnicalError,
     mockManualCorrespondenceNeeded,
     mockExistingProtections
@@ -332,7 +320,7 @@ class ReadProtectionsControllerSpec
         .thenReturn(Future.successful(Right(readProtectionsResponseGen.sample.value)))
       when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
         .thenReturn(testExistingProtectionsDisplayModel)
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
+      mockAuthSuccess(testNino)
       mockCacheSave()
 
       controller.currentProtections(fakeRequest).futureValue
@@ -346,7 +334,7 @@ class ReadProtectionsControllerSpec
           .thenReturn(Future.successful(Left(UnexpectedResponseError(503))))
         when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
           .thenReturn(testExistingProtectionsDisplayModel)
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
+        mockAuthSuccess(testNino)
 
         val result: Future[Result] = controller.currentProtections(fakeRequest)
 
@@ -374,7 +362,7 @@ class ReadProtectionsControllerSpec
           .thenReturn(Future.successful(Left(IncorrectResponseBodyError)))
         when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
           .thenReturn(testExistingProtectionsDisplayModel)
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
+        mockAuthSuccess(testNino)
 
         val result: Future[Result] = controller.currentProtections(fakeRequest)
 
@@ -389,7 +377,7 @@ class ReadProtectionsControllerSpec
           .thenReturn(Future.successful(Right(readProtectionsResponse)))
         when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
           .thenReturn(testExistingProtectionsDisplayModel)
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
+        mockAuthSuccess(testNino)
 
         val result: Future[Result] = controller.currentProtections(fakeRequest)
 

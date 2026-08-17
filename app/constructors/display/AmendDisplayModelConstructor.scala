@@ -21,14 +21,14 @@ import enums.ApplicationStage
 import models.amend.AmendProtectionModel
 import models.display.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel}
 import play.api.Logging
-import play.api.i18n.{Lang, Messages}
+import play.api.i18n.Messages
 import play.api.mvc.Call
 
 object AmendDisplayModelConstructor extends Logging {
 
   def createAmendDisplayModel(
       model: AmendProtectionModel
-  )(implicit lang: Lang, messages: Messages): AmendDisplayModel = {
+  )(implicit messages: Messages): AmendDisplayModel = {
     val amended = model.hasChanges
 
     val totalAmount = Display.currencyDisplayString(BigDecimal(model.updatedRelevantAmount))
@@ -58,7 +58,7 @@ object AmendDisplayModelConstructor extends Logging {
 
   private def createCurrentPsoSection(
       model: AmendProtectionModel
-  )(implicit lang: Lang, messages: Messages): Option[Seq[AmendDisplaySectionModel]] =
+  )(implicit messages: Messages): Option[Seq[AmendDisplaySectionModel]] =
     model.updated.pensionDebit.map { pensionDebit =>
       val psoAmendCall  = Helpers.createAmendCall(model, ApplicationStage.CurrentPsos)
       val psoRemoveCall = Helpers.createPsoRemoveCall(model)

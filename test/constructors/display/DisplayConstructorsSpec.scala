@@ -19,24 +19,24 @@ package constructors.display
 import models.NotificationId.NotificationId1
 import models.amend.AmendProtectionModel
 import models.{DateModel, PensionDebitModel, TransformedReadResponseModel}
-import play.api.i18n.{Lang, MessagesApi}
+import play.api.i18n.{Lang, Messages, MessagesApi}
 import testdata.AmendProtectionDisplayModelTestData.amendResponseModelNotification1
 
 class DisplayConstructorsSpec extends DisplayConstructorsTestData {
 
-  val langEnglish: Lang = Lang.defaultLang
-  val langWelsh: Lang   = Lang("cy")
+  val messagesApi: MessagesApi = inject[MessagesApi]
 
-  implicit val messagesApi: MessagesApi = inject[MessagesApi]
+  val messagesEnglish: Messages = messagesApi.preferred(Seq(Lang("en")))
+  val messagesWelsh: Messages   = messagesApi.preferred(Seq(Lang("cy")))
 
-  val displayConstructors = new DisplayConstructors()(messagesApi)
+  val displayConstructors = new DisplayConstructors()
 
   "createPrintDisplayModel" should {
     "use correct messages localisation" when {
       "provided with English language" in {
         val result =
           displayConstructors.createPrintDisplayModel(Some(tstPersonalDetailsModel), tstProtectionModel, tstNino)(
-            langEnglish
+            messagesEnglish
           )
 
         result.certificateDate shouldBe Some("17 April 2016")
@@ -45,7 +45,7 @@ class DisplayConstructorsSpec extends DisplayConstructorsTestData {
       "provided with Welsh language" in {
         val result =
           displayConstructors.createPrintDisplayModel(Some(tstPersonalDetailsModel), tstProtectionModel, tstNino)(
-            langWelsh
+            messagesWelsh
           )
 
         result.certificateDate shouldBe Some("17 Ebrill 2016")
@@ -60,14 +60,14 @@ class DisplayConstructorsSpec extends DisplayConstructorsTestData {
 
       "provided with English language" in {
         val result =
-          displayConstructors.createExistingProtectionsDisplayModel(tstTransformedReadResponseModel)(langEnglish)
+          displayConstructors.createExistingProtectionsDisplayModel(tstTransformedReadResponseModel)(messagesEnglish)
 
         result.activeProtection.get.certificateDate shouldBe Some("17 April 2016")
       }
 
       "provided with Welsh language" in {
         val result =
-          displayConstructors.createExistingProtectionsDisplayModel(tstTransformedReadResponseModel)(langWelsh)
+          displayConstructors.createExistingProtectionsDisplayModel(tstTransformedReadResponseModel)(messagesWelsh)
 
         result.activeProtection.get.certificateDate shouldBe Some("17 Ebrill 2016")
       }
@@ -94,13 +94,13 @@ class DisplayConstructorsSpec extends DisplayConstructorsTestData {
         )
 
       "provided with English language" in {
-        val result = displayConstructors.createAmendDisplayModel(tstAmendProtectionModel)(langEnglish)
+        val result = displayConstructors.createAmendDisplayModel(tstAmendProtectionModel)(messagesEnglish)
 
         result.psoSections.head.rows.head.displayValue shouldBe Seq("£100", "17 April 2016")
       }
 
       "provided with Welsh language" in {
-        val result = displayConstructors.createAmendDisplayModel(tstAmendProtectionModel)(langWelsh)
+        val result = displayConstructors.createAmendDisplayModel(tstAmendProtectionModel)(messagesWelsh)
 
         result.psoSections.head.rows.head.displayValue shouldBe Seq("£100", "17 Ebrill 2016")
       }
@@ -116,7 +116,7 @@ class DisplayConstructorsSpec extends DisplayConstructorsTestData {
           Some(tstPersonalDetailsModel),
           tstNino,
           NotificationId1
-        )(langEnglish)
+        )(messagesEnglish)
 
         result.details.get.certificateDate shouldBe Some("14 July 2015")
       }
@@ -127,7 +127,7 @@ class DisplayConstructorsSpec extends DisplayConstructorsTestData {
           Some(tstPersonalDetailsModel),
           tstNino,
           NotificationId1
-        )(langWelsh)
+        )(messagesWelsh)
 
         result.details.get.certificateDate shouldBe Some("14 Gorffennaf 2015")
       }
@@ -142,7 +142,7 @@ class DisplayConstructorsSpec extends DisplayConstructorsTestData {
           amendResponseModelNotification1,
           Some(tstPersonalDetailsModel),
           tstNino
-        )(langEnglish)
+        )(messagesEnglish)
 
         result.details.get.certificateDate shouldBe Some("14 July 2015")
       }
@@ -152,7 +152,7 @@ class DisplayConstructorsSpec extends DisplayConstructorsTestData {
           amendResponseModelNotification1,
           Some(tstPersonalDetailsModel),
           tstNino
-        )(langWelsh)
+        )(messagesWelsh)
 
         result.details.get.certificateDate shouldBe Some("14 Gorffennaf 2015")
       }

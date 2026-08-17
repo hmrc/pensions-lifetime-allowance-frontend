@@ -16,7 +16,7 @@
 
 package controllers
 
-import auth.AuthFunction
+import auth.AuthActions
 import common._
 import config.AppConfig
 import forms.AmendPsoDetailsForm._
@@ -39,7 +39,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class AmendsPensionSharingOrderController @Inject() (
     val sessionCacheService: SessionCacheService,
     mcc: MessagesControllerComponents,
-    authFunction: AuthFunction,
+    authActions: AuthActions,
     amendPsoDetails: pages.amends.amendPsoDetails,
     technicalError: views.html.pages.fallback.technicalError
 )(
@@ -56,26 +56,24 @@ class AmendsPensionSharingOrderController @Inject() (
       status: AmendProtectionRequestStatus,
       existingPSO: Boolean
   ): Action[AnyContent] =
-    Action.async { implicit request =>
-      authFunction.genericAuthWithNino { _ =>
-        amendPsoDetailsForm(protectionType)
-          .bindFromRequest()
-          .fold(
-            formWithErrors =>
-              Future.successful(BadRequest(amendPsoDetails(formWithErrors, protectionType, status, existingPSO))),
-            amendPsoDetailsModel =>
-              for {
-                amendProtectionModelOpt <- sessionCacheService.fetchAmendProtectionModel(protectionType, status)
-                amendProtectionModel = amendProtectionModelOpt.getOrElse {
-                  throw Exceptions.RequiredValueNotDefinedException("updateAmendModelWithPso", "amendModel")
-                }
-                pensionDebit = createPensionDebit(amendPsoDetailsModel)
-                updatedModel = amendProtectionModel.withPensionDebit(Some(pensionDebit))
+    authActions.authenticateWithNino.async { implicit request =>
+      amendPsoDetailsForm(protectionType)
+        .bindFromRequest()
+        .fold(
+          formWithErrors =>
+            Future.successful(BadRequest(amendPsoDetails(formWithErrors, protectionType, status, existingPSO))),
+          amendPsoDetailsModel =>
+            for {
+              amendProtectionModelOpt <- sessionCacheService.fetchAmendProtectionModel(protectionType, status)
+              amendProtectionModel = amendProtectionModelOpt.getOrElse {
+                throw Exceptions.RequiredValueNotDefinedException("updateAmendModelWithPso", "amendModel")
+              }
+              pensionDebit = createPensionDebit(amendPsoDetailsModel)
+              updatedModel = amendProtectionModel.withPensionDebit(Some(pensionDebit))
 
-                _ <- sessionCacheService.saveAmendProtectionModel(updatedModel)
-              } yield Redirect(routes.AmendsController.amendsSummary(protectionType, status))
-          )
-      }
+              _ <- sessionCacheService.saveAmendProtectionModel(updatedModel)
+            } yield Redirect(routes.AmendsController.amendsSummary(protectionType, status))
+        )
     }
 
   private[controllers] def createPensionDebit(formModel: AmendPsoDetailsModel): PensionDebitModel = {
@@ -89,30 +87,28 @@ class AmendsPensionSharingOrderController @Inject() (
   def amendPsoDetails(
       protectionType: AmendableProtectionType,
       status: AmendProtectionRequestStatus
-  ): Action[AnyContent] = Action.async { implicit request =>
-    authFunction.genericAuthWithNino { nino =>
-      sessionCacheService
-        .fetchAmendProtectionModel(protectionType, status)
-        .map {
-          case Some(amendProtectionModel) =>
-            amendProtectionModel.updated.pensionDebit match {
-              case Some(debit) =>
-                Ok(
-                  amendPsoDetails(
-                    amendPsoDetailsForm(protectionType).fill(createAmendPsoDetailsModel(debit)),
-                    protectionType,
-                    status,
-                    existingPso = true
-                  )
+  ): Action[AnyContent] = authActions.authenticateWithNino.async { implicit request =>
+    sessionCacheService
+      .fetchAmendProtectionModel(protectionType, status)
+      .map {
+        case Some(amendProtectionModel) =>
+          amendProtectionModel.updated.pensionDebit match {
+            case Some(debit) =>
+              Ok(
+                amendPsoDetails(
+                  amendPsoDetailsForm(protectionType).fill(createAmendPsoDetailsModel(debit)),
+                  protectionType,
+                  status,
+                  existingPso = true
                 )
-              case None =>
-                Ok(amendPsoDetails(amendPsoDetailsForm(protectionType), protectionType, status, existingPso = false))
-            }
-          case _ =>
-            logger.warn(couldNotRetrieveModelForNino(nino, "when loading the amend PSO details page"))
-            buildTechnicalError(technicalError)
-        }
-    }
+              )
+            case None =>
+              Ok(amendPsoDetails(amendPsoDetailsForm(protectionType), protectionType, status, existingPso = false))
+          }
+        case _ =>
+          logger.warn(couldNotRetrieveModelForNino(request.nino, "when loading the amend PSO details page"))
+          buildTechnicalError(technicalError)
+      }
   }
 
   private def createAmendPsoDetailsModel(psoDetails: PensionDebitModel): AmendPsoDetailsModel = {

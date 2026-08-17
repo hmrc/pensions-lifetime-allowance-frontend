@@ -17,7 +17,7 @@
 package common
 
 import models.{DateModel, TimeModel}
-import play.api.i18n.{Lang, Messages}
+import play.api.i18n.Messages
 
 import java.time.format.DateTimeFormatter
 
@@ -42,16 +42,11 @@ object Display {
     s"£$minus${format2DecimalPlacesOrWholeNumber(amount)}"
   }
 
-  private val englishDateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
+  def dateDisplayString(dateModel: DateModel)(implicit messages: Messages): String = {
+    val formatter = DateTimeFormatter.ofPattern(s"d '${messages(s"pla.month.${dateModel.date.getMonthValue}")}' yyyy")
 
-  def dateDisplayString(dateModel: DateModel)(implicit lang: Lang, messages: Messages): String =
-    if (lang.language == "cy") {
-      val monthNum       = dateModel.date.getMonthValue
-      val welshFormatter = DateTimeFormatter.ofPattern(s"""d '${messages(s"pla.month.$monthNum")}' yyyy""")
-      dateModel.date.format(welshFormatter)
-    } else {
-      dateModel.date.format(englishDateFormatter)
-    }
+    dateModel.date.format(formatter)
+  }
 
   private val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("h:mma")
 

@@ -32,7 +32,6 @@
 
 package config
 
-import auth.{AuthFunction, AuthFunctionImpl}
 import com.google.inject.AbstractModule
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.bootstrap.auth.DefaultAuthConnector
@@ -42,9 +41,7 @@ class Module extends AbstractModule {
   override def configure(): Unit =
     bindControllers()
 
-  private def bindControllers() = {
+  private def bindControllers() =
     bind(classOf[AuthConnector]).to(classOf[DefaultAuthConnector])
-    bind(classOf[AuthFunction]).to(classOf[AuthFunctionImpl])
-  }
 
 }

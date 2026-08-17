@@ -19,7 +19,7 @@ package constructors.display
 import common.{Display, Exceptions}
 import models.display.AmendOutcomeDisplayModelNoNotificationId
 import models.{AmendResponseModel, PersonalDetailsModel}
-import play.api.i18n.{Lang, Messages}
+import play.api.i18n.Messages
 
 object AmendOutcomeDisplayModelNoNotificationIdConstructor {
 
@@ -27,7 +27,7 @@ object AmendOutcomeDisplayModelNoNotificationIdConstructor {
       model: AmendResponseModel,
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       nino: String
-  )(implicit lang: Lang, messages: Messages): AmendOutcomeDisplayModelNoNotificationId = {
+  )(implicit messages: Messages): AmendOutcomeDisplayModelNoNotificationId = {
     val printDetails =
       AmendPrintDisplayModelConstructor.createAmendPrintDisplayModel(personalDetailsModelOpt, model, nino)
 

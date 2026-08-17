@@ -16,7 +16,7 @@
 
 package controllers
 
-import auth.AuthFunction
+import auth.AuthActions
 import common._
 import config.AppConfig
 import forms.AmendPensionsWorthBeforeForm.amendPensionsWorthBeforeForm
@@ -39,7 +39,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class AmendsPensionWorthBeforeController @Inject() (
     val sessionCacheService: SessionCacheService,
     mcc: MessagesControllerComponents,
-    authFunction: AuthFunction,
+    authActions: AuthActions,
     technicalError: views.html.pages.fallback.technicalError,
     amendIP16PensionsWorthBefore: pages.amends.amendIP16PensionsWorthBefore,
     amendIP14PensionsWorthBefore: pages.amends.amendIP14PensionsWorthBefore
@@ -56,72 +56,68 @@ class AmendsPensionWorthBeforeController @Inject() (
       protectionType: AmendableProtectionType,
       status: AmendProtectionRequestStatus
   ): Action[AnyContent] =
-    Action.async { implicit request =>
-      authFunction.genericAuthWithNino { nino =>
-        sessionCacheService
-          .fetchAmendProtectionModel(protectionType, status)
-          .map {
-            case Some(data) =>
-              val form = amendPensionsWorthBeforeForm(protectionType).fill(
-                AmendPensionsWorthBeforeModel(
-                  Some(
-                    Display.currencyInputDisplayFormat(
-                      data.updated.preADayPensionInPaymentAmount.getOrElse[Double](0)
-                    )
+    authActions.authenticateWithNino.async { implicit request =>
+      sessionCacheService
+        .fetchAmendProtectionModel(protectionType, status)
+        .map {
+          case Some(data) =>
+            val form = amendPensionsWorthBeforeForm(protectionType).fill(
+              AmendPensionsWorthBeforeModel(
+                Some(
+                  Display.currencyInputDisplayFormat(
+                    data.updated.preADayPensionInPaymentAmount.getOrElse[Double](0)
                   )
                 )
               )
-              protectionType match {
-                case IndividualProtection2016 | IndividualProtection2016LTA =>
-                  Ok(amendIP16PensionsWorthBefore(form, protectionType, status))
-                case IndividualProtection2014 | IndividualProtection2014LTA =>
-                  Ok(amendIP14PensionsWorthBefore(form, protectionType, status))
-              }
-            case _ =>
-              logger.warn(couldNotRetrieveModelForNino(nino, "when loading the amend pensionWorthBefore page"))
-              buildTechnicalError(technicalError)
-          }
+            )
+            protectionType match {
+              case IndividualProtection2016 | IndividualProtection2016LTA =>
+                Ok(amendIP16PensionsWorthBefore(form, protectionType, status))
+              case IndividualProtection2014 | IndividualProtection2014LTA =>
+                Ok(amendIP14PensionsWorthBefore(form, protectionType, status))
+            }
+          case _ =>
+            logger.warn(couldNotRetrieveModelForNino(request.nino, "when loading the amend pensionWorthBefore page"))
+            buildTechnicalError(technicalError)
+        }
 
-      }
     }
 
   def submitAmendPensionsWorthBefore(
       protectionType: AmendableProtectionType,
       status: AmendProtectionRequestStatus
   ): Action[AnyContent] =
-    Action.async { implicit request =>
-      authFunction.genericAuthWithNino { nino =>
-        amendPensionsWorthBeforeForm(protectionType)
-          .bindFromRequest()
-          .fold(
-            errors =>
-              protectionType match {
-                case IndividualProtection2016 | IndividualProtection2016LTA =>
-                  Future.successful(BadRequest(amendIP16PensionsWorthBefore(errors, protectionType, status)))
-                case IndividualProtection2014 | IndividualProtection2014LTA =>
-                  Future.successful(BadRequest(amendIP14PensionsWorthBefore(errors, protectionType, status)))
-              },
-            success =>
-              sessionCacheService
-                .fetchAmendProtectionModel(protectionType, status)
-                .flatMap {
-                  case Some(model) =>
-                    val updatedAmount = success.amendedPensionsTakenBeforeAmt.get.toDouble
-                    val updatedModel  = model.withPreADayPensionInPaymentAmount(Some(updatedAmount))
+    authActions.authenticateWithNino.async { implicit request =>
+      amendPensionsWorthBeforeForm(protectionType)
+        .bindFromRequest()
+        .fold(
+          errors =>
+            protectionType match {
+              case IndividualProtection2016 | IndividualProtection2016LTA =>
+                Future.successful(BadRequest(amendIP16PensionsWorthBefore(errors, protectionType, status)))
+              case IndividualProtection2014 | IndividualProtection2014LTA =>
+                Future.successful(BadRequest(amendIP14PensionsWorthBefore(errors, protectionType, status)))
+            },
+          success =>
+            sessionCacheService
+              .fetchAmendProtectionModel(protectionType, status)
+              .flatMap {
+                case Some(model) =>
+                  val updatedAmount = success.amendedPensionsTakenBeforeAmt.get.toDouble
+                  val updatedModel  = model.withPreADayPensionInPaymentAmount(Some(updatedAmount))
 
-                    sessionCacheService
-                      .saveAmendProtectionModel(updatedModel)
-                      .map(_ => Redirect(routes.AmendsController.amendsSummary(protectionType, status)))
+                  sessionCacheService
+                    .saveAmendProtectionModel(updatedModel)
+                    .map(_ => Redirect(routes.AmendsController.amendsSummary(protectionType, status)))
 
-                  case _ =>
-                    logger.warn(
-                      couldNotRetrieveModelForNino(nino, "after submitting amend pensions worth before amount")
-                    )
-                    Future.successful(buildTechnicalError(technicalError))
-                }
-          )
+                case _ =>
+                  logger.warn(
+                    couldNotRetrieveModelForNino(request.nino, "after submitting amend pensions worth before amount")
+                  )
+                  Future.successful(buildTechnicalError(technicalError))
+              }
+        )
 
-      }
     }
 
 }

@@ -16,11 +16,10 @@
 
 package controllers
 
-import auth.AuthFunction
 import config.AppConfig
 import connectors.CitizenDetailsConnector
 import constructors.display.DisplayConstructors
-import mocks.AuthMock
+import auth.helpers.AuthMocks
 import models._
 import models.display.PrintDisplayModel
 import models.pla.response.{ProtectionStatus, ProtectionType}
@@ -35,14 +34,11 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import services.SessionCacheService
 import testHelpers.FakeApplication
-import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
-import views.html.pages.fallback.technicalError
 import views.html.pages.result.printProtection
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMock with BeforeAndAfterEach {
+class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMocks with BeforeAndAfterEach {
 
   private val displayConstructors: DisplayConstructors         = mock[DisplayConstructors]
   private val sessionCacheService: SessionCacheService         = mock[SessionCacheService]
@@ -55,21 +51,13 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
   private implicit val executionContext: ExecutionContext = inject[ExecutionContext]
   private implicit val AppConfig: AppConfig               = mock[AppConfig]
 
-  private val authFunction = new AuthFunction {
-    override implicit val appConfig: AppConfig           = AppConfig
-    override implicit val technicalError: technicalError = inject[technicalError]
-    override implicit val ec: ExecutionContext           = executionContext
-
-    override def authConnector: AuthConnector = mockAuthConnector
-  }
-
   private val printController = new PrintController(
     sessionCacheService,
     citizenDetailsConnector,
     displayConstructors,
     printProtectionView,
     messagesControllerComponents,
-    authFunction
+    authActions
   )
 
   override def beforeEach(): Unit = {
@@ -117,7 +105,7 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
 
     "there is no data in cache" should {
       "return Redirect to ReadProtectionsController.currentProtections" in {
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
+        mockAuthSuccess(testNino)
         when(citizenDetailsConnector.getPersonDetails(any())(any()))
           .thenReturn(Future(Some(testPersonalDetails)))
         when(sessionCacheService.fetchOpenProtection(any())).thenReturn(Future(None))
@@ -131,7 +119,7 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
 
     "there is a protection stored in the cache" should {
       "return Ok with printProtectionView view" in {
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
+        mockAuthSuccess(testNino)
 
         when(citizenDetailsConnector.getPersonDetails(any())(any()))
           .thenReturn(Future.successful(Some(testPersonalDetails)))
