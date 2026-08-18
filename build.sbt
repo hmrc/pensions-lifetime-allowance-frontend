@@ -40,10 +40,11 @@ lazy val root = Project(appName, file("."))
   .settings(
     scalaVersion := scala3_3_7,
     libraryDependencies ++= AppDependencies(),
-    Test / parallelExecution        := false,
-    Test / fork                     := false,
-    retrieveManaged                 := true,
-    (update / evictionWarningOptions).withRank(KeyRanks.Invisible) := EvictionWarningOptions.default.withWarnScalaVersionEviction(false)
+    Test / parallelExecution := false,
+    Test / fork              := false,
+    retrieveManaged          := true,
+    (update / evictionWarningOptions).withRank(KeyRanks.Invisible) := EvictionWarningOptions.default
+      .withWarnScalaVersionEviction(false)
     // Use the silencer plugin to suppress warnings from unused imports in compiled twirl templates
   )
   .settings(
