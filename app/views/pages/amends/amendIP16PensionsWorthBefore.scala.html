@@ -35,21 +35,21 @@
 )(implicit request: RequestHeader, messages: Messages)
 
 @helpTextAccordionContent = {
-        <p class="govuk-body">@Messages("pla.pensionsWorthBefore.para.1")</p>
+        <p class="govuk-body">@messages("pla.pensionsWorthBefore.para.1")</p>
         <ol class="govuk-list govuk-list--number">
-            <li>@Messages("pla.pensionsWorthBefore.step.1")</li>
-            <li>@Messages("pla.pensionsWorthBefore.step.2")</li>
-            <li>@Messages("pla.pensionsWorthBefore.step.3")</li>
+            <li>@messages("pla.pensionsWorthBefore.step.1")</li>
+            <li>@messages("pla.pensionsWorthBefore.step.2")</li>
+            <li>@messages("pla.pensionsWorthBefore.step.3")</li>
         </ol>
-        <p>@Messages("pla.pensionsWorthBefore.para.2")</p>
+        <p>@messages("pla.pensionsWorthBefore.para.2")</p>
         <ul class="govuk-list govuk-list--number">
-            <li>@Messages("pla.pensionsWorthBefore.bullet.1")</li>
-            <li>@Messages("pla.pensionsWorthBefore.bullet.2")</li>
+            <li>@messages("pla.pensionsWorthBefore.bullet.1")</li>
+            <li>@messages("pla.pensionsWorthBefore.bullet.2")</li>
         </ul>
         <p class="govuk-body">
-            @Messages( "pla.pensionsWorthBefore.para.3")
+            @messages( "pla.pensionsWorthBefore.para.3")
             <a href="@Links.pensionsWorthBefore" class ="govuk-link" id ="ip16-amend-pensions-worth-before-help-link" rel="noreferrer noopener" target="_blank">
-                @Messages("pla.pensionsWorthBefore.helpLinkText") (@Messages("pla.base.newTab")).
+                @messages("pla.pensionsWorthBefore.helpLinkText") (@messages("pla.base.newTab")).
             </a>
         </p>
 }
@@ -74,23 +74,23 @@
 
      @errorSummary(amendPensionsWorthBeforeForm.errors, Some("amendedPensionsTakenBeforeAmt"))
 
-     <h1 class="govuk-heading-xl">@Messages("pla.pensionsWorthBefore.title")</h1>
+     <h1 class="govuk-heading-xl">@messages("pla.pensionsWorthBefore.title")</h1>
 
      @form(action = routes.AmendsPensionWorthBeforeController.submitAmendPensionsWorthBefore(protectionType, status)) {
           @helpTextAccordion(
                id = "ip16-amend-pensions-taken-before-help",
-               summaryText = Messages("pla.pensionsWorthBefore.help"),
+               summaryText = messages("pla.pensionsWorthBefore.help"),
                hiddenContent = helpTextAccordionContent
           )
           @formInputMoney(
                 field = amendPensionsWorthBeforeForm("amendedPensionsTakenBeforeAmt"),
-                question = Messages("pla.pensionsWorthBefore.question"),
-                hintText = Some(Messages("pla.pensionsWorthBefore.hint")),
+                question = messages("pla.pensionsWorthBefore.question"),
+                hintText = Some(messages("pla.pensionsWorthBefore.hint")),
                 hideLabel = true,
                 pageHeading = false,
                 errorMessage = if (amendPensionsWorthBeforeForm.errors.nonEmpty) Some(errorMessage.head) else Some("")
           )
 
-          @submitButton(submitText = Messages("pla.base.change"))
+          @submitButton(submitText = messages("pla.base.change"))
      }
 }

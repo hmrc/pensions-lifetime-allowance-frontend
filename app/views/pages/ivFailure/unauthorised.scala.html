@@ -23,14 +23,14 @@
 @()(implicit request: RequestHeader, messages: Messages)
 
 @layout(
-    pageTitle = Messages("pla.notAuthorised.title")
+    pageTitle = messages("pla.notAuthorised.title")
 ) {
 
-    <h1 class="govuk-heading-xl">@Messages("pla.notAuthorised.pageHeading")</h1>
+    <h1 class="govuk-heading-xl">@messages("pla.notAuthorised.pageHeading")</h1>
     <p class="govuk-body">@messages("pla.notAuthorised.paraOne")</p>
 
     <ul class="govuk-list govuk-list--bullet">
-        <li><a class="govuk-body govuk-link" href="@Links.plaMain">@Messages("pla.notAuthorised.tryAgain")</a></li>
-        <li><a class="govuk-body govuk-link" href="@Links.contactHMRC" target="_blank" rel="noopener noreferrer">@Messages("pla.notAuthorised.paraTwo") (@Messages("pla.base.newTab"))</a></li>
+        <li><a class="govuk-body govuk-link" href="@Links.plaMain">@messages("pla.notAuthorised.tryAgain")</a></li>
+        <li><a class="govuk-body govuk-link" href="@Links.contactHMRC" target="_blank" rel="noopener noreferrer">@messages("pla.notAuthorised.paraTwo") (@messages("pla.base.newTab"))</a></li>
      </ul>
 }

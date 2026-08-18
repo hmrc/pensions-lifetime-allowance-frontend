@@ -23,14 +23,14 @@
 @restartTarget = @{controllers.routes.ReadProtectionsController.currentProtections}
 
 @linkText = @{
-    Messages("pla.techError.retry")
+    messages("pla.techError.retry")
 }
 
 @layout(
-    pageTitle = Messages("pla.techError.title")
+    pageTitle = messages("pla.techError.title")
 ) {
 
-<h1 class="govuk-heading-xl" id="pageHeading">@Messages("pla.techError.pageHeading")</h1>
+<h1 class="govuk-heading-xl" id="pageHeading">@messages("pla.techError.pageHeading")</h1>
 
 <p>
     <a class="govuk-body govuk-link" href=@restartTarget id="tryAgainLink">@linkText</a>

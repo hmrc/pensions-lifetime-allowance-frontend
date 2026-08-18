@@ -181,7 +181,7 @@ class AmendsPensionSharingOrderControllerSpec
         )
       val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
 
-      jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+      jsoupDoc.body.getElementsByTag("h1").text shouldEqual messages("pla.techError.pageHeading")
       jsoupDoc.body
         .getElementById("tryAgainLink")
         .attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections}"
@@ -202,7 +202,7 @@ class AmendsPensionSharingOrderControllerSpec
 
       status(result) shouldBe 200
 
-      jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
+      jsoupDoc.body.getElementsByTag("h1").text shouldEqual messages("pla.psoDetails.title")
       jsoupDoc.body.getElementById("pso.day").attr("value") shouldEqual ""
       jsoupDoc.body.getElementById("pso.month").attr("value") shouldEqual ""
       jsoupDoc.body.getElementById("pso.year").attr("value") shouldEqual ""
@@ -225,7 +225,7 @@ class AmendsPensionSharingOrderControllerSpec
 
       val jsoupDoc = Jsoup.parse(contentAsString(result))
 
-      jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
+      jsoupDoc.body.getElementsByTag("h1").text shouldEqual messages("pla.psoDetails.title")
       jsoupDoc.body.getElementById("pso.day").attr("value") shouldEqual "23"
       jsoupDoc.body.getElementById("pso.month").attr("value") shouldEqual "12"
       jsoupDoc.body.getElementById("pso.year").attr("value") shouldEqual "2016"

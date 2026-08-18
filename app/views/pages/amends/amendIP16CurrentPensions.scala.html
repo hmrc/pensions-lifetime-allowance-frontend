@@ -36,45 +36,45 @@
 )(implicit request: RequestHeader, messages: Messages)
 
 @helpTextAccordionContent = {
-    <p class="govuk-body">@Messages("pla.currentPensions.hiddenTextPara")</p>
+    <p class="govuk-body">@messages("pla.currentPensions.hiddenTextPara")</p>
     <ol class="govuk-list govuk-list--number">
-        <li>@Messages("pla.currentPensions.hiddenText1")</li>
-        <li>@Messages("pla.currentPensions.hiddenText2")</li>
-        <li>@Messages("pla.currentPensions.hiddenText3")</li>
-        <li>@Messages("pla.currentPensions.hiddenText4")</li>
+        <li>@messages("pla.currentPensions.hiddenText1")</li>
+        <li>@messages("pla.currentPensions.hiddenText2")</li>
+        <li>@messages("pla.currentPensions.hiddenText3")</li>
+        <li>@messages("pla.currentPensions.hiddenText4")</li>
     </ol>
     <p class="govuk-body">
-        @Messages("pla.currentPensions.readGuidance.nonInput") <a class="govuk-link" href="@Links.currentPensions" id ="ip16-amend-current-pensions-help-link" rel="noreferrer noopener" target="_blank">
-                                                      @Messages("pla.currentPensions.helpLinkText") (@Messages("pla.base.newTab")).</a>
+        @messages("pla.currentPensions.readGuidance.nonInput") <a class="govuk-link" href="@Links.currentPensions" id ="ip16-amend-current-pensions-help-link" rel="noreferrer noopener" target="_blank">
+                                                      @messages("pla.currentPensions.helpLinkText") (@messages("pla.base.newTab")).</a>
     </p>
 }
 
 @layout(
-    pageTitle = Messages("pla.currentPensions.title")
+    pageTitle = messages("pla.currentPensions.title")
 ) {
 
     @errorSummary(amendCurrentPensionForm.errors, Some("amendedUKPensionAmt"))
 
-    <h1 class="govuk-heading-xl">@Messages("pla.currentPensions.title")</h1>
+    <h1 class="govuk-heading-xl">@messages("pla.currentPensions.title")</h1>
 
-    <p class="govuk-body">@Messages("pla.currentPensions.question")</p>
+    <p class="govuk-body">@messages("pla.currentPensions.question")</p>
 
     @helpTextAccordion(
         id = "ip16-amend-current-pensions-help",
-        summaryText = Messages("pla.currentPensions.hiddenLink"),
+        summaryText = messages("pla.currentPensions.hiddenLink"),
         helpTextAccordionContent
     )
 
     @form(action = routes.AmendsCurrentPensionController.submitAmendCurrentPension(protectionType, status)) {
         @formInputMoney(
             field = amendCurrentPensionForm("amendedUKPensionAmt"),
-            question = Messages("pla.currentPensions.title"),
-            hintText = Some(Messages("pla.currentPensions.hint")),
+            question = messages("pla.currentPensions.title"),
+            hintText = Some(messages("pla.currentPensions.hint")),
             labelClass = Some("govuk-visually-hidden"),
             pageHeading = false
         )
 
-        @submitButton(submitText = Messages("pla.base.change"))
+        @submitButton(submitText = messages("pla.base.change"))
     }
 
 }

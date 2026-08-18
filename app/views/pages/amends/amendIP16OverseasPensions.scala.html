@@ -44,8 +44,8 @@
 
     @formInputMoney(
         field = amendOverseasPensionsForm("amendedOverseasPensionsAmt"),
-        question = Messages("pla.overseasPensions.questionTwo"),
-        hintText = Some(Messages("pla.overseasPensions.questionTwo.hint")),
+        question = messages("pla.overseasPensions.questionTwo"),
+        hintText = Some(messages("pla.overseasPensions.questionTwo.hint")),
         labelClass = Some("govuk-label--l"),
         pageHeading = false,
         errorMessage = if (amendOverseasPensionsForm.errors.nonEmpty) Some(errorMessage.head) else Some("")
@@ -66,19 +66,19 @@
 
     @errorSummary(amendOverseasPensionsForm.errors, Some("amendedOverseasPensionsAmt"))
 
-    <h1 class="govuk-heading-xl">@Messages("pla.overseasPensions.title")</h1>
+    <h1 class="govuk-heading-xl">@messages("pla.overseasPensions.title")</h1>
 
-    <p class="govuk-body">@Messages("pla.overseasPensions.question")</p>
+    <p class="govuk-body">@messages("pla.overseasPensions.question")</p>
 
     @form(action = routes.AmendsOverseasPensionController.submitAmendOverseasPensions(protectionType, status)) {
         @formHiddenYesNoRadio(
             field = amendOverseasPensionsForm("amendedOverseasPensions"),
-            question = Messages("pla.overseasPensions.legend"),
+            question = messages("pla.overseasPensions.legend"),
             hiddenQuestion = true,
             pageHeading = false,
             yesHiddencontent = Some(hiddenYesNoContent)
         )
 
-        @submitButton(Messages("pla.base.change"))
+        @submitButton(messages("pla.base.change"))
     }
 }

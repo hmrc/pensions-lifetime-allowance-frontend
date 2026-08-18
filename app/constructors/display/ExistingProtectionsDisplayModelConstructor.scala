@@ -74,7 +74,7 @@ object ExistingProtectionsDisplayModelConstructor {
 
     val status              = model.status
     val protectionType      = model.protectionType
-    val protectionReference = model.protectionReference.getOrElse(Messages("pla.protection.protectionReference"))
+    val protectionReference = model.protectionReference.getOrElse(messages("pla.protection.protectionReference"))
 
     val protectedAmount =
       model.protectedAmount.map(protectedAmount => Display.currencyDisplayString(BigDecimal(protectedAmount)))

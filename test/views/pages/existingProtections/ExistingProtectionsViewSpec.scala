@@ -28,7 +28,6 @@ import models.pla.request.AmendProtectionRequestStatus
 import models.pla.response.ProtectionStatus.{Dormant, Open}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import play.api.i18n.Messages
 import play.api.mvc.Call
 import testHelpers.CommonViewSpecHelper
 import testHelpers.messages.existingProtections.ExistingProtectionsViewMessages
@@ -70,7 +69,7 @@ class ExistingProtectionsViewSpec extends CommonViewSpecHelper with ExistingProt
         .amendsSummary(AmendableProtectionType.IndividualProtection2014, AmendProtectionRequestStatus.Dormant)
     ),
     psaCheckReference = tstPSACheckRef,
-    protectionReference = Messages("pla.protection.protectionReference"),
+    protectionReference = messages("pla.protection.protectionReference"),
     protectedAmount = Some("100.00"),
     certificateDate = Some(""),
     certificateTime = None

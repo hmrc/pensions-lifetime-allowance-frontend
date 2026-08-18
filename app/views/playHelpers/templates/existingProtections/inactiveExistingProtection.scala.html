@@ -26,9 +26,9 @@
 @changeLink = {
     @protection.amendCall.map{ call =>
         <a class="govuk-link" href="@call" id=@{s"${protection.status.toString.toLowerCase}-${protection.protectionType}-amend-link-$protectionNum"}>
-            @Messages("pla.existingProtections.amendLinkText")
+            @messages("pla.existingProtections.amendLinkText")
             <span class="govuk-visually-hidden">
-                @Messages("pla.protection.types." + protection.protectionType) @protection.protectionReference
+                @messages("pla.protection.types." + protection.protectionType) @protection.protectionReference
             </span>
         </a>
     }
@@ -36,35 +36,35 @@
 
 <dl class="govuk-summary-list">
     @protection.protectedAmount.map { protectedAmount =>
-        @protectionDetails(Messages(HeaderContent.getProtectedLifetimeAllowance), protectedAmount, s"${protection.status}InactiveProtectedAmount$protectionNum", Some(changeLink))
+        @protectionDetails(messages(HeaderContent.getProtectedLifetimeAllowance), protectedAmount, s"${protection.status}InactiveProtectedAmount$protectionNum", Some(changeLink))
     }
 
-    @protectionDetails(Messages(HeaderContent.getProtectionNotificationNumber), protection.protectionReference, s"${protection.status}InactiveProtectionReference$protectionNum")
+    @protectionDetails(messages(HeaderContent.getProtectionNotificationNumber), protection.protectionReference, s"${protection.status}InactiveProtectionReference$protectionNum")
 
-    @protectionDetails(Messages(HeaderContent.getSchemeAdministratorReference), protection.psaCheckReference, s"${protection.status}InactivePSACheckRef$protectionNum")
+    @protectionDetails(messages(HeaderContent.getSchemeAdministratorReference), protection.psaCheckReference, s"${protection.status}InactivePSACheckRef$protectionNum")
 
     @protection.certificateDate.map{ certificateDate =>
-        @protectionDetails(Messages("pla.existingProtections.applicationDate"), certificateDate, s"${protection.status}InactiveCertificateDate$protectionNum")
+        @protectionDetails(messages("pla.existingProtections.applicationDate"), certificateDate, s"${protection.status}InactiveCertificateDate$protectionNum")
     }
 
     @protection.certificateTime.map{ certificateTime =>
-        @protectionDetails(Messages("pla.existingProtections.applicationTime"), certificateTime, s"${protection.status}InactiveCertificateTime$protectionNum")
+        @protectionDetails(messages("pla.existingProtections.applicationTime"), certificateTime, s"${protection.status}InactiveCertificateTime$protectionNum")
     }
 
     @protection.lumpSumPercentage.map { lumpSumPercentage =>
-        @protectionDetails(Messages("pla.existingProtections.lumpSumPercentage"), lumpSumPercentage, s"${protection.status}InactiveLumpSumPercentage$protectionNum")
+        @protectionDetails(messages("pla.existingProtections.lumpSumPercentage"), lumpSumPercentage, s"${protection.status}InactiveLumpSumPercentage$protectionNum")
     }
 
     @protection.lumpSumAmount.map{ lumpSumAmount =>
-        @protectionDetails(Messages("pla.existingProtections.lumpSumAmount"), lumpSumAmount, s"${protection.status}InactiveLumpSumAmount$protectionNum")
+        @protectionDetails(messages("pla.existingProtections.lumpSumAmount"), lumpSumAmount, s"${protection.status}InactiveLumpSumAmount$protectionNum")
     }
 
     @protection.enhancementFactor.map{ enhancementFactor =>
-        @protectionDetails(Messages("pla.existingProtections.enhancementFactor"), enhancementFactor, s"${protection.status}EnhancementFactor$protectionNum")
+        @protectionDetails(messages("pla.existingProtections.enhancementFactor"), enhancementFactor, s"${protection.status}EnhancementFactor$protectionNum")
     }
 
     @protection.factor.map{ factor =>
-        @protectionDetails(Messages("pla.existingProtections.factor"), factor, s"${protection.status}Factor$protectionNum")
+        @protectionDetails(messages("pla.existingProtections.factor"), factor, s"${protection.status}Factor$protectionNum")
     }
 
 </dl>

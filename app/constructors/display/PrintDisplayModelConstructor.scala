@@ -49,7 +49,7 @@ object PrintDisplayModelConstructor {
     val psaCheckReference = protectionModel.psaCheckReference
 
     val protectionReference =
-      protectionModel.protectionReference.getOrElse(Messages("pla.protection.protectionReference"))
+      protectionModel.protectionReference.getOrElse(messages("pla.protection.protectionReference"))
 
     val protectedAmount = if (protectionType.isFixedProtection2016) {
       Some(Display.currencyDisplayString(Constants.fixedProtection2016FixedAmount))

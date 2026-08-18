@@ -29,18 +29,18 @@
 )(implicit request: RequestHeader, messages: Messages)
 
 @layout(
-    pageTitle = Messages("pla.psoDetails.title")
+    pageTitle = messages("pla.psoDetails.title")
 ) {
 
-    <h1 class="govuk-heading-xl" id="page-heading">@Messages("pla.psoDetails.title")</h1>
+    <h1 class="govuk-heading-xl" id="page-heading">@messages("pla.psoDetails.title")</h1>
 
-    <p class="govuk-body">@Messages("pla.amends.pensionDebits.removePso")</p>
+    <p class="govuk-body">@messages("pla.amends.pensionDebits.removePso")</p>
 
     @form(action = routes.AmendsRemovePensionSharingOrderController.submitRemovePso(protectionType, status)) {
 
-        @submitButton(Messages("pla.base.remove"))
+        @submitButton(messages("pla.base.remove"))
 
-        <p class="govuk-body"><a class="govuk-link" href="@routes.AmendsController.amendsSummary(protectionType, status)" id="cancel-link">@Messages("pla.amends.pensionDebits.cancelRemove")</a></p>
+        <p class="govuk-body"><a class="govuk-link" href="@routes.AmendsController.amendsSummary(protectionType, status)" id="cancel-link">@messages("pla.amends.pensionDebits.cancelRemove")</a></p>
 
     }
 }

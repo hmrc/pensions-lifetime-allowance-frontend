@@ -35,19 +35,19 @@
 )(implicit request: RequestHeader, messages: Messages)
 
 @helpTextAccordionContent = {
-    <p class="govuk-body">@Messages("pla.ip14PensionsTakenBetween.para.2")</p>
+    <p class="govuk-body">@messages("pla.ip14PensionsTakenBetween.para.2")</p>
     <ol class="govuk-list govuk-list--number">
-        <li>@Messages("pla.ip14PensionsTakenBetween.step.1")</li>
-        <li>@Messages("pla.pensionsUsedBetween.step.2")</li>
-        <li>@Messages("pla.pensionsUsedBetween.step.3")</li>
-        <li>@Messages("pla.pensionsUsedBetween.step.4")</li>
+        <li>@messages("pla.ip14PensionsTakenBetween.step.1")</li>
+        <li>@messages("pla.pensionsUsedBetween.step.2")</li>
+        <li>@messages("pla.pensionsUsedBetween.step.3")</li>
+        <li>@messages("pla.pensionsUsedBetween.step.4")</li>
     </ol>
-    <p class="govuk-body">@Messages("pla.pensionsUsedBetween.para.3.nonInput")
+    <p class="govuk-body">@messages("pla.pensionsUsedBetween.para.3.nonInput")
         <a href="@Links.pensionsUsedBetween"
            id="ip14-amend-pensions-used-between-help-link"
            class="govuk-link"
            rel="noreferrer noopener"
-           target="_blank">@Messages("pla.pensionsUsedBetween.helpLinkText") (@Messages("pla.base.newTab"))</a>.
+           target="_blank">@messages("pla.pensionsUsedBetween.helpLinkText") (@messages("pla.base.newTab"))</a>.
     </p>
 }
 
@@ -70,23 +70,23 @@
     pageTitle = title
 ){
     @errorSummary(amendPensionsUsedBetweenForm.errors, Some("amendedPensionsUsedBetweenAmt"))
-    <h1 class="govuk-heading-xl">@Messages("pla.pensionsUsedBetween.question")</h1>
-    <p class="govuk-body govuk-!-margin-top-4">@Messages("pla.pensionsUsedBetween.para.1")</p>
+    <h1 class="govuk-heading-xl">@messages("pla.pensionsUsedBetween.question")</h1>
+    <p class="govuk-body govuk-!-margin-top-4">@messages("pla.pensionsUsedBetween.para.1")</p>
     @form(action = routes.AmendsPensionUsedBetweenController.submitAmendPensionsUsedBetween(protectionType, status)) {
         @helpTextAccordion(
             id = "ip14-amend-pensions-used-between-help",
-            summaryText = Messages("pla.pensionsUsedBetween.help"),
+            summaryText = messages("pla.pensionsUsedBetween.help"),
             hiddenContent = helpTextAccordionContent
         )
         @formInputMoney(
             field = amendPensionsUsedBetweenForm("amendedPensionsUsedBetweenAmt"),
-            question = Messages("pla.pensionsUsedBetween.question"),
+            question = messages("pla.pensionsUsedBetween.question"),
             hideLabel = true,
             pageHeading = false,
-            hintText = Some(Messages("pla.pensionsUsedBetween.hint")),
+            hintText = Some(messages("pla.pensionsUsedBetween.hint")),
             errorMessage = if (amendPensionsUsedBetweenForm.errors.nonEmpty) Some(errorMessage.head) else Some("")
         )
 
-        @submitButton(Messages("pla.base.change"))
+        @submitButton(messages("pla.base.change"))
     }
 }

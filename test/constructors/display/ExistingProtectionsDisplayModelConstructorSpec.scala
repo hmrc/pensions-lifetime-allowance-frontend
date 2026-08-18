@@ -28,7 +28,6 @@ import models.pla.response.ProtectionStatus.*
 import models.pla.response.ProtectionType
 import models.pla.response.ProtectionType.*
 import models.{DateModel, ProtectionModel, TimeModel, TransformedReadResponseModel}
-import play.api.i18n.Messages
 
 class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructorsTestData {
 
@@ -82,7 +81,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
           )
         ),
         psaCheckReference = tstPsaCheckRef,
-        protectionReference = Messages("pla.protection.protectionReference"),
+        protectionReference = messages("pla.protection.protectionReference"),
         protectedAmount = None,
         certificateDate = None,
         certificateTime = None
@@ -152,7 +151,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
         status = Dormant,
         amendCall = None,
         psaCheckReference = tstPsaCheckRef,
-        protectionReference = Messages("pla.protection.protectionReference"),
+        protectionReference = messages("pla.protection.protectionReference"),
         protectedAmount = None,
         certificateDate = None,
         certificateTime = None
@@ -175,7 +174,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
         status = Dormant,
         amendCall = None,
         psaCheckReference = tstPsaCheckRef,
-        protectionReference = Messages("pla.protection.protectionReference"),
+        protectionReference = messages("pla.protection.protectionReference"),
         protectedAmount = None,
         certificateDate = None,
         certificateTime = None
@@ -197,7 +196,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
         status = Dormant,
         amendCall = None,
         psaCheckReference = tstPsaCheckRef,
-        protectionReference = Messages("pla.protection.protectionReference"),
+        protectionReference = messages("pla.protection.protectionReference"),
         protectedAmount = None,
         certificateDate = None,
         certificateTime = None
@@ -219,7 +218,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
         status = Dormant,
         amendCall = None,
         psaCheckReference = tstPsaCheckRef,
-        protectionReference = Messages("pla.protection.protectionReference"),
+        protectionReference = messages("pla.protection.protectionReference"),
         protectedAmount = None,
         certificateDate = None,
         certificateTime = None
@@ -246,7 +245,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
           )
         ),
         psaCheckReference = tstPsaCheckRef,
-        protectionReference = Messages("pla.protection.protectionReference"),
+        protectionReference = messages("pla.protection.protectionReference"),
         protectedAmount = None,
         certificateDate = None,
         certificateTime = None
@@ -268,7 +267,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
         status = Dormant,
         amendCall = None,
         psaCheckReference = tstPsaCheckRef,
-        protectionReference = Messages("pla.protection.protectionReference"),
+        protectionReference = messages("pla.protection.protectionReference"),
         protectedAmount = None,
         certificateDate = None,
         certificateTime = None
@@ -296,7 +295,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
           )
         ),
         psaCheckReference = tstPsaCheckRef,
-        protectionReference = Messages("pla.protection.protectionReference"),
+        protectionReference = messages("pla.protection.protectionReference"),
         protectedAmount = None,
         certificateDate = None,
         certificateTime = None
@@ -373,7 +372,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
         status = Expired,
         amendCall = None,
         psaCheckReference = tstPsaCheckRef,
-        protectionReference = Messages("pla.protection.protectionReference"),
+        protectionReference = messages("pla.protection.protectionReference"),
         protectedAmount = None,
         certificateDate = None,
         certificateTime = None
@@ -395,7 +394,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
         status = Expired,
         amendCall = None,
         psaCheckReference = tstPsaCheckRef,
-        protectionReference = Messages("pla.protection.protectionReference"),
+        protectionReference = messages("pla.protection.protectionReference"),
         protectedAmount = None,
         certificateDate = None,
         certificateTime = None
@@ -417,7 +416,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
         status = Rejected,
         amendCall = None,
         psaCheckReference = tstPsaCheckRef,
-        protectionReference = Messages("pla.protection.protectionReference"),
+        protectionReference = messages("pla.protection.protectionReference"),
         protectedAmount = None,
         certificateDate = None,
         certificateTime = None
@@ -439,7 +438,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
         status = Unsuccessful,
         amendCall = None,
         psaCheckReference = tstPsaCheckRef,
-        protectionReference = Messages("pla.protection.protectionReference"),
+        protectionReference = messages("pla.protection.protectionReference"),
         protectedAmount = None,
         certificateDate = None,
         certificateTime = None
@@ -461,7 +460,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
         status = Withdrawn,
         amendCall = None,
         psaCheckReference = tstPsaCheckRef,
-        protectionReference = Messages("pla.protection.protectionReference"),
+        protectionReference = messages("pla.protection.protectionReference"),
         protectedAmount = None,
         certificateDate = None,
         certificateTime = None
@@ -483,7 +482,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
         status = Withdrawn,
         amendCall = None,
         psaCheckReference = tstPsaCheckRef,
-        protectionReference = Messages("pla.protection.protectionReference"),
+        protectionReference = messages("pla.protection.protectionReference"),
         protectedAmount = None,
         certificateDate = None,
         certificateTime = None
@@ -505,7 +504,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
         status = Dormant,
         amendCall = None,
         psaCheckReference = tstPsaCheckRef,
-        protectionReference = Messages("pla.protection.protectionReference"),
+        protectionReference = messages("pla.protection.protectionReference"),
         protectedAmount = None,
         certificateDate = None,
         certificateTime = None
@@ -527,7 +526,7 @@ class ExistingProtectionsDisplayModelConstructorSpec extends DisplayConstructors
         status = Dormant,
         amendCall = None,
         psaCheckReference = tstPsaCheckRef,
-        protectionReference = Messages("pla.protection.protectionReference"),
+        protectionReference = messages("pla.protection.protectionReference"),
         protectedAmount = None,
         certificateDate = None,
         certificateTime = None

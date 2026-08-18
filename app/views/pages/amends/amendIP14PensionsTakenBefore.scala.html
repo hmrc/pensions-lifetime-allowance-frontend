@@ -50,16 +50,16 @@
     @form(action = routes.AmendsPensionTakenBeforeController.submitAmendPensionsTakenBefore(protectionType, status)) {
 
         @plaInputRadioGroup(
-            legend = Messages("pla.pensionsTakenBefore.title"),
+            legend = messages("pla.pensionsTakenBefore.title"),
             legendClass = Some("govuk-fieldset__legend--xl"),
             items = Seq(
-                RadioItem(content = Text(Messages("pla.base.yes")), value = Option("yes")),
-                RadioItem(content = Text(Messages("pla.base.no")), value = Option("no"))
+                RadioItem(content = Text(messages("pla.base.yes")), value = Option("yes")),
+                RadioItem(content = Text(messages("pla.base.no")), value = Option("no"))
             ),
             inLine = true,
             field = amendPensionsTakenBeforeForm("amendedPensionsTakenBefore")
         )
 
-        @submitButton(Messages("pla.base.change"))
+        @submitButton(messages("pla.base.change"))
     }
 }

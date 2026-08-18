@@ -26,7 +26,7 @@
 @labelAfter = @{ elements.args.getOrElse(Symbol("_labelAfter"), false).asInstanceOf[Boolean] }
 <fieldset class="@fieldsetClass" id="@field.id"
     @if(elements.args.contains(Symbol("_fieldsetAttributes"))) {@elements.args.get(Symbol("_fieldsetAttributes"))}>
-    @elements.errors.map{error => <span class="error-notification" id="@{elements.field.id}--error">@Messages(error.toString)</span>}
+    @elements.errors.map{error => <span class="error-notification" id="@{elements.field.id}--error">@messages(error.toString)</span>}
     @if(elements.args.contains(Symbol("_legend"))) {
         <legend @if(elements.args.contains(Symbol("_legendClass"))) {class="@elements.args.get(Symbol("_legendClass"))"}>
             <span id="@{elements.field.id}Label">

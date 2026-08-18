@@ -47,21 +47,21 @@
 
     @errorSummary(amendPensionsTakenBetweenForm.errors)
 
-    <h1 class="govuk-heading-l">@Messages("pla.pensionsTakenBetween.title")</h1>
+    <h1 class="govuk-heading-l">@messages("pla.pensionsTakenBetween.title")</h1>
 
     @form(action = routes.AmendsPensionTakenBetweenController.submitAmendPensionsTakenBetween(protectionType, status)) {
         @plaInputRadioGroup(
-            legend = Messages("pla.pensionsTakenBetween.title"),
+            legend = messages("pla.pensionsTakenBetween.title"),
             legendClass = Some("govuk-visually-hidden govuk-!-display-block"),
             items = Seq(
-                RadioItem(content = Text(Messages("pla.base.yes")), value = Option("yes")),
-                RadioItem(content = Text(Messages("pla.base.no")), value = Option("no"))
+                RadioItem(content = Text(messages("pla.base.yes")), value = Option("yes")),
+                RadioItem(content = Text(messages("pla.base.no")), value = Option("no"))
             ),
             isPageHeading = false,
             inLine = true,
             field = amendPensionsTakenBetweenForm("amendedPensionsTakenBetween")
         )
 
-        @submitButton(submitText = Messages("pla.base.change"))
+        @submitButton(submitText = messages("pla.base.change"))
     }
 }

@@ -39,7 +39,7 @@
             ActionItem(
                 href = changeLink.url,
                 content = Text(messages("pla.base.change")),
-                visuallyHiddenText = Some(Messages(s"pla.amends.$sectionId.$protectionType.${model.rowId}")),
+                visuallyHiddenText = Some(messages(s"pla.amends.$sectionId.$protectionType.${model.rowId}")),
                 attributes = Map("id" -> s"$sectionId-${model.rowId}-change-link")
         ))).flatten
 

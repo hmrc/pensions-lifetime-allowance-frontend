@@ -51,7 +51,7 @@ class AmendsCurrentPensionControllerSpec
 
   implicit val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
 
-  implicit val mockMessage: Messages = mcc.messagesApi.preferred(fakeRequest)
+  implicit val messages: Messages = mcc.messagesApi.preferred(fakeRequest)
 
   implicit val appConfig: AppConfig           = inject[AppConfig]
   implicit val system: ActorSystem            = ActorSystem()
@@ -115,7 +115,7 @@ class AmendsCurrentPensionControllerSpec
 
       status(result) shouldBe 200
 
-      jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.currentPensions.title")
+      jsoupDoc.body.getElementsByTag("h1").text shouldEqual messages("pla.currentPensions.title")
     }
 
     "return some HTML that" should {

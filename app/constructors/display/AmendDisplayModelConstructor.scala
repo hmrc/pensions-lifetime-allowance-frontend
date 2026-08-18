@@ -243,15 +243,15 @@ object AmendDisplayModelConstructor extends Logging {
       implicit messages: Messages
   ): AmendDisplaySectionModel =
     amountOption.fold(
-      AmendDisplaySectionModel(stage, Seq(AmendDisplayRowModel("YesNo", None, None, Messages("pla.base.no"))))
+      AmendDisplaySectionModel(stage, Seq(AmendDisplayRowModel("YesNo", None, None, messages("pla.base.no"))))
     )(amt =>
       if (amt < 0.01) {
-        AmendDisplaySectionModel(stage, Seq(AmendDisplayRowModel("YesNo", None, None, Messages("pla.base.no"))))
+        AmendDisplaySectionModel(stage, Seq(AmendDisplayRowModel("YesNo", None, None, messages("pla.base.no"))))
       } else {
         AmendDisplaySectionModel(
           stage,
           Seq(
-            AmendDisplayRowModel("YesNo", None, None, Messages("pla.base.yes")),
+            AmendDisplayRowModel("YesNo", None, None, messages("pla.base.yes")),
             AmendDisplayRowModel("Amt", None, None, Display.currencyDisplayString(amt))
           )
         )
@@ -268,20 +268,20 @@ object AmendDisplayModelConstructor extends Logging {
     amountOption.fold(
       AmendDisplaySectionModel(
         stage,
-        Seq(AmendDisplayRowModel("YesNo", amendCall, removeLinkCall = None, Messages("pla.base.no")))
+        Seq(AmendDisplayRowModel("YesNo", amendCall, removeLinkCall = None, messages("pla.base.no")))
       )
     )(amt =>
       if (amt < 0.01) {
         AmendDisplaySectionModel(
           stage,
-          Seq(AmendDisplayRowModel("YesNo", amendCall, removeLinkCall = None, Messages("pla.base.no")))
+          Seq(AmendDisplayRowModel("YesNo", amendCall, removeLinkCall = None, messages("pla.base.no")))
         )
       } else {
         if (displayYesNoOnly) {
           AmendDisplaySectionModel(
             stage,
             Seq(
-              AmendDisplayRowModel("YesNo", amendCall, removeLinkCall = None, Messages("pla.base.yes"))
+              AmendDisplayRowModel("YesNo", amendCall, removeLinkCall = None, messages("pla.base.yes"))
             )
           )
         } else if (displayAmountOnly) {
@@ -295,7 +295,7 @@ object AmendDisplayModelConstructor extends Logging {
           AmendDisplaySectionModel(
             stage,
             Seq(
-              AmendDisplayRowModel("YesNo", amendCall, removeLinkCall = None, Messages("pla.base.yes")),
+              AmendDisplayRowModel("YesNo", amendCall, removeLinkCall = None, messages("pla.base.yes")),
               AmendDisplayRowModel("Amt", amendCall, removeLinkCall = None, Display.currencyDisplayString(amt))
             )
           )

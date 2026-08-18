@@ -148,7 +148,7 @@ class AmendsPensionTakenBetweenControllerSpec
       )(fakeRequest)
     val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
 
-    jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBetween.title")
+    jsoupDoc.body.getElementsByTag("h1").text shouldEqual messages("pla.pensionsTakenBetween.title")
   }
 
   "return some HTML that" should {

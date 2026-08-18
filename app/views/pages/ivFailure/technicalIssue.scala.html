@@ -23,15 +23,15 @@
 @()(implicit request: RequestHeader, messages: Messages)
 
 @layout(
-    pageTitle = Messages("pla.technicalIssue.title"),
+    pageTitle = messages("pla.technicalIssue.title"),
     backLinkEnabled = false
 ) {
 
-    <h1 class="govuk-heading-xl">@Messages("pla.technicalIssue.pageHeading")</h1>
+    <h1 class="govuk-heading-xl">@messages("pla.technicalIssue.pageHeading")</h1>
 
-    <p class="govuk-body">@Messages("pla.technicalIssue.paraOne")</p>
+    <p class="govuk-body">@messages("pla.technicalIssue.paraOne")</p>
 
-    <p class="govuk-body">@Messages("pla.technicalIssue.paraTwo")</p>
+    <p class="govuk-body">@messages("pla.technicalIssue.paraTwo")</p>
 
     <p class="govuk-body">@messages("pla.technicalIssue.tryAgain.p1")
         <a class="govuk-link" href="@Links.plaMain" rel="external">@messages("pla.technicalIssue.tryAgain.linkText")</a>

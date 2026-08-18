@@ -34,14 +34,14 @@
 )(implicit request: RequestHeader, messages: Messages)
 
 @layout(
-    pageTitle = Messages("pla.amends.title")
+    pageTitle = messages("pla.amends.title")
 ) {
 
     <h1 class="govuk-heading-xl" id="page-heading">
         @if(model.amended) {
-            @Messages(s"pla.amends.heading.${model.protectionType}.changed")
+            @messages(s"pla.amends.heading.${model.protectionType}.changed")
         } else {
-            @Messages(s"pla.amends.heading.${model.protectionType}.noChanges")
+            @messages(s"pla.amends.heading.${model.protectionType}.noChanges")
         }
     </h1>
 
@@ -52,7 +52,7 @@
         </p>
     }
 
-    <h2 class="govuk-heading-m">@Messages("pla.summary.pensionsHeading")</h2>
+    <h2 class="govuk-heading-m">@messages("pla.summary.pensionsHeading")</h2>
 
 
     @amendSection(model.pensionContributionSections, model.protectionType)
@@ -71,14 +71,14 @@
     ))
 
     @if(model.psoSections.nonEmpty){
-        <h2 class="govuk-heading-m">@Messages("pla.summary.psosHeading")</h2>
+        <h2 class="govuk-heading-m">@messages("pla.summary.psosHeading")</h2>
 
         @amendSection(model.psoSections, model.protectionType)
     }
 
     @if(!model.psoAdded){
         <p class="govuk-body">
-            <a class="govuk-link" href="@routes.AmendsPensionSharingOrderController.amendPsoDetails(model.protectionType, status)" id="addPsoLink">@Messages("pla.amends.addPsoLink")</a>
+            <a class="govuk-link" href="@routes.AmendsPensionSharingOrderController.amendPsoDetails(model.protectionType, status)" id="addPsoLink">@messages("pla.amends.addPsoLink")</a>
         </p>
     }
 
@@ -87,7 +87,7 @@
             @govukInsetText(InsetText(
                 id = Some("declaration"),
                 classes = "govuk-!-font-weight-bold",
-                content = Text(Messages("pla.amends.declaration"))
+                content = Text(messages("pla.amends.declaration"))
             ))
             @submitButton(messages("pla.amends.submit"))
         }

@@ -37,12 +37,12 @@
  )),
  items = Seq(
   RadioItem(
-   content = Text(Messages("pla.base.yes")),
+   content = Text(messages("pla.base.yes")),
    value = Some("yes"),
    conditionalHtml = if (yesHiddencontent.nonEmpty) yesHiddencontent else None
   ),
   RadioItem(
-   content = Text(Messages("pla.base.no")),
+   content = Text(messages("pla.base.no")),
    value = Some("no"),
    conditionalHtml = if (noHiddenContent.nonEmpty) noHiddenContent else None
   )

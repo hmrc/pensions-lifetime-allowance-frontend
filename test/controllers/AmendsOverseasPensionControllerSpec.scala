@@ -167,7 +167,7 @@ class AmendsOverseasPensionControllerSpec
         )(fakeRequest)
       val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
 
-      jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.overseasPensions.title")
+      jsoupDoc.body.getElementsByTag("h1").text shouldEqual messages("pla.overseasPensions.title")
     }
 
     "return some HTML that" should {
@@ -322,7 +322,7 @@ class AmendsOverseasPensionControllerSpec
       val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       jsoupDoc.getElementsByClass("govuk-error-message").text should include(
-        Messages("pla.overseasPensions.amount.errors.mandatoryError.IndividualProtection2016")
+        messages("pla.overseasPensions.amount.errors.mandatoryError.IndividualProtection2016")
       )
     }
   }
@@ -418,7 +418,7 @@ class AmendsOverseasPensionControllerSpec
       val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       jsoupDoc.getElementsByClass("govuk-error-message").text should include(
-        Messages("pla.overseasPensions.amount.errors.mandatoryError.IndividualProtection2014")
+        messages("pla.overseasPensions.amount.errors.mandatoryError.IndividualProtection2014")
       )
     }
   }
@@ -514,7 +514,7 @@ class AmendsOverseasPensionControllerSpec
       val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       jsoupDoc.getElementsByClass("govuk-error-message").text should include(
-        Messages("pla.overseasPensions.amount.errors.mandatoryError.IndividualProtection2016LTA")
+        messages("pla.overseasPensions.amount.errors.mandatoryError.IndividualProtection2016LTA")
       )
     }
   }
@@ -610,7 +610,7 @@ class AmendsOverseasPensionControllerSpec
       val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       jsoupDoc.getElementsByClass("govuk-error-message").text should include(
-        Messages("pla.overseasPensions.amount.errors.mandatoryError.IndividualProtection2014LTA")
+        messages("pla.overseasPensions.amount.errors.mandatoryError.IndividualProtection2014LTA")
       )
     }
   }

@@ -133,7 +133,7 @@ class AmendsRemovePensionSharingOrderControllerSpec
         )
       val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
 
-      jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+      jsoupDoc.body.getElementsByTag("h1").text shouldEqual messages("pla.techError.pageHeading")
       jsoupDoc.body
         .getElementById("tryAgainLink")
         .attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections}"
@@ -180,7 +180,7 @@ class AmendsRemovePensionSharingOrderControllerSpec
 
       val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
 
-      jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
+      jsoupDoc.body.getElementsByTag("h1").text shouldEqual messages("pla.psoDetails.title")
     }
 
     "return 500 if the an amend protection model could not be retrieved from cache" in {

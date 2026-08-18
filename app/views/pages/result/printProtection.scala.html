@@ -39,78 +39,78 @@
 
     <h1 class="govuk-heading-xl" id="userName">@{model.firstName} @{model.surname}</h1>
     <p class="govuk-body" id="userNino">
-        @{Messages("pla.print.nino")} @{model.nino}
+        @{messages("pla.print.nino")} @{model.nino}
     </p>
     <h2 class="govuk-heading-l">
-        @Messages("pla.print.protectionDetails")
+        @messages("pla.print.protectionDetails")
     </h2>
 
     <table class="govuk-table">
-        <caption class="govuk-visually-hidden">@Messages("pla.print.protectionDetails")</caption>
+        <caption class="govuk-visually-hidden">@messages("pla.print.protectionDetails")</caption>
         <tbody class="govuk-table__body">
 
             <tr class="govuk-table__row">
-                <th scope="row" class="govuk-table__header">@Messages("pla.print.protectionType")</th>
-                <td class="govuk-table__cell" id="protectionType">@Messages(s"pla.protection.types.${model.protectionType}")</td>
+                <th scope="row" class="govuk-table__header">@messages("pla.print.protectionType")</th>
+                <td class="govuk-table__cell" id="protectionType">@messages(s"pla.protection.types.${model.protectionType}")</td>
             </tr>
             @model.protectedAmount.map { protectedAmount =>
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">@Messages(HeaderContent.getProtectedLifetimeAllowance)</th>
+                    <th scope="row" class="govuk-table__header">@messages(HeaderContent.getProtectedLifetimeAllowance)</th>
                     <td class="govuk-table__cell" id="protectedAmount">@{protectedAmount}</td>
                 </tr>
             }
             <tr class="govuk-table__row">
-                <th scope="row" class="govuk-table__header">@Messages(HeaderContent.getProtectionNotificationNumber)</th>
+                <th scope="row" class="govuk-table__header">@messages(HeaderContent.getProtectionNotificationNumber)</th>
                 <td class="govuk-table__cell" id="protectionRef">@{model.protectionReference}</td>
             </tr>
             <tr class="govuk-table__row">
-                <th scope="row" class="govuk-table__header">@Messages(HeaderContent.getSchemeAdministratorReference)</th>
+                <th scope="row" class="govuk-table__header">@messages(HeaderContent.getSchemeAdministratorReference)</th>
                 <td class="govuk-table__cell" id="psaRef">@{model.psaCheckReference}</td>
             </tr>
             @model.lumpSumPercentage.map { lumpSumPercentage =>
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">@Messages("pla.print.lumpSumPercentage")</th>
+                    <th scope="row" class="govuk-table__header">@messages("pla.print.lumpSumPercentage")</th>
                     <td class="govuk-table__cell" id="lumpSumPercentage">@lumpSumPercentage</td>
                 </tr>
             }
             @model.lumpSumAmount.map { lumpSumAmount =>
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">@Messages("pla.print.lumpSumAmount")</th>
+                    <th scope="row" class="govuk-table__header">@messages("pla.print.lumpSumAmount")</th>
                     <td class="govuk-table__cell" id="lumpSumAmount">@lumpSumAmount</td>
                 </tr>
             }
             @model.enhancementFactor.map { enhancementFactor =>
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">@Messages("pla.print.enhancementFactor")</th>
+                    <th scope="row" class="govuk-table__header">@messages("pla.print.enhancementFactor")</th>
                     <td class="govuk-table__cell" id="enhancementFactor">@enhancementFactor</td>
                 </tr>
             }
             @model.factor.map { factor =>
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">@Messages("pla.print.factor")</th>
+                    <th scope="row" class="govuk-table__header">@messages("pla.print.factor")</th>
                     <td class="govuk-table__cell" id="factor">@factor</td>
                 </tr>
             }
             @model.certificateDate.map { certificateDate =>
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">@Messages("pla.print.applicationDate")</th>
+                    <th scope="row" class="govuk-table__header">@messages("pla.print.applicationDate")</th>
                     <td class="govuk-table__cell" id="applicationDate">@{certificateDate}</td>
                 </tr>
             }
             @model.certificateTime.map { certificateTime =>
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">@Messages("pla.print.applicationTime")</th>
+                    <th scope="row" class="govuk-table__header">@messages("pla.print.applicationTime")</th>
                     <td class="govuk-table__cell" id="applicationTime">@{certificateTime}</td>
                 </tr>
             }
         </tbody>
     </table>
 
-    <p class="govuk-body">@Messages("pla.print.giveToPensionProvider")</p>
+    <p class="govuk-body">@messages("pla.print.giveToPensionProvider")</p>
 
     @if(model.isFixedProtection2016) {
-        <p class="govuk-body" id="contactHMRC">@Messages(s"pla.print.FP2016.contactHMRC")</p>
+        <p class="govuk-body" id="contactHMRC">@messages(s"pla.print.FP2016.contactHMRC")</p>
     } else {
-        <p class="govuk-body" id="contactHMRC">@Messages(s"pla.print.contactHMRC")</p>
+        <p class="govuk-body" id="contactHMRC">@messages(s"pla.print.contactHMRC")</p>
     }
 }

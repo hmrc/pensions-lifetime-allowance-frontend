@@ -44,27 +44,27 @@
     pageTitle = title
 ){
     @errorSummary(amendPensionsTakenBetweenForm.errors)
-    <h1 class="govuk-heading-xl">@Messages("pla.ip14PensionsTakenBetween.title")</h1>
+    <h1 class="govuk-heading-xl">@messages("pla.ip14PensionsTakenBetween.title")</h1>
 
     @form(action = routes.AmendsPensionTakenBetweenController.submitAmendPensionsTakenBetween(protectionType, status)) {
         <ul class="govuk-list govuk-list--bullet">
-            <li>@Messages("pla.pensionsTakenBetween.bullet.1")</li>
-            <li>@Messages("pla.pensionsTakenBetween.bullet.2")</li>
-            <li>@Messages("pla.pensionsTakenBetween.bullet.3")</li>
+            <li>@messages("pla.pensionsTakenBetween.bullet.1")</li>
+            <li>@messages("pla.pensionsTakenBetween.bullet.2")</li>
+            <li>@messages("pla.pensionsTakenBetween.bullet.3")</li>
         </ul>
 
         @plaInputRadioGroup(
-            legend = Messages("pla.ip14PensionsTakenBetween.legend"),
+            legend = messages("pla.ip14PensionsTakenBetween.legend"),
             legendClass = Some("govuk-visually-hidden govuk-!-display-block"),
             items = Seq(
-                RadioItem(content = Text(Messages("pla.base.yes")), value = Option("yes")),
-                RadioItem(content = Text(Messages("pla.base.no")), value = Option("no"))
+                RadioItem(content = Text(messages("pla.base.yes")), value = Option("yes")),
+                RadioItem(content = Text(messages("pla.base.no")), value = Option("no"))
             ),
             isPageHeading = false,
             inLine = true,
             field = amendPensionsTakenBetweenForm("amendedPensionsTakenBetween")
         )
 
-        @submitButton(Messages("pla.base.change"))
+        @submitButton(messages("pla.base.change"))
     }
 }

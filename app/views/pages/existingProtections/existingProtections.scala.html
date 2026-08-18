@@ -28,9 +28,9 @@
 @protectionsOfType(protections: Seq[ExistingProtectionDisplayModel]) = {
     @if(protections.nonEmpty){
         <h3 class="govuk-heading-m">
-            @Messages("pla.protection.types." + protections.head.protectionType)
+            @messages("pla.protection.types." + protections.head.protectionType)
             <span class="govuk-visually-hidden">
-                @Messages("pla.hidden." + protections.head.status)
+                @messages("pla.hidden." + protections.head.status)
             </span>
         </h3>
         @for((protection, index) <- protections.zipWithIndex) {
@@ -46,20 +46,20 @@
 }
 
 @layout(
-    pageTitle = Messages("pla.existingProtections.title"),
+    pageTitle = messages("pla.existingProtections.title"),
     backLinkEnabled = false
 ) {
 
-    <h1 class="govuk-heading-xl">@Messages("pla.existingProtections.title")</h1>
+    <h1 class="govuk-heading-xl">@messages("pla.existingProtections.title")</h1>
 
     @if(protections.activeProtection.isEmpty && protections.inactiveProtections.isEmpty) {
-        <p class="govuk-body" id="noProtections">@Messages("pla.existingProtections.noProtections")</p>
+        <p class="govuk-body" id="noProtections">@messages("pla.existingProtections.noProtections")</p>
     } else {
         <div id="listProtections">
             @if(protections.activeProtection.isEmpty && protections.inactiveProtections.nonEmpty) {
-                <p class="govuk-body" id="noActiveProtections">@Messages("pla.existingProtections.noActiveProtections")</p>
+                <p class="govuk-body" id="noActiveProtections">@messages("pla.existingProtections.noActiveProtections")</p>
             } else {
-                <h2 class="govuk-heading-l">@Messages("pla.existingProtections.active.heading")</h2>
+                <h2 class="govuk-heading-l">@messages("pla.existingProtections.active.heading")</h2>
                 @protections.activeProtection.map { protection =>
                     <div class="protection-detail">
                         @activeExistingProtection(protection, 1)
@@ -69,26 +69,26 @@
             }
 
             @if(protections.activeProtection.isDefined && protections.inactiveProtections.isEmpty) {
-                <p class="govuk-body" id="noOtherProtections">@Messages("pla.existingProtections.noOtherProtections")</p>
+                <p class="govuk-body" id="noOtherProtections">@messages("pla.existingProtections.noOtherProtections")</p>
             } else {
                 @if(protections.inactiveProtections.dormantProtections.nonEmpty) {
-                    <h2 class="govuk-heading-l govuk-!-margin-top-9" id="dormant">@Messages("pla.protection.statuses.dormant")</h2>
+                    <h2 class="govuk-heading-l govuk-!-margin-top-9" id="dormant">@messages("pla.protection.statuses.dormant")</h2>
                     @protectionsFor(protections.inactiveProtections.dormantProtections)
                 }
                 @if(protections.inactiveProtections.withdrawnProtections.nonEmpty) {
-                    <h2 class="govuk-heading-l govuk-!-margin-top-9" id="withdraw">@Messages("pla.protection.statuses.withdrawn")</h2>
+                    <h2 class="govuk-heading-l govuk-!-margin-top-9" id="withdraw">@messages("pla.protection.statuses.withdrawn")</h2>
                     @protectionsFor(protections.inactiveProtections.withdrawnProtections)
                 }
                 @if(protections.inactiveProtections.unsuccessfulProtections.nonEmpty) {
-                    <h2 class="govuk-heading-l govuk-!-margin-top-9" id="unsuccessful">@Messages("pla.protection.statuses.unsuccessful")</h2>
+                    <h2 class="govuk-heading-l govuk-!-margin-top-9" id="unsuccessful">@messages("pla.protection.statuses.unsuccessful")</h2>
                     @protectionsFor(protections.inactiveProtections.unsuccessfulProtections)
                   }
                 @if(protections.inactiveProtections.rejectedProtections.nonEmpty) {
-                    <h2 class="govuk-heading-l govuk-!-margin-top-9" id="rejected">@Messages("pla.protection.statuses.rejected")</h2>
+                    <h2 class="govuk-heading-l govuk-!-margin-top-9" id="rejected">@messages("pla.protection.statuses.rejected")</h2>
                     @protectionsFor(protections.inactiveProtections.rejectedProtections)
                 }
                 @if(protections.inactiveProtections.expiredProtections.nonEmpty) {
-                    <h2 class="govuk-heading-l govuk-!-margin-top-9" id="expired">@Messages("pla.protection.statuses.expired")</h2>
+                    <h2 class="govuk-heading-l govuk-!-margin-top-9" id="expired">@messages("pla.protection.statuses.expired")</h2>
                     @protectionsFor(protections.inactiveProtections.expiredProtections)
                 }
             }
@@ -96,7 +96,7 @@
     }
 
     <p class="govuk-body">
-        @Messages("pla.existingProtections.other.protections.linkText.before_2016ShutterEnabled") <a class="govuk-link" href="https://www.gov.uk/guidance/taking-higher-tax-free-lump-sums-with-lifetime-allowance-protection">@Messages("pla.existingProtections.other.protections.link_2016ShutterEnabled")</a>
+        @messages("pla.existingProtections.other.protections.linkText.before_2016ShutterEnabled") <a class="govuk-link" href="https://www.gov.uk/guidance/taking-higher-tax-free-lump-sums-with-lifetime-allowance-protection">@messages("pla.existingProtections.other.protections.link_2016ShutterEnabled")</a>
     </p>
 
 }

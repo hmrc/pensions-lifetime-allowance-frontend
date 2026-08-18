@@ -49,28 +49,28 @@
 
     @errorSummary(psoDetailsForm.errors.distinctBy(error => error.message), errorSuffixes = Some(Map("pso" -> "day")))
 
-    <h1 class="govuk-heading-xl">@Messages("pla.psoDetails.title")</h1>
+    <h1 class="govuk-heading-xl">@messages("pla.psoDetails.title")</h1>
 
     @form(action = routes.AmendsPensionSharingOrderController.submitAmendPsoDetails(protectionType, status, existingPso)) {
 
         @formInlineDateInput(
-            content = Messages("pla.psoDetails.date.question"),
+            content = messages("pla.psoDetails.date.question"),
             field = psoDetailsForm("pso"),
-            hintContent = Some(Messages("pla.psoDetails.date.hint")),
+            hintContent = Some(messages("pla.psoDetails.date.hint")),
             pageHeading = false,
             labelClass = Some("govuk-label--m")
         )
 
         @formInputMoney(
             field = psoDetailsForm("psoAmt"),
-            Messages("pla.psoDetails.amount.question"),
-            hintText = Some(Messages("pla.psoDetails.amount.hint")),
+            messages("pla.psoDetails.amount.question"),
+            hintText = Some(messages("pla.psoDetails.amount.hint")),
             pageHeading = false,
             labelClass = Some("govuk-label--m")
         )
 
         @submitButton(
-            submitText = if(existingPso) Messages("pla.base.update") else Messages("pla.base.add")
+            submitText = if(existingPso) messages("pla.base.update") else messages("pla.base.add")
         )
 
     }
