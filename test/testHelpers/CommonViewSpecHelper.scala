@@ -52,7 +52,7 @@ trait CommonViewSpecHelper extends FakeApplication with CommonMessages with Mock
     reset(mockAppConfig)
   }
 
-  implicit class ElementsExtension(elements: Elements) {
+  extension (elements: Elements) {
 
     def toSeq: Seq[Element] = {
       import CollectionConverters.*
