@@ -46,15 +46,6 @@ lazy val root = Project(appName, file("."))
     retrieveManaged          := true,
     (update / evictionWarningOptions).withRank(KeyRanks.Invisible) := EvictionWarningOptions.default
       .withWarnScalaVersionEviction(false)
-    // Use the silencer plugin to suppress warnings from unused imports in compiled twirl templates
-  )
-  .settings(
-    TwirlKeys.templateImports ++= Seq(
-      "uk.gov.hmrc.govukfrontend.views.html.components._",
-      "uk.gov.hmrc.hmrcfrontend.views.html.components._",
-      "uk.gov.hmrc.hmrcfrontend.views.html.helpers._",
-      "uk.gov.hmrc.govukfrontend.views.html.components.implicits._"
-    )
   )
 
 PlayKeys.playDefaultPort := 9010
