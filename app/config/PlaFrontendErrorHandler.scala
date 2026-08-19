@@ -25,18 +25,19 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class PlaFrontendErrorHandler @Inject() (errorTemplate: views.html.error_template)(
-    implicit val messagesApi: MessagesApi,
-    val appConfig: AppConfig,
-    val ec: ExecutionContext
+class PlaFrontendErrorHandler @Inject() (
+    errorTemplate: views.html.error_template
+)(
+    using override val messagesApi: MessagesApi,
+    override val ec: ExecutionContext
 ) extends FrontendErrorHandler {
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(
-      implicit rh: RequestHeader
+      using RequestHeader
   ): Future[Html] =
     Future.successful(errorTemplate(pageTitle, heading, message))
 
-  override def badRequestTemplate(implicit request: RequestHeader): Future[Html] = {
+  override def badRequestTemplate(using RequestHeader): Future[Html] = {
     val messages: Messages = summon[Messages]
 
     standardErrorTemplate(
@@ -46,7 +47,7 @@ class PlaFrontendErrorHandler @Inject() (errorTemplate: views.html.error_templat
     )
   }
 
-  override def notFoundTemplate(implicit request: RequestHeader): Future[Html] =
+  override def notFoundTemplate(using RequestHeader): Future[Html] =
     val messages: Messages = summon[Messages]
 
     standardErrorTemplate(
@@ -55,7 +56,7 @@ class PlaFrontendErrorHandler @Inject() (errorTemplate: views.html.error_templat
       messages("global.error.404.message")
     )
 
-  override def internalServerErrorTemplate(implicit request: RequestHeader): Future[Html] =
+  override def internalServerErrorTemplate(using RequestHeader): Future[Html] =
     val messages: Messages = summon[Messages]
 
     standardErrorTemplate(

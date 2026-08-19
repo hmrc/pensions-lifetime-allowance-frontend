@@ -17,7 +17,6 @@
 package controllers
 
 import auth.AuthActions
-import config.AppConfig
 import forms.AmendPensionsTakenBetweenForm.*
 import models.amend.value.AmendPensionsTakenBetweenModel
 import models.pla.AmendableProtectionType
@@ -26,7 +25,6 @@ import models.pla.request.AmendProtectionRequestStatus
 import play.api.Logging
 import play.api.mvc.*
 import services.SessionCacheService
-import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages
 
@@ -35,16 +33,14 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class AmendsPensionTakenBetweenController @Inject() (
-    val sessionCacheService: SessionCacheService,
+    sessionCacheService: SessionCacheService,
     mcc: MessagesControllerComponents,
     authActions: AuthActions,
-    technicalError: views.html.pages.fallback.technicalError,
+    override val technicalError: views.html.pages.fallback.technicalError,
     amendIP16PensionsTakenBetween: pages.amends.amendIP16PensionsTakenBetween,
     amendIP14PensionsTakenBetween: pages.amends.amendIP14PensionsTakenBetween
 )(
-    implicit val appConfig: AppConfig,
-    val formWithCSRF: FormWithCSRF,
-    val ec: ExecutionContext
+    using ExecutionContext
 ) extends FrontendController(mcc)
     with AmendControllerErrorHelper
     with Logging {
@@ -53,7 +49,9 @@ class AmendsPensionTakenBetweenController @Inject() (
       protectionType: AmendableProtectionType,
       status: AmendProtectionRequestStatus
   ): Action[AnyContent] =
-    authActions.authenticateWithNino.async { implicit request =>
+    authActions.authenticateWithNino.async { request =>
+      given MessagesRequest[?] = request
+
       sessionCacheService
         .fetchAmendProtectionModel(protectionType, status)
         .map {
@@ -72,7 +70,7 @@ class AmendsPensionTakenBetweenController @Inject() (
             }
           case _ =>
             logger.warn(couldNotRetrieveModelForNino(request.nino, "when loading amend pensionTakenBetween page"))
-            buildTechnicalError(technicalError)
+            technicalErrorResult
         }
 
     }
@@ -81,7 +79,9 @@ class AmendsPensionTakenBetweenController @Inject() (
       protectionType: AmendableProtectionType,
       status: AmendProtectionRequestStatus
   ): Action[AnyContent] =
-    authActions.authenticateWithNino.async { implicit request =>
+    authActions.authenticateWithNino.async { request =>
+      given MessagesRequest[?] = request
+
       amendPensionsTakenBetweenForm(protectionType)
         .bindFromRequest()
         .fold(
@@ -122,7 +122,7 @@ class AmendsPensionTakenBetweenController @Inject() (
                 case _ =>
                   logger
                     .warn(couldNotRetrieveModelForNino(request.nino, "after submitting amend pensions taken between"))
-                  Future.successful(buildTechnicalError(technicalError))
+                  Future.successful(technicalErrorResult)
               }
         )
 

@@ -32,7 +32,7 @@ class SessionRepository @Inject() (
     mongoComponent: MongoComponent,
     appConfig: AppConfig,
     timestampSupport: TimestampSupport
-)(implicit ec: ExecutionContext)
+)(using ec: ExecutionContext)
     extends SessionCacheRepository(
       mongoComponent = mongoComponent,
       collectionName = appConfig.appName,
@@ -44,12 +44,12 @@ class SessionRepository @Inject() (
   def putInSession[T: Writes](
       dataKey: DataKey[T],
       data: T
-  )(implicit request: RequestHeader, ec: ExecutionContext): Future[CacheMap] =
+  )(using request: RequestHeader): Future[CacheMap] =
     cacheRepo
       .put[T](request)(dataKey, data)
       .map(res => CacheMap(res.id, res.data.value.toMap))
 
-  def clearSession(implicit request: RequestHeader): Future[Unit] =
+  def clearSession()(using request: RequestHeader): Future[Unit] =
     cacheRepo.deleteEntity(request)
 
 }

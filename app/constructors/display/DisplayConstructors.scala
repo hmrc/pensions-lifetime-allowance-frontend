@@ -36,15 +36,15 @@ class DisplayConstructors @Inject() {
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       protectionModel: ProtectionModel,
       nino: String
-  )(implicit messages: Messages): PrintDisplayModel =
+  )(using Messages): PrintDisplayModel =
     PrintDisplayModelConstructor.createPrintDisplayModel(personalDetailsModelOpt, protectionModel, nino)
 
   def createExistingProtectionsDisplayModel(
       model: TransformedReadResponseModel
-  )(implicit messages: Messages): ExistingProtectionsDisplayModel =
+  )(using Messages): ExistingProtectionsDisplayModel =
     ExistingProtectionsDisplayModelConstructor.createExistingProtectionsDisplayModel(model)
 
-  def createAmendDisplayModel(model: AmendProtectionModel)(implicit messages: Messages): AmendDisplayModel =
+  def createAmendDisplayModel(model: AmendProtectionModel)(using Messages): AmendDisplayModel =
     AmendDisplayModelConstructor.createAmendDisplayModel(model)
 
   def createAmendOutcomeDisplayModel(
@@ -52,7 +52,7 @@ class DisplayConstructors @Inject() {
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       nino: String,
       notificationId: NotificationId
-  )(implicit messages: Messages): AmendOutcomeDisplayModel =
+  )(using Messages): AmendOutcomeDisplayModel =
     AmendOutcomeDisplayModelConstructor.createAmendOutcomeDisplayModel(
       model,
       personalDetailsModelOpt,
@@ -64,7 +64,7 @@ class DisplayConstructors @Inject() {
       model: AmendResponseModel,
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       nino: String
-  )(implicit messages: Messages): AmendOutcomeDisplayModelNoNotificationId =
+  )(using Messages): AmendOutcomeDisplayModelNoNotificationId =
     AmendOutcomeDisplayModelNoNotificationIdConstructor.createAmendOutcomeDisplayModelNoNotificationId(
       model,
       personalDetailsModelOpt,

@@ -23,7 +23,7 @@
     protectionDetailsTable: playHelpers.templates.amendProtectionOutcomeTable
 )
 
-@(model: AmendOutcomeDisplayModel)(implicit request: RequestHeader, messages: Messages)
+@(model: AmendOutcomeDisplayModel)(using request: RequestHeader, messages: Messages)
 
 @layout(
     pageTitle = messages("pla.amendsResultPage.title"),

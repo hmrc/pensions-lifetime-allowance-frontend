@@ -37,7 +37,7 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Environment
 import play.api.http.HeaderNames.CACHE_CONTROL
-import play.api.i18n.{Lang, Messages}
+import play.api.i18n.Messages
 import play.api.mvc.{AnyContent, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
@@ -60,45 +60,38 @@ class AmendsPensionSharingOrderControllerSpec
     with AmendProtectionModelTestData
     with ScalaFutures {
 
-  implicit val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
+  private val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
 
-  implicit val messages: Messages = mcc.messagesApi.preferred(fakeRequest)
+  private val messages: Messages = mcc.messagesApi.preferred(fakeRequest)
 
-  implicit val appConfig: AppConfig           = inject[AppConfig]
-  implicit val system: ActorSystem            = ActorSystem()
-  implicit val mockMaterializer: Materializer = mock[Materializer]
-  implicit val mockLang: Lang                 = mock[Lang]
-  implicit val formWithCSRF: FormWithCSRF     = inject[FormWithCSRF]
-  implicit val ec: ExecutionContext           = inject[ExecutionContext]
+  private val executionContext: ExecutionContext = ExecutionContext.global
 
-  val mockDisplayConstructors: DisplayConstructors = mock[DisplayConstructors]
-  val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
-  val mockEnv: Environment                         = mock[Environment]
+  private val mockDisplayConstructors: DisplayConstructors = mock[DisplayConstructors]
+  private val mockEnv: Environment                         = mock[Environment]
 
-  val amendPsoDetailsView: amendPsoDetails = inject[amendPsoDetails]
-  val technicalErrorView: technicalError   = inject[technicalError]
+  private val amendPsoDetailsView: amendPsoDetails = inject[amendPsoDetails]
+  private val technicalErrorView: technicalError   = inject[technicalError]
 
   override def beforeEach(): Unit = {
     super.beforeEach()
 
-    reset(mockSessionCacheService)
     reset(mockDisplayConstructors)
     reset(mockEnv)
   }
 
-  val controller = new AmendsPensionSharingOrderController(
+  private val controller = new AmendsPensionSharingOrderController(
     mockSessionCacheService,
     mcc,
     authActions,
     amendPsoDetailsView,
     technicalErrorView
-  )
+  )(using executionContext)
 
-  val sessionId: String  = UUID.randomUUID.toString
-  val mockUsername       = "mockuser"
-  val mockUserId: String = "/auth/oid/" + mockUsername
+  private val sessionId: String  = UUID.randomUUID.toString
+  private val mockUsername       = "mockuser"
+  private val mockUserId: String = "/auth/oid/" + mockUsername
 
-  val tstPensionContributionNoPsoDisplaySections: Seq[AmendDisplaySectionModel] = Seq(
+  private val tstPensionContributionNoPsoDisplaySections: Seq[AmendDisplaySectionModel] = Seq(
     AmendDisplaySectionModel(
       "OverseasPensions",
       Seq(
@@ -150,7 +143,7 @@ class AmendsPensionSharingOrderControllerSpec
     )
   )
 
-  val tstAmendDisplayModel = AmendDisplayModel(
+  private val tstAmendDisplayModel = AmendDisplayModel(
     protectionType = AmendableProtectionType.IndividualProtection2014,
     amended = true,
     pensionContributionSections = tstPensionContributionNoPsoDisplaySections,
@@ -307,7 +300,7 @@ class AmendsPensionSharingOrderControllerSpec
             Some(PensionDebitModel(DateModel.of(testData.psoYear, 4, 6), 100_000))
           )
 
-          verify(mockSessionCacheService).saveAmendProtectionModel(eqTo(expectedAmendProtectionModel))(any())
+          verify(mockSessionCacheService).saveAmendProtectionModel(eqTo(expectedAmendProtectionModel))(using any())
         }
       }
     }

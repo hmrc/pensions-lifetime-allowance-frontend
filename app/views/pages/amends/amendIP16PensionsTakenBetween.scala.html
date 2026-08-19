@@ -33,7 +33,7 @@
     amendPensionsTakenBetweenForm: Form[AmendPensionsTakenBetweenModel],
     protectionType: AmendableProtectionType,
     status: AmendProtectionRequestStatus
-)(implicit request: RequestHeader, messages: Messages)
+)(using request: RequestHeader, messages: Messages)
 
 @title = @{
     if(amendPensionsTakenBetweenForm.errors.nonEmpty){

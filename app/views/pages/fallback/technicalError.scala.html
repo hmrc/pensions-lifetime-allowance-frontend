@@ -18,7 +18,7 @@
     layout: Layout
 )
 
-@()(implicit request: RequestHeader, messages: Messages)
+@()(using request: RequestHeader, messages: Messages)
 
 @restartTarget = @{controllers.routes.ReadProtectionsController.currentProtections}
 

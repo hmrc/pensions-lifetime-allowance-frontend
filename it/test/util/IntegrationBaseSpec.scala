@@ -37,7 +37,7 @@ trait IntegrationBaseSpec
     with BeforeAndAfterAll
     with DefaultAwaitTimeout {
 
-  override implicit def defaultAwaitTimeout: Timeout = 5.seconds
+  override given defaultAwaitTimeout: Timeout = 5.seconds
 
   val localHost      = "localhost"
   val localPort: Int = port
@@ -53,7 +53,7 @@ trait IntegrationBaseSpec
     "auditing.consumer.baseUri.port"                         -> s"${WiremockHelper.wiremockPort}"
   )
 
-  override implicit lazy val app: Application = new GuiceApplicationBuilder()
+  override lazy val app: Application = new GuiceApplicationBuilder()
     .configure(defaultConfiguration)
     .build()
 

@@ -33,19 +33,13 @@ import models.{
   ProtectionModel,
   TimeModel
 }
-import org.scalatestplus.mockito.MockitoSugar.mock
-import play.api.i18n.{Lang, Messages}
-import play.api.mvc.{AnyContentAsEmpty, MessagesControllerComponents}
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 import testHelpers.FakeApplication
 
 trait DisplayConstructorsTestData extends FakeApplication {
 
-  implicit val mockLang: Lang                                   = mock[Lang]
-  implicit val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-
-  implicit val messages: Messages =
-    inject[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
+  given messages: Messages = inject[MessagesApi].preferred(FakeRequest())
 
   val tstPsaCheckRef = "PSA33456789"
 

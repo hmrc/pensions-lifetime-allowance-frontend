@@ -22,9 +22,9 @@ import org.jsoup.select.Elements
 import org.mockito.Mockito.reset
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.mvc.{AnyContent, MessagesControllerComponents}
+import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import play.api.Application
 import testHelpers.messages.CommonMessages
@@ -34,18 +34,17 @@ import scala.jdk.CollectionConverters
 
 trait CommonViewSpecHelper extends FakeApplication with CommonMessages with MockitoSugar with BeforeAndAfterEach {
 
-  implicit val mockAppConfig: AppConfig = mock[AppConfig]
+  given mockAppConfig: AppConfig = mock[AppConfig]
 
-  override implicit lazy val app: Application = GuiceApplicationBuilder()
+  override lazy val app: Application = GuiceApplicationBuilder()
     .overrides(play.api.inject.bind[AppConfig].toInstance(mockAppConfig))
     .build()
 
   val http: HttpClientV2 = mock[HttpClientV2]
 
-  implicit val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
+  given fakeRequest: FakeRequest[AnyContent] = FakeRequest()
 
-  implicit val messages: Messages =
-    inject[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
+  given messages: Messages = inject[MessagesApi].preferred(fakeRequest)
 
   override def beforeEach(): Unit = {
     super.beforeEach()

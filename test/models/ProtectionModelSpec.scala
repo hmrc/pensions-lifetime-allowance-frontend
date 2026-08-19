@@ -24,7 +24,7 @@ import org.scalatest.wordspec.AnyWordSpec
 
 class ProtectionModelSpec extends AnyWordSpec with Matchers with ModelGenerators {
 
-  val protectionModel = ProtectionModel(
+  private val protectionModel = ProtectionModel(
     psaCheckReference = "psaCheckRef",
     identifier = 10,
     sequenceNumber = 1,

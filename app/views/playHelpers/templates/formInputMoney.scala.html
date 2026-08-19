@@ -29,7 +29,7 @@
     labelClass: Option[String] = None,
     hintText: Option[String] = None,
     errorMessage: Option[String] = Some("")
-)(implicit messages: Messages)
+)(using messages: Messages)
 
 @govukInput(Input(
     label = Label(

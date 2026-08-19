@@ -27,7 +27,7 @@ object AmendOutcomeDisplayModelNoNotificationIdConstructor {
       model: AmendResponseModel,
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       nino: String
-  )(implicit messages: Messages): AmendOutcomeDisplayModelNoNotificationId = {
+  )(using Messages): AmendOutcomeDisplayModelNoNotificationId = {
     val printDetails =
       AmendPrintDisplayModelConstructor.createAmendPrintDisplayModel(personalDetailsModelOpt, model, nino)
 

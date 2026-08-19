@@ -42,5 +42,5 @@ case class AmendProtectionResponse(
 )
 
 object AmendProtectionResponse {
-  implicit val reads: Reads[AmendProtectionResponse] = Json.reads[AmendProtectionResponse]
+  given Reads[AmendProtectionResponse] = Json.reads[AmendProtectionResponse]
 }

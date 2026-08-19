@@ -28,13 +28,13 @@ import views.html.pages.result.printProtection
 
 class PrintProtectionViewSpec extends CommonViewSpecHelper with ResultPrintPageContentMessages {
 
-  val view: printProtection = app.injector.instanceOf[printProtection]
+  private val view: printProtection = app.injector.instanceOf[printProtection]
 
-  def doc(printDisplayModel: PrintDisplayModel = model): Document = Jsoup.parse(view(printDisplayModel).body)
+  private def doc(printDisplayModel: PrintDisplayModel = model): Document = Jsoup.parse(view(printDisplayModel).body)
 
-  val nino = "AB123456A"
+  private val nino = "AB123456A"
 
-  val model = PrintDisplayModel(
+  private val model = PrintDisplayModel(
     firstName = "Jim",
     surname = "Davis",
     nino = nino,

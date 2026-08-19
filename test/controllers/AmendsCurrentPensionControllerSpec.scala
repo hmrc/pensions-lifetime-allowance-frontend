@@ -24,7 +24,6 @@ import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.*
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Environment
@@ -32,6 +31,7 @@ import play.api.i18n.{Lang, Messages}
 import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
+import play.api.test.FakeRequest
 import services.SessionCacheService
 import testHelpers.*
 import testdata.AmendProtectionModelTestData
@@ -49,39 +49,32 @@ class AmendsCurrentPensionControllerSpec
     with AuthMocks
     with AmendProtectionModelTestData {
 
-  implicit val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
+  private val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
 
-  implicit val messages: Messages = mcc.messagesApi.preferred(fakeRequest)
+  private val messages: Messages = mcc.messagesApi.preferred(fakeRequest)
 
-  implicit val appConfig: AppConfig           = inject[AppConfig]
-  implicit val system: ActorSystem            = ActorSystem()
-  implicit val mockMaterializer: Materializer = mock[Materializer]
-  implicit val mockLang: Lang                 = mock[Lang]
-  implicit val formWithCSRF: FormWithCSRF     = inject[FormWithCSRF]
-  implicit val ec: ExecutionContext           = inject[ExecutionContext]
+  private val appConfig: AppConfig               = inject[AppConfig]
+  private val system: ActorSystem                = ActorSystem()
+  private val mockMaterializer: Materializer     = mock[Materializer]
+  private val mockLang: Lang                     = mock[Lang]
+  private val formWithCSRF: FormWithCSRF         = inject[FormWithCSRF]
+  private val executionContext: ExecutionContext = inject[ExecutionContext]
 
-  val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
-  val mockEnv: Environment                         = mock[Environment]
+  override val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
+  private val mockEnv: Environment                          = mock[Environment]
 
-  val technicalErrorView: technicalError                     = inject[technicalError]
-  val amendIP16CurrentPensionsView: amendIP16CurrentPensions = inject[amendIP16CurrentPensions]
-  val amendIP14CurrentPensionsView: amendIP14CurrentPensions = inject[amendIP14CurrentPensions]
+  private val technicalErrorView: technicalError                     = inject[technicalError]
+  private val amendIP16CurrentPensionsView: amendIP16CurrentPensions = inject[amendIP16CurrentPensions]
+  private val amendIP14CurrentPensionsView: amendIP14CurrentPensions = inject[amendIP14CurrentPensions]
 
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-
-    reset(mockSessionCacheService)
-    reset(mockEnv)
-  }
-
-  val controller = new AmendsCurrentPensionController(
+  private val controller = new AmendsCurrentPensionController(
     mockSessionCacheService,
     mcc,
     authActions,
     technicalErrorView,
     amendIP16CurrentPensionsView,
     amendIP14CurrentPensionsView
-  )
+  )(using executionContext)
 
   "Calling the .amendCurrentPensions action" when {
 

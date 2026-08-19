@@ -28,7 +28,7 @@
         pageHeading: Boolean = true,
         yesHiddencontent: Option[Html] = None,
         noHiddenContent: Option[Html] = None,
-)(implicit messages: Messages)
+)(using messages: Messages)
 
 @govukRadios(Radios(
  fieldset = Some(Fieldset(

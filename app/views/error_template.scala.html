@@ -15,7 +15,7 @@
  *@
 
 @this(
- layout: Layout,
+    layout: Layout,
 )
 
 @(
@@ -23,7 +23,7 @@
     heading: String,
     message: String
 )(
-    implicit request: RequestHeader,
+    using requestHeader: RequestHeader,
     messages: Messages
 )
 

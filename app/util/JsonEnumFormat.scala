@@ -27,7 +27,7 @@ trait JsonEnumFormat[E <: JsonEnum] extends Logging {
 
   def withName(string: String): Option[E] = lookupMap.get(string)
 
-  given reads: Reads[E] = {
+  given Reads[E] = {
     case JsString(str) =>
       withName(str) match {
         case Some(value) => JsSuccess(value)
@@ -38,9 +38,7 @@ trait JsonEnumFormat[E <: JsonEnum] extends Logging {
       JsError(s"Cannot create ${getClass.getSimpleName} instance from: ${other.toString}")
   }
 
-  given writes: Writes[E] = value => JsString(value.jsonString)
-
-  given Format[E] = Format(reads, writes)
+  given Writes[E] = value => JsString(value.jsonString)
 
   given JsonEnumFormat[E] = this
 

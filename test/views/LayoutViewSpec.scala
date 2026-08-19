@@ -29,9 +29,9 @@ import views.html.Layout
 
 class LayoutViewSpec extends CommonViewSpecHelper {
 
-  val layoutView: Layout = inject[Layout]
+  private val layoutView: Layout = inject[Layout]
 
-  def renderView(
+  private def renderView(
       pageTitle: String = "Page Title",
       isPsaLookupPage: Boolean = false,
       backLinkEnabled: Boolean = true,
@@ -39,7 +39,7 @@ class LayoutViewSpec extends CommonViewSpecHelper {
       timeoutEnabled: Boolean = true,
       additionalPrintCss: Boolean = false,
       content: Html = Text("Content").asHtml
-  )(implicit requestHeader: RequestHeader): Document = {
+  )(using requestHeader: RequestHeader): Document = {
     val html = layoutView(
       pageTitle = pageTitle,
       isPsaLookupPage = isPsaLookupPage,
@@ -47,12 +47,12 @@ class LayoutViewSpec extends CommonViewSpecHelper {
       isUserResearchBannerVisible = isUserResearchBannerVisible,
       timeoutEnabled = timeoutEnabled,
       additionalPrintCss = additionalPrintCss
-    )(content)(requestHeader, implicitly[Messages])
+    )(content)(using requestHeader, implicitly[Messages])
 
     Jsoup.parse(html.toString)
   }
 
-  val signedInRequest: FakeRequest[AnyContent] = fakeRequest.withSession("authToken" -> "some auth token")
+  private val signedInRequest: FakeRequest[AnyContent] = fakeRequest.withSession("authToken" -> "some auth token")
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -74,7 +74,7 @@ class LayoutViewSpec extends CommonViewSpecHelper {
 
     "show the sign out button" when {
       "the user is signed in" in {
-        renderView()(signedInRequest).getElementsByClass("hmrc-sign-out-nav__link") should have size 1
+        renderView()(using signedInRequest).getElementsByClass("hmrc-sign-out-nav__link") should have size 1
       }
     }
 
@@ -160,7 +160,7 @@ class LayoutViewSpec extends CommonViewSpecHelper {
 
     "include the service navigation menu bar" when {
       "the user is signed in" in {
-        renderView()(signedInRequest).getElementsByClass("govuk-service-navigation__wrapper") should have size 1
+        renderView()(using signedInRequest).getElementsByClass("govuk-service-navigation__wrapper") should have size 1
       }
     }
 
@@ -172,7 +172,9 @@ class LayoutViewSpec extends CommonViewSpecHelper {
 
     "include the language picker" when {
       "the user is signed in" in {
-        renderView()(signedInRequest).getElementsByClass("hmrc-service-navigation-language-select") should have size 1
+        renderView()(using signedInRequest).getElementsByClass(
+          "hmrc-service-navigation-language-select"
+        ) should have size 1
       }
 
       "the user is not signed in" in {

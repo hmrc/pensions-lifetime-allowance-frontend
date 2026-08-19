@@ -16,9 +16,9 @@
 
 package models
 
-import models.pla.response.AmendProtectionResponseStatus.*
 import models.pla.response.AmendProtectionResponseStatus
-import play.api.libs.json.{Format, JsError, JsNumber, JsSuccess, Reads, Writes}
+import models.pla.response.AmendProtectionResponseStatus.*
+import play.api.libs.json.{JsError, JsNumber, JsSuccess, Reads, Writes}
 
 enum NotificationId(
     val toInt: Int,
@@ -45,7 +45,7 @@ enum NotificationId(
 
 object NotificationId {
 
-  implicit val reads: Reads[NotificationId] = {
+  given Reads[NotificationId] = {
     case JsNumber(number) =>
       number.toInt match {
         case 1  => JsSuccess(NotificationId1)
@@ -67,8 +67,6 @@ object NotificationId {
     case _ => JsError("notificationIdentifier must be a number")
   }
 
-  implicit val writes: Writes[NotificationId] = notificationIdentifier => JsNumber(notificationIdentifier.toInt)
-
-  implicit val format: Format[NotificationId] = Format(reads, writes)
+  given Writes[NotificationId] = notificationIdentifier => JsNumber(notificationIdentifier.toInt)
 
 }

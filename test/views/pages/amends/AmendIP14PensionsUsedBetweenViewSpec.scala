@@ -34,21 +34,21 @@ class AmendIP14PensionsUsedBetweenViewSpec
     with AmendIP14PensionsTakenBetweenViewMessages
     with AmendIP16PensionsUsedBetweenViewMessages {
 
-  implicit val formWithCSRF: FormWithCSRF = inject[FormWithCSRF]
+  private val formWithCSRF: FormWithCSRF = inject[FormWithCSRF]
 
-  val view: amendIP14PensionsUsedBetween = inject[amendIP14PensionsUsedBetween]
+  private val view: amendIP14PensionsUsedBetween = inject[amendIP14PensionsUsedBetween]
 
-  val form: Form[AmendPensionsUsedBetweenModel] = AmendPensionsUsedBetweenForm
+  private val form: Form[AmendPensionsUsedBetweenModel] = AmendPensionsUsedBetweenForm
     .amendPensionsUsedBetweenForm(IndividualProtection2016)
     .bind(Map("amendedPensionsUsedBetweenAmt" -> "12345"))
 
-  val doc: Document = Jsoup.parse(view.apply(form, IndividualProtection2016, Open).body)
+  private val doc: Document = Jsoup.parse(view.apply(form, IndividualProtection2016, Open).body)
 
-  val errorForm: Form[AmendPensionsUsedBetweenModel] = AmendPensionsUsedBetweenForm
+  private val errorForm: Form[AmendPensionsUsedBetweenModel] = AmendPensionsUsedBetweenForm
     .amendPensionsUsedBetweenForm(IndividualProtection2016)
     .bind(Map.empty[String, String])
 
-  val errorDoc: Document = Jsoup.parse(view.apply(errorForm, IndividualProtection2016, Open).body)
+  private val errorDoc: Document = Jsoup.parse(view.apply(errorForm, IndividualProtection2016, Open).body)
 
   "the AmendIP14PensionsUsedBetweenView" should {
     "have the correct title" in {

@@ -23,15 +23,15 @@ import util.Constants.maximumCurrencyAmount
 
 class CurrencyMappingsSpec extends AnyWordSpec with Matchers {
 
-  object TestCurrencyMappings extends CurrencyMappings
+  private object TestCurrencyMappings extends CurrencyMappings
 
-  val mandatoryMessageKey            = "mandatoryError"
-  val invalidMessageKey              = "notReal"
-  val tooManyDecimalPlacesMessageKey = "decimal"
-  val negativeMessageKey             = "negative"
-  val tooHighMessageKey              = "max"
+  private val mandatoryMessageKey            = "mandatoryError"
+  private val invalidMessageKey              = "notReal"
+  private val tooManyDecimalPlacesMessageKey = "decimal"
+  private val negativeMessageKey             = "negative"
+  private val tooHighMessageKey              = "max"
 
-  val currencyMappings: Mapping[Option[BigDecimal]] = TestCurrencyMappings.currencyMapping(
+  private val currencyMappings: Mapping[Option[BigDecimal]] = TestCurrencyMappings.currencyMapping(
     mandatoryMessageKey = mandatoryMessageKey,
     invalidMessageKey = invalidMessageKey,
     tooHighMessageKey = tooHighMessageKey,
@@ -39,13 +39,13 @@ class CurrencyMappingsSpec extends AnyWordSpec with Matchers {
     tooManyDecimalPlacesMessageKey = tooManyDecimalPlacesMessageKey
   )
 
-  val valueKey: String = currencyMappings.key
+  private val valueKey: String = currencyMappings.key
 
-  val mandatoryError            = FormError(valueKey, mandatoryMessageKey)
-  val invalidError              = FormError(valueKey, invalidMessageKey)
-  val tooManyDecimalPlacesError = FormError(valueKey, tooManyDecimalPlacesMessageKey)
-  val negativeError             = FormError(valueKey, negativeMessageKey)
-  val tooHighError              = FormError(valueKey, tooHighMessageKey)
+  private val mandatoryError            = FormError(valueKey, mandatoryMessageKey)
+  private val invalidError              = FormError(valueKey, invalidMessageKey)
+  private val tooManyDecimalPlacesError = FormError(valueKey, tooManyDecimalPlacesMessageKey)
+  private val negativeError             = FormError(valueKey, negativeMessageKey)
+  private val tooHighError              = FormError(valueKey, tooHighMessageKey)
 
   "currencyMapping.bind" should {
     "return mandatoryError" when {

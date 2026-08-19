@@ -27,6 +27,10 @@ class PsaLookupClosedController @Inject() (
     psaLookupClosedView: views.html.pages.psaLookup.psaLookupClosed
 ) extends FrontendController(mcc) {
 
-  val psaLookupClosed: Action[AnyContent] = Action(implicit request => Ok(psaLookupClosedView()))
+  val psaLookupClosed: Action[AnyContent] = Action { request =>
+    given MessagesRequest[?] = request
+
+    Ok(psaLookupClosedView())
+  }
 
 }

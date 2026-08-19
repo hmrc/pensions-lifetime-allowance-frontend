@@ -24,7 +24,6 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.http.Status
 import play.api.libs.json.Json
-import services.SessionCacheService
 import testHelpers.FakeApplication
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
@@ -34,16 +33,17 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.io.Source
 
 class IdentityVerificationConnectorSpec extends FakeApplication with ScalaFutures with MockitoSugar {
-  implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
+  private val headerCarrier = HeaderCarrier()
 
-  implicit val executionContext: ExecutionContext  = inject[ExecutionContext]
-  val mockAppConfig: AppConfig                     = inject[AppConfig]
-  val mockHttp: HttpClientV2                       = mock[HttpClientV2]
-  val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
+  private val executionContext: ExecutionContext = ExecutionContext.global
+  private val mockAppConfig: AppConfig           = inject[AppConfig]
+  private val mockHttp: HttpClientV2             = mock[HttpClientV2]
 
-  val identityVerificationConstructor = new IdentityVerificationConnector(mockAppConfig, mockHttp)
+  private val identityVerificationConstructor = new IdentityVerificationConnector(mockAppConfig, mockHttp)(
+    using executionContext
+  )
 
-  val possibleJournies = Map(
+  private val possibleJournies = Map(
     "success-journey-id"               -> "test/resources/identity-verification/success.json",
     "incomplete-journey-id"            -> "test/resources/identity-verification/incomplete.json",
     "failed-matching-journey-id"       -> "test/resources/identity-verification/failed-matching.json",
@@ -58,10 +58,10 @@ class IdentityVerificationConnectorSpec extends FakeApplication with ScalaFuture
     "invalid-fields-journey-id"        -> "test/resources/identity-verification/invalid-fields.json"
   )
 
-  def mockJourneyId(journeyId: String): Unit = {
+  private def mockJourneyId(journeyId: String): Unit = {
     val fileContents                   = Source.fromFile(possibleJournies(journeyId)).mkString
     val requestBuilder: RequestBuilder = mock[RequestBuilder]
-    val serviceUrl                     = identityVerificationConstructor.identityVerificationBaseUrl
+    val serviceUrl                     = mockAppConfig.identityVerificationBaseUrl
     val journeyIdUrl                   = s"$serviceUrl/mdtp/journey/journeyId/$journeyId"
     when(mockHttp.get(eqs(new URL(journeyIdUrl)))(any)).thenReturn(requestBuilder)
     when(requestBuilder.execute[HttpResponse](any, any))
@@ -74,72 +74,73 @@ class IdentityVerificationConnectorSpec extends FakeApplication with ScalaFuture
 
   "return success when identityVerification returns success" in {
     identityVerificationConstructor
-      .identityVerificationResponse("success-journey-id")
+      .identityVerificationResponse("success-journey-id")(using headerCarrier)
       .futureValue shouldBe IdentityVerificationResult.Success
   }
 
   "return incomplete when identityVerification returns incomplete" in {
     identityVerificationConstructor
-      .identityVerificationResponse("incomplete-journey-id")
+      .identityVerificationResponse("incomplete-journey-id")(using headerCarrier)
       .futureValue shouldBe IdentityVerificationResult.Incomplete
   }
 
   "return failed matching when identityVerification returns failed matching" in {
     identityVerificationConstructor
-      .identityVerificationResponse("failed-matching-journey-id")
+      .identityVerificationResponse("failed-matching-journey-id")(using headerCarrier)
       .futureValue shouldBe IdentityVerificationResult.FailedMatching
   }
 
   "return insufficient evidence when identityVerification returns insufficient evidence" in {
     identityVerificationConstructor
-      .identityVerificationResponse("insufficient-evidence-journey-id")
+      .identityVerificationResponse("insufficient-evidence-journey-id")(using headerCarrier)
       .futureValue shouldBe IdentityVerificationResult.InsufficientEvidence
   }
 
   "return locked out when identityVerification returns locked out" in {
     identityVerificationConstructor
-      .identityVerificationResponse("locked-out-journey-id")
+      .identityVerificationResponse("locked-out-journey-id")(using headerCarrier)
       .futureValue shouldBe IdentityVerificationResult.LockedOut
   }
 
   "return user aborted when identityVerification returns user aborted" in {
     identityVerificationConstructor
-      .identityVerificationResponse("user-aborted-journey-id")
+      .identityVerificationResponse("user-aborted-journey-id")(using headerCarrier)
       .futureValue shouldBe IdentityVerificationResult.UserAborted
   }
 
   "return timeout when identityVerification returns timeout" in {
     identityVerificationConstructor
-      .identityVerificationResponse("timeout-journey-id")
+      .identityVerificationResponse("timeout-journey-id")(using headerCarrier)
       .futureValue shouldBe IdentityVerificationResult.Timeout
   }
 
   "return technical issue when identityVerification returns technical issue" in {
     identityVerificationConstructor
-      .identityVerificationResponse("technical-issue-journey-id")
+      .identityVerificationResponse("technical-issue-journey-id")(using headerCarrier)
       .futureValue shouldBe IdentityVerificationResult.TechnicalIssue
   }
 
   "return precondition failed when identityVerification returns precondition failed" in {
     identityVerificationConstructor
-      .identityVerificationResponse("precondition-failed-journey-id")
+      .identityVerificationResponse("precondition-failed-journey-id")(using headerCarrier)
       .futureValue shouldBe IdentityVerificationResult.PreconditionFailed
   }
 
   "return failed IV when identityVerification returns failed IV result type" in {
     identityVerificationConstructor
-      .identityVerificationResponse("failed-iv-journey-id")
+      .identityVerificationResponse("failed-iv-journey-id")(using headerCarrier)
       .futureValue shouldBe IdentityVerificationResult.FailedIV
   }
 
   "return unknown outcome when identityVerification returns non-existent result type" in {
     identityVerificationConstructor
-      .identityVerificationResponse("invalid-journey-id")
+      .identityVerificationResponse("invalid-journey-id")(using headerCarrier)
       .futureValue shouldBe IdentityVerificationResult.UnknownOutcome
   }
 
   "return failed future for invalid json fields" in {
-    val result = identityVerificationConstructor.identityVerificationResponse("invalid-fields-journey-id")
+    val result =
+      identityVerificationConstructor.identityVerificationResponse("invalid-fields-journey-id")(using headerCarrier)
     ScalaFutures.whenReady(result.failed)(e => e shouldBe a[identityVerificationConstructor.JsonValidationException])
   }
 

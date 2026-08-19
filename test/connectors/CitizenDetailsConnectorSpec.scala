@@ -21,7 +21,7 @@ import models.{Person, PersonalDetailsModel}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.*
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.Json
 import play.api.test.Helpers.*
 import testHelpers.FakeApplication
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
@@ -31,50 +31,49 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class CitizenDetailsConnectorSpec extends FakeApplication with MockitoSugar {
 
-  implicit val ec: ExecutionContext = inject[ExecutionContext]
+  private val executionContext = ExecutionContext.global
 
-  val mockAppConfig: AppConfig = inject[AppConfig]
-  val mockHttp: HttpClientV2   = mock[HttpClientV2]
+  private val mockAppConfig: AppConfig = inject[AppConfig]
+  private val mockHttp: HttpClientV2   = mock[HttpClientV2]
 
-  val tstDetails                     = PersonalDetailsModel(Person("McTestFace", "Testy"))
-  val x: JsValue                     = Json.toJson(tstDetails)
-  val requestBuilder: RequestBuilder = mock[RequestBuilder]
+  private val tstDetails                     = PersonalDetailsModel(Person("McTestFace", "Testy"))
+  private val requestBuilder: RequestBuilder = mock[RequestBuilder]
 
-  implicit val hc: HeaderCarrier = HeaderCarrier()
+  private val headerCarrier: HeaderCarrier = HeaderCarrier()
 
-  val controller = new CitizenDetailsConnector(mockAppConfig, mockHttp)
+  private val controller = new CitizenDetailsConnector(mockAppConfig, mockHttp)(using executionContext)
 
   "Calling getPersonDetails with valid response" should {
     "return a defined Option on PersonalDetailsModel" in {
-      when(mockHttp.get(any)(any)).thenReturn(requestBuilder)
-      when(requestBuilder.execute[HttpResponse](any, any))
+      when(mockHttp.get(any())(using any())).thenReturn(requestBuilder)
+      when(requestBuilder.execute[HttpResponse](any(), any()))
         .thenReturn(Future.successful(HttpResponse(status = OK, json = Json.toJson(tstDetails), headers = Map.empty)))
 
-      val response: Future[Option[PersonalDetailsModel]] = controller.getPersonDetails("tstNino")
+      val response: Future[Option[PersonalDetailsModel]] = controller.getPersonDetails("tstNino")(using headerCarrier)
       await(response) shouldBe Some(tstDetails)
     }
   }
 
   "Calling getPersonDetails with invalid response" should {
     "return an undefined Option on PersonalDetailsModel" in {
-      when(mockHttp.get(any)(any)).thenReturn(requestBuilder)
-      when(requestBuilder.execute[HttpResponse](any, any))
+      when(mockHttp.get(any())(using any())).thenReturn(requestBuilder)
+      when(requestBuilder.execute[HttpResponse](any(), any()))
         .thenReturn(
           Future.successful(HttpResponse(status = OK, json = Json.toJson("""name:NoName"""), headers = Map.empty))
         )
 
-      val response: Future[Option[PersonalDetailsModel]] = controller.getPersonDetails("tstNino")
+      val response: Future[Option[PersonalDetailsModel]] = controller.getPersonDetails("tstNino")(using headerCarrier)
       await(response) shouldBe None
     }
   }
 
   "Calling getPersonDetails with error response" should {
     "return an undefined Option on PersonalDetailsModel" in {
-      when(mockHttp.get(any)(any)).thenReturn(requestBuilder)
-      when(requestBuilder.execute[HttpResponse](any, any))
+      when(mockHttp.get(any())(using any())).thenReturn(requestBuilder)
+      when(requestBuilder.execute[HttpResponse](any(), any()))
         .thenReturn(Future.successful(HttpResponse(INTERNAL_SERVER_ERROR, "")))
 
-      val response: Future[Option[PersonalDetailsModel]] = controller.getPersonDetails("tstNino")
+      val response: Future[Option[PersonalDetailsModel]] = controller.getPersonDetails("tstNino")(using headerCarrier)
       await(response) shouldBe None
     }
   }

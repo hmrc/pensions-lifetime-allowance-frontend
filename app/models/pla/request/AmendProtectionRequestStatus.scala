@@ -36,7 +36,7 @@ object AmendProtectionRequestStatus extends JsonEnumFormat[AmendProtectionReques
       case _                        => None
     }
 
-  implicit val pathBindable: PathBindable[AmendProtectionRequestStatus] =
+  given pathBindable: PathBindable[AmendProtectionRequestStatus] =
     new PathBindable[AmendProtectionRequestStatus] {
 
       override def bind(key: String, value: String): Either[String, AmendProtectionRequestStatus] =

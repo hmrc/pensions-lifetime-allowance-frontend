@@ -24,8 +24,8 @@ import views.html.pages.result.manualCorrespondenceNeeded
 
 class ManualCorrespondenceNeededViewSpec extends CommonViewSpecHelper with ManualCorrespondenceNeededMessages {
 
-  val view: manualCorrespondenceNeeded = inject[manualCorrespondenceNeeded]
-  val doc: Document                    = Jsoup.parse(view().body)
+  private val view: manualCorrespondenceNeeded = inject[manualCorrespondenceNeeded]
+  private val doc: Document                    = Jsoup.parse(view().body)
 
   "The Manual Correspondence needed page" should {
 

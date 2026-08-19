@@ -42,7 +42,7 @@ case class AmendProtectionRequest(
 )
 
 object AmendProtectionRequest {
-  implicit val writes: Writes[AmendProtectionRequest] = Json.writes[AmendProtectionRequest]
+  given Writes[AmendProtectionRequest] = Json.writes[AmendProtectionRequest]
 
   def from(protectionModel: AmendProtectionModel): AmendProtectionRequest = {
     val lifetimeAllowanceSequenceNumber = protectionModel.sequenceNumber

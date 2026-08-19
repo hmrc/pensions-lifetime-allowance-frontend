@@ -22,14 +22,14 @@ import play.mvc.Http.Status.NOT_FOUND
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import util.{IntegrationBaseSpec, MockedAudit, WiremockHelper}
 
-class IdentityVerificationConnectorSpec extends IntegrationBaseSpec with MockedAudit {
+class IdentityVerificationConnectorISpec extends IntegrationBaseSpec with MockedAudit {
 
-  override implicit lazy val app: Application = new GuiceApplicationBuilder()
+  override lazy val app: Application = new GuiceApplicationBuilder()
     .configure(defaultConfiguration)
     .configure(Configuration("microservice.services.identity-verification.port" -> WiremockHelper.wiremockPort))
     .build()
 
-  implicit val hc: HeaderCarrier = HeaderCarrier()
+  given HeaderCarrier = HeaderCarrier()
 
   val missingJourneyId = "1234aa56-7a8a-901a-23aa-aa4a56a78aa9"
 

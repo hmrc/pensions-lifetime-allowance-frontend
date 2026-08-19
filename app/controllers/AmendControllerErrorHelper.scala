@@ -16,19 +16,20 @@
 
 package controllers
 
-import play.api.mvc.{RequestHeader, Result}
-import play.api.mvc.Results.InternalServerError
 import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.i18n.Messages
+import play.api.mvc.Results.InternalServerError
+import play.api.mvc.{RequestHeader, Result}
+import views.html.pages.fallback.technicalError
 
 trait AmendControllerErrorHelper {
+
+  val technicalError: technicalError
 
   def couldNotRetrieveModelForNino(nino: String, when: String): String =
     s"Could not retrieve amend protection model for user with nino $nino $when"
 
-  def buildTechnicalError(
-      technicalError: views.html.pages.fallback.technicalError
-  )(implicit request: RequestHeader, messages: Messages): Result =
+  def technicalErrorResult(using RequestHeader, Messages): Result =
     InternalServerError(technicalError())
       .withHeaders(CACHE_CONTROL -> "no-cache")
 

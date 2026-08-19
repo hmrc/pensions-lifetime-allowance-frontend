@@ -42,12 +42,11 @@ import scala.concurrent.{ExecutionContext, Future}
 class PlaConnector @Inject() (
     appConfig: AppConfig,
     http: HttpClientV2
+)(
+    using ExecutionContext
 ) extends Logging {
 
-  def readProtections(nino: String)(
-      implicit hc: HeaderCarrier,
-      ex: ExecutionContext
-  ): Future[Either[PlaConnectorError, ReadProtectionsResponse]] = {
+  def readProtections(nino: String)(using HeaderCarrier): Future[Either[PlaConnectorError, ReadProtectionsResponse]] = {
     val url = s"${appConfig.backendUrl}/protect-your-lifetime-allowance/v2/individuals/$nino/protections"
 
     http
@@ -75,10 +74,9 @@ class PlaConnector @Inject() (
       }
   }
 
-  def amendProtection(
-      nino: String,
-      protection: AmendProtectionModel
-  )(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[Either[PlaConnectorError, AmendProtectionResponse]] = {
+  def amendProtection(nino: String, protection: AmendProtectionModel)(
+      using HeaderCarrier
+  ): Future[Either[PlaConnectorError, AmendProtectionResponse]] = {
     val id          = protection.identifier
     val requestBody = AmendProtectionRequest.from(protection)
     val url         = s"${appConfig.backendUrl}/protect-your-lifetime-allowance/v2/individuals/$nino/protections/$id"

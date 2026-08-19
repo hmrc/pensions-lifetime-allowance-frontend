@@ -20,7 +20,7 @@
     appConfig: AppConfig,
 )
 
-@()(implicit request: RequestHeader, messages: Messages)
+@()(using request: RequestHeader, messages: Messages)
 
 @layout(
     pageTitle = messages("psa.lookup.withdraw.title"),

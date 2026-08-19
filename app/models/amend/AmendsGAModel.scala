@@ -27,5 +27,5 @@ case class AmendsGAModel(
 ) {}
 
 object AmendsGAModel {
-  implicit val format: OFormat[AmendsGAModel] = Json.format[AmendsGAModel]
+  given OFormat[AmendsGAModel] = Json.format[AmendsGAModel]
 }

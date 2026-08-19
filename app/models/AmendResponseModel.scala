@@ -78,7 +78,7 @@ case class AmendResponseModel(
 
 object AmendResponseModel {
 
-  implicit val format: Format[AmendResponseModel] = Json.format[AmendResponseModel]
+  given Format[AmendResponseModel] = Json.format[AmendResponseModel]
 
   def from(amendResponse: AmendProtectionResponse, psaCheckReference: String): AmendResponseModel = {
     val pensionDebit = amendResponse.pensionDebitStartDate.zip(amendResponse.pensionDebitEnteredAmount).map {

@@ -16,36 +16,30 @@
 
 package controllers
 
-import config.AppConfig
-import org.apache.pekko.actor.ActorSystem
-import org.apache.pekko.stream.Materializer
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.Application
-import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.{AnyContentAsEmpty, MessagesControllerComponents, Result}
 import play.api.test.FakeRequest
-import play.api.test.Helpers.*
+import play.api.test.Helpers.{defaultAwaitTimeout, status}
 import testHelpers.*
 import views.html.pages.timeout
+
+import scala.concurrent.Future
 
 class TimeoutControllerSpec extends FakeApplication with MockitoSugar {
 
   val mcc: MessagesControllerComponents = inject[MessagesControllerComponents]
 
-  implicit val mockAppConfig: AppConfig   = inject[AppConfig]
-  implicit val system: ActorSystem        = ActorSystem()
-  implicit val materializer: Materializer = mock[Materializer]
-  implicit val application: Application   = mock[Application]
-  implicit val mockTimeout: timeout       = inject[timeout]
+  private val mockTimeout: timeout = inject[timeout]
 
   val controller = new TimeoutController(mcc, mockTimeout)
 
-  "Calling the .timeout action" when {
+  private val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-    "navigated to " should {
-      val result = controller.timeout(FakeRequest())
-      "return a 200" in {
-        status(result) shouldBe 200
-      }
+  "Calling the .timeout action" should {
+    "return a 200" in {
+      val result: Future[Result] = controller.timeout(FakeRequest())
+
+      status(result) shouldBe 200
     }
   }
 

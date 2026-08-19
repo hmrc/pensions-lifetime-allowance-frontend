@@ -29,7 +29,7 @@ govukDateInput: GovukDateInput
     largeText: Boolean = true,
     labelClass: Option[String] = None,
     pageHeading: Boolean = true
-)(implicit messages: Messages)
+)(using messages: Messages)
 
 @govukDateInput(DateInput(
     hint = hintContent.map(text => Hint(content = Text(text))),

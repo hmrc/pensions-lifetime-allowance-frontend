@@ -29,7 +29,7 @@
     inputType: String = "text",
     autoComplete: Option[String] = None,
     largeText: Boolean = true,
-)(implicit messages: Messages)
+)(using messages: Messages)
 
 @govukInput(Input(
     label = Label(

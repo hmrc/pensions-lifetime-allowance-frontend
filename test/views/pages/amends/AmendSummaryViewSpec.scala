@@ -28,7 +28,7 @@ import views.html.pages.amends.amendSummary
 
 class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewMessages {
 
-  val tstPensionContributionPsoDisplaySections = Seq(
+  private val tstPensionContributionPsoDisplaySections = Seq(
     AmendDisplaySectionModel(
       "PensionsTakenBefore",
       Seq(
@@ -121,7 +121,7 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewMes
     )
   )
 
-  val tstPsoDisplaySections = Seq(
+  private val tstPsoDisplaySections = Seq(
     AmendDisplaySectionModel(
       "pensionDebits",
       Seq(
@@ -142,7 +142,7 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewMes
     )
   )
 
-  val amendDisplayModel = AmendDisplayModel(
+  private val amendDisplayModel = AmendDisplayModel(
     protectionType = IndividualProtection2016,
     amended = true,
     pensionContributionSections = tstPensionContributionPsoDisplaySections,
@@ -151,7 +151,7 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewMes
     totalAmount = "£1,300,000.34"
   )
 
-  val amendDisplayModelWithoutPso = AmendDisplayModel(
+  private val amendDisplayModelWithoutPso = AmendDisplayModel(
     protectionType = IndividualProtection2016,
     amended = false,
     pensionContributionSections = tstPensionContributionPsoDisplaySections,
@@ -160,12 +160,12 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewMes
     totalAmount = "£1,100,000.34"
   )
 
-  def view: amendSummary = inject[amendSummary]
+  private def view: amendSummary = inject[amendSummary]
 
-  def doc: Document =
+  private def doc: Document =
     Jsoup.parse(view.apply(amendDisplayModel, IndividualProtection2016, Open).body)
 
-  def docWithoutPso: Document = Jsoup.parse(
+  private def docWithoutPso: Document = Jsoup.parse(
     view.apply(amendDisplayModelWithoutPso, IndividualProtection2016, Open).body
   )
 

@@ -26,51 +26,70 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.*
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.libs.json.{Json, Reads, Writes}
+import play.api.libs.json.{Format, Json, Reads, Writes}
+import play.api.mvc.AnyContentAsEmpty
+import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import repositories.SessionRepository
-import testHelpers.FakeApplication
 import testdata.AmendProtectionOutcomeViewsTestData.amendsGAModel
 import uk.gov.hmrc.mongo.cache.DataKey
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class SessionCacheServiceSpec
-    extends FakeApplication
+    extends AnyWordSpec
+    with Matchers
     with MockitoSugar
     with ScalaFutures
     with BeforeAndAfterEach
     with DisplayConstructorsTestData {
 
-  val mockSessionRepository: SessionRepository = mock[SessionRepository]
+  private val mockSessionRepository: SessionRepository = mock[SessionRepository]
 
-  implicit val executionContext: ExecutionContext = inject[ExecutionContext]
+  private val executionContext: ExecutionContext = ExecutionContext.global
 
-  val sessionCacheService = new SessionCacheService(mockSessionRepository)
+  private val sessionCacheService = new SessionCacheService(mockSessionRepository)
 
-  val testKey      = "cache-key"
-  val testCacheMap = CacheMap("haveAddedToPension", Map("data" -> Json.toJson("")))
+  private val testKey      = "cache-key"
+  private val testCacheMap = CacheMap("haveAddedToPension", Map("data" -> Json.toJson("")))
 
-  val testPensionDebit                               = PensionDebitModel(DateModel.of(2025, 12, 4), 10_000)
-  val testProtectionModel: ProtectionModel           = tstProtectionModel
-  val testAmendProtectionModel: AmendProtectionModel = tstNoPsoAmendProtectionModel
-  val testAmendsGAModel: AmendsGAModel               = amendsGAModel
-  val testAmendResponseModel: AmendResponseModel     = amendResponseModel
-  val testPreviousTechnicalIssues: Boolean           = false
+  private given fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+
+  private val testPensionDebit                               = PensionDebitModel(DateModel.of(2025, 12, 4), 10_000)
+  private val testProtectionModel: ProtectionModel           = tstProtectionModel
+  private val testAmendProtectionModel: AmendProtectionModel = tstNoPsoAmendProtectionModel
+  private val testAmendsGAModel: AmendsGAModel               = amendsGAModel
+  private val testAmendResponseModel: AmendResponseModel     = amendResponseModel
+  private val testPreviousTechnicalIssues: Boolean           = false
+
+  private val pensionDebitModelFormat: Format[PensionDebitModel]       = summon[Format[PensionDebitModel]]
+  private val protectionModelFormat: Format[ProtectionModel]           = summon[Format[ProtectionModel]]
+  private val amendProtectionModelFormat: Format[AmendProtectionModel] = summon[Format[AmendProtectionModel]]
+  private val amendsGAModelFormat: Format[AmendsGAModel]               = summon[Format[AmendsGAModel]]
+  private val amendResponseModelFormat: Format[AmendResponseModel]     = summon[Format[AmendResponseModel]]
 
   override def beforeEach(): Unit =
     reset(mockSessionRepository)
 
   "fetchAndGetFormData" should {
     "fetch and get from repo" in {
-      when(mockSessionRepository.getFromSession[PensionDebitModel](DataKey[PensionDebitModel](any()))(any(), any()))
+      when(
+        mockSessionRepository.getFromSession[PensionDebitModel](DataKey[PensionDebitModel](any()))(using any(), any())
+      )
         .thenReturn(Future.successful(Option(testPensionDebit)))
 
-      val result = sessionCacheService.fetchAndGetFormData[PensionDebitModel](testKey)
+      val result: Future[Option[PensionDebitModel]] =
+        sessionCacheService.fetchAndGetFormData[PensionDebitModel](testKey)
+
       await(result) shouldBe Some(testPensionDebit)
       verify(mockSessionRepository)
-        .getFromSession[PensionDebitModel](DataKey[PensionDebitModel](testKey))(PensionDebitModel.format, fakeRequest)
+        .getFromSession[PensionDebitModel](DataKey[PensionDebitModel](testKey))(
+          using pensionDebitModelFormat,
+          fakeRequest
+        )
     }
   }
 
@@ -78,7 +97,7 @@ class SessionCacheServiceSpec
     "save form data to repo" in {
       when(
         mockSessionRepository
-          .putInSession[PensionDebitModel](DataKey[PensionDebitModel](any()), any())(any(), any(), any())
+          .putInSession[PensionDebitModel](DataKey[PensionDebitModel](any()), any())(using any(), any())
       )
         .thenReturn(Future.successful(testCacheMap))
 
@@ -88,9 +107,8 @@ class SessionCacheServiceSpec
 
       verify(mockSessionRepository)
         .putInSession[PensionDebitModel](DataKey[PensionDebitModel](testKey), testPensionDebit)(
-          PensionDebitModel.format,
-          fakeRequest,
-          executionContext
+          using pensionDebitModelFormat,
+          fakeRequest
         )
     }
   }
@@ -98,7 +116,8 @@ class SessionCacheServiceSpec
   "saveOpenProtection" should {
     "call saveFormData with correct key" in {
       when(
-        mockSessionRepository.putInSession[ProtectionModel](DataKey[ProtectionModel](any()), any())(any(), any(), any())
+        mockSessionRepository
+          .putInSession[ProtectionModel](DataKey[ProtectionModel](any()), any())(using any(), any())
       )
         .thenReturn(Future.successful(testCacheMap))
 
@@ -109,7 +128,7 @@ class SessionCacheServiceSpec
       verify(mockSessionRepository).putInSession[ProtectionModel](
         DataKey[ProtectionModel]("openProtection"),
         tstProtectionModel
-      )(ProtectionModel.format, fakeRequest, executionContext)
+      )(using protectionModelFormat, fakeRequest)
     }
   }
 
@@ -124,7 +143,7 @@ class SessionCacheServiceSpec
         s"protectionType is '$protectionType' and status is '$status'" in {
           when(
             mockSessionRepository
-              .putInSession[AmendProtectionModel](DataKey[AmendProtectionModel](any()), any())(any(), any(), any())
+              .putInSession[AmendProtectionModel](DataKey[AmendProtectionModel](any()), any())(using any(), any())
           )
             .thenReturn(Future.successful(testCacheMap))
 
@@ -142,7 +161,7 @@ class SessionCacheServiceSpec
           verify(mockSessionRepository).putInSession[AmendProtectionModel](
             DataKey[AmendProtectionModel](key),
             amendModel
-          )(AmendProtectionModel.format, fakeRequest, executionContext)
+          )(using amendProtectionModelFormat, fakeRequest)
         }
       }
     }
@@ -151,7 +170,10 @@ class SessionCacheServiceSpec
   "saveAmendsGAModel" should {
     "call saveFormData with correct key" in {
 
-      when(mockSessionRepository.putInSession[AmendsGAModel](DataKey[AmendsGAModel](any()), any())(any(), any(), any()))
+      when(
+        mockSessionRepository
+          .putInSession[AmendsGAModel](DataKey[AmendsGAModel](any()), any())(using any(), any())
+      )
         .thenReturn(Future.successful(testCacheMap))
 
       val result = sessionCacheService.saveAmendsGAModel(amendsGAModel)
@@ -159,9 +181,8 @@ class SessionCacheServiceSpec
       await(result) shouldBe testCacheMap
 
       verify(mockSessionRepository).putInSession[AmendsGAModel](DataKey[AmendsGAModel]("AmendsGA"), amendsGAModel)(
-        AmendsGAModel.format,
-        fakeRequest,
-        executionContext
+        using amendsGAModelFormat,
+        fakeRequest
       )
     }
   }
@@ -171,7 +192,7 @@ class SessionCacheServiceSpec
 
       when(
         mockSessionRepository
-          .putInSession[AmendResponseModel](DataKey[AmendResponseModel](any()), any())(any(), any(), any())
+          .putInSession[AmendResponseModel](DataKey[AmendResponseModel](any()), any())(using any(), any())
       )
         .thenReturn(Future.successful(testCacheMap))
 
@@ -182,14 +203,14 @@ class SessionCacheServiceSpec
       verify(mockSessionRepository).putInSession[AmendResponseModel](
         DataKey[AmendResponseModel]("amendResponseModel"),
         testAmendResponseModel
-      )(AmendResponseModel.format, fakeRequest, executionContext)
+      )(using amendResponseModelFormat, fakeRequest)
     }
   }
 
   "savePreviousTechnicalIssues" should {
     "call saveFormData with correct key" in {
 
-      when(mockSessionRepository.putInSession[Boolean](DataKey[Boolean](any()), any())(any(), any(), any()))
+      when(mockSessionRepository.putInSession[Boolean](DataKey[Boolean](any()), any())(using any(), any()))
         .thenReturn(Future.successful(testCacheMap))
 
       val result = sessionCacheService.savePreviousTechnicalIssues(testPreviousTechnicalIssues)
@@ -198,16 +219,15 @@ class SessionCacheServiceSpec
 
       verify(mockSessionRepository)
         .putInSession[Boolean](DataKey[Boolean]("previous-technical-issues"), testPreviousTechnicalIssues)(
-          Writes.BooleanWrites,
-          fakeRequest,
-          executionContext
+          using Writes.BooleanWrites,
+          fakeRequest
         )
     }
   }
 
   "fetchOpenProtection" should {
     "call getFromSession with correct key" in {
-      when(mockSessionRepository.getFromSession[ProtectionModel](DataKey[ProtectionModel](any()))(any(), any()))
+      when(mockSessionRepository.getFromSession[ProtectionModel](DataKey[ProtectionModel](any()))(using any(), any()))
         .thenReturn(Future.successful(Some(testProtectionModel)))
 
       val result = sessionCacheService.fetchOpenProtection
@@ -215,7 +235,7 @@ class SessionCacheServiceSpec
       await(result) shouldBe Some(testProtectionModel)
 
       verify(mockSessionRepository).getFromSession[ProtectionModel](DataKey[ProtectionModel]("openProtection"))(
-        ProtectionModel.format,
+        using protectionModelFormat,
         fakeRequest
       )
     }
@@ -237,7 +257,7 @@ class SessionCacheServiceSpec
 
           when(
             mockSessionRepository
-              .getFromSession[AmendProtectionModel](DataKey[AmendProtectionModel](any()))(any(), any())
+              .getFromSession[AmendProtectionModel](DataKey[AmendProtectionModel](any()))(using any(), any())
           )
             .thenReturn(Future.successful(Some(amendModel)))
 
@@ -248,7 +268,7 @@ class SessionCacheServiceSpec
           await(result) shouldBe Some(amendModel)
 
           verify(mockSessionRepository).getFromSession[AmendProtectionModel](DataKey[AmendProtectionModel](key))(
-            AmendProtectionModel.format,
+            amendProtectionModelFormat,
             fakeRequest
           )
         }
@@ -258,7 +278,7 @@ class SessionCacheServiceSpec
 
   "fetchAmendsGAModel" should {
     "call getFromSession with correct key" in {
-      when(mockSessionRepository.getFromSession[AmendsGAModel](DataKey[AmendsGAModel](any()))(any(), any()))
+      when(mockSessionRepository.getFromSession[AmendsGAModel](DataKey[AmendsGAModel](any()))(using any(), any()))
         .thenReturn(Future.successful(Some(testAmendsGAModel)))
 
       val result = sessionCacheService.fetchAmendsGAModel
@@ -266,13 +286,15 @@ class SessionCacheServiceSpec
       await(result) shouldBe Some(testAmendsGAModel)
 
       verify(mockSessionRepository)
-        .getFromSession[AmendsGAModel](DataKey[AmendsGAModel]("AmendsGA"))(AmendsGAModel.format, fakeRequest)
+        .getFromSession[AmendsGAModel](DataKey[AmendsGAModel]("AmendsGA"))(amendsGAModelFormat, fakeRequest)
     }
   }
 
   "fetchAmendResponseModel" should {
     "call getFromSession with correct key" in {
-      when(mockSessionRepository.getFromSession[AmendResponseModel](DataKey[AmendResponseModel](any()))(any(), any()))
+      when(
+        mockSessionRepository.getFromSession[AmendResponseModel](DataKey[AmendResponseModel](any()))(using any(), any())
+      )
         .thenReturn(Future.successful(Some(testAmendResponseModel)))
 
       val result = sessionCacheService.fetchAmendResponseModel
@@ -282,7 +304,7 @@ class SessionCacheServiceSpec
       verify(mockSessionRepository).getFromSession[AmendResponseModel](
         DataKey[AmendResponseModel]("amendResponseModel")
       )(
-        AmendResponseModel.format,
+        amendResponseModelFormat,
         fakeRequest
       )
     }
@@ -290,7 +312,7 @@ class SessionCacheServiceSpec
 
   "fetchPreviousTechnicalIssues" should {
     "call getFromSession with correct key" in {
-      when(mockSessionRepository.getFromSession[Boolean](DataKey[Boolean](any()))(any(), any()))
+      when(mockSessionRepository.getFromSession[Boolean](DataKey[Boolean](any()))(using any(), any()))
         .thenReturn(Future.successful(Some(testPreviousTechnicalIssues)))
 
       val result = sessionCacheService.fetchPreviousTechnicalIssues
@@ -304,11 +326,11 @@ class SessionCacheServiceSpec
 
   "remove" should {
     "call clearSession" in {
-      when(mockSessionRepository.clearSession(any())).thenReturn(Future.successful((): Unit))
+      when(mockSessionRepository.clearSession()(using any())).thenReturn(Future.successful((): Unit))
 
-      sessionCacheService.remove
+      sessionCacheService.remove()
 
-      verify(mockSessionRepository).clearSession(fakeRequest)
+      verify(mockSessionRepository).clearSession()(using fakeRequest)
     }
   }
 

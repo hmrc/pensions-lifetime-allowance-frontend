@@ -17,7 +17,6 @@
 package controllers
 
 import auth.helpers.AuthMocks
-import config.AppConfig
 import connectors.CitizenDetailsConnector
 import constructors.display.DisplayConstructors
 import models.*
@@ -45,8 +44,7 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
   private val citizenDetailsConnector: CitizenDetailsConnector = mock[CitizenDetailsConnector]
   private val printProtectionView: printProtection             = mock[printProtection]
 
-  private implicit val executionContext: ExecutionContext = inject[ExecutionContext]
-  private implicit val AppConfig: AppConfig               = mock[AppConfig]
+  private val executionContext: ExecutionContext = ExecutionContext.global
 
   private val printController = new PrintController(
     sessionCacheService,
@@ -55,7 +53,7 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
     printProtectionView,
     mcc,
     authActions
-  )
+  )(using executionContext)
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -64,9 +62,8 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
     reset(sessionCacheService)
     reset(citizenDetailsConnector)
     reset(printProtectionView)
-    reset(AppConfig)
 
-    when(printProtectionView.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
+    when(printProtectionView.apply(any())(using any(), any())).thenReturn(HtmlFormat.empty)
   }
 
   private val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
@@ -103,9 +100,9 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
     "there is no data in cache" should {
       "return Redirect to ReadProtectionsController.currentProtections" in {
         mockAuthSuccess(testNino)
-        when(citizenDetailsConnector.getPersonDetails(any())(any()))
-          .thenReturn(Future(Some(testPersonalDetails)))
-        when(sessionCacheService.fetchOpenProtection(any())).thenReturn(Future(None))
+        when(citizenDetailsConnector.getPersonDetails(any())(using any()))
+          .thenReturn(Future.successful(Some(testPersonalDetails)))
+        when(sessionCacheService.fetchOpenProtection(using any())).thenReturn(Future.successful(None))
 
         val result = printController.printView(fakeRequest)
 
@@ -118,16 +115,17 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
       "return Ok with printProtectionView view" in {
         mockAuthSuccess(testNino)
 
-        when(citizenDetailsConnector.getPersonDetails(any())(any()))
+        when(citizenDetailsConnector.getPersonDetails(any())(using any()))
           .thenReturn(Future.successful(Some(testPersonalDetails)))
-        when(sessionCacheService.fetchOpenProtection(any())).thenReturn(Future(Some(testProtectionModel)))
-        when(displayConstructors.createPrintDisplayModel(any(), any(), any())(any()))
+        when(sessionCacheService.fetchOpenProtection(using any()))
+          .thenReturn(Future.successful(Some(testProtectionModel)))
+        when(displayConstructors.createPrintDisplayModel(any(), any(), any())(using any()))
           .thenReturn(testPrintDisplayModel)
 
         val result = printController.printView(fakeRequest)
 
         status(result) shouldBe 200
-        verify(printProtectionView).apply(ArgumentMatchers.eq(testPrintDisplayModel))(any(), any())
+        verify(printProtectionView).apply(ArgumentMatchers.eq(testPrintDisplayModel))(using any(), any())
       }
     }
   }

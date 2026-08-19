@@ -20,7 +20,7 @@
    layout: Layout,
 )
 
-@()(implicit request: RequestHeader, messages: Messages)
+@()(using request: RequestHeader, messages: Messages)
 
 @linkText = @{
     messages("pla.timeout.returnToPTA.href.linkText")

@@ -19,12 +19,12 @@ package controllers.redirect
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{GET, defaultAwaitTimeout, redirectLocation, status}
+import play.api.test.Helpers.{GET, defaultAwaitTimeout, redirectLocation, status, stubMessagesControllerComponents}
 import testHelpers.FakeApplication
 
 class RedirectControllerSpec extends FakeApplication with MockitoSugar {
 
-  private val mcc = inject[MessagesControllerComponents]
+  private val mcc = stubMessagesControllerComponents()
 
   private val redirectController = new RedirectController(mcc)
 

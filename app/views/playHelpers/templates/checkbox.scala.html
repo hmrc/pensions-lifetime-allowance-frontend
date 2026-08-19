@@ -17,7 +17,7 @@
 @import play.api.i18n.*
 @import views.html.helper.*
 
-@(field: Field, checkboxOptions: Seq[(String, String)], args: (Symbol, Any)*)(implicit messages: Messages)
+@(field: Field, checkboxOptions: Seq[(String, String)], args: (Symbol, Any)*)(using messages: Messages)
 
 @elements = @{new FieldElements(field.id, field, null, args.toMap, messages) }
 

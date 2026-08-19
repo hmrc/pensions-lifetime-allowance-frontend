@@ -35,11 +35,11 @@ import views.html.pages.existingProtections.existingProtections
 
 class ExistingProtectionsViewSpec extends CommonViewSpecHelper with ExistingProtectionsViewMessages {
 
-  val view: existingProtections = inject[existingProtections]
+  private val view: existingProtections = inject[existingProtections]
 
-  val tstPSACheckRef = "PSA33456789"
+  private val tstPSACheckRef = "PSA33456789"
 
-  val protectionModel = ExistingProtectionDisplayModel(
+  private val protectionModel = ExistingProtectionDisplayModel(
     protectionType = IndividualProtection2016,
     status = Open,
     amendCall = Some(Call("", "", "")),
@@ -50,7 +50,7 @@ class ExistingProtectionsViewSpec extends CommonViewSpecHelper with ExistingProt
     certificateTime = Some("")
   )
 
-  val protectionModel2 = ExistingProtectionDisplayModel(
+  private val protectionModel2 = ExistingProtectionDisplayModel(
     protectionType = IndividualProtection2014,
     status = Dormant,
     amendCall = Some(Call("", "", "")),
@@ -61,7 +61,7 @@ class ExistingProtectionsViewSpec extends CommonViewSpecHelper with ExistingProt
     certificateTime = Some("")
   )
 
-  val tstProtectionDisplayModelDormant1 = ExistingProtectionDisplayModel(
+  private val tstProtectionDisplayModelDormant1 = ExistingProtectionDisplayModel(
     protectionType = IndividualProtection2014,
     status = Dormant,
     amendCall = Some(
@@ -75,14 +75,14 @@ class ExistingProtectionsViewSpec extends CommonViewSpecHelper with ExistingProt
     certificateTime = None
   )
 
-  val modelOnlyActive = ExistingProtectionsDisplayModel(
+  private val modelOnlyActive = ExistingProtectionsDisplayModel(
     inactiveProtections = ExistingInactiveProtectionsDisplayModel.empty,
     activeProtection = Some(protectionModel)
   )
 
-  val docOnlyActive: Document = Jsoup.parse(view.apply(modelOnlyActive).body)
+  private val docOnlyActive: Document = Jsoup.parse(view.apply(modelOnlyActive).body)
 
-  val modelOnlyInactive = ExistingProtectionsDisplayModel(
+  private val modelOnlyInactive = ExistingProtectionsDisplayModel(
     activeProtection = None,
     inactiveProtections = ExistingInactiveProtectionsDisplayModel(
       dormantProtections = ExistingInactiveProtectionsByType(
@@ -99,9 +99,9 @@ class ExistingProtectionsViewSpec extends CommonViewSpecHelper with ExistingProt
     )
   )
 
-  val docOnlyInactive: Document = Jsoup.parse(view.apply(modelOnlyInactive).body)
+  private val docOnlyInactive: Document = Jsoup.parse(view.apply(modelOnlyInactive).body)
 
-  val modelActiveAndInactive = ExistingProtectionsDisplayModel(
+  private val modelActiveAndInactive = ExistingProtectionsDisplayModel(
     activeProtection = Some(protectionModel2),
     inactiveProtections = ExistingInactiveProtectionsDisplayModel(
       dormantProtections = ExistingInactiveProtectionsByType(
@@ -118,14 +118,14 @@ class ExistingProtectionsViewSpec extends CommonViewSpecHelper with ExistingProt
     )
   )
 
-  val docActiveAndInactive: Document = Jsoup.parse(view.apply(modelActiveAndInactive).body)
+  private val docActiveAndInactive: Document = Jsoup.parse(view.apply(modelActiveAndInactive).body)
 
-  val modelNoProtections = ExistingProtectionsDisplayModel(
+  private val modelNoProtections = ExistingProtectionsDisplayModel(
     activeProtection = None,
     inactiveProtections = ExistingInactiveProtectionsDisplayModel.empty
   )
 
-  val docNoProtections: Document = Jsoup.parse(view.apply(modelNoProtections).body)
+  private val docNoProtections: Document = Jsoup.parse(view.apply(modelNoProtections).body)
 
   "The Existing Protections page" should {
 

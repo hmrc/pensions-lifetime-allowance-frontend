@@ -21,11 +21,11 @@ import play.api.libs.json.{Json, OFormat}
 case class Person(firstName: String, lastName: String) {}
 
 object Person {
-  implicit val format: OFormat[Person] = Json.format[Person]
+  given OFormat[Person] = Json.format[Person]
 }
 
 case class PersonalDetailsModel(person: Person) {}
 
 object PersonalDetailsModel {
-  implicit val format: OFormat[PersonalDetailsModel] = Json.format[PersonalDetailsModel]
+  given OFormat[PersonalDetailsModel] = Json.format[PersonalDetailsModel]
 }

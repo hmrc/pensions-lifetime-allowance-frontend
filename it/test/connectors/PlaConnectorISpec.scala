@@ -34,15 +34,12 @@ import testdata.PlaConnectorTestData.*
 import uk.gov.hmrc.http.HeaderCarrier
 import util.IntegrationBaseSpec
 
-import scala.concurrent.ExecutionContext
-
 class PlaConnectorISpec extends IntegrationBaseSpec with ScalaFutures {
 
   private val connector: PlaConnector = app.injector.instanceOf[PlaConnector]
 
-  private implicit val hc: HeaderCarrier    = HeaderCarrier()
-  private implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
-  private implicit val defaultPatience: PatienceConfig = PatienceConfig(timeout = Span(2, Seconds), interval = Span(5, Millis))
+  private given HeaderCarrier    = HeaderCarrier()
+  private given PatienceConfig = PatienceConfig(timeout = Span(2, Seconds), interval = Span(5, Millis))
 
   private val testNino          = "AB999999C"
   private val protectionId      = PlaConnectorTestData.lifetimeAllowanceIdentifier

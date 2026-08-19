@@ -29,7 +29,7 @@ object AmendOutcomeDisplayModelConstructor {
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       nino: String,
       notificationId: NotificationId
-  )(implicit messages: Messages): AmendOutcomeDisplayModel = {
+  )(using Messages): AmendOutcomeDisplayModel = {
     val printDetails =
       AmendPrintDisplayModelConstructor.createAmendPrintDisplayModel(personalDetailsModelOpt, model, nino)
 

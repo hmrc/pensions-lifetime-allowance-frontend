@@ -18,18 +18,26 @@ package auth
 
 import config.AppConfig
 import auth.helpers.AuthMocks
-import org.mockito.ArgumentMatchers.{any, eq => eqTo}
-import org.mockito.Mockito._
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{reset, verify, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.mvc.Results._
+import play.api.mvc.Results.{InternalServerError, Redirect}
 import play.api.mvc.MessagesRequest
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.GET
 import play.twirl.api.Html
 import testHelpers.FakeApplication
-import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.auth.core.{
+  AuthConnector,
+  BearerTokenExpired,
+  ConfidenceLevel,
+  Enrolment,
+  IncorrectCredentialStrength,
+  InsufficientConfidenceLevel,
+  InsufficientEnrolments
+}
 import views.html.pages.fallback.technicalError
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -49,16 +57,16 @@ class AuthenticateWithNinoSpec
   private val requestUrlEncoded = "https%3A%2F%2Fwww.pla-frontend.gov.uk%2Fip16-start-page"
   private val fakeRequest       = new MessagesRequest(FakeRequest(GET, requestUrl), mcc.messagesApi)
 
-  private implicit val executionContext: ExecutionContext = ExecutionContext.global
+  private val executionContext: ExecutionContext = ExecutionContext.global
 
   override def beforeEach(): Unit =
     reset(authConnector)
 
-  val authenticateWithNino = new AuthenticateWithNino(
+  private val authenticateWithNino = new AuthenticateWithNino(
     authConnector = authConnector,
     appConfig = appConfig,
     technicalError = technicalError
-  )(executionContext)
+  )(using executionContext)
 
   "AuthenticateWithNino" should {
 
@@ -136,13 +144,13 @@ class AuthenticateWithNinoSpec
         "any other auth failure occurs" in {
           when(authConnector.authorise[Option[String]](any(), any())(any(), any()))
             .thenReturn(Future.failed(IncorrectCredentialStrength()))
-          when(technicalError.apply()(any(), any())).thenReturn(Html("technical error page HTML"))
+          when(technicalError.apply()(using any(), any())).thenReturn(Html("technical error page HTML"))
 
           authenticateWithNino.refine(fakeRequest).futureValue shouldBe Left(
             InternalServerError(Html("technical error page HTML"))
           )
 
-          verify(technicalError).apply()(eqTo(fakeRequest), any())
+          verify(technicalError).apply()(using eqTo(fakeRequest), any())
         }
       }
     }

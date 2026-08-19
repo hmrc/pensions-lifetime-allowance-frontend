@@ -30,7 +30,7 @@ case class DateFormatter(
     optMinDate: Option[LocalDate] = None,
     optMaxDate: Option[LocalDate] = None,
     rangeInclusive: Boolean = false
-)(implicit val messages: Messages)
+)(using messages: Messages)
     extends Formatter[LocalDate] {
 
   val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy", messages.lang.toLocale)

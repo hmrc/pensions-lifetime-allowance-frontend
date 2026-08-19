@@ -26,9 +26,9 @@ import views.html.pages.amends.amendOutcome
 
 class AmendOutcomeViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewMessages {
 
-  val view: amendOutcome = inject[amendOutcome]
+  private val view: amendOutcome = inject[amendOutcome]
 
-  def parseDocument(amendResultDisplayModel: AmendOutcomeDisplayModel): Document =
+  private def parseDocument(amendResultDisplayModel: AmendOutcomeDisplayModel): Document =
     Jsoup.parse(view(amendResultDisplayModel).body)
 
   "amendOutcome" when {

@@ -33,7 +33,7 @@
     amendCurrentPensionForm: Form[AmendCurrentPensionModel],
     protectionType: AmendableProtectionType,
     status: AmendProtectionRequestStatus
-)(implicit request: RequestHeader, messages: Messages)
+)(using request: RequestHeader, messages: Messages)
 
 @helpTextAccordionContent = {
     <p class="govuk-body">@messages("pla.currentPensions.hiddenTextPara")</p>

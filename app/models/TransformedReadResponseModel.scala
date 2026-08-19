@@ -26,7 +26,7 @@ case class TransformedReadResponseModel(
 )
 
 object TransformedReadResponseModel {
-  implicit val format: OFormat[TransformedReadResponseModel] = Json.format[TransformedReadResponseModel]
+  given OFormat[TransformedReadResponseModel] = Json.format[TransformedReadResponseModel]
 
   def from(respModel: ReadProtectionsResponse): TransformedReadResponseModel = {
 

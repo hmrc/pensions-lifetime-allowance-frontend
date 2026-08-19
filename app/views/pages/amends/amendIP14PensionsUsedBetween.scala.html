@@ -32,7 +32,7 @@
     amendPensionsUsedBetweenForm: Form[AmendPensionsUsedBetweenModel],
     protectionType: AmendableProtectionType,
     status: AmendProtectionRequestStatus
-)(implicit request: RequestHeader, messages: Messages)
+)(using request: RequestHeader, messages: Messages)
 
 @helpTextAccordionContent = {
     <p class="govuk-body">@messages("pla.ip14PensionsTakenBetween.para.2")</p>

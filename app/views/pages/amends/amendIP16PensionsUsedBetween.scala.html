@@ -34,7 +34,7 @@
     amendPensionsUsedBetweenForm: Form[AmendPensionsUsedBetweenModel],
     protectionType: AmendableProtectionType,
     status: AmendProtectionRequestStatus
-)(implicit request: RequestHeader, messages: Messages)
+)(using request: RequestHeader, messages: Messages)
 
 @helpTextAccordionContent = {
 

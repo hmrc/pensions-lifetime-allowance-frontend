@@ -30,7 +30,7 @@ class TimeModelSpec extends AnyWordSpec with Matchers {
         "000001" -> TimeModel.of(0, 0, 1)
       ).foreach { case (timeString, timeModel) =>
         s"provided with '$timeString'" in {
-          TimeModel.reads.reads(JsString(timeString)) shouldBe JsSuccess(timeModel)
+          Json.fromJson[TimeModel](JsString(timeString)) shouldBe JsSuccess(timeModel)
         }
       }
 
@@ -42,7 +42,7 @@ class TimeModelSpec extends AnyWordSpec with Matchers {
         "130477"
       ).foreach { timeString =>
         s"provided with '$timeString'" in {
-          TimeModel.reads.reads(JsString(timeString)) shouldBe JsError("invalid time string")
+          Json.fromJson[TimeModel](JsString(timeString)) shouldBe JsError("invalid time string")
         }
       }
 
@@ -54,7 +54,7 @@ class TimeModelSpec extends AnyWordSpec with Matchers {
         "2025-12-03T13:44:12.000"
       ).foreach { timeString =>
         s"provided with '$timeString'" in {
-          TimeModel.reads.reads(JsString(timeString)) shouldBe JsError("invalid time string")
+          Json.fromJson[TimeModel](JsString(timeString)) shouldBe JsError("invalid time string")
         }
       }
 
@@ -67,7 +67,7 @@ class TimeModelSpec extends AnyWordSpec with Matchers {
         Json.arr(JsNumber(2025), JsNumber(12), JsNumber(8))
       ).foreach { timeValue =>
         s"provided with $timeValue" in {
-          TimeModel.reads.reads(timeValue) shouldBe JsError("time must be a string")
+          Json.fromJson[TimeModel](timeValue) shouldBe JsError("time must be a string")
         }
       }
   }
@@ -80,7 +80,7 @@ class TimeModelSpec extends AnyWordSpec with Matchers {
         TimeModel.of(23, 23, 23) -> "232323"
       ).foreach { case (timeModel, timeString) =>
         s"provided with $timeModel" in {
-          TimeModel.writes.writes(timeModel) shouldBe JsString(timeString)
+          Json.toJson[TimeModel](timeModel) shouldBe JsString(timeString)
         }
       }
   }

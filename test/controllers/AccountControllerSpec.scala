@@ -25,10 +25,10 @@ import testHelpers.*
 
 class AccountControllerSpec extends FakeApplication with MockitoSugar {
 
-  val appConfig: AppConfig              = inject[AppConfig]
-  val mcc: MessagesControllerComponents = inject[MessagesControllerComponents]
+  private val appConfig: AppConfig              = inject[AppConfig]
+  private val mcc: MessagesControllerComponents = stubMessagesControllerComponents()
 
-  val controller = new AccountController(appConfig, mcc)
+  private val controller = new AccountController(appConfig, mcc)
 
   "navigating to signout with an existing session" in {
 

@@ -23,9 +23,9 @@ import views.html.pages.applicationClosed.applicationClosed2014
 
 class ApplicationClosed2014ViewSpec extends CommonViewSpecHelper {
 
-  def view: applicationClosed2014 = inject[applicationClosed2014]
+  private def view: applicationClosed2014 = inject[applicationClosed2014]
 
-  def doc: Document = Jsoup.parse(view()(fakeRequest, messages).body)
+  private def doc: Document = Jsoup.parse(view()(using fakeRequest, messages).body)
 
   "applicationClosed2014 view" must {
 

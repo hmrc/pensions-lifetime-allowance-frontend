@@ -35,7 +35,7 @@ object AmendPsoDetailsForm extends CurrencyMappings {
 
   def amendPsoDetailsForm(
       protectionType: AmendableProtectionType
-  )(implicit messages: Messages): Form[AmendPsoDetailsModel] = Form(
+  )(using Messages): Form[AmendPsoDetailsModel] = Form(
     mapping(
       key -> of(
         DateFormatter(

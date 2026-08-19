@@ -24,7 +24,7 @@ import testdata.PlaConnectorTestData.*
 
 class AmendResponseModelSpec extends AnyWordSpec with Matchers {
 
-  val amendResponseModel = AmendResponseModel(
+  private val amendResponseModel = AmendResponseModel(
     psaCheckReference = "testPSARef",
     identifier = lifetimeAllowanceIdentifier,
     sequenceNumber = lifetimeAllowanceSequenceNumber + 1,
@@ -44,7 +44,7 @@ class AmendResponseModelSpec extends AnyWordSpec with Matchers {
     pensionDebitTotalAmount = Some(40_000)
   )
 
-  val protectionModel = ProtectionModel(
+  private val protectionModel = ProtectionModel(
     psaCheckReference = "fixedPsaRef",
     identifier = 10101,
     sequenceNumber = 20202,

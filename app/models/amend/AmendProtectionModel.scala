@@ -109,7 +109,7 @@ object AmendProtectionModel {
       )
     }
 
-  implicit val format: OFormat[AmendProtectionModel] = Json.format[AmendProtectionModel]
+  given OFormat[AmendProtectionModel] = Json.format[AmendProtectionModel]
 }
 
 case class AmendProtectionFields(
@@ -130,5 +130,5 @@ object AmendProtectionFields {
     pensionDebit = None
   )
 
-  implicit val format: OFormat[AmendProtectionFields] = Json.format[AmendProtectionFields]
+  given OFormat[AmendProtectionFields] = Json.format[AmendProtectionFields]
 }

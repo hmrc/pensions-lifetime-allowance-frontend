@@ -16,7 +16,6 @@
 
 package controllers
 
-import config.AppConfig
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{reset, verify, when}
 import org.scalatest.BeforeAndAfterEach
@@ -38,8 +37,6 @@ class PsaLookupClosedControllerSpec extends FakeApplication with BeforeAndAfterE
 
   private val mockPsaLookupClosed: psaLookupClosed = mock[psaLookupClosed]
 
-  private implicit val appConfig: AppConfig = mock[AppConfig]
-
   private val controller = new PsaLookupClosedController(
     mcc,
     mockPsaLookupClosed
@@ -48,10 +45,9 @@ class PsaLookupClosedControllerSpec extends FakeApplication with BeforeAndAfterE
   override def beforeEach(): Unit = {
     super.beforeEach()
 
-    reset(appConfig)
     reset(mockPsaLookupClosed)
 
-    when(mockPsaLookupClosed.apply()(any(), any())).thenReturn(HtmlFormat.empty)
+    when(mockPsaLookupClosed.apply()(using any(), any())).thenReturn(HtmlFormat.empty)
   }
 
   private val request = FakeRequest().withSession(sessionId)
@@ -62,7 +58,7 @@ class PsaLookupClosedControllerSpec extends FakeApplication with BeforeAndAfterE
       val result = controller.psaLookupClosed.apply(request)
 
       status(result) shouldBe OK
-      verify(mockPsaLookupClosed).apply()(any(), any())
+      verify(mockPsaLookupClosed).apply()(using any(), any())
     }
 
   }

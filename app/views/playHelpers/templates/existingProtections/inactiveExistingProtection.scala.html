@@ -21,7 +21,7 @@
 
 @this()
 
-@(protection: ExistingProtectionDisplayModel, protectionNum: Int)(implicit messages: Messages)
+@(protection: ExistingProtectionDisplayModel, protectionNum: Int)(using messages: Messages)
 
 @changeLink = {
     @protection.amendCall.map{ call =>

@@ -22,7 +22,7 @@
     layout: Layout,
 )
 
-@(model: PrintDisplayModel)(implicit request: RequestHeader, messages: Messages)
+@(model: PrintDisplayModel)(using request: RequestHeader, messages: Messages)
 
 
 @layout(

@@ -19,31 +19,33 @@ package controllers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Messages
-import play.api.mvc.MessagesControllerComponents
-import play.api.mvc.AnyContentAsEmpty
+import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
-import play.api.test.Helpers.CACHE_CONTROL
+import play.api.test.Helpers.*
 import play.twirl.api.HtmlFormat
-import testHelpers.*
 import views.html.pages.fallback.technicalError
 
 class AmendControllerErrorHelperSpec
-    extends FakeApplication
+    extends AnyWordSpec
+    with Matchers
     with MockitoSugar
     with BeforeAndAfterEach
     with AmendControllerErrorHelper {
 
-  private val mcc = inject[MessagesControllerComponents]
-
-  implicit val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-  implicit val mockMessage: Messages                            = mcc.messagesApi.preferred(fakeRequest)
+  val fakeRequest: FakeRequest[?] = FakeRequest()
+  val messages: Messages          = mock[Messages]
 
   val technicalError: technicalError = mock[technicalError]
 
-  override def beforeEach(): Unit =
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+
     reset(technicalError)
+  }
 
   "couldNotRetrieveModelForNino" should {
     "return the correctly formatted log message" in {
@@ -56,9 +58,9 @@ class AmendControllerErrorHelperSpec
 
   "buildTechnicalError" should {
     "return the technical error page" in {
-      when(technicalError.apply()(any(), any())).thenReturn(HtmlFormat.raw("html"))
+      when(technicalError.apply()(using any(), any())).thenReturn(HtmlFormat.raw("html"))
 
-      val error = buildTechnicalError(technicalError)
+      val error: Result = technicalErrorResult(using fakeRequest, messages)
 
       error.header.headers.get(CACHE_CONTROL) shouldBe Some("no-cache")
     }

@@ -62,7 +62,7 @@ object AmendableProtectionType extends JsonEnumFormat[AmendableProtectionType] {
       case _                                          => None
     }
 
-  implicit val pathBindable: PathBindable[AmendableProtectionType] =
+  given pathBindable: PathBindable[AmendableProtectionType] =
     new PathBindable[AmendableProtectionType] {
 
       override def bind(key: String, value: String): Either[String, AmendableProtectionType] =

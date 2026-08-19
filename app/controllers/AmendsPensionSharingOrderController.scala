@@ -18,7 +18,6 @@ package controllers
 
 import auth.AuthActions
 import common.*
-import config.AppConfig
 import forms.AmendPsoDetailsForm.*
 import models.amend.AmendPsoDetailsModel
 import models.pla.AmendableProtectionType
@@ -27,7 +26,6 @@ import models.{DateModel, PensionDebitModel}
 import play.api.Logging
 import play.api.mvc.*
 import services.SessionCacheService
-import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages
 
@@ -36,15 +34,13 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class AmendsPensionSharingOrderController @Inject() (
-    val sessionCacheService: SessionCacheService,
+    sessionCacheService: SessionCacheService,
     mcc: MessagesControllerComponents,
     authActions: AuthActions,
     amendPsoDetails: pages.amends.amendPsoDetails,
-    technicalError: views.html.pages.fallback.technicalError
+    override val technicalError: views.html.pages.fallback.technicalError
 )(
-    implicit val appConfig: AppConfig,
-    val formWithCSRF: FormWithCSRF,
-    val ec: ExecutionContext
+    using ExecutionContext
 ) extends FrontendController(mcc)
     with AmendControllerErrorHelper
     with Logging {
@@ -54,7 +50,9 @@ class AmendsPensionSharingOrderController @Inject() (
       status: AmendProtectionRequestStatus,
       existingPSO: Boolean
   ): Action[AnyContent] =
-    authActions.authenticateWithNino.async { implicit request =>
+    authActions.authenticateWithNino.async { request =>
+      given MessagesRequest[?] = request
+
       amendPsoDetailsForm(protectionType)
         .bindFromRequest()
         .fold(
@@ -85,7 +83,9 @@ class AmendsPensionSharingOrderController @Inject() (
   def amendPsoDetails(
       protectionType: AmendableProtectionType,
       status: AmendProtectionRequestStatus
-  ): Action[AnyContent] = authActions.authenticateWithNino.async { implicit request =>
+  ): Action[AnyContent] = authActions.authenticateWithNino.async { request =>
+    given MessagesRequest[?] = request
+
     sessionCacheService
       .fetchAmendProtectionModel(protectionType, status)
       .map {
@@ -105,12 +105,12 @@ class AmendsPensionSharingOrderController @Inject() (
           }
         case _ =>
           logger.warn(couldNotRetrieveModelForNino(request.nino, "when loading the amend PSO details page"))
-          buildTechnicalError(technicalError)
+          technicalErrorResult
       }
   }
 
   private def createAmendPsoDetailsModel(psoDetails: PensionDebitModel): AmendPsoDetailsModel = {
-    val date = psoDetails.startDate.date
+    val date = psoDetails.startDate.toLocalDate
     AmendPsoDetailsModel(date, Some(Display.currencyInputDisplayFormat(psoDetails.enteredAmount)))
   }
 

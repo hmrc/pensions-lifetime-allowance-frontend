@@ -20,7 +20,6 @@ import common.Display.*
 import models.{DateModel, TimeModel}
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
-import play.api.mvc.MessagesControllerComponents
 import testHelpers.FakeApplication
 
 import java.time.{LocalDate, LocalTime}
@@ -28,8 +27,10 @@ import java.util.Locale
 
 class DisplaySpec extends FakeApplication with MockitoSugar {
 
-  implicit val mockMessages: Messages = mock[Messages]
-  val mockMCC: MessagesApi            = inject[MessagesControllerComponents].messagesApi
+  val messagesApi: MessagesApi = inject[MessagesApi]
+
+  val englishMessages: Messages = MessagesImpl(Lang(Locale.ENGLISH), messagesApi)
+  val welshMessages: Messages   = MessagesImpl(Lang(Locale.forLanguageTag("cy")), messagesApi)
 
   "currencyDisplayString" should {
 
@@ -64,15 +65,11 @@ class DisplaySpec extends FakeApplication with MockitoSugar {
       val tstDate = DateModel(LocalDate.of(2018, 4, 17))
 
       "using English messages" in {
-        val messages: Messages = MessagesImpl(Lang(Locale.ENGLISH), mockMCC)
-
-        dateDisplayString(tstDate)(messages) shouldBe "17 April 2018"
+        dateDisplayString(tstDate)(using englishMessages) shouldBe "17 April 2018"
       }
 
       "using Welsh messages" in {
-        val messages: Messages = MessagesImpl(Lang(Locale.forLanguageTag("cy")), mockMCC)
-
-        dateDisplayString(tstDate)(messages) shouldBe "17 Ebrill 2018"
+        dateDisplayString(tstDate)(using welshMessages) shouldBe "17 Ebrill 2018"
       }
     }
 

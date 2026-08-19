@@ -28,7 +28,7 @@ import models.pla.request.AmendProtectionRequestStatus
 import models.{AmendResponseModel, NotificationId, PersonalDetailsModel, TransformedReadResponseModel}
 import play.api.Logging
 import play.api.i18n.Messages
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, RequestHeader, Result}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, MessagesRequest, RequestHeader, Result}
 import services.SessionCacheService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -46,11 +46,11 @@ class AmendsController @Inject() (
     mcc: MessagesControllerComponents,
     authActions: AuthActions,
     manualCorrespondenceNeeded: views.html.pages.result.manualCorrespondenceNeeded,
-    technicalError: views.html.pages.fallback.technicalError,
+    override val technicalError: views.html.pages.fallback.technicalError,
     amendOutcome: views.html.pages.amends.amendOutcome,
     amendOutcomeNoNotificationId: views.html.pages.amends.amendOutcomeNoNotificationId,
     amendSummary: views.html.pages.amends.amendSummary
-)(implicit ec: ExecutionContext)
+)(using ExecutionContext)
     extends FrontendController(mcc)
     with Logging
     with AmendControllerErrorHelper {
@@ -59,7 +59,9 @@ class AmendsController @Inject() (
       protectionType: AmendableProtectionType,
       status: AmendProtectionRequestStatus
   ): Action[AnyContent] =
-    authActions.authenticateWithNino.async { implicit request =>
+    authActions.authenticateWithNino.async { request =>
+      given MessagesRequest[?] = request
+
       sessionCacheService.fetchAmendProtectionModel(protectionType, status).map {
         case Some(amendModel) =>
           Ok(
@@ -71,7 +73,7 @@ class AmendsController @Inject() (
           )
         case _ =>
           logger.warn(couldNotRetrieveModelForNino(request.nino, "when loading the amend summary page"))
-          buildTechnicalError(technicalError)
+          technicalErrorResult
       }
     }
 
@@ -79,7 +81,9 @@ class AmendsController @Inject() (
       protectionType: AmendableProtectionType,
       status: AmendProtectionRequestStatus
   ): Action[AnyContent] =
-    authActions.authenticateWithNino.async { implicit request =>
+    authActions.authenticateWithNino.async { request =>
+      given MessagesRequest[?] = request
+
       for {
         protectionAmendment <- sessionCacheService.fetchAmendProtectionModel(protectionType, status)
         _                   <- saveAmendsGA(protectionAmendment)
@@ -95,20 +99,18 @@ class AmendsController @Inject() (
             Future.successful(Locked(manualCorrespondenceNeeded()))
 
           case Left(ConflictResponseError) =>
-            Future.successful(buildTechnicalError(technicalError))
+            Future.successful(technicalErrorResult)
 
           case Left(IncorrectResponseBodyError) =>
-            Future.successful(buildTechnicalError(technicalError))
+            Future.successful(technicalErrorResult)
 
           case Left(_) =>
-            Future.successful(buildTechnicalError(technicalError))
+            Future.successful(technicalErrorResult)
         }
       } yield result
     }
 
-  private def saveAmendsGA(
-      protectionAmendment: Option[AmendProtectionModel]
-  )(implicit request: RequestHeader): Future[CacheMap] =
+  private def saveAmendsGA(protectionAmendment: Option[AmendProtectionModel])(using RequestHeader): Future[CacheMap] =
     sessionCacheService.saveAmendsGAModel(
       AmendsGAConstructor.identifyAmendsChanges(
         protectionAmendment.get.updated,
@@ -117,21 +119,21 @@ class AmendsController @Inject() (
     )
 
   private def sendAmendProtectionRequest(nino: String, protection: AmendProtectionModel)(
-      implicit hc: HeaderCarrier
+      using HeaderCarrier
   ): Future[Either[PlaConnectorError, AmendResponseModel]] =
     plaConnector
       .amendProtection(nino, protection)
       .map(_.map(AmendResponseModel.from(_, protection.psaCheckReference)))
 
-  private def saveAndRedirectToDisplay(amendResponseModel: AmendResponseModel)(
-      implicit request: RequestHeader
-  ): Future[Result] =
+  private def saveAndRedirectToDisplay(amendResponseModel: AmendResponseModel)(using RequestHeader): Future[Result] =
     sessionCacheService.saveAmendResponseModel(amendResponseModel).map { _ =>
       Redirect(routes.AmendsController.amendmentOutcome)
     }
 
   def amendmentOutcome: Action[AnyContent] =
-    authActions.authenticateWithNino.async { implicit request =>
+    authActions.authenticateWithNino.async { request =>
+      given MessagesRequest[?] = request
+
       val nino = request.nino
 
       for {
@@ -148,7 +150,7 @@ class AmendsController @Inject() (
       modelGA: Option[AmendsGAModel],
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       nino: String
-  )(implicit request: RequestHeader, messages: Messages): Future[Result] = {
+  )(using RequestHeader, Messages): Future[Result] = {
     if (modelGA.isEmpty) {
       logger.warn(s"Unable to retrieve amendsGAModel from cache for user nino :$nino")
     }
@@ -179,7 +181,7 @@ class AmendsController @Inject() (
                 logger.warn(
                   s"Unable to retrieve fixed protection model from API GET endpoint for user with nino :$nino"
                 )
-                buildTechnicalError(technicalError)
+                technicalErrorResult
 
             }
         }
@@ -187,7 +189,7 @@ class AmendsController @Inject() (
       .getOrElse {
         logger.warn(s"Unable to retrieve amendment outcome model from cache for user nino :$nino")
         Future.successful(
-          buildTechnicalError(technicalError)
+          technicalErrorResult
         )
       }
   }
@@ -196,7 +198,7 @@ class AmendsController @Inject() (
       notificationId: NotificationId,
       model: AmendResponseModel,
       nino: String
-  )(implicit request: RequestHeader): Future[Option[AmendResponseModel]] =
+  )(using RequestHeader): Future[Option[AmendResponseModel]] =
     if (NotificationIds.showingFixedProtection2016Details.contains(notificationId)) {
       createCombinedFixedAndIndividualProtectionModel(model, nino)
     } else {
@@ -206,7 +208,7 @@ class AmendsController @Inject() (
   private def createCombinedFixedAndIndividualProtectionModel(
       amendResponseModel: AmendResponseModel,
       nino: String
-  )(implicit request: RequestHeader): Future[Option[AmendResponseModel]] =
+  )(using RequestHeader): Future[Option[AmendResponseModel]] =
     for {
       protections <- fetchProtections(nino)
       activeProtection = protections.toOption.flatMap(_.activeProtection)
@@ -215,7 +217,7 @@ class AmendsController @Inject() (
 
   private def fetchProtections(
       nino: String
-  )(implicit hc: HeaderCarrier): Future[Either[PlaConnectorError, TransformedReadResponseModel]] =
+  )(using HeaderCarrier): Future[Either[PlaConnectorError, TransformedReadResponseModel]] =
     plaConnector.readProtections(nino).map(_.map(TransformedReadResponseModel.from))
 
 }

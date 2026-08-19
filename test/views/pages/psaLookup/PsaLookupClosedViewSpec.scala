@@ -24,9 +24,9 @@ import views.html.pages.psaLookup.psaLookupClosed
 
 class PsaLookupClosedViewSpec extends CommonViewSpecHelper {
 
-  def view: psaLookupClosed = inject[psaLookupClosed]
+  private def view: psaLookupClosed = inject[psaLookupClosed]
 
-  def doc: Document = Jsoup.parse(view()(fakeRequest, messages).body)
+  private def doc: Document = Jsoup.parse(view()(using fakeRequest, messages).body)
 
   "withdrawnPSALookupJourney view" must {
 

@@ -25,9 +25,9 @@ import testdata.PlaConnectorTestData.*
 
 class AmendProtectionRequestSpec extends AnyWordSpec with Matchers {
 
-  val pensionDebit = PensionDebitModel(DateModel.of(2026, 7, 9), 25_000)
+  private val pensionDebit = PensionDebitModel(DateModel.of(2026, 7, 9), 25_000)
 
-  val protectionModel = ProtectionModel(
+  private val protectionModel = ProtectionModel(
     psaCheckReference = "psaCheckReference",
     identifier = lifetimeAllowanceIdentifier,
     sequenceNumber = lifetimeAllowanceSequenceNumber,
@@ -45,7 +45,7 @@ class AmendProtectionRequestSpec extends AnyWordSpec with Matchers {
     pensionDebitTotalAmount = Some(40_000)
   )
 
-  val amendProtectionModel: AmendProtectionModel =
+  private val amendProtectionModel: AmendProtectionModel =
     AmendProtectionModel.tryFromProtection(protectionModel).get.withPensionDebit(Some(pensionDebit))
 
   "AmendProtectionRequest on from" should {

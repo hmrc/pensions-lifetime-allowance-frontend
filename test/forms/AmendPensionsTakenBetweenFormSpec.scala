@@ -25,9 +25,10 @@ import testHelpers.FakeApplication
 import testHelpers.messages.CommonErrorMessages
 
 class AmendPensionsTakenBetweenFormSpec extends FakeApplication with CommonErrorMessages with MockitoSugar {
-  implicit val lang: Lang = mock[Lang]
 
-  val messageKey = "pensionsTakenBetween"
+  private val lang: Lang = mock[Lang]
+
+  private val messageKey = "pensionsTakenBetween"
 
   "The AmendPensionsTakenBetweenForm" should {
     val validMap = Map("amendedPensionsTakenBetween" -> "yes")

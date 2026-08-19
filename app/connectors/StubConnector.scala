@@ -27,31 +27,23 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class StubConnector @Inject() (appConfig: AppConfig, http: HttpClientV2)(implicit ec: ExecutionContext) {
+class StubConnector @Inject() (appConfig: AppConfig, http: HttpClientV2)(using ExecutionContext) {
 
-  val stubBaseUrl: String = appConfig.stubBaseUrl
-
-  private def deleteProtectionByNinoUrl(nino: String) = s"$stubBaseUrl/test-only/individuals/$nino/protections"
-  private val deleteProtectionsUrl                    = s"$stubBaseUrl/test-only/protections/removeAll"
-  private val insertProtectionsUrl                    = s"$stubBaseUrl/test-only/protections/insert"
-
-  def deleteProtectionByNino(nino: String)(implicit hc: HeaderCarrier): Future[Int] = {
-    val dpUrl = deleteProtectionByNinoUrl(nino)
+  def deleteProtectionByNino(nino: String)(using HeaderCarrier): Future[Int] =
     http
-      .delete(url"$dpUrl")
-      .execute[HttpResponse]
-      .map(_.status)
-  }
-
-  def deleteProtections()(implicit hc: HeaderCarrier): Future[Int] =
-    http
-      .delete(url"$deleteProtectionsUrl")
+      .delete(url"${appConfig.stubBaseUrl}/test-only/individuals/$nino/protections")
       .execute[HttpResponse]
       .map(_.status)
 
-  def insertProtections(payload: JsValue)(implicit hc: HeaderCarrier): Future[Int] =
+  def deleteProtections()(using HeaderCarrier): Future[Int] =
     http
-      .post(url"$insertProtectionsUrl")
+      .delete(url"${appConfig.stubBaseUrl}/test-only/protections/removeAll")
+      .execute[HttpResponse]
+      .map(_.status)
+
+  def insertProtections(payload: JsValue)(using HeaderCarrier): Future[Int] =
+    http
+      .post(url"${appConfig.stubBaseUrl}/test-only/protections/insert")
       .withBody(Json.toJson(payload))
       .execute[HttpResponse]
       .map(_.status)

@@ -42,16 +42,17 @@ object Display {
     s"£$minus${format2DecimalPlacesOrWholeNumber(amount)}"
   }
 
-  def dateDisplayString(dateModel: DateModel)(implicit messages: Messages): String = {
-    val formatter = DateTimeFormatter.ofPattern(s"d '${messages(s"pla.month.${dateModel.date.getMonthValue}")}' yyyy")
+  def dateDisplayString(dateModel: DateModel)(using messages: Messages): String = {
+    val formatter =
+      DateTimeFormatter.ofPattern(s"d '${messages(s"pla.month.${dateModel.toLocalDate.getMonthValue}")}' yyyy")
 
-    dateModel.date.format(formatter)
+    dateModel.toLocalDate.format(formatter)
   }
 
   private val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("h:mma")
 
   def timeDisplayString(time: TimeModel): String =
-    time.time.format(timeFormatter).toLowerCase
+    time.toLocalTime.format(timeFormatter).toLowerCase
 
   def currencyInputDisplayFormat(amt: BigDecimal): BigDecimal =
     scaleBigDecimal(amt)

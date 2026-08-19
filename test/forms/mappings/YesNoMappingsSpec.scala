@@ -22,17 +22,17 @@ import play.api.data.{FormError, Mapping}
 
 class YesNoMappingsSpec extends AnyWordSpec with Matchers {
 
-  object TestYesNoMappings extends YesNoMappings
+  private object TestYesNoMappings extends YesNoMappings
 
-  val mandatoryMessageKey = "mandatoryError"
+  private val mandatoryMessageKey = "mandatoryError"
 
-  val yesNoMappings: Mapping[String] = TestYesNoMappings.yesNoMapping(
+  private val yesNoMappings: Mapping[String] = TestYesNoMappings.yesNoMapping(
     mandatoryMessageKey = mandatoryMessageKey
   )
 
-  val valueKey: String = yesNoMappings.key
+  private val valueKey: String = yesNoMappings.key
 
-  val mandatoryError = FormError(valueKey, mandatoryMessageKey)
+  private val mandatoryError = FormError(valueKey, mandatoryMessageKey)
 
   "currencyMapping.bind" should {
     "return mandatoryError" when {

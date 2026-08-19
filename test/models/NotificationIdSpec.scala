@@ -24,7 +24,7 @@ import play.api.libs.json.{JsBoolean, JsError, JsNull, JsNumber, JsString, JsSuc
 
 class NotificationIdSpec extends AnyWordSpec with Matchers {
 
-  val numbers = Seq(
+  private val numbers = Seq(
     1  -> NotificationId1,
     2  -> NotificationId2,
     3  -> NotificationId3,
@@ -78,14 +78,14 @@ class NotificationIdSpec extends AnyWordSpec with Matchers {
     "correctly parse valid notification id" when
       numbers.foreach { case (number, notificationId) =>
         s"provided with '$number'" in {
-          NotificationId.reads.reads(JsNumber(number)) shouldBe JsSuccess(notificationId)
+          Json.fromJson[NotificationId](JsNumber(number)) shouldBe JsSuccess(notificationId)
         }
       }
 
     "reject number outside of range 1-14 inclusive" when
       Seq(0, 15, 999, -222, 10101010).foreach { number =>
         s"provided with '$number'" in {
-          NotificationId.reads.reads(JsNumber(number)) shouldBe JsError(
+          Json.fromJson[NotificationId](JsNumber(number)) shouldBe JsError(
             s"notificationIdentifier must be in range 1 to 14 inclusive, got $number"
           )
         }
@@ -100,7 +100,7 @@ class NotificationIdSpec extends AnyWordSpec with Matchers {
         Json.arr(JsNumber(2025), JsNumber(12), JsNumber(8))
       ).foreach { timeValue =>
         s"provided with $timeValue" in {
-          NotificationId.reads.reads(timeValue) shouldBe JsError("notificationIdentifier must be a number")
+          Json.fromJson[NotificationId](timeValue) shouldBe JsError("notificationIdentifier must be a number")
         }
       }
   }
@@ -109,7 +109,7 @@ class NotificationIdSpec extends AnyWordSpec with Matchers {
     "correctly format notificationId" when
       numbers.foreach { case (number, notificationId) =>
         s"provided with notification $notificationId" in {
-          NotificationId.writes.writes(notificationId) shouldBe JsNumber(number)
+          Json.toJson[NotificationId](notificationId) shouldBe JsNumber(number)
         }
       }
   }

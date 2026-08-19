@@ -33,7 +33,7 @@
     protectionType: AmendableProtectionType,
     status: AmendProtectionRequestStatus,
     existingPso: Boolean
-)(implicit request: RequestHeader, messages: Messages)
+)(using request: RequestHeader, messages: Messages)
 
 @title = @{
     if(psoDetailsForm.errors.nonEmpty){

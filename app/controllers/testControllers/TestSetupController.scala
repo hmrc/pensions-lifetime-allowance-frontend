@@ -27,10 +27,12 @@ import scala.concurrent.ExecutionContext
 
 @Singleton
 class TestSetupController @Inject() (connector: StubConnector, mcc: MessagesControllerComponents)(
-    implicit ec: ExecutionContext
+    using ExecutionContext
 ) extends FrontendController(mcc) {
 
-  def insertProtections(): Action[JsValue] = Action.async(parse.json) { implicit request =>
+  def insertProtections(): Action[JsValue] = Action.async(parse.json) { request =>
+    given RequestHeader = request
+
     val payload: JsValue = request.body
     connector.insertProtections(payload).map {
       case OK     => Ok("Successfully inserted protections")
@@ -38,14 +40,18 @@ class TestSetupController @Inject() (connector: StubConnector, mcc: MessagesCont
     }
   }
 
-  def removeAllProtections(): Action[AnyContent] = Action.async { implicit request =>
+  def removeAllProtections(): Action[AnyContent] = Action.async { request =>
+    given RequestHeader = request
+
     connector.deleteProtections().map {
       case OK     => Ok("All protections deleted")
       case status => InternalServerError(s"Error deleting all protections: received $status from stub")
     }
   }
 
-  def removeProtections(nino: String): Action[AnyContent] = Action.async { implicit request =>
+  def removeProtections(nino: String): Action[AnyContent] = Action.async { request =>
+    given RequestHeader = request
+
     connector.deleteProtectionByNino(nino).map {
       case OK     => Ok(s"$nino deleted")
       case status => InternalServerError(s"Error deleting protections for nino $nino: received $status from stub")

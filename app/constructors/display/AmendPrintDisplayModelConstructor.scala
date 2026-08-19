@@ -27,7 +27,7 @@ object AmendPrintDisplayModelConstructor {
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       protectionModel: AmendResponseModel,
       nino: String
-  )(implicit messages: Messages): AmendPrintDisplayModel = {
+  )(using Messages): AmendPrintDisplayModel = {
     val printDisplayModel =
       PrintDisplayModelConstructor.createPrintDisplayModel(
         personalDetailsModelOpt,

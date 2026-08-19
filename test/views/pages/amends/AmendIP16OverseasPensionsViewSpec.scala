@@ -30,21 +30,21 @@ import views.html.pages.amends.amendIP16OverseasPensions
 
 class AmendIP16OverseasPensionsViewSpec extends CommonViewSpecHelper with AmendIP16OverseasPensionsViewMessages {
 
-  implicit val formWithCSRF: FormWithCSRF = inject[FormWithCSRF]
+  private val formWithCSRF: FormWithCSRF = inject[FormWithCSRF]
 
-  val view: amendIP16OverseasPensions = inject[amendIP16OverseasPensions]
+  private val view: amendIP16OverseasPensions = inject[amendIP16OverseasPensions]
 
-  val oPensionsForm: Form[AmendOverseasPensionsModel] = AmendOverseasPensionsForm
+  private val oPensionsForm: Form[AmendOverseasPensionsModel] = AmendOverseasPensionsForm
     .amendOverseasPensionsForm(IndividualProtection2016)
     .bind(Map("amendedOverseasPensions" -> "yes", "amendedOverseasPensionsAmt" -> "1234"))
 
-  val doc: Document = Jsoup.parse(view.apply(oPensionsForm, IndividualProtection2016, Open).body)
+  private val doc: Document = Jsoup.parse(view.apply(oPensionsForm, IndividualProtection2016, Open).body)
 
-  val errorForm: Form[AmendOverseasPensionsModel] = AmendOverseasPensionsForm
+  private val errorForm: Form[AmendOverseasPensionsModel] = AmendOverseasPensionsForm
     .amendOverseasPensionsForm(IndividualProtection2016)
     .bind(Map("amendedOverseasPensions" -> "", "amendedOverseasPensionsAmt" -> "1234"))
 
-  val errorDoc: Document =
+  private val errorDoc: Document =
     Jsoup.parse(view.apply(errorForm, IndividualProtection2016, Open).body)
 
   "the AmendOverseasPensionsView" should {

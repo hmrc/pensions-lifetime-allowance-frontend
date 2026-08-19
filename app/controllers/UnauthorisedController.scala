@@ -41,7 +41,9 @@ class UnauthorisedController @Inject() (
 ) extends FrontendController(mcc)
     with Logging {
 
-  def showNotAuthorised(journeyId: Option[String]): Action[AnyContent] = Action.async { implicit request =>
+  def showNotAuthorised(journeyId: Option[String]): Action[AnyContent] = Action.async { request =>
+    given MessagesRequest[?] = request
+
     val result: Future[Result] = journeyId
       .map { id =>
         val identityVerificationResult = identityVerificationConnector.identityVerificationResponse(id)

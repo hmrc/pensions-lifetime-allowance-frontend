@@ -30,7 +30,7 @@ class DateModelSpec extends AnyWordSpec with Matchers {
         "2020-02-29" -> DateModel.of(2020, 2, 29)
       ).foreach { case (dateString, dateModel) =>
         s"provided with '$dateString'" in {
-          DateModel.reads.reads(JsString(dateString)) shouldBe JsSuccess(dateModel)
+          Json.fromJson[DateModel](JsString(dateString)) shouldBe JsSuccess(dateModel)
         }
       }
 
@@ -43,7 +43,7 @@ class DateModelSpec extends AnyWordSpec with Matchers {
         "2025-31-01"
       ).foreach { dateString =>
         s"provided with '$dateString'" in {
-          DateModel.reads.reads(JsString(dateString)) shouldBe JsError("invalid date string")
+          Json.fromJson[DateModel](JsString(dateString)) shouldBe JsError("invalid date string")
         }
       }
 
@@ -55,7 +55,7 @@ class DateModelSpec extends AnyWordSpec with Matchers {
         "2025-12-03T13:44:12.000"
       ).foreach { dateString =>
         s"provided with '$dateString'" in {
-          DateModel.reads.reads(JsString(dateString)) shouldBe JsError("invalid date string")
+          Json.fromJson[DateModel](JsString(dateString)) shouldBe JsError("invalid date string")
         }
       }
 
@@ -68,7 +68,7 @@ class DateModelSpec extends AnyWordSpec with Matchers {
         Json.arr(JsNumber(2025), JsNumber(12), JsNumber(8))
       ).foreach { dateValue =>
         s"provided with $dateValue" in {
-          DateModel.reads.reads(dateValue) shouldBe JsError("date must be a string")
+          Json.fromJson[DateModel](dateValue) shouldBe JsError("date must be a string")
         }
       }
   }
@@ -81,7 +81,7 @@ class DateModelSpec extends AnyWordSpec with Matchers {
         DateModel.of(2016, 9, 22) -> "2016-09-22"
       ).foreach { case (dateModel, dateString) =>
         s"provided with $dateModel" in {
-          DateModel.writes.writes(dateModel) shouldBe JsString(dateString)
+          Json.toJson[DateModel](dateModel) shouldBe JsString(dateString)
         }
       }
   }

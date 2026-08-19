@@ -29,14 +29,14 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class CitizenDetailsConnector @Inject() (appConfig: AppConfig, http: HttpClientV2)(
-    implicit ec: ExecutionContext
+    using ExecutionContext
 ) extends Logging {
 
   private val citizenDetailsBaseUrl: String = appConfig.citizenDetailsBaseUrl
 
   private def url(nino: String) = s"$citizenDetailsBaseUrl/citizen-details/$nino/designatory-details"
 
-  def getPersonDetails(nino: String)(implicit hc: HeaderCarrier): Future[Option[PersonalDetailsModel]] = {
+  def getPersonDetails(nino: String)(using HeaderCarrier): Future[Option[PersonalDetailsModel]] = {
     val cdUrl = url(nino)
     http
       .get(url"$cdUrl")

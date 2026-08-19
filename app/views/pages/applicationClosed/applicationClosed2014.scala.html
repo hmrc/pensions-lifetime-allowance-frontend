@@ -18,7 +18,7 @@
      layout: Layout
 )
 
-@()(implicit request: RequestHeader, messages: Messages)
+@()(using request: RequestHeader, messages: Messages)
 
 @layout(
      pageTitle = messages("pla.applicationClosed.2014.title"),

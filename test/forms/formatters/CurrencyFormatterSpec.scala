@@ -22,18 +22,18 @@ import play.api.data.FormError
 
 class CurrencyFormatterSpec extends AnyWordSpec with Matchers {
 
-  val mandatoryMessageKey = "mandatoryError"
-  val invalidMessageKey   = "notReal"
+  private val mandatoryMessageKey = "mandatoryError"
+  private val invalidMessageKey   = "notReal"
 
-  val currencyFormatter = CurrencyFormatter(
+  private val currencyFormatter = CurrencyFormatter(
     mandatoryMessageKey = mandatoryMessageKey,
     invalidMessageKey = invalidMessageKey
   )
 
-  val valueKey = "key"
+  private val valueKey = "key"
 
-  val mandatoryError = FormError(valueKey, mandatoryMessageKey)
-  val invalidError   = FormError(valueKey, invalidMessageKey)
+  private val mandatoryError = FormError(valueKey, mandatoryMessageKey)
+  private val invalidError   = FormError(valueKey, invalidMessageKey)
 
   "bind" should {
 

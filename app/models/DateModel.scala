@@ -16,13 +16,13 @@
 
 package models
 
-import play.api.libs.json.{Format, JsError, JsString, JsSuccess, Reads, Writes}
+import play.api.libs.json.{JsError, JsString, JsSuccess, Reads, Writes}
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import scala.util.Try
 
-case class DateModel(date: LocalDate) extends AnyVal
+case class DateModel(toLocalDate: LocalDate) extends AnyVal
 
 object DateModel {
 
@@ -31,9 +31,9 @@ object DateModel {
   private def parseDate(dateString: String): Option[DateModel] =
     Try(LocalDate.parse(dateString, dateFormat)).toOption.map(DateModel(_))
 
-  private def serialiseDate(dateModel: DateModel): String = dateModel.date.format(dateFormat)
+  private def serialiseDate(dateModel: DateModel): String = dateModel.toLocalDate.format(dateFormat)
 
-  implicit val reads: Reads[DateModel] = {
+  given Reads[DateModel] = {
     case JsString(dateString) =>
       parseDate(dateString) match {
         case Some(date) => JsSuccess(date)
@@ -42,9 +42,7 @@ object DateModel {
     case _ => JsError("date must be a string")
   }
 
-  implicit val writes: Writes[DateModel] = date => JsString(serialiseDate(date))
-
-  implicit val format: Format[DateModel] = Format(reads, writes)
+  given Writes[DateModel] = date => JsString(serialiseDate(date))
 
   def of(year: Int, month: Int, day: Int): DateModel = DateModel(LocalDate.of(year, month, day))
 

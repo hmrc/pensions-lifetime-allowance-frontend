@@ -32,7 +32,7 @@
     amendOverseasPensionsForm: Form[AmendOverseasPensionsModel],
     protectionType: AmendableProtectionType,
     status: AmendProtectionRequestStatus
-)(implicit request: RequestHeader, messages: Messages)
+)(using request: RequestHeader, messages: Messages)
 
 @hiddenYesNoContent = {
     @formInputMoney(

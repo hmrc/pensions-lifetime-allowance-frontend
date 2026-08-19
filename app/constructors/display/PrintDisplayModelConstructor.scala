@@ -35,7 +35,7 @@ object PrintDisplayModelConstructor {
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       protectionModel: ProtectionModel,
       nino: String
-  )(implicit messages: Messages): PrintDisplayModel = {
+  )(using messages: Messages): PrintDisplayModel = {
 
     val personalDetailsModel = personalDetailsModelOpt.getOrElse {
       throw Exceptions.RequiredValueNotDefinedException("createPrintDisplayModel", "personalDetailsModel")

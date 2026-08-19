@@ -41,14 +41,14 @@ class AuthenticateWithNino @Inject() (
     override val authConnector: AuthConnector,
     appConfig: AppConfig,
     technicalError: views.html.pages.fallback.technicalError
-)(override implicit val executionContext: ExecutionContext)
+)(using override val executionContext: ExecutionContext)
     extends ActionRefiner[MessagesRequest, AuthenticatedRequest]
     with AuthorisedFunctions
     with Logging
     with FrontendHeaderCarrierProvider {
 
   override def refine[A](request: MessagesRequest[A]): Future[Either[Result, AuthenticatedRequest[A]]] = {
-    implicit val implicitRequest: MessagesRequest[A] = request
+    given MessagesRequest[A] = request
 
     authorised(Enrolment(enrolmentKey).and(ConfidenceLevel.L200))
       .retrieve(Retrievals.nino)
@@ -63,7 +63,7 @@ class AuthenticateWithNino @Inject() (
   private val enrolmentKey: String = "HMRC-NI"
 
   private def authErrorHandling[A](
-      implicit request: MessagesRequest[A]
+      using request: MessagesRequest[A]
   ): PartialFunction[Throwable, Left[Result, AuthenticatedRequest[A]]] = {
     case _: NoActiveSession =>
       Left(redirectToSignIn)
@@ -74,7 +74,7 @@ class AuthenticateWithNino @Inject() (
       Left(InternalServerError(technicalError()))
   }
 
-  private def redirectToSignIn(implicit request: RequestHeader): Result =
+  private def redirectToSignIn(using request: RequestHeader): Result =
     Redirect(
       appConfig.ggSignInUrl,
       Map(
@@ -83,7 +83,7 @@ class AuthenticateWithNino @Inject() (
       )
     )
 
-  private def redirectToIvUplift(implicit request: RequestHeader): Result =
+  private def redirectToIvUplift(using request: RequestHeader): Result =
     Redirect(
       appConfig.ivUpliftUrl,
       Map(

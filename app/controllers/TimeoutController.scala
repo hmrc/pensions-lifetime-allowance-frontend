@@ -16,7 +16,7 @@
 
 package controllers
 
-import play.api.mvc.*
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, MessagesRequest}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}
@@ -28,6 +28,10 @@ class TimeoutController @Inject() (
 )(
 ) extends FrontendController(mcc) {
 
-  def timeout: Action[AnyContent] = Action(implicit request => Ok(Timeout()))
+  def timeout: Action[AnyContent] = Action { request =>
+    given MessagesRequest[?] = request
+
+    Ok(Timeout())
+  }
 
 }
