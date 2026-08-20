@@ -17,7 +17,6 @@
 package controllers.redirect
 
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{GET, defaultAwaitTimeout, redirectLocation, status, stubMessagesControllerComponents}
 import testHelpers.FakeApplication

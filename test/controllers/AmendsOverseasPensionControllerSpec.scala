@@ -17,32 +17,24 @@
 package controllers
 
 import auth.helpers.AuthMocks
-import config.AppConfig
 import constructors.display.DisplayConstructors
 import models.pla.AmendableProtectionType
 import models.pla.request.AmendProtectionRequestStatus
-import org.apache.pekko.actor.ActorSystem
-import org.apache.pekko.stream.Materializer
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.*
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.Environment
 import play.api.i18n.Messages
-import play.api.mvc.{AnyContent, Result}
+import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
-import services.SessionCacheService
 import testHelpers.*
 import testdata.AmendProtectionModelTestData
-import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
-import views.html.pages.amends.*
+import views.html.pages.amends.{amendIP14OverseasPensions, amendIP16OverseasPensions}
 import views.html.pages.fallback.technicalError
-import views.html.pages.result.manualCorrespondenceNeeded
 
-import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
 
 class AmendsOverseasPensionControllerSpec
@@ -53,7 +45,7 @@ class AmendsOverseasPensionControllerSpec
     with AuthMocks
     with AmendProtectionModelTestData {
 
-  private val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
+  private val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   private val messages: Messages = mcc.messagesApi.preferred(fakeRequest)
 
@@ -61,31 +53,14 @@ class AmendsOverseasPensionControllerSpec
 
   private val mockDisplayConstructors: DisplayConstructors = mock[DisplayConstructors]
 
-  private val manualCorrespondenceNeededView: manualCorrespondenceNeeded       = inject[manualCorrespondenceNeeded]
-  private val amendPsoDetailsView: amendPsoDetails                             = inject[amendPsoDetails]
-  private val technicalErrorView: technicalError                               = inject[technicalError]
-  private val amendIP16CurrentPensionsView: amendIP16CurrentPensions           = inject[amendIP16CurrentPensions]
-  private val amendIP16OverseasPensionsView: amendIP16OverseasPensions         = inject[amendIP16OverseasPensions]
-  private val amendIP16PensionsTakenBeforeView: amendIP16PensionsTakenBefore   = inject[amendIP16PensionsTakenBefore]
-  private val amendIP16PensionsWorthBeforeView: amendIP16PensionsWorthBefore   = inject[amendIP16PensionsWorthBefore]
-  private val amendIP16PensionsTakenBetweenView: amendIP16PensionsTakenBetween = inject[amendIP16PensionsTakenBetween]
-  private val amendIP16PensionsUsedBetweenView: amendIP16PensionsUsedBetween   = inject[amendIP16PensionsUsedBetween]
-  private val amendIP14CurrentPensionsView: amendIP14CurrentPensions           = inject[amendIP14CurrentPensions]
-  private val amendIP14OverseasPensionsView: amendIP14OverseasPensions         = inject[amendIP14OverseasPensions]
-  private val amendIP14PensionsTakenBeforeView: amendIP14PensionsTakenBefore   = inject[amendIP14PensionsTakenBefore]
-  private val amendIP14PensionsWorthBeforeView: amendIP14PensionsWorthBefore   = inject[amendIP14PensionsWorthBefore]
-  private val amendIP14PensionsTakenBetweenView: amendIP14PensionsTakenBetween = inject[amendIP14PensionsTakenBetween]
-  private val amendIP14PensionsUsedBetweenView: amendIP14PensionsUsedBetween   = inject[amendIP14PensionsUsedBetween]
-  private val removePsoDebitsView: removePsoDebits                             = inject[removePsoDebits]
-  private val amendSummaryView: amendSummary                                   = inject[amendSummary]
-
-  private val mockEnv: Environment = mock[Environment]
+  private val technicalErrorView: technicalError = inject[technicalError]
+  private val amendIP16OverseasPensionsView      = inject[amendIP16OverseasPensions]
+  private val amendIP14OverseasPensionsView      = inject[amendIP14OverseasPensions]
 
   override def beforeEach(): Unit = {
     super.beforeEach()
 
     reset(mockDisplayConstructors)
-    reset(mockEnv)
   }
 
   private val controller = new AmendsOverseasPensionController(
@@ -96,10 +71,6 @@ class AmendsOverseasPensionControllerSpec
     amendIP16OverseasPensionsView,
     amendIP14OverseasPensionsView
   )(using executionContext)
-
-  private val sessionId: String  = UUID.randomUUID.toString
-  private val mockUsername       = "mockuser"
-  private val mockUserId: String = "/auth/oid/" + mockUsername
 
   "In AmendsOverseasPensionController calling the .amendOverseasPensions action" when {
 

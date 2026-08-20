@@ -26,7 +26,6 @@ import play.api.data.Form
 import testHelpers.CommonViewSpecHelper
 import testHelpers.messages.amends.PsoDetailsViewMessages
 import testHelpers.messages.{CommonErrorMessages, CommonMessages}
-import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.amendPsoDetails
 
 class AmendPsoDetailsViewSpec
@@ -34,8 +33,6 @@ class AmendPsoDetailsViewSpec
     with PsoDetailsViewMessages
     with CommonErrorMessages
     with CommonMessages {
-
-  private val formWithCSRF: FormWithCSRF = inject[FormWithCSRF]
 
   private val view: amendPsoDetails = inject[amendPsoDetails]
 

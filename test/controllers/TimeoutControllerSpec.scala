@@ -17,7 +17,7 @@
 package controllers
 
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.mvc.{AnyContentAsEmpty, MessagesControllerComponents, Result}
+import play.api.mvc.{MessagesControllerComponents, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{defaultAwaitTimeout, status}
 import testHelpers.*
@@ -27,13 +27,11 @@ import scala.concurrent.Future
 
 class TimeoutControllerSpec extends FakeApplication with MockitoSugar {
 
-  val mcc: MessagesControllerComponents = inject[MessagesControllerComponents]
+  private val mcc: MessagesControllerComponents = inject[MessagesControllerComponents]
 
   private val mockTimeout: timeout = inject[timeout]
 
-  val controller = new TimeoutController(mcc, mockTimeout)
-
-  private val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+  private val controller = new TimeoutController(mcc, mockTimeout)
 
   "Calling the .timeout action" should {
     "return a 200" in {

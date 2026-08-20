@@ -17,30 +17,24 @@
 package controllers
 
 import auth.helpers.AuthMocks
-import config.*
 import models.*
 import models.amend.AmendProtectionModel
 import models.pla.AmendableProtectionType
 import models.pla.request.AmendProtectionRequestStatus
 import models.pla.response.ProtectionStatus.Dormant
 import models.pla.response.ProtectionType.IndividualProtection2016
-import org.apache.pekko.actor.ActorSystem
-import org.apache.pekko.stream.Materializer
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.mockito.ArgumentMatchers.{any, eq as eqTo}
 import org.mockito.Mockito.*
-import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.Environment
 import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.i18n.Messages
-import play.api.mvc.{AnyContent, Result}
+import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import services.SessionCacheService
 import testHelpers.*
-import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.*
 import views.html.pages.fallback.technicalError
 
@@ -50,10 +44,9 @@ class AmendsRemovePensionSharingOrderControllerSpec
     extends FakeApplication
     with MockitoSugar
     with MockSessionCacheService
-    with BeforeAndAfterEach
     with AuthMocks {
 
-  private val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
+  private val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   private val messages: Messages = mcc.messagesApi.preferred(fakeRequest)
 
@@ -63,12 +56,6 @@ class AmendsRemovePensionSharingOrderControllerSpec
 
   private val technicalErrorView: technicalError   = inject[technicalError]
   private val removePsoDebitsView: removePsoDebits = inject[removePsoDebits]
-  private val mockEnv: Environment                 = mock[Environment]
-
-  override def beforeEach(): Unit = {
-    reset(mockEnv)
-    super.beforeEach()
-  }
 
   private val controller = new AmendsRemovePensionSharingOrderController(
     mockSessionCacheService,

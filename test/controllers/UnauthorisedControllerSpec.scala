@@ -16,30 +16,23 @@
 
 package controllers
 
-import config.AppConfig
 import connectors.IdentityVerificationConnector
 import enums.IdentityVerificationResult
 import models.cache.CacheMap
-import org.apache.pekko.actor.ActorSystem
-import org.apache.pekko.stream.Materializer
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.*
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.http.Status
-import play.api.libs.json.Json
 import play.api.mvc.{MessagesControllerComponents, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import services.SessionCacheService
 import testHelpers.*
-import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
+import uk.gov.hmrc.http.HeaderCarrier
 import views.html.pages.ivFailure.{lockedOut, technicalIssue, unauthorised}
 import views.html.pages.timeout
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.io.Source
 
 class UnauthorisedControllerSpec
     extends FakeApplication
@@ -48,57 +41,16 @@ class UnauthorisedControllerSpec
     with MockSessionCacheService {
 
   private val mcc: MessagesControllerComponents                                = inject[MessagesControllerComponents]
-  private val mockHttp: HttpClientV2                                           = mock[HttpClientV2]
   private val fakeRequest                                                      = FakeRequest("GET", "/")
-  private val mockAppConfig: AppConfig                                         = inject[AppConfig]
   private val mockIdentityVerificationConnector: IdentityVerificationConnector = mock[IdentityVerificationConnector]
-  private val requestBuilder: RequestBuilder                                   = mock[RequestBuilder]
 
   override val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
 
   private val executionContext: ExecutionContext = ExecutionContext.global
-  private val appConfig: AppConfig               = inject[AppConfig]
-  private val actorSystem: ActorSystem           = ActorSystem()
-  private val materializer: Materializer         = mock[Materializer]
-  private val headerCarrier: HeaderCarrier       = mock[HeaderCarrier]
   private val mockLockedOut: lockedOut           = inject[lockedOut]
   private val mockTechnicalIssue: technicalIssue = inject[technicalIssue]
   private val mockUnauthorised: unauthorised     = inject[unauthorised]
   private val mockTimeout: timeout               = inject[timeout]
-
-  private object MockIdentityVerificationHttp extends MockitoSugar {
-
-    val possibleJournies = Map(
-      "success-journey-id"               -> "test/resources/identity-verification/success.json",
-      "incomplete-journey-id"            -> "test/resources/identity-verification/incomplete.json",
-      "failed-matching-journey-id"       -> "test/resources/identity-verification/failed-matching.json",
-      "insufficient-evidence-journey-id" -> "test/resources/identity-verification/insufficient-evidence.json",
-      "locked-out-journey-id"            -> "test/resources/identity-verification/locked-out.json",
-      "user-aborted-journey-id"          -> "test/resources/identity-verification/user-aborted.json",
-      "timeout-journey-id"               -> "test/resources/identity-verification/timeout.json",
-      "technical-issue-journey-id"       -> "test/resources/identity-verification/technical-issue.json",
-      "precondition-failed-journey-id"   -> "test/resources/identity-verification/precondition-failed.json",
-      "failed-iv-journey-id"             -> "test/resources/identity-verification/failed-iv.json",
-      "invalid-journey-id"               -> "test/resources/identity-verification/invalid-result.json",
-      "invalid-fields-journey-id"        -> "test/resources/identity-verification/invalid-fields.json"
-    )
-
-    def mockJourneyId(journeyId: String): Unit = {
-      val fileContents = {
-        val source   = Source.fromFile(possibleJournies(journeyId))
-        val contents = source.mkString
-        source.close()
-        contents
-      }
-      when(mockHttp.get(url"$journeyId")(using any)).thenReturn(requestBuilder)
-      when(requestBuilder.execute[HttpResponse](any, any))
-        .thenReturn(
-          Future.successful(HttpResponse(status = Status.OK, json = Json.parse(fileContents), headers = Map.empty))
-        )
-    }
-
-    possibleJournies.keys.foreach(mockJourneyId)
-  }
 
   private val controller = new UnauthorisedController(
     mockIdentityVerificationConnector,

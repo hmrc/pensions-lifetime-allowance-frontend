@@ -37,7 +37,7 @@ import repositories.SessionRepository
 import testdata.AmendProtectionOutcomeViewsTestData.amendsGAModel
 import uk.gov.hmrc.mongo.cache.DataKey
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 class SessionCacheServiceSpec
     extends AnyWordSpec
@@ -48,8 +48,6 @@ class SessionCacheServiceSpec
     with DisplayConstructorsTestData {
 
   private val mockSessionRepository: SessionRepository = mock[SessionRepository]
-
-  private val executionContext: ExecutionContext = ExecutionContext.global
 
   private val sessionCacheService = new SessionCacheService(mockSessionRepository)
 

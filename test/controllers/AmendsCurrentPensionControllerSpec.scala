@@ -17,25 +17,17 @@
 package controllers
 
 import auth.helpers.AuthMocks
-import config.*
 import models.pla.AmendableProtectionType
 import models.pla.request.AmendProtectionRequestStatus
-import org.apache.pekko.actor.ActorSystem
-import org.apache.pekko.stream.Materializer
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers.any
-import org.scalatest.BeforeAndAfterEach
-import org.scalatestplus.mockito.MockitoSugar
-import play.api.Environment
-import play.api.i18n.{Lang, Messages}
-import play.api.mvc.AnyContent
-import play.api.test.FakeRequest
+import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers.*
 import play.api.test.FakeRequest
 import services.SessionCacheService
 import testHelpers.*
 import testdata.AmendProtectionModelTestData
-import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.*
 import views.html.pages.fallback.technicalError
 
@@ -43,25 +35,17 @@ import scala.concurrent.ExecutionContext
 
 class AmendsCurrentPensionControllerSpec
     extends FakeApplication
-    with MockitoSugar
     with MockSessionCacheService
-    with BeforeAndAfterEach
     with AuthMocks
     with AmendProtectionModelTestData {
 
-  private val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
+  private val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   private val messages: Messages = mcc.messagesApi.preferred(fakeRequest)
 
-  private val appConfig: AppConfig               = inject[AppConfig]
-  private val system: ActorSystem                = ActorSystem()
-  private val mockMaterializer: Materializer     = mock[Materializer]
-  private val mockLang: Lang                     = mock[Lang]
-  private val formWithCSRF: FormWithCSRF         = inject[FormWithCSRF]
   private val executionContext: ExecutionContext = inject[ExecutionContext]
 
   override val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
-  private val mockEnv: Environment                          = mock[Environment]
 
   private val technicalErrorView: technicalError                     = inject[technicalError]
   private val amendIP16CurrentPensionsView: amendIP16CurrentPensions = inject[amendIP16CurrentPensions]

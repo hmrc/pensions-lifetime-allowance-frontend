@@ -20,7 +20,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.mockito.Mockito.when
 import play.api.i18n.Messages
-import play.api.mvc.{AnyContent, RequestHeader}
+import play.api.mvc.{AnyContentAsEmpty, RequestHeader}
 import play.api.test.FakeRequest
 import play.twirl.api.Html
 import testHelpers.CommonViewSpecHelper
@@ -52,7 +52,8 @@ class LayoutViewSpec extends CommonViewSpecHelper {
     Jsoup.parse(html.toString)
   }
 
-  private val signedInRequest: FakeRequest[AnyContent] = fakeRequest.withSession("authToken" -> "some auth token")
+  private val signedInRequest: FakeRequest[AnyContentAsEmpty.type] =
+    fakeRequest.withSession("authToken" -> "some auth token")
 
   override def beforeEach(): Unit = {
     super.beforeEach()

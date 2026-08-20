@@ -20,14 +20,11 @@ import forms.AmendPensionsUsedBetweenForm.*
 import models.amend.value.AmendPensionsUsedBetweenModel
 import models.pla.AmendableProtectionType.IndividualProtection2016
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.i18n.Lang
 import testHelpers.FakeApplication
 import testHelpers.messages.CommonErrorMessages
 import util.Constants
 
 class AmendPensionsUsedBetweenFormSpec extends FakeApplication with CommonErrorMessages with MockitoSugar {
-
-  private val lang: Lang = mock[Lang]
 
   private val messageKey = "pensionsUsedBetween"
 

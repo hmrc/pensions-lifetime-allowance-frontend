@@ -25,15 +25,12 @@ import org.jsoup.nodes.Document
 import play.api.data.Form
 import testHelpers.CommonViewSpecHelper
 import testHelpers.messages.amends.{AmendIP16PensionsTakenBetweenViewMessages, AmendIP16PensionsUsedBetweenViewMessages}
-import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.amendIP16PensionsUsedBetween
 
 class AmendIP16PensionsUsedBetweenViewSpec
     extends CommonViewSpecHelper
     with AmendIP16PensionsTakenBetweenViewMessages
     with AmendIP16PensionsUsedBetweenViewMessages {
-
-  private val formWithCSRF: FormWithCSRF = inject[FormWithCSRF]
 
   private val view: amendIP16PensionsUsedBetween = inject[amendIP16PensionsUsedBetween]
 

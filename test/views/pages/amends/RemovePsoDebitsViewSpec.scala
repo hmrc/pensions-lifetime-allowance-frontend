@@ -23,12 +23,9 @@ import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
 import testHelpers.CommonViewSpecHelper
 import testHelpers.messages.amends.RemovePsoDetailsViewMessages
-import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.removePsoDebits
 
 class RemovePsoDebitsViewSpec extends CommonViewSpecHelper with RemovePsoDetailsViewMessages {
-
-  private val formWithCSRF: FormWithCSRF = inject[FormWithCSRF]
 
   private val view: removePsoDebits = inject[removePsoDebits]
   private val doc: Document         = Jsoup.parse(view.apply(IndividualProtection2016, Open).body)

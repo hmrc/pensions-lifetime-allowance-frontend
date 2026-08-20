@@ -24,7 +24,7 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.mvc.AnyContent
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.Application
 import testHelpers.messages.CommonMessages
@@ -42,7 +42,7 @@ trait CommonViewSpecHelper extends FakeApplication with CommonMessages with Mock
 
   val http: HttpClientV2 = mock[HttpClientV2]
 
-  given fakeRequest: FakeRequest[AnyContent] = FakeRequest()
+  given fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   given messages: Messages = inject[MessagesApi].preferred(fakeRequest)
 

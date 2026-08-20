@@ -20,14 +20,11 @@ import forms.AmendOverseasPensionsForm.*
 import models.amend.value.AmendOverseasPensionsModel
 import models.pla.AmendableProtectionType.IndividualProtection2016
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.i18n.Lang
 import testHelpers.FakeApplication
 import testHelpers.messages.CommonErrorMessages
 import util.Constants
 
 class AmendOverseasPensionsFormSpec extends FakeApplication with CommonErrorMessages with MockitoSugar {
-
-  private val lang: Lang = mock[Lang]
 
   private val messageKey = "overseasPensions"
 

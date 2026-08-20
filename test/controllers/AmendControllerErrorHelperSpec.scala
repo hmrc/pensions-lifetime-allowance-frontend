@@ -36,10 +36,10 @@ class AmendControllerErrorHelperSpec
     with BeforeAndAfterEach
     with AmendControllerErrorHelper {
 
-  val fakeRequest: FakeRequest[?] = FakeRequest()
-  val messages: Messages          = mock[Messages]
+  private val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+  private val messages: Messages                               = mock[Messages]
 
-  val technicalError: technicalError = mock[technicalError]
+  override val technicalError: technicalError = mock[technicalError]
 
   override def beforeEach(): Unit = {
     super.beforeEach()

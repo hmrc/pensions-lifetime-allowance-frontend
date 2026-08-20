@@ -19,15 +19,11 @@ package controllers
 import auth.authenticatedFakeRequest
 import auth.helpers.AuthMocks
 import common.Exceptions
-import config.*
 import constructors.display.DisplayConstructors
 import models.amend.AmendProtectionModel
-import models.display.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel}
 import models.pla.AmendableProtectionType
 import models.pla.request.AmendProtectionRequestStatus
 import models.{DateModel, PensionDebitModel}
-import org.apache.pekko.actor.ActorSystem
-import org.apache.pekko.stream.Materializer
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.mockito.ArgumentMatchers.{any, eq as eqTo}
@@ -35,20 +31,16 @@ import org.mockito.Mockito.*
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.Environment
 import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.i18n.Messages
-import play.api.mvc.{AnyContent, Result}
+import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
-import services.SessionCacheService
 import testHelpers.*
 import testdata.AmendProtectionModelTestData
-import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.*
 import views.html.pages.fallback.technicalError
 
-import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
 
 class AmendsPensionSharingOrderControllerSpec
@@ -60,14 +52,13 @@ class AmendsPensionSharingOrderControllerSpec
     with AmendProtectionModelTestData
     with ScalaFutures {
 
-  private val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
+  private val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   private val messages: Messages = mcc.messagesApi.preferred(fakeRequest)
 
   private val executionContext: ExecutionContext = ExecutionContext.global
 
   private val mockDisplayConstructors: DisplayConstructors = mock[DisplayConstructors]
-  private val mockEnv: Environment                         = mock[Environment]
 
   private val amendPsoDetailsView: amendPsoDetails = inject[amendPsoDetails]
   private val technicalErrorView: technicalError   = inject[technicalError]
@@ -76,7 +67,6 @@ class AmendsPensionSharingOrderControllerSpec
     super.beforeEach()
 
     reset(mockDisplayConstructors)
-    reset(mockEnv)
   }
 
   private val controller = new AmendsPensionSharingOrderController(
@@ -86,71 +76,6 @@ class AmendsPensionSharingOrderControllerSpec
     amendPsoDetailsView,
     technicalErrorView
   )(using executionContext)
-
-  private val sessionId: String  = UUID.randomUUID.toString
-  private val mockUsername       = "mockuser"
-  private val mockUserId: String = "/auth/oid/" + mockUsername
-
-  private val tstPensionContributionNoPsoDisplaySections: Seq[AmendDisplaySectionModel] = Seq(
-    AmendDisplaySectionModel(
-      "OverseasPensions",
-      Seq(
-        AmendDisplayRowModel(
-          "YesNo",
-          Some(
-            controllers.routes.AmendsOverseasPensionController
-              .amendOverseasPensions(
-                AmendableProtectionType.IndividualProtection2014,
-                AmendProtectionRequestStatus.Open
-              )
-          ),
-          None,
-          "Yes"
-        ),
-        AmendDisplayRowModel(
-          "Amt",
-          Some(
-            controllers.routes.AmendsOverseasPensionController
-              .amendOverseasPensions(
-                AmendableProtectionType.IndividualProtection2014,
-                AmendProtectionRequestStatus.Open
-              )
-          ),
-          None,
-          "£100,000"
-        )
-      )
-    ),
-    AmendDisplaySectionModel(
-      "CurrentPensions",
-      Seq(
-        AmendDisplayRowModel(
-          "Amt",
-          Some(
-            controllers.routes.AmendsCurrentPensionController
-              .amendCurrentPensions(AmendableProtectionType.IndividualProtection2014, AmendProtectionRequestStatus.Open)
-          ),
-          None,
-          "£1,000,000"
-        )
-      )
-    ),
-    AmendDisplaySectionModel(
-      "CurrentPsos",
-      Seq(
-        AmendDisplayRowModel("YesNo", None, None, "No")
-      )
-    )
-  )
-
-  private val tstAmendDisplayModel = AmendDisplayModel(
-    protectionType = AmendableProtectionType.IndividualProtection2014,
-    amended = true,
-    pensionContributionSections = tstPensionContributionNoPsoDisplaySections,
-    psoAdded = false,
-    psoSections = Seq.empty,
-    totalAmount = "£1,100,000"
-  )
 
   "Calling the amendPsoDetails action" when {
     "there is no amendment model fetched from cache" in {

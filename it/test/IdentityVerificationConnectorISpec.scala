@@ -29,11 +29,11 @@ class IdentityVerificationConnectorISpec extends IntegrationBaseSpec with Mocked
     .configure(Configuration("microservice.services.identity-verification.port" -> WiremockHelper.wiremockPort))
     .build()
 
-  given HeaderCarrier = HeaderCarrier()
+  private given HeaderCarrier = HeaderCarrier()
 
-  val missingJourneyId = "1234aa56-7a8a-901a-23aa-aa4a56a78aa9"
+  private val missingJourneyId = "1234aa56-7a8a-901a-23aa-aa4a56a78aa9"
 
-  val identityVerificationConnector: IdentityVerificationConnector = app.injector.instanceOf[IdentityVerificationConnector]
+  private val identityVerificationConnector: IdentityVerificationConnector = app.injector.instanceOf[IdentityVerificationConnector]
 
   "IdentityVerificationConnector" should {
     "throw an UpstreamErrorResponse with a statusCode of NOT_FOUND" when {

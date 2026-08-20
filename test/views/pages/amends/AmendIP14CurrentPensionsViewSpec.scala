@@ -26,12 +26,9 @@ import org.jsoup.select.Elements
 import play.api.data.Form
 import testHelpers.CommonViewSpecHelper
 import testHelpers.messages.amends.AmendIP14CurrentPensionsViewMessages
-import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.amendIP14CurrentPensions
 
 class AmendIP14CurrentPensionsViewSpec extends CommonViewSpecHelper with AmendIP14CurrentPensionsViewMessages {
-
-  private val formWithCSRF: FormWithCSRF = inject[FormWithCSRF]
 
   private val view: amendIP14CurrentPensions = inject[amendIP14CurrentPensions]
 

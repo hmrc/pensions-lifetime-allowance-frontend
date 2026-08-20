@@ -20,16 +20,12 @@ import forms.AmendPensionsTakenBeforeForm.*
 import models.amend.value.AmendPensionsTakenBeforeModel
 import models.pla.AmendableProtectionType.IndividualProtection2016
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.i18n.Lang
 import testHelpers.FakeApplication
 import testHelpers.messages.CommonErrorMessages
 
 class AmendPensionsTakenBeforeFormSpec extends FakeApplication with CommonErrorMessages with MockitoSugar {
 
-  private val lang: Lang = mock[Lang]
-
-  private val messageKey       = "pensionsTakenBefore"
-  private val amountMessageKey = "pensionsWorthBefore"
+  private val messageKey = "pensionsTakenBefore"
 
   "The AmendPensionsTakenBeforeForm" should {
     val validMap = Map("amendedPensionsTakenBefore" -> "yes")

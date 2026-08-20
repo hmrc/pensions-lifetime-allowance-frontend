@@ -27,7 +27,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.*
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.mvc.AnyContent
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import play.twirl.api.HtmlFormat
@@ -66,7 +66,7 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
     when(printProtectionView.apply(any())(using any(), any())).thenReturn(HtmlFormat.empty)
   }
 
-  private val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
+  private val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   private val testNino: String = "AB123456A"
 

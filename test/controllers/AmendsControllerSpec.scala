@@ -41,10 +41,9 @@ import org.mockito.Mockito.*
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.mvc.AnyContent
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
-import play.api.test.FakeRequest
 import play.twirl.api.HtmlFormat
 import testHelpers.*
 import testdata.AmendProtectionDisplayModelTestData.*
@@ -111,7 +110,7 @@ class AmendsControllerSpec
     when(amendSummaryView.apply(any(), any(), any())(using any(), any())).thenReturn(HtmlFormat.empty)
   }
 
-  private val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
+  private val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   private val testNino: String = "AB123456A"
 
