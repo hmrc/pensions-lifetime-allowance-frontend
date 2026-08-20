@@ -21,7 +21,7 @@ import connectors.CitizenDetailsConnector
 import constructors.display.DisplayConstructors
 import models.ProtectionModel
 import play.api.Logging
-import play.api.i18n.I18nSupport
+import play.api.i18n.Messages
 import play.api.mvc._
 import services.SessionCacheService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -40,7 +40,6 @@ class PrintController @Inject() (
     authActions: AuthActions
 )(implicit val ec: ExecutionContext)
     extends FrontendController(mcc)
-    with I18nSupport
     with Logging {
 
   def printView: Action[AnyContent] = authActions.authenticateWithNino.async { implicit request =>
@@ -53,7 +52,7 @@ class PrintController @Inject() (
   private def routePrintView(
       protectionModel: Option[ProtectionModel],
       nino: String
-  )(implicit request: Request[AnyContent]): Future[Result] =
+  )(implicit request: RequestHeader, messages: Messages): Future[Result] =
     protectionModel match {
       case Some(model) =>
         citizenDetailsConnector.getPersonDetails(nino).map { personalDetailsModel =>

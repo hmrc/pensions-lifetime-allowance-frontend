@@ -20,8 +20,9 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.i18n.{I18nSupport, Messages, MessagesApi}
+import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers.CACHE_CONTROL
 import play.twirl.api.HtmlFormat
@@ -32,16 +33,12 @@ class AmendControllerErrorHelperSpec
     extends FakeApplication
     with MockitoSugar
     with BeforeAndAfterEach
-    with AmendControllerErrorHelper
-    with I18nSupport {
+    with AmendControllerErrorHelper {
 
-  private val messagesControllerComponents: MessagesControllerComponents =
-    inject[MessagesControllerComponents]
+  private val mcc = inject[MessagesControllerComponents]
 
-  override val messagesApi: MessagesApi = messagesControllerComponents.messagesApi
-
-  implicit val fakeRequest: FakeRequest[_] = FakeRequest()
-  implicit val mockMessage: Messages       = messagesApi.preferred(fakeRequest)
+  implicit val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+  implicit val mockMessage: Messages                            = mcc.messagesApi.preferred(fakeRequest)
 
   val technicalError: technicalError = mock[technicalError]
 

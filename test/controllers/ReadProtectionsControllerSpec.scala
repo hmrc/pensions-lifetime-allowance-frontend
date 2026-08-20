@@ -39,7 +39,7 @@ import org.scalatestplus.mockito.MockitoSugar
 import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.i18n.Lang
 import play.api.libs.json.Json
-import play.api.mvc.{AnyContent, MessagesControllerComponents, Result}
+import play.api.mvc.{AnyContent, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Application, Environment}
@@ -78,7 +78,6 @@ class ReadProtectionsControllerSpec
   val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
   val mockPlaConnector: PlaConnector               = mock[PlaConnector]
   val mockAppConfig: AppConfig                     = mock[AppConfig]
-  val mockMCC: MessagesControllerComponents        = inject[MessagesControllerComponents]
   val mockEnv: Environment                         = mock[Environment]
   val mockCacheMap: CacheMap                       = mock[CacheMap]
 
@@ -108,7 +107,7 @@ class ReadProtectionsControllerSpec
     mockPlaConnector,
     mockSessionCacheService,
     mockDisplayConstructors,
-    mockMCC,
+    mcc,
     authActions,
     mockTechnicalError,
     mockManualCorrespondenceNeeded,

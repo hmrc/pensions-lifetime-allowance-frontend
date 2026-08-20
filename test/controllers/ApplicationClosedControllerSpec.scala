@@ -21,7 +21,7 @@ import org.jsoup.nodes.{Document, Element}
 import org.scalatest.Assertion
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.{Messages, MessagesApi}
-import play.api.mvc.{AnyContent, MessagesControllerComponents, Request, Result}
+import play.api.mvc.{AnyContent, MessagesControllerComponents, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.Html
@@ -33,13 +33,13 @@ import scala.concurrent.Future
 
 class ApplicationClosedControllerSpec extends FakeApplication with MockitoSugar {
 
-  val mockMCC: MessagesControllerComponents = inject[MessagesControllerComponents]
+  val mcc: MessagesControllerComponents = inject[MessagesControllerComponents]
 
   implicit val view2014: applicationClosed2014 = inject[applicationClosed2014]
   implicit val view2016: applicationClosed2016 = inject[applicationClosed2016]
 
-  val controller                            = new ApplicationClosedController(mockMCC, view2014, view2016)
-  implicit val request: Request[AnyContent] = FakeRequest("GET", "/")
+  val controller                                = new ApplicationClosedController(mcc, view2014, view2016)
+  implicit val request: FakeRequest[AnyContent] = FakeRequest("GET", "/")
 
   implicit val messages: Messages = inject[MessagesApi].preferred(request)
 

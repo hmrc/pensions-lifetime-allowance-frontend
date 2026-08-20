@@ -35,7 +35,7 @@ case class MockAuthSuccess(nino: String, mcc: MessagesControllerComponents)
   override def parser: BodyParser[AnyContent] = mcc.parsers.defaultBodyParser
 
   override def invokeBlock[A](request: Request[A], block: AuthenticatedRequest[A] => Future[Result]): Future[Result] = {
-    val authenticatedRequest = AuthenticatedRequest(nino, MessagesRequest(request, mcc.messagesApi))
+    val authenticatedRequest = AuthenticatedRequest(nino, new MessagesRequest(request, mcc.messagesApi))
     block(authenticatedRequest)
   }
 

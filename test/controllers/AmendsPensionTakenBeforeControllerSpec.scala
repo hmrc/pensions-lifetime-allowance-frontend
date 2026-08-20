@@ -29,8 +29,8 @@ import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Environment
-import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
-import play.api.mvc.{AnyContent, MessagesControllerComponents, Result}
+import play.api.i18n.{Lang, Messages}
+import play.api.mvc.{AnyContent, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionCacheService
@@ -49,15 +49,11 @@ class AmendsPensionTakenBeforeControllerSpec
     with MockSessionCacheService
     with BeforeAndAfterEach
     with AuthMocks
-    with AmendProtectionModelTestData
-    with I18nSupport {
+    with AmendProtectionModelTestData {
 
   implicit val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
 
-  val mcc: MessagesControllerComponents = inject[MessagesControllerComponents]
-  val messagesApi: MessagesApi          = mcc.messagesApi
-
-  implicit val messages: Messages = messagesApi.preferred(fakeRequest)
+  implicit val messages: Messages = mcc.messagesApi.preferred(fakeRequest)
 
   implicit val appConfig: AppConfig           = inject[AppConfig]
   implicit val system: ActorSystem            = ActorSystem()

@@ -27,8 +27,8 @@ import models.pla.AmendableProtectionType
 import models.pla.request.AmendProtectionRequestStatus
 import models.{AmendResponseModel, NotificationId, PersonalDetailsModel, TransformedReadResponseModel}
 import play.api.Logging
-import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, Result}
+import play.api.i18n.Messages
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, RequestHeader, Result}
 import services.SessionCacheService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -52,7 +52,6 @@ class AmendsController @Inject() (
     amendSummary: views.html.pages.amends.amendSummary
 )(implicit ec: ExecutionContext)
     extends FrontendController(mcc)
-    with I18nSupport
     with Logging
     with AmendControllerErrorHelper {
 
@@ -109,7 +108,7 @@ class AmendsController @Inject() (
 
   private def saveAmendsGA(
       protectionAmendment: Option[AmendProtectionModel]
-  )(implicit request: Request[AnyContent]): Future[CacheMap] =
+  )(implicit request: RequestHeader): Future[CacheMap] =
     sessionCacheService.saveAmendsGAModel(
       AmendsGAConstructor.identifyAmendsChanges(
         protectionAmendment.get.updated,
@@ -125,7 +124,7 @@ class AmendsController @Inject() (
       .map(_.map(AmendResponseModel.from(_, protection.psaCheckReference)))
 
   private def saveAndRedirectToDisplay(amendResponseModel: AmendResponseModel)(
-      implicit request: Request[AnyContent]
+      implicit request: RequestHeader
   ): Future[Result] =
     sessionCacheService.saveAmendResponseModel(amendResponseModel).map { _ =>
       Redirect(routes.AmendsController.amendmentOutcome)
@@ -149,7 +148,7 @@ class AmendsController @Inject() (
       modelGA: Option[AmendsGAModel],
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       nino: String
-  )(implicit request: Request[AnyContent]): Future[Result] = {
+  )(implicit request: RequestHeader, messages: Messages): Future[Result] = {
     if (modelGA.isEmpty) {
       logger.warn(s"Unable to retrieve amendsGAModel from cache for user nino :$nino")
     }
@@ -197,7 +196,7 @@ class AmendsController @Inject() (
       notificationId: NotificationId,
       model: AmendResponseModel,
       nino: String
-  )(implicit request: Request[AnyContent]): Future[Option[AmendResponseModel]] =
+  )(implicit request: RequestHeader): Future[Option[AmendResponseModel]] =
     if (NotificationIds.showingFixedProtection2016Details.contains(notificationId)) {
       createCombinedFixedAndIndividualProtectionModel(model, nino)
     } else {
@@ -207,7 +206,7 @@ class AmendsController @Inject() (
   private def createCombinedFixedAndIndividualProtectionModel(
       amendResponseModel: AmendResponseModel,
       nino: String
-  )(implicit request: Request[AnyContent]): Future[Option[AmendResponseModel]] =
+  )(implicit request: RequestHeader): Future[Option[AmendResponseModel]] =
     for {
       protections <- fetchProtections(nino)
       activeProtection = protections.toOption.flatMap(_.activeProtection)

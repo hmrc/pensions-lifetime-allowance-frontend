@@ -28,7 +28,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.mvc.{AnyContent, MessagesControllerComponents}
+import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
@@ -45,9 +45,6 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
   private val citizenDetailsConnector: CitizenDetailsConnector = mock[CitizenDetailsConnector]
   private val printProtectionView: printProtection             = mock[printProtection]
 
-  private val messagesControllerComponents: MessagesControllerComponents =
-    inject[MessagesControllerComponents]
-
   private implicit val executionContext: ExecutionContext = inject[ExecutionContext]
   private implicit val AppConfig: AppConfig               = mock[AppConfig]
 
@@ -56,7 +53,7 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
     citizenDetailsConnector,
     displayConstructors,
     printProtectionView,
-    messagesControllerComponents,
+    mcc,
     authActions
   )
 

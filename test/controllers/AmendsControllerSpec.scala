@@ -42,8 +42,7 @@ import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{AnyContent, MessagesControllerComponents}
+import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
@@ -65,16 +64,12 @@ class AmendsControllerSpec
     with BeforeAndAfterEach
     with AuthMocks
     with ScalaFutures
-    with AmendProtectionModelTestData
-    with I18nSupport {
+    with AmendProtectionModelTestData {
 
   private val displayConstructors: DisplayConstructors         = mock[DisplayConstructors]
   private val citizenDetailsConnector: CitizenDetailsConnector = mock[CitizenDetailsConnector]
   private val plaConnector: PlaConnector                       = mock[PlaConnector]
   private val appConfig: AppConfig                             = mock[AppConfig]
-
-  private val messagesControllerComponents: MessagesControllerComponents =
-    inject[MessagesControllerComponents]
 
   private val manualCorrespondenceNeededView: manualCorrespondenceNeeded     = mock[manualCorrespondenceNeeded]
   private val technicalErrorView: technicalError                             = mock[technicalError]
@@ -82,7 +77,6 @@ class AmendsControllerSpec
   private val amendOutcomeNoNotificationIdView: amendOutcomeNoNotificationId = mock[amendOutcomeNoNotificationId]
   private val amendSummaryView: amendSummary                                 = mock[amendSummary]
 
-  override val messagesApi: MessagesApi                     = messagesControllerComponents.messagesApi
   override val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
 
   private val ec: ExecutionContext = inject[ExecutionContext]
@@ -92,7 +86,7 @@ class AmendsControllerSpec
     citizenDetailsConnector = citizenDetailsConnector,
     plaConnector = plaConnector,
     displayConstructors = displayConstructors,
-    mcc = messagesControllerComponents,
+    mcc = mcc,
     authActions = authActions,
     manualCorrespondenceNeeded = manualCorrespondenceNeededView,
     technicalError = technicalErrorView,

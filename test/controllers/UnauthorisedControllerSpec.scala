@@ -48,7 +48,7 @@ class UnauthorisedControllerSpec
     with BeforeAndAfterEach
     with MockSessionCacheService {
 
-  val mockMCC: MessagesControllerComponents                            = inject[MessagesControllerComponents]
+  val mcc: MessagesControllerComponents                                = inject[MessagesControllerComponents]
   val mockHttp: HttpClientV2                                           = mock[HttpClientV2]
   val fakeRequest                                                      = FakeRequest("GET", "/")
   val mockAppConfig: AppConfig                                         = inject[AppConfig]
@@ -105,7 +105,7 @@ class UnauthorisedControllerSpec
   val controller = new UnauthorisedController(
     mockIdentityVerificationConnector,
     mockSessionCacheService,
-    mockMCC,
+    mcc,
     mockLockedOut,
     mockTechnicalIssue,
     mockUnauthorised,

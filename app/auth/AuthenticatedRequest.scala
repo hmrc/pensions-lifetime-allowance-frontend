@@ -16,12 +16,7 @@
 
 package auth
 
-import play.api.i18n.MessagesApi
-import play.api.mvc.{MessagesRequest, PreferredMessagesProvider, WrappedRequest}
+import play.api.mvc.MessagesRequest
 
 case class AuthenticatedRequest[A](nino: String, request: MessagesRequest[A])
-    extends WrappedRequest[A](request)
-    with PreferredMessagesProvider {
-
-  override def messagesApi: MessagesApi = request.messagesApi
-}
+    extends MessagesRequest[A](request, request.messagesApi)

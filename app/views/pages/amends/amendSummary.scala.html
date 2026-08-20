@@ -33,7 +33,7 @@
     model: AmendDisplayModel,
     protectionType: AmendableProtectionType,
     status: AmendProtectionRequestStatus
-)(implicit request: Request[_], messages: Messages)
+)(implicit request: RequestHeader, messages: Messages)
 
 @layout(
     pageTitle = Messages("pla.amends.title")

@@ -18,18 +18,18 @@ package auth
 
 import config.AppConfig
 import auth.helpers.AuthMocks
-import org.mockito.ArgumentMatchers.{any, eq as eqTo}
-import org.mockito.Mockito.*
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.mvc.Results.*
-import play.api.mvc.{MessagesControllerComponents, MessagesRequest}
+import play.api.mvc.Results._
+import play.api.mvc.MessagesRequest
 import play.api.test.FakeRequest
-import play.api.test.Helpers.*
+import play.api.test.Helpers._
 import play.twirl.api.Html
 import testHelpers.FakeApplication
-import uk.gov.hmrc.auth.core.*
+import uk.gov.hmrc.auth.core._
 import views.html.pages.fallback.technicalError
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -45,11 +45,9 @@ class AuthenticateWithNinoSpec
   private val authConnector: AuthConnector   = mock[AuthConnector]
   private val technicalError: technicalError = mock[technicalError]
 
-  private val stubMcc: MessagesControllerComponents = stubMessagesControllerComponents()
-
   private val requestUrl        = "https://www.pla-frontend.gov.uk/ip16-start-page"
   private val requestUrlEncoded = "https%3A%2F%2Fwww.pla-frontend.gov.uk%2Fip16-start-page"
-  private val fakeRequest       = MessagesRequest(FakeRequest(GET, requestUrl), stubMcc.messagesApi)
+  private val fakeRequest       = new MessagesRequest(FakeRequest(GET, requestUrl), mcc.messagesApi)
 
   private implicit val executionContext: ExecutionContext = ExecutionContext.global
 

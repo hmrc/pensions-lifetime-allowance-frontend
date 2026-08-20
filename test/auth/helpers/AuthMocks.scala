@@ -18,23 +18,25 @@ package auth.helpers
 
 import auth.AuthActions
 import org.mockito.Mockito.{reset, when}
-import org.scalatest.{BeforeAndAfterEach, Suite}
+import org.scalatest.{BeforeAndAfterEach, TestSuite}
 import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.mvc.Results.Unauthorized
 import play.api.mvc.{MessagesControllerComponents, Result}
-import play.api.test.Helpers.stubMessagesControllerComponents
+import play.api.test.Injecting
 
-trait AuthMocks extends MockitoSugar with BeforeAndAfterEach { this: Suite =>
+trait AuthMocks extends MockitoSugar with BeforeAndAfterEach with GuiceOneAppPerSuite with Injecting {
+  this: TestSuite =>
 
   val authActions: AuthActions = mock[AuthActions]
 
-  val stubMcc: MessagesControllerComponents = stubMessagesControllerComponents()
+  val mcc: MessagesControllerComponents = inject[MessagesControllerComponents]
 
   def mockAuthSuccess(nino: String = "nino"): Unit =
-    when(authActions.authenticateWithNino).thenReturn(MockAuthSuccess(nino, stubMcc))
+    when(authActions.authenticateWithNino).thenReturn(MockAuthSuccess(nino, mcc))
 
   def mockAuthFailure(result: Result = Unauthorized("401 Unauthorized")): Unit =
-    when(authActions.authenticateWithNino).thenReturn(MockAuthFailure(result, stubMcc))
+    when(authActions.authenticateWithNino).thenReturn(MockAuthFailure(result, mcc))
 
   override def beforeEach(): Unit = {
     super.beforeEach()

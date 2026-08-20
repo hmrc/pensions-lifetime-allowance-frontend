@@ -21,7 +21,6 @@ import config.AppConfig
 import models.pla.AmendableProtectionType
 import models.pla.request.AmendProtectionRequestStatus
 import play.api.Logging
-import play.api.i18n.I18nSupport
 import play.api.mvc._
 import services.SessionCacheService
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
@@ -44,7 +43,6 @@ class AmendsRemovePensionSharingOrderController @Inject() (
     val ec: ExecutionContext
 ) extends FrontendController(mcc)
     with AmendControllerErrorHelper
-    with I18nSupport
     with Logging {
 
   def removePso(

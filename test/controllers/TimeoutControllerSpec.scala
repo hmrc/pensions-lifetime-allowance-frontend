@@ -29,7 +29,7 @@ import views.html.pages.timeout
 
 class TimeoutControllerSpec extends FakeApplication with MockitoSugar {
 
-  val mockMCC: MessagesControllerComponents = inject[MessagesControllerComponents]
+  val mcc: MessagesControllerComponents = inject[MessagesControllerComponents]
 
   implicit val mockAppConfig: AppConfig   = inject[AppConfig]
   implicit val system: ActorSystem        = ActorSystem()
@@ -37,7 +37,7 @@ class TimeoutControllerSpec extends FakeApplication with MockitoSugar {
   implicit val application: Application   = mock[Application]
   implicit val mockTimeout: timeout       = inject[timeout]
 
-  val controller = new TimeoutController(mockMCC, mockTimeout)
+  val controller = new TimeoutController(mcc, mockTimeout)
 
   "Calling the .timeout action" when {
 

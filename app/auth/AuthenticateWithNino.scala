@@ -19,7 +19,7 @@ package auth
 import config.AppConfig
 import play.api.Logging
 import play.api.mvc.Results.{InternalServerError, Redirect}
-import play.api.mvc.{ActionRefiner, MessagesRequest, Request, Result}
+import play.api.mvc.{ActionRefiner, MessagesRequest, RequestHeader, Result}
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.{
   AuthConnector,
@@ -63,7 +63,7 @@ class AuthenticateWithNino @Inject() (
   private val enrolmentKey: String = "HMRC-NI"
 
   private def authErrorHandling[A](
-      using MessagesRequest[A]
+      implicit request: MessagesRequest[A]
   ): PartialFunction[Throwable, Left[Result, AuthenticatedRequest[A]]] = {
     case _: NoActiveSession =>
       Left(redirectToSignIn)
@@ -74,7 +74,7 @@ class AuthenticateWithNino @Inject() (
       Left(InternalServerError(technicalError()))
   }
 
-  private def redirectToSignIn(implicit request: Request[?]): Result =
+  private def redirectToSignIn(implicit request: RequestHeader): Result =
     Redirect(
       appConfig.ggSignInUrl,
       Map(
@@ -83,7 +83,7 @@ class AuthenticateWithNino @Inject() (
       )
     )
 
-  private def redirectToIvUplift(implicit request: Request[?]): Result =
+  private def redirectToIvUplift(implicit request: RequestHeader): Result =
     Redirect(
       appConfig.ivUpliftUrl,
       Map(

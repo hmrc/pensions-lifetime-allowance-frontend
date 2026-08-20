@@ -25,7 +25,7 @@ import org.scalatest.wordspec.AnyWordSpec
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{Json, OFormat}
-import play.api.mvc.{AnyContent, Request}
+import play.api.mvc.AnyContent
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.mongo.TimestampSupport
@@ -53,8 +53,8 @@ class SessionRepositoryISpec
 
   val session1: String                      = UUID.randomUUID.toString
   val session2: String                      = UUID.randomUUID.toString
-  val userRequest: Request[AnyContent]      = FakeRequest().withSession(SessionKeys.sessionId -> session1)
-  val otherUserRequest: Request[AnyContent] = FakeRequest().withSession(SessionKeys.sessionId -> session2)
+  val userRequest: FakeRequest[AnyContent]      = FakeRequest().withSession(SessionKeys.sessionId -> session1)
+  val otherUserRequest: FakeRequest[AnyContent] = FakeRequest().withSession(SessionKeys.sessionId -> session2)
 
   val testAnswerKey: DataKey[PensionDebitModel] = DataKey[PensionDebitModel]("pensionsTaken")
   val testAnswer: PensionDebitModel             = PensionDebitModel(DateModel.of(2025, 12, 5), 200)
