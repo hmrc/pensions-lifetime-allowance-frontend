@@ -16,7 +16,7 @@
 
 package controllers
 
-import auth.AuthFunction
+import auth.AuthActions
 import config.AppConfig
 import connectors.PlaConnectorError.LockedResponseError
 import connectors.{PlaConnector, PlaConnectorError}
@@ -24,7 +24,7 @@ import constructors.display.DisplayConstructors
 import models._
 import models.amend.AmendProtectionModel
 import models.cache.CacheMap
-import play.api.i18n.{I18nSupport, Lang}
+import play.api.i18n.Messages
 import play.api.mvc._
 import play.api.{Application, Logging}
 import services.SessionCacheService
@@ -41,7 +41,7 @@ class ReadProtectionsController @Inject() (
     sessionCacheService: SessionCacheService,
     displayConstructors: DisplayConstructors,
     mcc: MessagesControllerComponents,
-    authFunction: AuthFunction,
+    authActions: AuthActions,
     technicalError: views.html.pages.fallback.technicalError,
     manualCorrespondenceNeeded: views.html.pages.result.manualCorrespondenceNeeded,
     existingProtections: pages.existingProtections.existingProtections
@@ -50,26 +50,21 @@ class ReadProtectionsController @Inject() (
     implicit val appConfig: AppConfig,
     implicit val ec: ExecutionContext
 ) extends FrontendController(mcc)
-    with I18nSupport
     with Logging {
 
-  val currentProtections: Action[AnyContent] = Action.async { implicit request =>
-    implicit val lang: Lang = mcc.messagesApi.preferred(request).lang
+  def currentProtections: Action[AnyContent] = authActions.authenticateWithNino.async { implicit request =>
+    fetchProtections(request.nino).flatMap {
 
-    authFunction.genericAuthWithNino { nino =>
-      fetchProtections(nino).flatMap {
+      case Right(transformedReadResponseModel: TransformedReadResponseModel) =>
+        saveAndDisplayExistingProtections(transformedReadResponseModel)
 
-        case Right(transformedReadResponseModel: TransformedReadResponseModel) =>
-          saveAndDisplayExistingProtections(transformedReadResponseModel)
+      case Left(LockedResponseError) => Future.successful(Locked(manualCorrespondenceNeeded()))
 
-        case Left(LockedResponseError) => Future.successful(Locked(manualCorrespondenceNeeded()))
-
-        case Left(_) =>
-          Future.successful(
-            InternalServerError(technicalError())
-              .withHeaders(CACHE_CONTROL -> "no-cache")
-          )
-      }
+      case Left(_) =>
+        Future.successful(
+          InternalServerError(technicalError())
+            .withHeaders(CACHE_CONTROL -> "no-cache")
+        )
     }
   }
 
@@ -80,7 +75,7 @@ class ReadProtectionsController @Inject() (
 
   private[controllers] def saveAndDisplayExistingProtections(
       transformedReadResponseModel: TransformedReadResponseModel
-  )(implicit request: Request[AnyContent], lang: Lang): Future[Result] =
+  )(implicit request: RequestHeader, messages: Messages): Future[Result] =
     for {
       _ <- saveActiveProtection(transformedReadResponseModel.activeProtection)
       _ <- saveAmendableProtections(transformedReadResponseModel)
@@ -90,14 +85,14 @@ class ReadProtectionsController @Inject() (
 
   private[controllers] def saveActiveProtection(
       activeModel: Option[ProtectionModel]
-  )(implicit request: Request[AnyContent]): Future[Option[CacheMap]] =
+  )(implicit request: RequestHeader): Future[Option[CacheMap]] =
     activeModel.map(sessionCacheService.saveOpenProtection) match {
       case Some(future) => future.map(Some(_))
       case None         => Future.successful(None)
     }
 
   private[controllers] def saveAmendableProtections(model: TransformedReadResponseModel)(
-      implicit request: Request[AnyContent]
+      implicit request: RequestHeader
   ): Future[Seq[CacheMap]] = {
     val allProtections = getAllProtections(model)
     val protections    = allProtections.flatMap(saveIfAmendable)
@@ -108,7 +103,7 @@ class ReadProtectionsController @Inject() (
     model.activeProtection.toSeq ++ model.inactiveProtections
 
   private[controllers] def saveIfAmendable(protection: ProtectionModel)(
-      implicit request: Request[AnyContent]
+      implicit request: RequestHeader
   ): Option[Future[CacheMap]] =
     AmendProtectionModel.tryFromProtection(protection).map(sessionCacheService.saveAmendProtectionModel)
 

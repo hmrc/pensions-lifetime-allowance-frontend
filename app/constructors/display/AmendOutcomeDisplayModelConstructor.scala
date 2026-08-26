@@ -20,7 +20,7 @@ import common.{Display, Exceptions}
 import models.display.AmendOutcomeDisplayModel
 import models.pla.response.AmendProtectionResponseStatus.Withdrawn
 import models.{AmendResponseModel, NotificationId, PersonalDetailsModel}
-import play.api.i18n.{Lang, Messages}
+import play.api.i18n.Messages
 
 object AmendOutcomeDisplayModelConstructor {
 
@@ -29,7 +29,7 @@ object AmendOutcomeDisplayModelConstructor {
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       nino: String,
       notificationId: NotificationId
-  )(implicit lang: Lang, messages: Messages): AmendOutcomeDisplayModel = {
+  )(implicit messages: Messages): AmendOutcomeDisplayModel = {
     val printDetails =
       AmendPrintDisplayModelConstructor.createAmendPrintDisplayModel(personalDetailsModelOpt, model, nino)
 

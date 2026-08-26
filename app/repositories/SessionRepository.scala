@@ -19,7 +19,7 @@ package repositories
 import config.AppConfig
 import models.cache.CacheMap
 import play.api.libs.json.Writes
-import play.api.mvc.Request
+import play.api.mvc.RequestHeader
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.mongo.cache.{DataKey, SessionCacheRepository}
 import uk.gov.hmrc.mongo.{MongoComponent, TimestampSupport}
@@ -44,12 +44,12 @@ class SessionRepository @Inject() (
   def putInSession[T: Writes](
       dataKey: DataKey[T],
       data: T
-  )(implicit request: Request[Any], ec: ExecutionContext): Future[CacheMap] =
+  )(implicit request: RequestHeader, ec: ExecutionContext): Future[CacheMap] =
     cacheRepo
       .put[T](request)(dataKey, data)
       .map(res => CacheMap(res.id, res.data.value.toMap))
 
-  def clearSession(implicit request: Request[_]): Future[Unit] =
+  def clearSession(implicit request: RequestHeader): Future[Unit] =
     cacheRepo.deleteEntity(request)
 
 }

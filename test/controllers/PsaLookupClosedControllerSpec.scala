@@ -33,7 +33,7 @@ class PsaLookupClosedControllerSpec extends FakeApplication with BeforeAndAfterE
 
   private val sessionId = SessionKeys.sessionId -> "lookup-test"
 
-  private val mockMCC: MessagesControllerComponents =
+  private val mcc: MessagesControllerComponents =
     inject[MessagesControllerComponents]
 
   private val mockPsaLookupClosed: psaLookupClosed = mock[psaLookupClosed]
@@ -41,7 +41,7 @@ class PsaLookupClosedControllerSpec extends FakeApplication with BeforeAndAfterE
   private implicit val appConfig: AppConfig = mock[AppConfig]
 
   private val controller = new PsaLookupClosedController(
-    mockMCC,
+    mcc,
     mockPsaLookupClosed
   )
 

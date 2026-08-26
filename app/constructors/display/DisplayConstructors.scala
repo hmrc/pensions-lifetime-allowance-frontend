@@ -25,68 +25,50 @@ import models.display.{
   PrintDisplayModel
 }
 import models.{AmendResponseModel, NotificationId, PersonalDetailsModel, ProtectionModel, TransformedReadResponseModel}
-import play.api.i18n.{Lang, Messages, MessagesApi}
+import play.api.i18n.Messages
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) {
+class DisplayConstructors @Inject() {
 
   def createPrintDisplayModel(
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       protectionModel: ProtectionModel,
       nino: String
-  )(implicit lang: Lang): PrintDisplayModel = {
-    implicit val messages: Messages = messagesForLang(lang)
-
+  )(implicit messages: Messages): PrintDisplayModel =
     PrintDisplayModelConstructor.createPrintDisplayModel(personalDetailsModelOpt, protectionModel, nino)
-  }
 
   def createExistingProtectionsDisplayModel(
       model: TransformedReadResponseModel
-  )(implicit lang: Lang): ExistingProtectionsDisplayModel = {
-    implicit val messages: Messages = messagesForLang(lang)
-
+  )(implicit messages: Messages): ExistingProtectionsDisplayModel =
     ExistingProtectionsDisplayModelConstructor.createExistingProtectionsDisplayModel(model)
-  }
 
-  def createAmendDisplayModel(model: AmendProtectionModel)(implicit lang: Lang): AmendDisplayModel = {
-    implicit val messages: Messages = messagesForLang(lang)
-
+  def createAmendDisplayModel(model: AmendProtectionModel)(implicit messages: Messages): AmendDisplayModel =
     AmendDisplayModelConstructor.createAmendDisplayModel(model)
-  }
 
   def createAmendOutcomeDisplayModel(
       model: AmendResponseModel,
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       nino: String,
       notificationId: NotificationId
-  )(implicit lang: Lang): AmendOutcomeDisplayModel = {
-    implicit val messages: Messages = messagesForLang(lang)
-
+  )(implicit messages: Messages): AmendOutcomeDisplayModel =
     AmendOutcomeDisplayModelConstructor.createAmendOutcomeDisplayModel(
       model,
       personalDetailsModelOpt,
       nino,
       notificationId
     )
-  }
 
   def createAmendOutcomeDisplayModelNoNotificationId(
       model: AmendResponseModel,
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       nino: String
-  )(implicit lang: Lang): AmendOutcomeDisplayModelNoNotificationId = {
-    implicit val messages: Messages = messagesForLang(lang)
-
+  )(implicit messages: Messages): AmendOutcomeDisplayModelNoNotificationId =
     AmendOutcomeDisplayModelNoNotificationIdConstructor.createAmendOutcomeDisplayModelNoNotificationId(
       model,
       personalDetailsModelOpt,
       nino
     )
-  }
-
-  private def messagesForLang(lang: Lang): Messages =
-    messagesApi.preferred(Seq(lang))
 
 }

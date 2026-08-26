@@ -34,8 +34,8 @@ class AppConfig @Inject() (
 
   val notAuthorisedRedirectUrl: String = servicesConfig.getString("not-authorised-callback.url")
 
-  val sessionMissingUpliftUrlPrefix: Option[String] =
-    configuration.getOptional[String]("login-missing-session.url.prefix")
+  val sessionMissingUpliftUrlPrefix: String =
+    configuration.getOptional[String]("login-missing-session.url.prefix").getOrElse("")
 
   val ivUpliftUrl: String =
     configuration.getOptional[String](s"identity-verification-uplift.host").getOrElse("")

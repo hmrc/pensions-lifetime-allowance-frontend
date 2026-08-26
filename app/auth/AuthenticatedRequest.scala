@@ -1,5 +1,5 @@
-@*
- * Copyright 2023 HM Revenue & Customs
+/*
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,28 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this(
-    layout: Layout
-)
+package auth
 
-@()(implicit request: RequestHeader, messages: Messages)
+import play.api.mvc.MessagesRequest
 
-@restartTarget = @{controllers.routes.ReadProtectionsController.currentProtections}
-
-@linkText = @{
-    Messages("pla.techError.retry")
-}
-
-@layout(
-    pageTitle = Messages("pla.techError.title")
-) {
-
-<h1 class="govuk-heading-xl" id="pageHeading">@Messages("pla.techError.pageHeading")</h1>
-
-<p>
-    <a class="govuk-body govuk-link" href=@restartTarget id="tryAgainLink">@linkText</a>
-</p>
-
-}
+case class AuthenticatedRequest[A](nino: String, request: MessagesRequest[A])
+    extends MessagesRequest[A](request, request.messagesApi)

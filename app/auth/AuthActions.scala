@@ -1,5 +1,5 @@
-@*
- * Copyright 2023 HM Revenue & Customs
+/*
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,28 +12,21 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this(
-    layout: Layout
-)
+package auth
 
-@()(implicit request: RequestHeader, messages: Messages)
+import play.api.mvc.{ActionBuilder, AnyContent, MessagesControllerComponents}
 
-@restartTarget = @{controllers.routes.ReadProtectionsController.currentProtections}
+import javax.inject.{Inject, Singleton}
 
-@linkText = @{
-    Messages("pla.techError.retry")
-}
-
-@layout(
-    pageTitle = Messages("pla.techError.title")
+@Singleton
+class AuthActions @Inject() (
+    messagesControllerComponents: MessagesControllerComponents,
+    authenticateWithNinoAction: AuthenticateWithNino
 ) {
 
-<h1 class="govuk-heading-xl" id="pageHeading">@Messages("pla.techError.pageHeading")</h1>
-
-<p>
-    <a class="govuk-body govuk-link" href=@restartTarget id="tryAgainLink">@linkText</a>
-</p>
+  def authenticateWithNino: ActionBuilder[AuthenticatedRequest, AnyContent] =
+    messagesControllerComponents.messagesActionBuilder.andThen(authenticateWithNinoAction)
 
 }

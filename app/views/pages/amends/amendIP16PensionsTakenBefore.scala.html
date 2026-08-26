@@ -33,7 +33,7 @@
     amendPensionsTakenBeforeForm: Form[AmendPensionsTakenBeforeModel],
     protectionType: AmendableProtectionType,
     status: AmendProtectionRequestStatus
-)(implicit request: Request[_], messages: Messages)
+)(implicit request: RequestHeader, messages: Messages)
 
 @title = @{
         if(amendPensionsTakenBeforeForm.errors.nonEmpty) Messages("site.title.error", Messages("pla.pensionsTakenBefore.title")) else Messages("pla.pensionsTakenBefore.title")

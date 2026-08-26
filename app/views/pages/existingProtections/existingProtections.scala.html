@@ -23,7 +23,7 @@
     inactiveExistingProtection : playHelpers.templates.existingProtections.inactiveExistingProtection,
     activeExistingProtection: playHelpers.templates.existingProtections.activeExistingProtection
 )
-@(protections: ExistingProtectionsDisplayModel)(implicit request: Request[_], messages: Messages)
+@(protections: ExistingProtectionsDisplayModel)(implicit request: RequestHeader, messages: Messages)
 
 @protectionsOfType(protections: Seq[ExistingProtectionDisplayModel]) = {
     @if(protections.nonEmpty){

@@ -16,12 +16,11 @@
 
 package controllers
 
-import auth.AuthFunction
+import auth.AuthActions
 import config.AppConfig
 import models.pla.AmendableProtectionType
 import models.pla.request.AmendProtectionRequestStatus
 import play.api.Logging
-import play.api.i18n.I18nSupport
 import play.api.mvc._
 import services.SessionCacheService
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
@@ -35,7 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class AmendsRemovePensionSharingOrderController @Inject() (
     val sessionCacheService: SessionCacheService,
     mcc: MessagesControllerComponents,
-    authFunction: AuthFunction,
+    authActions: AuthActions,
     technicalError: views.html.pages.fallback.technicalError,
     removePsoDebits: pages.amends.removePsoDebits
 )(
@@ -44,48 +43,43 @@ class AmendsRemovePensionSharingOrderController @Inject() (
     val ec: ExecutionContext
 ) extends FrontendController(mcc)
     with AmendControllerErrorHelper
-    with I18nSupport
     with Logging {
 
   def removePso(
       protectionType: AmendableProtectionType,
       status: AmendProtectionRequestStatus
-  ): Action[AnyContent] = Action.async { implicit request =>
-    authFunction.genericAuthWithNino { nino =>
-      sessionCacheService
-        .fetchAmendProtectionModel(protectionType, status)
-        .map {
-          case Some(_) =>
-            Ok(removePsoDebits(protectionType, status))
-          case _ =>
-            logger.warn(couldNotRetrieveModelForNino(nino, "when removing the new pension debit"))
-            buildTechnicalError(technicalError)
-        }
-    }
+  ): Action[AnyContent] = authActions.authenticateWithNino.async { implicit request =>
+    sessionCacheService
+      .fetchAmendProtectionModel(protectionType, status)
+      .map {
+        case Some(_) =>
+          Ok(removePsoDebits(protectionType, status))
+        case _ =>
+          logger.warn(couldNotRetrieveModelForNino(request.nino, "when removing the new pension debit"))
+          buildTechnicalError(technicalError)
+      }
   }
 
   def submitRemovePso(
       protectionType: AmendableProtectionType,
       status: AmendProtectionRequestStatus
-  ): Action[AnyContent] = Action.async { implicit request =>
-    authFunction.genericAuthWithNino { nino =>
-      sessionCacheService
-        .fetchAmendProtectionModel(protectionType, status)
-        .flatMap {
-          case Some(model) =>
-            val updatedModel = model.withPensionDebit(None)
+  ): Action[AnyContent] = authActions.authenticateWithNino.async { implicit request =>
+    sessionCacheService
+      .fetchAmendProtectionModel(protectionType, status)
+      .flatMap {
+        case Some(model) =>
+          val updatedModel = model.withPensionDebit(None)
 
-            sessionCacheService
-              .saveAmendProtectionModel(updatedModel)
-              .map(_ => Redirect(routes.AmendsController.amendsSummary(protectionType, status)))
+          sessionCacheService
+            .saveAmendProtectionModel(updatedModel)
+            .map(_ => Redirect(routes.AmendsController.amendsSummary(protectionType, status)))
 
-          case None =>
-            logger.warn(couldNotRetrieveModelForNino(nino, "when submitting a removal of a pension debit"))
-            Future.successful(
-              buildTechnicalError(technicalError)
-            )
-        }
-    }
+        case None =>
+          logger.warn(couldNotRetrieveModelForNino(request.nino, "when submitting a removal of a pension debit"))
+          Future.successful(
+            buildTechnicalError(technicalError)
+          )
+      }
   }
 
 }

@@ -16,7 +16,7 @@
 
 package controllers
 
-import play.api.mvc.{Request, Result}
+import play.api.mvc.{RequestHeader, Result}
 import play.api.mvc.Results.InternalServerError
 import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.i18n.Messages
@@ -28,7 +28,7 @@ trait AmendControllerErrorHelper {
 
   def buildTechnicalError(
       technicalError: views.html.pages.fallback.technicalError
-  )(implicit request: Request[_], messages: Messages): Result =
+  )(implicit request: RequestHeader, messages: Messages): Result =
     InternalServerError(technicalError())
       .withHeaders(CACHE_CONTROL -> "no-cache")
 

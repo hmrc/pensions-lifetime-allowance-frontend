@@ -16,12 +16,11 @@
 
 package controllers
 
-import auth.AuthFunctionImpl
+import auth.helpers.AuthMocks
 import config._
 import connectors.PlaConnectorError.{ConflictResponseError, LockedResponseError}
 import connectors.{CitizenDetailsConnector, PlaConnector}
 import constructors.display.DisplayConstructors
-import mocks.AuthMock
 import models.NotificationId._
 import models.amend.AmendsGAModel
 import models.cache.CacheMap
@@ -43,8 +42,7 @@ import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{AnyContent, MessagesControllerComponents}
+import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
@@ -53,7 +51,6 @@ import testHelpers._
 import testdata.AmendProtectionDisplayModelTestData._
 import testdata.AmendProtectionModelTestData
 import testdata.PlaConnectorTestData.amendProtectionResponse
-import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import views.html.pages.amends._
 import views.html.pages.fallback.technicalError
 import views.html.pages.result.manualCorrespondenceNeeded
@@ -65,18 +62,14 @@ class AmendsControllerSpec
     with MockitoSugar
     with MockSessionCacheService
     with BeforeAndAfterEach
-    with AuthMock
+    with AuthMocks
     with ScalaFutures
-    with AmendProtectionModelTestData
-    with I18nSupport {
+    with AmendProtectionModelTestData {
 
   private val displayConstructors: DisplayConstructors         = mock[DisplayConstructors]
   private val citizenDetailsConnector: CitizenDetailsConnector = mock[CitizenDetailsConnector]
   private val plaConnector: PlaConnector                       = mock[PlaConnector]
   private val appConfig: AppConfig                             = mock[AppConfig]
-
-  private val messagesControllerComponents: MessagesControllerComponents =
-    inject[MessagesControllerComponents]
 
   private val manualCorrespondenceNeededView: manualCorrespondenceNeeded     = mock[manualCorrespondenceNeeded]
   private val technicalErrorView: technicalError                             = mock[technicalError]
@@ -84,24 +77,17 @@ class AmendsControllerSpec
   private val amendOutcomeNoNotificationIdView: amendOutcomeNoNotificationId = mock[amendOutcomeNoNotificationId]
   private val amendSummaryView: amendSummary                                 = mock[amendSummary]
 
-  override val messagesApi: MessagesApi                     = messagesControllerComponents.messagesApi
   override val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
 
   private val ec: ExecutionContext = inject[ExecutionContext]
-
-  private val authFunction = new AuthFunctionImpl(
-    messagesControllerComponents,
-    mockAuthConnector,
-    technicalErrorView
-  )(appConfig, ec)
 
   private val controller = new AmendsController(
     sessionCacheService = mockSessionCacheService,
     citizenDetailsConnector = citizenDetailsConnector,
     plaConnector = plaConnector,
     displayConstructors = displayConstructors,
-    mcc = messagesControllerComponents,
-    authFunction = authFunction,
+    mcc = mcc,
+    authActions = authActions,
     manualCorrespondenceNeeded = manualCorrespondenceNeededView,
     technicalError = technicalErrorView,
     amendOutcome = amendOutcomeView,
@@ -116,7 +102,6 @@ class AmendsControllerSpec
     reset(plaConnector)
     reset(plaConnector)
     reset(displayConstructors)
-    reset(mockAuthConnector)
     reset(manualCorrespondenceNeededView)
     reset(technicalErrorView)
     reset(amendOutcomeView)
@@ -124,7 +109,7 @@ class AmendsControllerSpec
     reset(amendSummaryView)
     reset(appConfig)
 
-    mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
+    mockAuthSuccess(testNino)
     when(manualCorrespondenceNeededView.apply()(any(), any())).thenReturn(HtmlFormat.empty)
     when(technicalErrorView.apply()(any(), any())).thenReturn(HtmlFormat.empty)
     when(amendOutcomeView.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)

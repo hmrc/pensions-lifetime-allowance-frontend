@@ -60,23 +60,19 @@ class DisplaySpec extends FakeApplication with MockitoSugar {
   }
 
   "dateDisplayString" should {
-    def createLangMessages(languageCode: Locale): (Lang, Messages) = {
-      val lang = new Lang(languageCode)
-      (lang, MessagesImpl(lang, mockMCC))
-    }
-
     "correctly create a date string for 17/04/2018" when {
       val tstDate = DateModel(LocalDate.of(2018, 4, 17))
 
-      "lang is set to en" in {
+      "using English messages" in {
+        val messages: Messages = MessagesImpl(Lang(Locale.ENGLISH), mockMCC)
 
-        val (lang, message) = createLangMessages(Locale.ENGLISH)
-        dateDisplayString(tstDate)(lang, message) shouldBe "17 April 2018"
+        dateDisplayString(tstDate)(messages) shouldBe "17 April 2018"
       }
 
-      "lang is set to cy" in {
-        val (lang, message) = createLangMessages(Locale.forLanguageTag("cy"))
-        dateDisplayString(tstDate)(lang, message) shouldBe "17 Ebrill 2018"
+      "using Welsh messages" in {
+        val messages: Messages = MessagesImpl(Lang(Locale.forLanguageTag("cy")), mockMCC)
+
+        dateDisplayString(tstDate)(messages) shouldBe "17 Ebrill 2018"
       }
     }
 

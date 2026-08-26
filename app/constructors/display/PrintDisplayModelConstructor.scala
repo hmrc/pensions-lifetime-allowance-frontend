@@ -26,7 +26,7 @@ import constructors.display.ExistingProtectionsDisplayModelConstructor.{
 }
 import models.display.PrintDisplayModel
 import models.{PersonalDetailsModel, ProtectionModel}
-import play.api.i18n.{Lang, Messages}
+import play.api.i18n.Messages
 import utils.Constants
 
 object PrintDisplayModelConstructor {
@@ -35,7 +35,7 @@ object PrintDisplayModelConstructor {
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       protectionModel: ProtectionModel,
       nino: String
-  )(implicit lang: Lang, messages: Messages): PrintDisplayModel = {
+  )(implicit messages: Messages): PrintDisplayModel = {
 
     val personalDetailsModel = personalDetailsModelOpt.getOrElse {
       throw Exceptions.RequiredValueNotDefinedException("createPrintDisplayModel", "personalDetailsModel")
