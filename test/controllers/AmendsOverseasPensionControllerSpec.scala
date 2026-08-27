@@ -17,32 +17,24 @@
 package controllers
 
 import auth.helpers.AuthMocks
-import config.AppConfig
 import constructors.display.DisplayConstructors
 import models.pla.AmendableProtectionType
 import models.pla.request.AmendProtectionRequestStatus
-import org.apache.pekko.actor.ActorSystem
-import org.apache.pekko.stream.Materializer
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito._
+import org.mockito.Mockito.*
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.Environment
-import play.api.i18n.{Lang, Messages}
-import play.api.mvc.{AnyContent, Result}
+import play.api.i18n.Messages
+import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import services.SessionCacheService
-import testHelpers._
+import play.api.test.Helpers.*
+import testHelpers.*
 import testdata.AmendProtectionModelTestData
-import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
-import views.html.pages.amends._
+import views.html.pages.amends.{amendIP14OverseasPensions, amendIP16OverseasPensions}
 import views.html.pages.fallback.technicalError
-import views.html.pages.result.manualCorrespondenceNeeded
 
-import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
 
 class AmendsOverseasPensionControllerSpec
@@ -53,60 +45,32 @@ class AmendsOverseasPensionControllerSpec
     with AuthMocks
     with AmendProtectionModelTestData {
 
-  implicit val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
+  private val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-  implicit val messages: Messages = mcc.messagesApi.preferred(fakeRequest)
+  private val messages: Messages = mcc.messagesApi.preferred(fakeRequest)
 
-  implicit val appConfig: AppConfig           = inject[AppConfig]
-  implicit val system: ActorSystem            = ActorSystem()
-  implicit val mockMaterializer: Materializer = mock[Materializer]
-  implicit val mockLang: Lang                 = mock[Lang]
-  implicit val formWithCSRF: FormWithCSRF     = inject[FormWithCSRF]
-  implicit val ec: ExecutionContext           = inject[ExecutionContext]
+  private val executionContext: ExecutionContext = ExecutionContext.global
 
-  val mockDisplayConstructors: DisplayConstructors = mock[DisplayConstructors]
-  val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
+  private val mockDisplayConstructors: DisplayConstructors = mock[DisplayConstructors]
 
-  val manualCorrespondenceNeededView: manualCorrespondenceNeeded       = inject[manualCorrespondenceNeeded]
-  val amendPsoDetailsView: amendPsoDetails                             = inject[amendPsoDetails]
-  val technicalErrorView: technicalError                               = inject[technicalError]
-  val amendIP16CurrentPensionsView: amendIP16CurrentPensions           = inject[amendIP16CurrentPensions]
-  val amendIP16OverseasPensionsView: amendIP16OverseasPensions         = inject[amendIP16OverseasPensions]
-  val amendIP16PensionsTakenBeforeView: amendIP16PensionsTakenBefore   = inject[amendIP16PensionsTakenBefore]
-  val amendIP16PensionsWorthBeforeView: amendIP16PensionsWorthBefore   = inject[amendIP16PensionsWorthBefore]
-  val amendIP16PensionsTakenBetweenView: amendIP16PensionsTakenBetween = inject[amendIP16PensionsTakenBetween]
-  val amendIP16PensionsUsedBetweenView: amendIP16PensionsUsedBetween   = inject[amendIP16PensionsUsedBetween]
-  val amendIP14CurrentPensionsView: amendIP14CurrentPensions           = inject[amendIP14CurrentPensions]
-  val amendIP14OverseasPensionsView: amendIP14OverseasPensions         = inject[amendIP14OverseasPensions]
-  val amendIP14PensionsTakenBeforeView: amendIP14PensionsTakenBefore   = inject[amendIP14PensionsTakenBefore]
-  val amendIP14PensionsWorthBeforeView: amendIP14PensionsWorthBefore   = inject[amendIP14PensionsWorthBefore]
-  val amendIP14PensionsTakenBetweenView: amendIP14PensionsTakenBetween = inject[amendIP14PensionsTakenBetween]
-  val amendIP14PensionsUsedBetweenView: amendIP14PensionsUsedBetween   = inject[amendIP14PensionsUsedBetween]
-  val removePsoDebitsView: removePsoDebits                             = inject[removePsoDebits]
-  val amendSummaryView: amendSummary                                   = inject[amendSummary]
-
-  val mockEnv: Environment = mock[Environment]
+  private val technicalErrorView: technicalError = inject[technicalError]
+  private val amendIP16OverseasPensionsView      = inject[amendIP16OverseasPensions]
+  private val amendIP14OverseasPensionsView      = inject[amendIP14OverseasPensions]
 
   override def beforeEach(): Unit = {
     super.beforeEach()
 
-    reset(mockSessionCacheService)
     reset(mockDisplayConstructors)
-    reset(mockEnv)
   }
 
-  val controller = new AmendsOverseasPensionController(
+  private val controller = new AmendsOverseasPensionController(
     mockSessionCacheService,
     mcc,
     authActions,
     technicalErrorView,
     amendIP16OverseasPensionsView,
     amendIP14OverseasPensionsView
-  )
-
-  val sessionId: String  = UUID.randomUUID.toString
-  val mockUsername       = "mockuser"
-  val mockUserId: String = "/auth/oid/" + mockUsername
+  )(using executionContext)
 
   "In AmendsOverseasPensionController calling the .amendOverseasPensions action" when {
 
@@ -167,7 +131,7 @@ class AmendsOverseasPensionControllerSpec
         )(fakeRequest)
       val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
 
-      jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.overseasPensions.title")
+      jsoupDoc.body.getElementsByTag("h1").text shouldEqual messages("pla.overseasPensions.title")
     }
 
     "return some HTML that" should {
@@ -322,7 +286,7 @@ class AmendsOverseasPensionControllerSpec
       val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       jsoupDoc.getElementsByClass("govuk-error-message").text should include(
-        Messages("pla.overseasPensions.amount.errors.mandatoryError.IndividualProtection2016")
+        messages("pla.overseasPensions.amount.errors.mandatoryError.IndividualProtection2016")
       )
     }
   }
@@ -418,7 +382,7 @@ class AmendsOverseasPensionControllerSpec
       val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       jsoupDoc.getElementsByClass("govuk-error-message").text should include(
-        Messages("pla.overseasPensions.amount.errors.mandatoryError.IndividualProtection2014")
+        messages("pla.overseasPensions.amount.errors.mandatoryError.IndividualProtection2014")
       )
     }
   }
@@ -514,7 +478,7 @@ class AmendsOverseasPensionControllerSpec
       val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       jsoupDoc.getElementsByClass("govuk-error-message").text should include(
-        Messages("pla.overseasPensions.amount.errors.mandatoryError.IndividualProtection2016LTA")
+        messages("pla.overseasPensions.amount.errors.mandatoryError.IndividualProtection2016LTA")
       )
     }
   }
@@ -610,7 +574,7 @@ class AmendsOverseasPensionControllerSpec
       val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       jsoupDoc.getElementsByClass("govuk-error-message").text should include(
-        Messages("pla.overseasPensions.amount.errors.mandatoryError.IndividualProtection2014LTA")
+        messages("pla.overseasPensions.amount.errors.mandatoryError.IndividualProtection2014LTA")
       )
     }
   }

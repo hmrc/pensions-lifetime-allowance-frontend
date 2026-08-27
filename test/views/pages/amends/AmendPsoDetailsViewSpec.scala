@@ -26,7 +26,6 @@ import play.api.data.Form
 import testHelpers.CommonViewSpecHelper
 import testHelpers.messages.amends.PsoDetailsViewMessages
 import testHelpers.messages.{CommonErrorMessages, CommonMessages}
-import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.amendPsoDetails
 
 class AmendPsoDetailsViewSpec
@@ -35,11 +34,9 @@ class AmendPsoDetailsViewSpec
     with CommonErrorMessages
     with CommonMessages {
 
-  implicit val formWithCSRF: FormWithCSRF = inject[FormWithCSRF]
+  private val view: amendPsoDetails = inject[amendPsoDetails]
 
-  val view: amendPsoDetails = inject[amendPsoDetails]
-
-  val form: Form[AmendPsoDetailsModel] = AmendPsoDetailsForm
+  private val form: Form[AmendPsoDetailsModel] = AmendPsoDetailsForm
     .amendPsoDetailsForm(IndividualProtection2016)
     .bind(
       Map(
@@ -50,9 +47,9 @@ class AmendPsoDetailsViewSpec
       )
     )
 
-  val doc: Document = Jsoup.parse(view(form, IndividualProtection2016, Open, existingPso = true).body)
+  private val doc: Document = Jsoup.parse(view(form, IndividualProtection2016, Open, existingPso = true).body)
 
-  val errorForm: Form[AmendPsoDetailsModel] = AmendPsoDetailsForm
+  private val errorForm: Form[AmendPsoDetailsModel] = AmendPsoDetailsForm
     .amendPsoDetailsForm(IndividualProtection2016)
     .bind(
       Map(
@@ -63,10 +60,10 @@ class AmendPsoDetailsViewSpec
       )
     )
 
-  val errorDoc: Document =
+  private val errorDoc: Document =
     Jsoup.parse(view.apply(errorForm, IndividualProtection2016, Open, existingPso = false).body)
 
-  val pageTitle = s"$plaPsoDetailsTitle - $plaBaseAppName - GOV.UK"
+  private val pageTitle = s"$plaPsoDetailsTitle - $plaBaseAppName - GOV.UK"
 
   "the AmendPsoDetailsView" should {
     "have the correct title" in {

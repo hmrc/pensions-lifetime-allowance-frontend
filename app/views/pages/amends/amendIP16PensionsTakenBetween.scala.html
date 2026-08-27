@@ -14,14 +14,16 @@
  * limitations under the License.
  *@
 
-@import play.api.data._
+@import play.api.data.Field
 @import models.amend.value.AmendPensionsTakenBetweenModel
 @import models.pla.AmendableProtectionType
 @import models.pla.request.AmendProtectionRequestStatus
 
+@import uk.gov.hmrc.govukfrontend.views.html.components.{RadioItem, Text, FormWithCSRF}
+
 @this(
     layout: Layout,
-    form: uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF,
+    form: FormWithCSRF,
     errorSummary: playHelpers.templates.errorSummary,
     plaInputRadioGroup: playHelpers.templates.plaInputRadioGroup,
     submitButton: playHelpers.templates.submitButton
@@ -31,7 +33,7 @@
     amendPensionsTakenBetweenForm: Form[AmendPensionsTakenBetweenModel],
     protectionType: AmendableProtectionType,
     status: AmendProtectionRequestStatus
-)(implicit request: RequestHeader, messages: Messages)
+)(using request: RequestHeader, messages: Messages)
 
 @title = @{
     if(amendPensionsTakenBetweenForm.errors.nonEmpty){
@@ -47,21 +49,21 @@
 
     @errorSummary(amendPensionsTakenBetweenForm.errors)
 
-    <h1 class="govuk-heading-l">@Messages("pla.pensionsTakenBetween.title")</h1>
+    <h1 class="govuk-heading-l">@messages("pla.pensionsTakenBetween.title")</h1>
 
     @form(action = routes.AmendsPensionTakenBetweenController.submitAmendPensionsTakenBetween(protectionType, status)) {
         @plaInputRadioGroup(
-            legend = Messages("pla.pensionsTakenBetween.title"),
+            legend = messages("pla.pensionsTakenBetween.title"),
             legendClass = Some("govuk-visually-hidden govuk-!-display-block"),
             items = Seq(
-                RadioItem(content = Text(Messages("pla.base.yes")), value = Option("yes")),
-                RadioItem(content = Text(Messages("pla.base.no")), value = Option("no"))
+                RadioItem(content = Text(messages("pla.base.yes")), value = Option("yes")),
+                RadioItem(content = Text(messages("pla.base.no")), value = Option("no"))
             ),
             isPageHeading = false,
             inLine = true,
             field = amendPensionsTakenBetweenForm("amendedPensionsTakenBetween")
         )
 
-        @submitButton(submitText = Messages("pla.base.change"))
+        @submitButton(submitText = messages("pla.base.change"))
     }
 }

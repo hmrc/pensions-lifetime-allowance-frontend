@@ -16,32 +16,26 @@
 
 package controllers
 
-import config._
 import auth.helpers.AuthMocks
-import models._
+import models.*
 import models.amend.AmendProtectionModel
 import models.pla.AmendableProtectionType
 import models.pla.request.AmendProtectionRequestStatus
 import models.pla.response.ProtectionStatus.Dormant
 import models.pla.response.ProtectionType.IndividualProtection2016
-import org.apache.pekko.actor.ActorSystem
-import org.apache.pekko.stream.Materializer
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.mockito.ArgumentMatchers.{any, eq => eqTo}
-import org.mockito.Mockito._
-import org.scalatest.BeforeAndAfterEach
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.*
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.Environment
 import play.api.http.HeaderNames.CACHE_CONTROL
-import play.api.i18n.{Lang, Messages}
-import play.api.mvc.{AnyContent, Result}
+import play.api.i18n.Messages
+import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import services.SessionCacheService
-import testHelpers._
-import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
-import views.html.pages.amends._
+import testHelpers.*
+import views.html.pages.amends.*
 import views.html.pages.fallback.technicalError
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -50,41 +44,28 @@ class AmendsRemovePensionSharingOrderControllerSpec
     extends FakeApplication
     with MockitoSugar
     with MockSessionCacheService
-    with BeforeAndAfterEach
     with AuthMocks {
 
-  implicit val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
+  private val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-  implicit val messages: Messages = mcc.messagesApi.preferred(fakeRequest)
+  private val messages: Messages = mcc.messagesApi.preferred(fakeRequest)
 
-  implicit val mockAppConfig: AppConfig   = inject[AppConfig]
-  implicit val system: ActorSystem        = ActorSystem()
-  implicit val materializer: Materializer = mock[Materializer]
-  implicit val mockLang: Lang             = mock[Lang]
-  implicit val formWithCSRF: FormWithCSRF = inject[FormWithCSRF]
-  implicit val ec: ExecutionContext       = inject[ExecutionContext]
+  private val executionContext: ExecutionContext = ExecutionContext.global
 
   override val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
 
-  val technicalErrorView: technicalError   = inject[technicalError]
-  val removePsoDebitsView: removePsoDebits = inject[removePsoDebits]
-  val mockEnv: Environment                 = mock[Environment]
+  private val technicalErrorView: technicalError   = inject[technicalError]
+  private val removePsoDebitsView: removePsoDebits = inject[removePsoDebits]
 
-  override def beforeEach(): Unit = {
-    reset(mockSessionCacheService)
-    reset(mockEnv)
-    super.beforeEach()
-  }
-
-  val controller = new AmendsRemovePensionSharingOrderController(
+  private val controller = new AmendsRemovePensionSharingOrderController(
     mockSessionCacheService,
     mcc,
     authActions,
     technicalErrorView,
     removePsoDebitsView
-  )
+  )(using executionContext)
 
-  val individualProtection2016 = ProtectionModel(
+  private val individualProtection2016 = ProtectionModel(
     psaCheckReference = "testPSARef",
     identifier = 12345,
     sequenceNumber = 1,
@@ -101,12 +82,12 @@ class AmendsRemovePensionSharingOrderControllerSpec
     protectionReference = Some("PSA123456")
   )
 
-  val amendIndividualProtection2016: AmendProtectionModel =
+  private val amendIndividualProtection2016: AmendProtectionModel =
     AmendProtectionModel.tryFromProtection(individualProtection2016).get
 
-  val pensionDebit = PensionDebitModel(DateModel.of(2016, 12, 23), 1000.0)
+  private val pensionDebit = PensionDebitModel(DateModel.of(2016, 12, 23), 1000.0)
 
-  val amendIndividualProtection2016WithPso: AmendProtectionModel =
+  private val amendIndividualProtection2016WithPso: AmendProtectionModel =
     amendIndividualProtection2016.withPensionDebit(Some(pensionDebit))
 
   "Removing a recently added PSO" when {
@@ -133,7 +114,7 @@ class AmendsRemovePensionSharingOrderControllerSpec
         )
       val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
 
-      jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+      jsoupDoc.body.getElementsByTag("h1").text shouldEqual messages("pla.techError.pageHeading")
       jsoupDoc.body
         .getElementById("tryAgainLink")
         .attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections}"
@@ -180,7 +161,7 @@ class AmendsRemovePensionSharingOrderControllerSpec
 
       val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
 
-      jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
+      jsoupDoc.body.getElementsByTag("h1").text shouldEqual messages("pla.psoDetails.title")
     }
 
     "return 500 if the an amend protection model could not be retrieved from cache" in {
@@ -231,7 +212,7 @@ class AmendsRemovePensionSharingOrderControllerSpec
 
       verify(mockSessionCacheService).saveAmendProtectionModel(
         eqTo(amendIndividualProtection2016)
-      )(any())
+      )(using any())
     }
   }
 

@@ -52,13 +52,13 @@ object FakeRequests {
     val fakeRequest: FakeRequest[AnyContentAsFormUrlEncoded] =
       FakeRequest("POST", "/check-your-pension-protections-and-enhancements/" + url)
         .withSession(SessionKeys.sessionId -> s"session-$sessionId")
-        .withFormUrlEncodedBody(data: _*)
+        .withFormUrlEncodedBody(data*)
         .withMethod("POST")
 
     controllerAction(fakeRequest)
   }
 
   def authorisedPost(controllerAction: Action[AnyContent], data: (String, String)*): Future[Result] =
-    controllerAction(authenticatedFakeRequest().withFormUrlEncodedBody(data: _*).withMethod("POST"))
+    controllerAction(authenticatedFakeRequest().withFormUrlEncodedBody(data*).withMethod("POST"))
 
 }

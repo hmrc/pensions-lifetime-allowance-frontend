@@ -16,7 +16,7 @@
 
 package constructors.display
 
-import common._
+import common.*
 import enums.ApplicationStage
 import models.amend.AmendProtectionModel
 import models.display.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel}
@@ -28,7 +28,7 @@ object AmendDisplayModelConstructor extends Logging {
 
   def createAmendDisplayModel(
       model: AmendProtectionModel
-  )(implicit messages: Messages): AmendDisplayModel = {
+  )(using Messages): AmendDisplayModel = {
     val amended = model.hasChanges
 
     val totalAmount = Display.currencyDisplayString(BigDecimal(model.updatedRelevantAmount))
@@ -51,14 +51,12 @@ object AmendDisplayModelConstructor extends Logging {
     )
   }
 
-  private def createPreviousPsoSection(model: AmendProtectionModel)(
-      implicit messages: Messages
-  ): AmendDisplaySectionModel =
+  private def createPreviousPsoSection(model: AmendProtectionModel)(using Messages): AmendDisplaySectionModel =
     createNoChangeSection(ApplicationStage.CurrentPsos, model.pensionDebitTotalAmount)
 
   private def createCurrentPsoSection(
       model: AmendProtectionModel
-  )(implicit messages: Messages): Option[Seq[AmendDisplaySectionModel]] =
+  )(using Messages): Option[Seq[AmendDisplaySectionModel]] =
     model.updated.pensionDebit.map { pensionDebit =>
       val psoAmendCall  = Helpers.createAmendCall(model, ApplicationStage.CurrentPsos)
       val psoRemoveCall = Helpers.createPsoRemoveCall(model)
@@ -80,7 +78,7 @@ object AmendDisplayModelConstructor extends Logging {
 
   private def createAmendPensionContributionSectionsFromProtection(
       protection: AmendProtectionModel
-  )(implicit messages: Messages): Seq[AmendDisplaySectionModel] = {
+  )(using Messages): Seq[AmendDisplaySectionModel] = {
     val currentPensionsSection = createCurrentPensionsSection(protection, ApplicationStage.CurrentPensions)
     val pensionsTakenBeforeSection = createSection(
       protection,
@@ -208,7 +206,7 @@ object AmendDisplayModelConstructor extends Logging {
       amountOption: Option[Double],
       displayYesNoOnly: Boolean = false,
       displayAmountOnly: Boolean = false
-  )(implicit messages: Messages): AmendDisplaySectionModel = {
+  )(using Messages): AmendDisplaySectionModel = {
     val amendCall = Helpers.createAmendCall(protection, applicationStage)
 
     createYesNoSection(applicationStage.toString, Some(amendCall), amountOption, displayYesNoOnly, displayAmountOnly)
@@ -217,7 +215,7 @@ object AmendDisplayModelConstructor extends Logging {
   private def createNoChangeSection(
       applicationStage: ApplicationStage,
       amountOption: Option[Double]
-  )(implicit messages: Messages): AmendDisplaySectionModel =
+  )(using Messages): AmendDisplaySectionModel =
     createNoChangeYesNoSection(applicationStage.toString, amountOption)
 
   private def createCurrentPensionsSection(
@@ -240,18 +238,18 @@ object AmendDisplayModelConstructor extends Logging {
   }
 
   private def createNoChangeYesNoSection(stage: String, amountOption: Option[Double])(
-      implicit messages: Messages
+      using messages: Messages
   ): AmendDisplaySectionModel =
     amountOption.fold(
-      AmendDisplaySectionModel(stage, Seq(AmendDisplayRowModel("YesNo", None, None, Messages("pla.base.no"))))
+      AmendDisplaySectionModel(stage, Seq(AmendDisplayRowModel("YesNo", None, None, messages("pla.base.no"))))
     )(amt =>
       if (amt < 0.01) {
-        AmendDisplaySectionModel(stage, Seq(AmendDisplayRowModel("YesNo", None, None, Messages("pla.base.no"))))
+        AmendDisplaySectionModel(stage, Seq(AmendDisplayRowModel("YesNo", None, None, messages("pla.base.no"))))
       } else {
         AmendDisplaySectionModel(
           stage,
           Seq(
-            AmendDisplayRowModel("YesNo", None, None, Messages("pla.base.yes")),
+            AmendDisplayRowModel("YesNo", None, None, messages("pla.base.yes")),
             AmendDisplayRowModel("Amt", None, None, Display.currencyDisplayString(amt))
           )
         )
@@ -264,24 +262,24 @@ object AmendDisplayModelConstructor extends Logging {
       amountOption: Option[Double],
       displayYesNoOnly: Boolean,
       displayAmountOnly: Boolean
-  )(implicit messages: Messages): AmendDisplaySectionModel =
+  )(using messages: Messages): AmendDisplaySectionModel =
     amountOption.fold(
       AmendDisplaySectionModel(
         stage,
-        Seq(AmendDisplayRowModel("YesNo", amendCall, removeLinkCall = None, Messages("pla.base.no")))
+        Seq(AmendDisplayRowModel("YesNo", amendCall, removeLinkCall = None, messages("pla.base.no")))
       )
     )(amt =>
       if (amt < 0.01) {
         AmendDisplaySectionModel(
           stage,
-          Seq(AmendDisplayRowModel("YesNo", amendCall, removeLinkCall = None, Messages("pla.base.no")))
+          Seq(AmendDisplayRowModel("YesNo", amendCall, removeLinkCall = None, messages("pla.base.no")))
         )
       } else {
         if (displayYesNoOnly) {
           AmendDisplaySectionModel(
             stage,
             Seq(
-              AmendDisplayRowModel("YesNo", amendCall, removeLinkCall = None, Messages("pla.base.yes"))
+              AmendDisplayRowModel("YesNo", amendCall, removeLinkCall = None, messages("pla.base.yes"))
             )
           )
         } else if (displayAmountOnly) {
@@ -295,7 +293,7 @@ object AmendDisplayModelConstructor extends Logging {
           AmendDisplaySectionModel(
             stage,
             Seq(
-              AmendDisplayRowModel("YesNo", amendCall, removeLinkCall = None, Messages("pla.base.yes")),
+              AmendDisplayRowModel("YesNo", amendCall, removeLinkCall = None, messages("pla.base.yes")),
               AmendDisplayRowModel("Amt", amendCall, removeLinkCall = None, Display.currencyDisplayString(amt))
             )
           )

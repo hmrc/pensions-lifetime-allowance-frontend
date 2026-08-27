@@ -14,16 +14,15 @@
  * limitations under the License.
  *@
 
-@(field: play.api.data.Field, args: (Symbol,Any)*)(implicit messages: Messages)
+@import play.api.i18n.*
+@import views.html.helper.*
 
-@import play.api.i18n._
-@import views.html.helper._
-
+@(field: play.api.data.Field, args: (Symbol,Any)*)(using messages: Messages)
 
 @elements = @{ new FieldElements(field.id, field, null, args.toMap, messages) }
 @parentField = @{args.toMap.get(Symbol("parentField")).asInstanceOf[Option[Field]]}
 @parentElements = @{parentField.map(pf => new FieldElements(pf.id, pf, null, Map(), messages) )}
-@value = @{ field.value match { case Some(x) => x case None => "" case x => x }}
+@value = @{ field.value match { case Some(x) => x case None => "" }}
 @labelAfter = @{ elements.args.getOrElse(Symbol("_labelAfter"), false).asInstanceOf[Boolean] }
 @labelHighlight = @{ elements.args.getOrElse(Symbol("_labelHighlight"), false).asInstanceOf[Boolean] }
 
@@ -45,7 +44,7 @@
 }
 
     @if(parentElements.isDefined) {
-        @parentElements.get.errors.map { error => <span class="error-notification">@Messages(error.toString)</span>}
+        @parentElements.get.errors.map { error => <span class="error-notification">@messages(error.toString)</span>}
     }
 
     @if(!labelAfter && elements.args.contains(Symbol("_label"))) {

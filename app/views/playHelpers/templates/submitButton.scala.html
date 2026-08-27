@@ -14,9 +14,11 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.govukfrontend.views.html.components.{GovukButton, Button, Text}
+
 @this(govukButton : GovukButton)
 
-@(submitText: String = "pla.base.continue")(implicit messages: Messages)
+@(submitText: String = "pla.base.continue")(using messages: Messages)
 
 @govukButton(Button(
     content = Text(messages(submitText)),

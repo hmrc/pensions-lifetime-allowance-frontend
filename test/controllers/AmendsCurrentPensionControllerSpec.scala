@@ -17,71 +17,48 @@
 package controllers
 
 import auth.helpers.AuthMocks
-import config._
 import models.pla.AmendableProtectionType
 import models.pla.request.AmendProtectionRequestStatus
-import org.apache.pekko.actor.ActorSystem
-import org.apache.pekko.stream.Materializer
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito._
-import org.scalatest.BeforeAndAfterEach
-import org.scalatestplus.mockito.MockitoSugar
-import play.api.Environment
-import play.api.i18n.{Lang, Messages}
-import play.api.mvc.AnyContent
+import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
+import play.api.test.Helpers.*
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
 import services.SessionCacheService
-import testHelpers._
+import testHelpers.*
 import testdata.AmendProtectionModelTestData
-import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
-import views.html.pages.amends._
+import views.html.pages.amends.*
 import views.html.pages.fallback.technicalError
 
 import scala.concurrent.ExecutionContext
 
 class AmendsCurrentPensionControllerSpec
     extends FakeApplication
-    with MockitoSugar
     with MockSessionCacheService
-    with BeforeAndAfterEach
     with AuthMocks
     with AmendProtectionModelTestData {
 
-  implicit val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
+  private val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-  implicit val mockMessage: Messages = mcc.messagesApi.preferred(fakeRequest)
+  private val messages: Messages = mcc.messagesApi.preferred(fakeRequest)
 
-  implicit val appConfig: AppConfig           = inject[AppConfig]
-  implicit val system: ActorSystem            = ActorSystem()
-  implicit val mockMaterializer: Materializer = mock[Materializer]
-  implicit val mockLang: Lang                 = mock[Lang]
-  implicit val formWithCSRF: FormWithCSRF     = inject[FormWithCSRF]
-  implicit val ec: ExecutionContext           = inject[ExecutionContext]
+  private val executionContext: ExecutionContext = inject[ExecutionContext]
 
-  val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
-  val mockEnv: Environment                         = mock[Environment]
+  override val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
 
-  val technicalErrorView: technicalError                     = inject[technicalError]
-  val amendIP16CurrentPensionsView: amendIP16CurrentPensions = inject[amendIP16CurrentPensions]
-  val amendIP14CurrentPensionsView: amendIP14CurrentPensions = inject[amendIP14CurrentPensions]
+  private val technicalErrorView: technicalError                     = inject[technicalError]
+  private val amendIP16CurrentPensionsView: amendIP16CurrentPensions = inject[amendIP16CurrentPensions]
+  private val amendIP14CurrentPensionsView: amendIP14CurrentPensions = inject[amendIP14CurrentPensions]
 
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-
-    reset(mockSessionCacheService)
-    reset(mockEnv)
-  }
-
-  val controller = new AmendsCurrentPensionController(
+  private val controller = new AmendsCurrentPensionController(
     mockSessionCacheService,
     mcc,
     authActions,
     technicalErrorView,
     amendIP16CurrentPensionsView,
     amendIP14CurrentPensionsView
-  )
+  )(using executionContext)
 
   "Calling the .amendCurrentPensions action" when {
 
@@ -115,7 +92,7 @@ class AmendsCurrentPensionControllerSpec
 
       status(result) shouldBe 200
 
-      jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.currentPensions.title")
+      jsoupDoc.body.getElementsByTag("h1").text shouldEqual messages("pla.currentPensions.title")
     }
 
     "return some HTML that" should {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package utils
+package util
 
-import java.time.LocalDate
+import play.api.http.Status.NO_CONTENT
 
-object Constants {
+trait MockedAudit {
 
-  val maximumCurrencyAmount: Double                 = 1_000_000_000
-  val minIndividualProtection2014PsoDate: LocalDate = LocalDate.of(2014, 4, 5)
-  val minIndividualProtection2016PsoDate: LocalDate = LocalDate.of(2016, 4, 5)
+  self: IntegrationBaseSpec =>
 
-  val fixedProtection2016FixedAmount: Double = 1_250_000
+  override def beforeEach(): Unit = {
+    resetWiremock()
+    stubPost("/write/audit/merged", NO_CONTENT, "")
+    stubPost("/write/audit", NO_CONTENT, "")
+  }
 
 }

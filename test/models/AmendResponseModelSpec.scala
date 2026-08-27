@@ -20,15 +20,15 @@ import models.NotificationId.NotificationId7
 import models.pla.response.{AmendProtectionResponseStatus, ProtectionStatus, ProtectionType}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import testdata.PlaConnectorTestData._
+import testdata.PlaConnectorTestData.*
 
 class AmendResponseModelSpec extends AnyWordSpec with Matchers {
 
-  val amendResponseModel = AmendResponseModel(
+  private val amendResponseModel = AmendResponseModel(
     psaCheckReference = "testPSARef",
     identifier = lifetimeAllowanceIdentifier,
     sequenceNumber = lifetimeAllowanceSequenceNumber + 1,
-    protectionType = AmendedProtectionType.IndividualProtection2014,
+    protectionType = AmendResponseProtectionType.IndividualProtection2014,
     certificateDate = Some(DateModel.of(2025, 7, 15)),
     certificateTime = Some(TimeModel.of(17, 43, 12)),
     status = AmendProtectionResponseStatus.Dormant,
@@ -44,7 +44,7 @@ class AmendResponseModelSpec extends AnyWordSpec with Matchers {
     pensionDebitTotalAmount = Some(40_000)
   )
 
-  val protectionModel = ProtectionModel(
+  private val protectionModel = ProtectionModel(
     psaCheckReference = "fixedPsaRef",
     identifier = 10101,
     sequenceNumber = 20202,
@@ -96,8 +96,8 @@ class AmendResponseModelSpec extends AnyWordSpec with Matchers {
 
   "combineWithFixedProtection2016" should {
     val fixedProtectionTypes = Seq(
-      ProtectionType.FixedProtection2016    -> AmendedProtectionType.FixedProtection2016,
-      ProtectionType.FixedProtection2016LTA -> AmendedProtectionType.FixedProtection2016LTA
+      ProtectionType.FixedProtection2016    -> AmendResponseProtectionType.FixedProtection2016,
+      ProtectionType.FixedProtection2016LTA -> AmendResponseProtectionType.FixedProtection2016LTA
     )
     "return Some with correct fields" when
       fixedProtectionTypes.foreach { case (protectionType, amendedProtectionType) =>

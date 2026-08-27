@@ -22,14 +22,14 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import testHelpers.CommonViewSpecHelper
 import testHelpers.messages.amends.OutcomeAmendedViewMessages
-import testdata.AmendProtectionDisplayModelTestData._
+import testdata.AmendProtectionDisplayModelTestData.*
 import views.html.pages.amends.amendOutcomeNoNotificationId
 
 class AmendOutcomeNoNotificationIdViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewMessages {
 
-  val view: amendOutcomeNoNotificationId = inject[amendOutcomeNoNotificationId]
+  private val view: amendOutcomeNoNotificationId = inject[amendOutcomeNoNotificationId]
 
-  def parseDocument(amendResultDisplayModel: AmendOutcomeDisplayModelNoNotificationId): Document =
+  private def parseDocument(amendResultDisplayModel: AmendOutcomeDisplayModelNoNotificationId): Document =
     Jsoup.parse(view(amendResultDisplayModel).body)
 
   "amendOutcome" when {

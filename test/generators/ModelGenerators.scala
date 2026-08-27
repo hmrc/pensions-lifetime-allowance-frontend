@@ -48,10 +48,10 @@ trait ModelGenerators extends ScalaCheckDrivenPropertyChecks {
   val protectionRecordGen: Gen[ProtectionRecord] = for {
     identifier                                <- intGen
     sequenceNumber                            <- intGen
-    protectionType                            <- Gen.oneOf(ProtectionType.values)
+    protectionType                            <- Gen.oneOf(ProtectionType.values.toSeq)
     certificateDate                           <- dateGen
     certificateTime                           <- timeGen
-    status                                    <- Gen.oneOf(ProtectionStatus.values)
+    status                                    <- Gen.oneOf(ProtectionStatus.values.toSeq)
     protectionReference                       <- Gen.option(Gen.alphaStr)
     relevantAmount                            <- Gen.option(intGen)
     preADayPensionInPaymentAmount             <- Gen.option(intGen)

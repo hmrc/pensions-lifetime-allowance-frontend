@@ -14,14 +14,13 @@
  * limitations under the License.
  *@
 
-@(field: play.api.data.Field, args: (Symbol,Any)*)(implicit messages: Messages)
+@(field: play.api.data.Field, args: (Symbol,Any)*)(using messages: Messages)
 
-@import play.api.i18n._
-@import views.html.helper._
+@import views.html.helper.*
 
 
-@elements = @{ new FieldElements(field.id, field, null, args.toMap, messages) }
-@value = @{ field.value match { case Some(x) => x case None => "" case x => x }}
+@elements = @{ FieldElements(field.id, field, null, args.toMap, messages) }
+@value = @{ field.value match { case Some(x) => x case None => "" }}
 @labelAfter = @{ elements.args.getOrElse(Symbol("_labelAfter"), false).asInstanceOf[Boolean] }
 @labelHighlight = @{ elements.args.getOrElse(Symbol("_labelHighlight"), false).asInstanceOf[Boolean] }
 

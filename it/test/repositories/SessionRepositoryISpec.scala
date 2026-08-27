@@ -25,7 +25,7 @@ import org.scalatest.wordspec.AnyWordSpec
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{Json, OFormat}
-import play.api.mvc.AnyContent
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.mongo.TimestampSupport
@@ -33,7 +33,7 @@ import uk.gov.hmrc.mongo.cache.DataKey
 import uk.gov.hmrc.mongo.test.{CleanMongoCollectionSupport, MongoSupport}
 
 import java.util.UUID
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext
 
 class SessionRepositoryISpec
     extends AnyWordSpec
@@ -47,32 +47,33 @@ class SessionRepositoryISpec
     .configure("mongodb.uri" -> mongoUri)
     .build()
 
-  implicit val pensionsTakenModelFormat: OFormat[PensionDebitModel] = Json.format[PensionDebitModel]
+  private val pensionsTakenModelFormat: OFormat[PensionDebitModel] = Json.format[PensionDebitModel]
 
-  val repository = new SessionRepository(mongoComponent, inject[AppConfig], inject[TimestampSupport])
+  private val executionContext: ExecutionContext = ExecutionContext.global
 
-  val session1: String                      = UUID.randomUUID.toString
-  val session2: String                      = UUID.randomUUID.toString
-  val userRequest: FakeRequest[AnyContent]      = FakeRequest().withSession(SessionKeys.sessionId -> session1)
-  val otherUserRequest: FakeRequest[AnyContent] = FakeRequest().withSession(SessionKeys.sessionId -> session2)
+  private val repository = new SessionRepository(mongoComponent, inject[AppConfig], inject[TimestampSupport])(using executionContext)
 
-  val testAnswerKey: DataKey[PensionDebitModel] = DataKey[PensionDebitModel]("pensionsTaken")
-  val testAnswer: PensionDebitModel             = PensionDebitModel(DateModel.of(2025, 12, 5), 200)
-  val testOldAnswer: PensionDebitModel          = PensionDebitModel(DateModel.of(2024, 11, 23), 599)
-  val testCacheMap: CacheMap      = CacheMap(session1, Map(testAnswerKey.unwrap -> Json.toJson(testAnswer)))
-  val testOtherCacheMap: CacheMap = CacheMap(session2, Map(testAnswerKey.unwrap -> Json.toJson(testAnswer)))
+  private val session1: String                      = UUID.randomUUID.toString
+  private val session2: String                      = UUID.randomUUID.toString
+  private val userRequest: FakeRequest[AnyContentAsEmpty.type]      = FakeRequest().withSession(SessionKeys.sessionId -> session1)
+  private val otherUserRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(SessionKeys.sessionId -> session2)
+
+  private val testAnswerKey: DataKey[PensionDebitModel] = DataKey[PensionDebitModel]("pensionsTaken")
+  private val testAnswer: PensionDebitModel             = PensionDebitModel(DateModel.of(2025, 12, 5), 200)
+  private val testOldAnswer: PensionDebitModel          = PensionDebitModel(DateModel.of(2024, 11, 23), 599)
+  private val testCacheMap: CacheMap      = CacheMap(session1, Map(testAnswerKey.unwrap -> Json.toJson(testAnswer)))
 
   "putInSession" must {
     "successfully store data" in {
-      val res = repository.putInSession(testAnswerKey, testAnswer)(pensionsTakenModelFormat, userRequest, global)
+      val res = repository.putInSession(testAnswerKey, testAnswer)(using pensionsTakenModelFormat, userRequest)
 
       res.futureValue shouldBe testCacheMap
     }
 
     "successfully overwrite existing data" in {
-      repository.putInSession(testAnswerKey, testOldAnswer)(pensionsTakenModelFormat, userRequest, global).futureValue
+      repository.putInSession(testAnswerKey, testOldAnswer)(using pensionsTakenModelFormat, userRequest).futureValue
 
-      val res = repository.putInSession(testAnswerKey, testAnswer)(pensionsTakenModelFormat, userRequest, global)
+      val res = repository.putInSession(testAnswerKey, testAnswer)(using pensionsTakenModelFormat, userRequest)
 
       res.futureValue shouldBe testCacheMap
     }
@@ -81,7 +82,7 @@ class SessionRepositoryISpec
   "getFromSession" must {
     "return None when no data for this session exists" in {
       repository
-        .putInSession(testAnswerKey, testAnswer)(pensionsTakenModelFormat, otherUserRequest, global)
+        .putInSession(testAnswerKey, testAnswer)(using pensionsTakenModelFormat, otherUserRequest)
         .futureValue
 
       val res = repository.getFromSession(testAnswerKey)(pensionsTakenModelFormat, userRequest)
@@ -91,9 +92,9 @@ class SessionRepositoryISpec
 
     "successfully return existing data" in {
       repository
-        .putInSession(testAnswerKey, testAnswer)(pensionsTakenModelFormat, otherUserRequest, global)
+        .putInSession(testAnswerKey, testAnswer)(using pensionsTakenModelFormat, otherUserRequest)
         .futureValue
-      repository.putInSession(testAnswerKey, testAnswer)(pensionsTakenModelFormat, userRequest, global).futureValue
+      repository.putInSession(testAnswerKey, testAnswer)(using pensionsTakenModelFormat, userRequest).futureValue
 
       val res = repository.getFromSession(testAnswerKey)(pensionsTakenModelFormat, userRequest)
 
@@ -104,11 +105,11 @@ class SessionRepositoryISpec
   "clearSession" must {
     "successfully remove session of a user" in {
       repository
-        .putInSession(testAnswerKey, testAnswer)(pensionsTakenModelFormat, otherUserRequest, global)
+        .putInSession(testAnswerKey, testAnswer)(using pensionsTakenModelFormat, otherUserRequest)
         .futureValue
-      repository.putInSession(testAnswerKey, testAnswer)(pensionsTakenModelFormat, userRequest, global).futureValue
+      repository.putInSession(testAnswerKey, testAnswer)(using pensionsTakenModelFormat, userRequest).futureValue
 
-      repository.clearSession(userRequest).futureValue
+      repository.clearSession()(using userRequest).futureValue
 
       repository
         .getFromSession[PensionDebitModel](testAnswerKey)(pensionsTakenModelFormat, userRequest)

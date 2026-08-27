@@ -21,11 +21,11 @@ import org.jsoup.nodes.{Document, Element}
 import org.scalatest.Assertion
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.{Messages, MessagesApi}
-import play.api.mvc.{AnyContent, MessagesControllerComponents, Result}
+import play.api.mvc.{AnyContentAsEmpty, MessagesControllerComponents, Result}
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.twirl.api.Html
-import testHelpers._
+import testHelpers.*
 import views.html.pages.applicationClosed.applicationClosed2014
 import views.html.pages.applicationClosed.applicationClosed2016
 
@@ -33,25 +33,25 @@ import scala.concurrent.Future
 
 class ApplicationClosedControllerSpec extends FakeApplication with MockitoSugar {
 
-  val mcc: MessagesControllerComponents = inject[MessagesControllerComponents]
+  private val mcc: MessagesControllerComponents = inject[MessagesControllerComponents]
 
-  implicit val view2014: applicationClosed2014 = inject[applicationClosed2014]
-  implicit val view2016: applicationClosed2016 = inject[applicationClosed2016]
+  private val view2014: applicationClosed2014 = inject[applicationClosed2014]
+  private val view2016: applicationClosed2016 = inject[applicationClosed2016]
 
-  val controller                                = new ApplicationClosedController(mcc, view2014, view2016)
-  implicit val request: FakeRequest[AnyContent] = FakeRequest("GET", "/")
+  private val controller = new ApplicationClosedController(mcc, view2014, view2016)
+  private val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/")
 
-  implicit val messages: Messages = inject[MessagesApi].preferred(request)
+  private val messages: Messages = inject[MessagesApi].preferred(fakeRequest)
 
   "Application closed controller" should {
     "should show application closed page for 2014" in {
-      val result = controller.showApplicationClosed2014()(request)
-      contentAsString(result) should include(view2014().body)
+      val result = controller.showApplicationClosed2014()(fakeRequest)
+      contentAsString(result) should include(view2014()(using fakeRequest, messages).body)
     }
 
     "should show application closed page for 2016" in {
-      val result = controller.showApplicationClosed2016()(request)
-      contentAsString(result) should include(view2016().body)
+      val result = controller.showApplicationClosed2016()(fakeRequest)
+      contentAsString(result) should include(view2016()(using fakeRequest, messages).body)
     }
   }
 
@@ -72,7 +72,7 @@ class ApplicationClosedControllerSpec extends FakeApplication with MockitoSugar 
           controller.showApplicationClosed2014()(
             FakeRequest(GET, s"/check-your-pension-protections-and-enhancements$path")
           ),
-          view2014()
+          view2014()(using fakeRequest, messages)
         )
     }
 
@@ -95,7 +95,7 @@ class ApplicationClosedControllerSpec extends FakeApplication with MockitoSugar 
           controller.showApplicationClosed2016()(
             FakeRequest(GET, s"/check-your-pension-protections-and-enhancements$path")
           ),
-          view2016()
+          view2016()(using fakeRequest, messages)
         )
     }
 

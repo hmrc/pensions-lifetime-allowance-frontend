@@ -17,23 +17,23 @@
 import connectors.IdentityVerificationConnector
 import play.api.{Application, Configuration}
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.mvc.Http.Status.NOT_FOUND
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
-import utils.{IntegrationBaseSpec, MockedAudit, WiremockHelper}
+import util.{IntegrationBaseSpec, MockedAudit, WiremockHelper}
 
-class IdentityVerificationConnectorSpec extends IntegrationBaseSpec with MockedAudit {
+class IdentityVerificationConnectorISpec extends IntegrationBaseSpec with MockedAudit {
 
-  override implicit lazy val app: Application = new GuiceApplicationBuilder()
+  override lazy val app: Application = new GuiceApplicationBuilder()
     .configure(defaultConfiguration)
     .configure(Configuration("microservice.services.identity-verification.port" -> WiremockHelper.wiremockPort))
     .build()
 
-  implicit val hc: HeaderCarrier = HeaderCarrier()
+  private given HeaderCarrier = HeaderCarrier()
 
-  val missingJourneyId = "1234aa56-7a8a-901a-23aa-aa4a56a78aa9"
+  private val missingJourneyId = "1234aa56-7a8a-901a-23aa-aa4a56a78aa9"
 
-  val identityVerificationConnector: IdentityVerificationConnector = app.injector.instanceOf[IdentityVerificationConnector]
+  private val identityVerificationConnector: IdentityVerificationConnector = app.injector.instanceOf[IdentityVerificationConnector]
 
   "IdentityVerificationConnector" should {
     "throw an UpstreamErrorResponse with a statusCode of NOT_FOUND" when {

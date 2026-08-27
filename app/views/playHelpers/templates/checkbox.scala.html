@@ -14,10 +14,10 @@
  * limitations under the License.
  *@
 
-@(field: Field, checkboxOptions: Seq[(String, String)], args: (Symbol, Any)*)(implicit messages: Messages)
+@import play.api.i18n.*
+@import views.html.helper.*
 
-@import play.api.i18n._
-@import views.html.helper._
+@(field: Field, checkboxOptions: Seq[(String, String)], args: (Symbol, Any)*)(using messages: Messages)
 
 @elements = @{new FieldElements(field.id, field, null, args.toMap, messages) }
 
@@ -26,7 +26,7 @@
 @labelAfter = @{ elements.args.getOrElse(Symbol("_labelAfter"), false).asInstanceOf[Boolean] }
 <fieldset class="@fieldsetClass" id="@field.id"
     @if(elements.args.contains(Symbol("_fieldsetAttributes"))) {@elements.args.get(Symbol("_fieldsetAttributes"))}>
-    @elements.errors.map{error => <span class="error-notification" id="@{elements.field.id}--error">@Messages(error.toString)</span>}
+    @elements.errors.map{error => <span class="error-notification" id="@{elements.field.id}--error">@messages(error.toString)</span>}
     @if(elements.args.contains(Symbol("_legend"))) {
         <legend @if(elements.args.contains(Symbol("_legendClass"))) {class="@elements.args.get(Symbol("_legendClass"))"}>
             <span id="@{elements.field.id}Label">
@@ -35,7 +35,7 @@
         </legend>
     }
     <ul>
-    @checkboxOptions.zipWithIndex.map { case ((value, label), count) => {
+    @checkboxOptions.zipWithIndex.map { case ((value, label), _) => {
         @defining(s"${elements.field.id}-${value.toLowerCase.replace(" ","_")}")  { inputId =>
             <li>
                 <label class="block-label" for="@inputId"

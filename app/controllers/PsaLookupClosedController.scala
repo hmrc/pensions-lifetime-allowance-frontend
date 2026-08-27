@@ -16,7 +16,7 @@
 
 package controllers
 
-import play.api.mvc._
+import play.api.mvc.*
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}
@@ -27,6 +27,10 @@ class PsaLookupClosedController @Inject() (
     psaLookupClosedView: views.html.pages.psaLookup.psaLookupClosed
 ) extends FrontendController(mcc) {
 
-  val psaLookupClosed: Action[AnyContent] = Action(implicit request => Ok(psaLookupClosedView()))
+  val psaLookupClosed: Action[AnyContent] = Action { request =>
+    given MessagesRequest[?] = request
+
+    Ok(psaLookupClosedView())
+  }
 
 }

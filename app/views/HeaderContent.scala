@@ -20,13 +20,13 @@ import play.api.i18n.Messages
 
 object HeaderContent {
 
-  def getProtectedLifetimeAllowance(implicit messages: Messages): String =
+  def getProtectedLifetimeAllowance(using messages: Messages): String =
     messages("common.header.protectedAmount")
 
-  def getProtectionNotificationNumber(implicit messages: Messages): String =
+  def getProtectionNotificationNumber(using messages: Messages): String =
     messages("common.header.protectionReferenceNumber")
 
-  def getSchemeAdministratorReference(implicit messages: Messages): String =
+  def getSchemeAdministratorReference(using messages: Messages): String =
     messages("common.header.pensionSchemeAdministratorCheckReference")
 
 }

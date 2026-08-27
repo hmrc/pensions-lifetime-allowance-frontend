@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package utils
+package util
 
 import org.apache.pekko.util.Timeout
 import org.scalatest.matchers.should.Matchers
@@ -25,7 +25,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.DefaultAwaitTimeout
 import play.api.{Application, Configuration}
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 trait IntegrationBaseSpec
     extends AnyWordSpecLike
@@ -37,7 +37,7 @@ trait IntegrationBaseSpec
     with BeforeAndAfterAll
     with DefaultAwaitTimeout {
 
-  override implicit def defaultAwaitTimeout: Timeout = 5.seconds
+  override given defaultAwaitTimeout: Timeout = 5.seconds
 
   val localHost      = "localhost"
   val localPort: Int = port
@@ -53,7 +53,7 @@ trait IntegrationBaseSpec
     "auditing.consumer.baseUri.port"                         -> s"${WiremockHelper.wiremockPort}"
   )
 
-  override implicit lazy val app: Application = new GuiceApplicationBuilder()
+  override lazy val app: Application = new GuiceApplicationBuilder()
     .configure(defaultConfiguration)
     .build()
 

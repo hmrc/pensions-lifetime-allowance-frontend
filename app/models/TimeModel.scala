@@ -16,13 +16,13 @@
 
 package models
 
-import play.api.libs.json.{Format, JsError, JsString, JsSuccess, Reads, Writes}
+import play.api.libs.json.{JsError, JsString, JsSuccess, Reads, Writes}
 
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import scala.util.Try
 
-case class TimeModel(time: LocalTime) extends AnyVal
+case class TimeModel(toLocalTime: LocalTime) extends AnyVal
 
 object TimeModel {
 
@@ -31,9 +31,9 @@ object TimeModel {
   private def parse(timeString: String): Option[TimeModel] =
     Try(LocalTime.parse(timeString, timeFormat)).toOption.map(TimeModel(_))
 
-  private def serialiseTime(timeModel: TimeModel): String = timeModel.time.format(timeFormat)
+  private def serialiseTime(timeModel: TimeModel): String = timeModel.toLocalTime.format(timeFormat)
 
-  implicit val reads: Reads[TimeModel] = {
+  given Reads[TimeModel] = {
     case JsString(timeString) =>
       parse(timeString) match {
         case Some(time) => JsSuccess(time)
@@ -42,9 +42,7 @@ object TimeModel {
     case _ => JsError("time must be a string")
   }
 
-  implicit val writes: Writes[TimeModel] = time => JsString(serialiseTime(time))
-
-  implicit val format: Format[TimeModel] = Format(reads, writes)
+  given Writes[TimeModel] = time => JsString(serialiseTime(time))
 
   def of(hour: Int, minute: Int, second: Int): TimeModel = TimeModel(LocalTime.of(hour, minute, second))
 

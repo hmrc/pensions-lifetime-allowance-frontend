@@ -25,27 +25,24 @@ import org.jsoup.nodes.Document
 import play.api.data.Form
 import testHelpers.CommonViewSpecHelper
 import testHelpers.messages.amends.AmendIP16CurrentPensionsViewMessages
-import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.amendIP16CurrentPensions
 
 class AmendIP16CurrentPensionsViewSpec extends CommonViewSpecHelper with AmendIP16CurrentPensionsViewMessages {
 
-  implicit val formWithCSRF: FormWithCSRF = inject[FormWithCSRF]
+  private val view: amendIP16CurrentPensions = inject[amendIP16CurrentPensions]
 
-  val view: amendIP16CurrentPensions = inject[amendIP16CurrentPensions]
-
-  val form: Form[AmendCurrentPensionModel] =
+  private val form: Form[AmendCurrentPensionModel] =
     AmendCurrentPensionForm
       .amendCurrentPensionForm(IndividualProtection2016)
       .bind(Map("amendedUKPensionAmt" -> "12000"))
 
-  val doc: Document = Jsoup.parse(view.apply(form, IndividualProtection2016, Open).body)
+  private val doc: Document = Jsoup.parse(view.apply(form, IndividualProtection2016, Open).body)
 
-  val errorForm: Form[AmendCurrentPensionModel] = AmendCurrentPensionForm
+  private val errorForm: Form[AmendCurrentPensionModel] = AmendCurrentPensionForm
     .amendCurrentPensionForm(IndividualProtection2016)
     .bind(Map("amendedUKPensionAmt" -> "a"))
 
-  val errorDoc: Document = Jsoup.parse(view.apply(errorForm, IndividualProtection2016, Open).body)
+  private val errorDoc: Document = Jsoup.parse(view.apply(errorForm, IndividualProtection2016, Open).body)
 
   "the AmendCurrentPensionsView" should {
     "have the correct title" in {

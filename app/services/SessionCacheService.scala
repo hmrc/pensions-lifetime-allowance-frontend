@@ -27,12 +27,10 @@ import repositories.SessionRepository
 import uk.gov.hmrc.mongo.cache.DataKey
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 @Singleton
-class SessionCacheService @Inject() (sessionRepository: SessionRepository)(
-    implicit executionContext: ExecutionContext
-) {
+class SessionCacheService @Inject() (sessionRepository: SessionRepository) {
 
   private val openProtectionKey: String = "openProtection"
 
@@ -47,57 +45,57 @@ class SessionCacheService @Inject() (sessionRepository: SessionRepository)(
   private val amendResponseModelKey: String = "amendResponseModel"
   private val previousTechnicalIssuesKey    = "previous-technical-issues"
 
-  def saveOpenProtection(openProtection: ProtectionModel)(implicit request: RequestHeader): Future[CacheMap] =
+  def saveOpenProtection(openProtection: ProtectionModel)(using RequestHeader): Future[CacheMap] =
     saveFormData[ProtectionModel](openProtectionKey, openProtection)
 
   def saveAmendProtectionModel(
       amendProtectionModel: AmendProtectionModel
-  )(implicit request: RequestHeader): Future[CacheMap] =
+  )(using RequestHeader): Future[CacheMap] =
     saveFormData[AmendProtectionModel](
       amendProtectionModelKey(amendProtectionModel.protectionType, amendProtectionModel.status),
       amendProtectionModel
     )
 
-  def saveAmendsGAModel(amendsGAModel: AmendsGAModel)(implicit request: RequestHeader): Future[CacheMap] =
+  def saveAmendsGAModel(amendsGAModel: AmendsGAModel)(using RequestHeader): Future[CacheMap] =
     saveFormData[AmendsGAModel](amendsGAModelKey, amendsGAModel)
 
   def saveAmendResponseModel(amendResponseModel: AmendResponseModel)(
-      implicit request: RequestHeader
+      using RequestHeader
   ): Future[CacheMap] =
     saveFormData[AmendResponseModel](amendResponseModelKey, amendResponseModel)
 
-  def savePreviousTechnicalIssues(previousTechnicalIssues: Boolean)(implicit request: RequestHeader): Future[CacheMap] =
+  def savePreviousTechnicalIssues(previousTechnicalIssues: Boolean)(using RequestHeader): Future[CacheMap] =
     saveFormData[Boolean](previousTechnicalIssuesKey, previousTechnicalIssues)
 
   private[services] def saveFormData[T](
       key: String,
       data: T
-  )(implicit request: RequestHeader, formats: Writes[T]): Future[CacheMap] =
+  )(using request: RequestHeader, formats: Writes[T]): Future[CacheMap] =
     sessionRepository.putInSession(DataKey(key), data)
 
-  def fetchOpenProtection(implicit request: RequestHeader): Future[Option[ProtectionModel]] =
+  def fetchOpenProtection(using RequestHeader): Future[Option[ProtectionModel]] =
     fetchAndGetFormData[ProtectionModel](openProtectionKey)
 
   def fetchAmendProtectionModel(protectionType: AmendableProtectionType, status: AmendProtectionRequestStatus)(
-      implicit request: RequestHeader
+      using RequestHeader
   ): Future[Option[AmendProtectionModel]] =
     fetchAndGetFormData[AmendProtectionModel](amendProtectionModelKey(protectionType, status))
 
-  def fetchAmendsGAModel(implicit request: RequestHeader): Future[Option[AmendsGAModel]] =
+  def fetchAmendsGAModel(using RequestHeader): Future[Option[AmendsGAModel]] =
     fetchAndGetFormData[AmendsGAModel](amendsGAModelKey)
 
-  def fetchAmendResponseModel(implicit request: RequestHeader): Future[Option[AmendResponseModel]] =
+  def fetchAmendResponseModel(using RequestHeader): Future[Option[AmendResponseModel]] =
     fetchAndGetFormData[AmendResponseModel](amendResponseModelKey)
 
-  def fetchPreviousTechnicalIssues(implicit request: RequestHeader): Future[Option[Boolean]] =
+  def fetchPreviousTechnicalIssues(using RequestHeader): Future[Option[Boolean]] =
     fetchAndGetFormData[Boolean](previousTechnicalIssuesKey)
 
   private[services] def fetchAndGetFormData[T](
       key: String
-  )(implicit request: RequestHeader, formats: Reads[T]): Future[Option[T]] =
+  )(using request: RequestHeader, formats: Reads[T]): Future[Option[T]] =
     sessionRepository.getFromSession[T](DataKey(key))
 
-  def remove(implicit request: RequestHeader): Future[Unit] =
-    sessionRepository.clearSession
+  def remove()(using RequestHeader): Future[Unit] =
+    sessionRepository.clearSession()
 
 }

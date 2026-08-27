@@ -24,9 +24,10 @@ lazy val scoverageSettings = {
     ScoverageKeys.coverageFailOnMinimum    := true,
     ScoverageKeys.coverageHighlighting     := true,
     scalacOptions ++= Seq(
-      "-Wconf:cat=unused-imports&src=html/.*:s",
-      "-Wconf:cat=unused-imports&src=routes/.*:s",
-      "-Wconf:cat=unused&src=routes/.*:s"
+      "-Wconf:msg=unused-imports&src=html/.*:s",
+      "-Wconf:msg=unused-imports&src=routes/.*:s",
+      "-Wconf:msg=unused&src=routes/.*:s",
+      "-Wconf:msg=Flag.*repeatedly:s"
     )
   )
 }
@@ -40,19 +41,11 @@ lazy val root = Project(appName, file("."))
   .settings(
     scalaVersion := scala3_3_7,
     libraryDependencies ++= AppDependencies(),
-    Test / parallelExecution        := false,
-    Test / fork                     := false,
-    retrieveManaged                 := true,
-    (update / evictionWarningOptions).withRank(KeyRanks.Invisible) := EvictionWarningOptions.default.withWarnScalaVersionEviction(false)
-    // Use the silencer plugin to suppress warnings from unused imports in compiled twirl templates
-  )
-  .settings(
-    TwirlKeys.templateImports ++= Seq(
-      "uk.gov.hmrc.govukfrontend.views.html.components._",
-      "uk.gov.hmrc.hmrcfrontend.views.html.components._",
-      "uk.gov.hmrc.hmrcfrontend.views.html.helpers._",
-      "uk.gov.hmrc.govukfrontend.views.html.components.implicits._"
-    )
+    Test / parallelExecution := false,
+    Test / fork              := false,
+    retrieveManaged          := true,
+    (update / evictionWarningOptions).withRank(KeyRanks.Invisible) := EvictionWarningOptions.default
+      .withWarnScalaVersionEviction(false)
   )
 
 PlayKeys.playDefaultPort := 9010

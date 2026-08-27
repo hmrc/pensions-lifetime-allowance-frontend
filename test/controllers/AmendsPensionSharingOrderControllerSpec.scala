@@ -19,36 +19,28 @@ package controllers
 import auth.authenticatedFakeRequest
 import auth.helpers.AuthMocks
 import common.Exceptions
-import config._
 import constructors.display.DisplayConstructors
 import models.amend.AmendProtectionModel
-import models.display.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel}
 import models.pla.AmendableProtectionType
 import models.pla.request.AmendProtectionRequestStatus
 import models.{DateModel, PensionDebitModel}
-import org.apache.pekko.actor.ActorSystem
-import org.apache.pekko.stream.Materializer
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.mockito.ArgumentMatchers.{any, eq => eqTo}
-import org.mockito.Mockito._
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.*
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.Environment
 import play.api.http.HeaderNames.CACHE_CONTROL
-import play.api.i18n.{Lang, Messages}
-import play.api.mvc.{AnyContent, Result}
+import play.api.i18n.Messages
+import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import services.SessionCacheService
-import testHelpers._
+import play.api.test.Helpers.*
+import testHelpers.*
 import testdata.AmendProtectionModelTestData
-import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
-import views.html.pages.amends._
+import views.html.pages.amends.*
 import views.html.pages.fallback.technicalError
 
-import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
 
 class AmendsPensionSharingOrderControllerSpec
@@ -60,104 +52,30 @@ class AmendsPensionSharingOrderControllerSpec
     with AmendProtectionModelTestData
     with ScalaFutures {
 
-  implicit val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
+  private val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-  implicit val messages: Messages = mcc.messagesApi.preferred(fakeRequest)
+  private val messages: Messages = mcc.messagesApi.preferred(fakeRequest)
 
-  implicit val appConfig: AppConfig           = inject[AppConfig]
-  implicit val system: ActorSystem            = ActorSystem()
-  implicit val mockMaterializer: Materializer = mock[Materializer]
-  implicit val mockLang: Lang                 = mock[Lang]
-  implicit val formWithCSRF: FormWithCSRF     = inject[FormWithCSRF]
-  implicit val ec: ExecutionContext           = inject[ExecutionContext]
+  private val executionContext: ExecutionContext = ExecutionContext.global
 
-  val mockDisplayConstructors: DisplayConstructors = mock[DisplayConstructors]
-  val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
-  val mockEnv: Environment                         = mock[Environment]
+  private val mockDisplayConstructors: DisplayConstructors = mock[DisplayConstructors]
 
-  val amendPsoDetailsView: amendPsoDetails = inject[amendPsoDetails]
-  val technicalErrorView: technicalError   = inject[technicalError]
+  private val amendPsoDetailsView: amendPsoDetails = inject[amendPsoDetails]
+  private val technicalErrorView: technicalError   = inject[technicalError]
 
   override def beforeEach(): Unit = {
     super.beforeEach()
 
-    reset(mockSessionCacheService)
     reset(mockDisplayConstructors)
-    reset(mockEnv)
   }
 
-  val controller = new AmendsPensionSharingOrderController(
+  private val controller = new AmendsPensionSharingOrderController(
     mockSessionCacheService,
     mcc,
     authActions,
     amendPsoDetailsView,
     technicalErrorView
-  )
-
-  val sessionId: String  = UUID.randomUUID.toString
-  val mockUsername       = "mockuser"
-  val mockUserId: String = "/auth/oid/" + mockUsername
-
-  val tstPensionContributionNoPsoDisplaySections: Seq[AmendDisplaySectionModel] = Seq(
-    AmendDisplaySectionModel(
-      "OverseasPensions",
-      Seq(
-        AmendDisplayRowModel(
-          "YesNo",
-          Some(
-            controllers.routes.AmendsOverseasPensionController
-              .amendOverseasPensions(
-                AmendableProtectionType.IndividualProtection2014,
-                AmendProtectionRequestStatus.Open
-              )
-          ),
-          None,
-          "Yes"
-        ),
-        AmendDisplayRowModel(
-          "Amt",
-          Some(
-            controllers.routes.AmendsOverseasPensionController
-              .amendOverseasPensions(
-                AmendableProtectionType.IndividualProtection2014,
-                AmendProtectionRequestStatus.Open
-              )
-          ),
-          None,
-          "£100,000"
-        )
-      )
-    ),
-    AmendDisplaySectionModel(
-      "CurrentPensions",
-      Seq(
-        AmendDisplayRowModel(
-          "Amt",
-          Some(
-            controllers.routes.AmendsCurrentPensionController
-              .amendCurrentPensions(AmendableProtectionType.IndividualProtection2014, AmendProtectionRequestStatus.Open)
-          ),
-          None,
-          "£1,000,000"
-        )
-      )
-    ),
-    AmendDisplaySectionModel(
-      "CurrentPsos",
-      Seq(
-        AmendDisplayRowModel("YesNo", None, None, "No")
-      )
-    )
-  )
-
-  val tstAmendDisplayModel = AmendDisplayModel(
-    protectionType = AmendableProtectionType.IndividualProtection2014,
-    amended = true,
-    pensionContributionSections = tstPensionContributionNoPsoDisplaySections,
-    psoAdded = false,
-    psoSections = Seq.empty,
-    totalAmount = "£1,100,000"
-  )
+  )(using executionContext)
 
   "Calling the amendPsoDetails action" when {
     "there is no amendment model fetched from cache" in {
@@ -181,7 +99,7 @@ class AmendsPensionSharingOrderControllerSpec
         )
       val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
 
-      jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+      jsoupDoc.body.getElementsByTag("h1").text shouldEqual messages("pla.techError.pageHeading")
       jsoupDoc.body
         .getElementById("tryAgainLink")
         .attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections}"
@@ -202,7 +120,7 @@ class AmendsPensionSharingOrderControllerSpec
 
       status(result) shouldBe 200
 
-      jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
+      jsoupDoc.body.getElementsByTag("h1").text shouldEqual messages("pla.psoDetails.title")
       jsoupDoc.body.getElementById("pso.day").attr("value") shouldEqual ""
       jsoupDoc.body.getElementById("pso.month").attr("value") shouldEqual ""
       jsoupDoc.body.getElementById("pso.year").attr("value") shouldEqual ""
@@ -225,7 +143,7 @@ class AmendsPensionSharingOrderControllerSpec
 
       val jsoupDoc = Jsoup.parse(contentAsString(result))
 
-      jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
+      jsoupDoc.body.getElementsByTag("h1").text shouldEqual messages("pla.psoDetails.title")
       jsoupDoc.body.getElementById("pso.day").attr("value") shouldEqual "23"
       jsoupDoc.body.getElementById("pso.month").attr("value") shouldEqual "12"
       jsoupDoc.body.getElementById("pso.year").attr("value") shouldEqual "2016"
@@ -282,7 +200,7 @@ class AmendsPensionSharingOrderControllerSpec
             protectionType = testData.protectionType,
             status = AmendProtectionRequestStatus.Open,
             existingPSO = true
-          )(authenticatedFakeRequest().withFormUrlEncodedBody(requestData: _*).withMethod("POST"))
+          )(authenticatedFakeRequest().withFormUrlEncodedBody(requestData*).withMethod("POST"))
 
           status(result) shouldBe 303
           redirectLocation(result) shouldBe Some(
@@ -300,14 +218,14 @@ class AmendsPensionSharingOrderControllerSpec
               protectionType = testData.protectionType,
               status = AmendProtectionRequestStatus.Open,
               existingPSO = true
-            )(authenticatedFakeRequest().withFormUrlEncodedBody(requestData: _*).withMethod("POST"))
+            )(authenticatedFakeRequest().withFormUrlEncodedBody(requestData*).withMethod("POST"))
             .futureValue
 
           val expectedAmendProtectionModel = testData.amendProtectionModel.withPensionDebit(
             Some(PensionDebitModel(DateModel.of(testData.psoYear, 4, 6), 100_000))
           )
 
-          verify(mockSessionCacheService).saveAmendProtectionModel(eqTo(expectedAmendProtectionModel))(any())
+          verify(mockSessionCacheService).saveAmendProtectionModel(eqTo(expectedAmendProtectionModel))(using any())
         }
       }
     }
@@ -328,7 +246,7 @@ class AmendsPensionSharingOrderControllerSpec
           protectionType = AmendableProtectionType.IndividualProtection2014,
           status = AmendProtectionRequestStatus.Open,
           existingPSO = true
-        )(authenticatedFakeRequest().withFormUrlEncodedBody(data: _*).withMethod("POST"))
+        )(authenticatedFakeRequest().withFormUrlEncodedBody(data*).withMethod("POST"))
 
         status(result) shouldBe 400
       }
@@ -353,7 +271,7 @@ class AmendsPensionSharingOrderControllerSpec
             protectionType = AmendableProtectionType.IndividualProtection2014,
             status = AmendProtectionRequestStatus.Open,
             existingPSO = true
-          )(authenticatedFakeRequest().withFormUrlEncodedBody(requestData: _*).withMethod("POST"))
+          )(authenticatedFakeRequest().withFormUrlEncodedBody(requestData*).withMethod("POST"))
           .failed
           .futureValue
 

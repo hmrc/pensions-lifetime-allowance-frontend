@@ -16,14 +16,10 @@
 
 package connectors
 
-sealed trait PlaConnectorError
-
-object PlaConnectorError {
-
-  case object LockedResponseError                       extends PlaConnectorError
-  case object ConflictResponseError                     extends PlaConnectorError
-  case object IncorrectResponseBodyError                extends PlaConnectorError
-  case class UnexpectedResponseError(statusCode: Int)   extends PlaConnectorError
-  case class GenericPlaConnectorError(cause: Throwable) extends PlaConnectorError
-
+enum PlaConnectorError {
+  case LockedResponseError                        extends PlaConnectorError
+  case ConflictResponseError                      extends PlaConnectorError
+  case IncorrectResponseBodyError                 extends PlaConnectorError
+  case UnexpectedResponseError(statusCode: Int)   extends PlaConnectorError
+  case GenericPlaConnectorError(cause: Throwable) extends PlaConnectorError
 }

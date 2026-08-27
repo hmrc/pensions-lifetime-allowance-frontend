@@ -16,7 +16,7 @@
 
 package models.pla.response
 
-import models.pla.response.ProtectionType._
+import models.pla.response.ProtectionType.*
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 

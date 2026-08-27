@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-import com.github.tomakehurst.wiremock.client.WireMock._
+import com.github.tomakehurst.wiremock.client.WireMock.*
 import play.api.libs.json.Json
 import play.api.libs.ws.WSResponse
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.api.libs.ws.{writeableOf_JsValue, readableAsString}
-import utils.{IntegrationBaseSpec, MockedAudit}
+import util.{IntegrationBaseSpec, MockedAudit}
 
 import scala.concurrent.Future
 
 class TestControllerCSpec extends IntegrationBaseSpec with MockedAudit {
 
-  val protectionInsertUrl = s"$localUrl/check-your-pension-protections-and-enhancements/test-only/protections/insert"
+  private val protectionInsertUrl = s"$localUrl/check-your-pension-protections-and-enhancements/test-only/protections/insert"
 
   "Hitting the /protections/insert route" should {
     "return a 200 and valid result for protections" when {
@@ -90,7 +90,7 @@ class TestControllerCSpec extends IntegrationBaseSpec with MockedAudit {
     }
   }
 
-  val protectionDeleteAllUrl = s"$localUrl/check-your-pension-protections-and-enhancements/test-only/protections/removeAll"
+  private val protectionDeleteAllUrl = s"$localUrl/check-your-pension-protections-and-enhancements/test-only/protections/removeAll"
 
   "Hitting the /protections/removeAll route" should {
     "return a 200 and valid result for deletion" when {
@@ -109,8 +109,8 @@ class TestControllerCSpec extends IntegrationBaseSpec with MockedAudit {
     }
   }
 
-  val nino                    = "AA123456"
-  val protectionDeleteNinoUrl = s"$localUrl/check-your-pension-protections-and-enhancements/test-only/individuals/$nino/protections"
+  private val nino                    = "AA123456"
+  private val protectionDeleteNinoUrl = s"$localUrl/check-your-pension-protections-and-enhancements/test-only/individuals/$nino/protections"
 
   "Hitting the /individuals/:nino/protections route" should {
     "return a 200 and valid result for nino deletion" when {

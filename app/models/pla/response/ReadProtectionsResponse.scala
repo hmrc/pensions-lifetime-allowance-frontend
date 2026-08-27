@@ -25,7 +25,7 @@ case class ReadProtectionsResponse(
 )
 
 object ReadProtectionsResponse {
-  implicit val reads: Reads[ReadProtectionsResponse] = Json.reads[ReadProtectionsResponse]
+  given Reads[ReadProtectionsResponse] = Json.reads[ReadProtectionsResponse]
 }
 
 case class ProtectionRecordsList(
@@ -34,7 +34,7 @@ case class ProtectionRecordsList(
 )
 
 object ProtectionRecordsList {
-  implicit val reads: Reads[ProtectionRecordsList] = Json.reads[ProtectionRecordsList]
+  given Reads[ProtectionRecordsList] = Json.reads[ProtectionRecordsList]
 }
 
 case class ProtectionRecord(
@@ -62,5 +62,5 @@ case class ProtectionRecord(
 
 object ProtectionRecord {
 
-  implicit val reads: Reads[ProtectionRecord] = Json.reads[ProtectionRecord]
+  given Reads[ProtectionRecord] = Json.reads[ProtectionRecord]
 }

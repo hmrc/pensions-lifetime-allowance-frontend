@@ -18,20 +18,16 @@ package models.pla.request
 
 import models.pla.response.ProtectionStatus
 import play.api.mvc.PathBindable
-import utils.{Enumerable, EnumerableInstance}
+import util.{JsonEnum, JsonEnumFormat}
 
-sealed abstract class AmendProtectionRequestStatus(name: String, override val jsonValue: String)
-    extends EnumerableInstance(name) {}
+enum AmendProtectionRequestStatus(override val toString: String, override val jsonString: String) extends JsonEnum {
 
-object AmendProtectionRequestStatus extends Enumerable.Implicits {
+  case Open extends AmendProtectionRequestStatus("Open", "OPEN")
 
-  case object Open    extends AmendProtectionRequestStatus("Open", "OPEN")
-  case object Dormant extends AmendProtectionRequestStatus("Dormant", "DORMANT")
+  case Dormant extends AmendProtectionRequestStatus("Dormant", "DORMANT")
+}
 
-  val values: Seq[AmendProtectionRequestStatus] = Seq(Open, Dormant)
-
-  implicit val toEnumerable: Enumerable[AmendProtectionRequestStatus] =
-    Enumerable(values.map(v => v.jsonValue -> v): _*)
+object AmendProtectionRequestStatus extends JsonEnumFormat[AmendProtectionRequestStatus] {
 
   def tryFromProtectionStatus(protectionStatus: ProtectionStatus): Option[AmendProtectionRequestStatus] =
     protectionStatus match {
@@ -40,7 +36,7 @@ object AmendProtectionRequestStatus extends Enumerable.Implicits {
       case _                        => None
     }
 
-  implicit val pathBindable: PathBindable[AmendProtectionRequestStatus] =
+  given pathBindable: PathBindable[AmendProtectionRequestStatus] =
     new PathBindable[AmendProtectionRequestStatus] {
 
       override def bind(key: String, value: String): Either[String, AmendProtectionRequestStatus] =

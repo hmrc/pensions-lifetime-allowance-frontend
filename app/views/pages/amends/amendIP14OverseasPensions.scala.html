@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import play.api.data._
+@import play.api.data.Field
 @import models.amend.value.AmendOverseasPensionsModel
 @import models.pla.AmendableProtectionType
 @import models.pla.request.AmendProtectionRequestStatus
@@ -32,14 +32,14 @@
     amendOverseasPensionsForm: Form[AmendOverseasPensionsModel],
     protectionType: AmendableProtectionType,
     status: AmendProtectionRequestStatus
-)(implicit request: RequestHeader, messages: Messages)
+)(using request: RequestHeader, messages: Messages)
 
 @hiddenYesNoContent = {
     @formInputMoney(
         field = amendOverseasPensionsForm("amendedOverseasPensionsAmt"),
-        question = Messages("pla.overseasPensions.questionTwo"),
+        question = messages("pla.overseasPensions.questionTwo"),
         pageHeading = false,
-        hintText = Some(Messages("pla.overseasPensions.questionTwo.hint")),
+        hintText = Some(messages("pla.overseasPensions.questionTwo.hint")),
         labelClass = Some("govuk-label--m")
     )
 }
@@ -58,20 +58,20 @@
 
     @errorSummary(amendOverseasPensionsForm.errors, Some("amendedOverseasPensionsAmt"))
 
-    <h1 class="govuk-heading-xl">@Messages("pla.overseasPensions.title")</h1>
+    <h1 class="govuk-heading-xl">@messages("pla.overseasPensions.title")</h1>
 
     @form(action = routes.AmendsOverseasPensionController.submitAmendOverseasPensions(protectionType, status)) {
 
-        <p class="govuk-body">@Messages("pla.ip14OverseasPensions.question")</p>
+        <p class="govuk-body">@messages("pla.ip14OverseasPensions.question")</p>
 
         @formHiddenYesNoRadio(
             field = amendOverseasPensionsForm("amendedOverseasPensions"),
-            question = Messages("pla.ip14OverseasPensions.legend"),
+            question = messages("pla.ip14OverseasPensions.legend"),
             hiddenQuestion = true,
             pageHeading = false,
             yesHiddencontent = Some(hiddenYesNoContent)
         )
 
-        @submitButton(submitText = Messages("pla.base.change"))
+        @submitButton(submitText = messages("pla.base.change"))
     }
 }

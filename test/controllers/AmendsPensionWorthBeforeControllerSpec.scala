@@ -16,80 +16,49 @@
 
 package controllers
 
-import config._
 import auth.helpers.AuthMocks
 import models.pla.AmendableProtectionType
 import models.pla.request.AmendProtectionRequestStatus
-import org.apache.pekko.actor.ActorSystem
-import org.apache.pekko.stream.Materializer
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito._
-import org.scalatest.BeforeAndAfterEach
-import org.scalatestplus.mockito.MockitoSugar
-import play.api.Environment
-import play.api.i18n.{Lang, Messages}
-import play.api.mvc.{AnyContent, Result}
+import play.api.i18n.Messages
+import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import services.SessionCacheService
-import testHelpers._
+import play.api.test.Helpers.*
+import testHelpers.*
 import testdata.AmendProtectionModelTestData
-import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
-import views.html.pages.amends._
+import views.html.pages.amends.*
 import views.html.pages.fallback.technicalError
 
-import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
 
 class AmendsPensionWorthBeforeControllerSpec
     extends FakeApplication
-    with MockitoSugar
     with MockSessionCacheService
-    with BeforeAndAfterEach
     with AuthMocks
     with AmendProtectionModelTestData {
 
-  implicit val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
+  private val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-  implicit val messages: Messages = mcc.messagesApi.preferred(fakeRequest)
+  private val messages: Messages = mcc.messagesApi.preferred(fakeRequest)
 
-  implicit val appConfig: AppConfig       = inject[AppConfig]
-  implicit val system: ActorSystem        = ActorSystem()
-  implicit val materializer: Materializer = mock[Materializer]
-  implicit val mockLang: Lang             = mock[Lang]
-  implicit val formWithCSRF: FormWithCSRF = inject[FormWithCSRF]
-  implicit val ec: ExecutionContext       = inject[ExecutionContext]
+  private val executionContext: ExecutionContext = ExecutionContext.global
 
-  val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
-  val technicalErrorView: technicalError           = inject[technicalError]
+  private val technicalErrorView: technicalError = inject[technicalError]
 
-  val amendIP16PensionsWorthBeforeView: amendIP16PensionsWorthBefore =
+  private val amendIP16PensionsWorthBeforeView: amendIP16PensionsWorthBefore =
     inject[amendIP16PensionsWorthBefore]
 
-  val amendIP14PensionsWorthBeforeView: amendIP14PensionsWorthBefore =
+  private val amendIP14PensionsWorthBeforeView: amendIP14PensionsWorthBefore =
     inject[amendIP14PensionsWorthBefore]
 
-  val mockEnv: Environment = mock[Environment]
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-
-    reset(mockSessionCacheService)
-    reset(mockEnv)
-  }
-
-  val controller = new AmendsPensionWorthBeforeController(
+  private val controller = new AmendsPensionWorthBeforeController(
     mockSessionCacheService,
     mcc,
     authActions,
     technicalErrorView,
     amendIP16PensionsWorthBeforeView,
     amendIP14PensionsWorthBeforeView
-  )
-
-  val sessionId: String  = UUID.randomUUID.toString
-  val mockUsername       = "mockuser"
-  val mockUserId: String = "/auth/oid/" + mockUsername
+  )(using executionContext)
 
   "AmendsPensionWorthBeforeController" must {
 

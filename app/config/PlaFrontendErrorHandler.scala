@@ -16,45 +16,53 @@
 
 package config
 
-import javax.inject.{Inject, Singleton}
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.RequestHeader
 import play.twirl.api.Html
-
-import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
+
 @Singleton
-class PlaFrontendErrorHandler @Inject() (errorTemplate: views.html.error_template)(
-    implicit val messagesApi: MessagesApi,
-    val appConfig: AppConfig,
-    val ec: ExecutionContext
+class PlaFrontendErrorHandler @Inject() (
+    errorTemplate: views.html.error_template
+)(
+    using override val messagesApi: MessagesApi,
+    override val ec: ExecutionContext
 ) extends FrontendErrorHandler {
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(
-      implicit rh: RequestHeader
+      using RequestHeader
   ): Future[Html] =
     Future.successful(errorTemplate(pageTitle, heading, message))
 
-  override def badRequestTemplate(implicit request: RequestHeader): Future[Html] =
+  override def badRequestTemplate(using RequestHeader): Future[Html] = {
+    val messages: Messages = summon[Messages]
+
     standardErrorTemplate(
-      Messages("global.error.400.title"),
-      Messages("global.error.400.heading"),
-      Messages("global.error.400.message")
+      messages("global.error.400.title"),
+      messages("global.error.400.heading"),
+      messages("global.error.400.message")
+    )
+  }
+
+  override def notFoundTemplate(using RequestHeader): Future[Html] =
+    val messages: Messages = summon[Messages]
+
+    standardErrorTemplate(
+      messages("global.error.404.title"),
+      messages("global.error.404.heading"),
+      messages("global.error.404.message")
     )
 
-  override def notFoundTemplate(implicit request: RequestHeader): Future[Html] =
-    standardErrorTemplate(
-      Messages("global.error.404.title"),
-      Messages("global.error.404.heading"),
-      Messages("global.error.404.message")
-    )
+  override def internalServerErrorTemplate(using RequestHeader): Future[Html] =
+    val messages: Messages = summon[Messages]
 
-  override def internalServerErrorTemplate(implicit request: RequestHeader): Future[Html] =
     standardErrorTemplate(
-      Messages("pla.error.InternalServerError500.title"),
-      Messages("pla.error.InternalServerError500.heading"),
-      Messages("pla.error.InternalServerError500.message")
+      messages("pla.error.InternalServerError500.title"),
+      messages("pla.error.InternalServerError500.heading"),
+      messages("pla.error.InternalServerError500.message")
     )
 
 }

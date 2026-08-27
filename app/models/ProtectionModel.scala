@@ -89,5 +89,5 @@ object ProtectionModel {
       enhancementFactor = record.enhancementFactor
     )
 
-  implicit val format: OFormat[ProtectionModel] = Json.format[ProtectionModel]
+  given OFormat[ProtectionModel] = Json.format[ProtectionModel]
 }

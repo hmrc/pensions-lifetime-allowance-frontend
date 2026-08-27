@@ -31,7 +31,7 @@ object ExistingProtectionsDisplayModelConstructor {
 
   def createExistingProtectionsDisplayModel(
       model: TransformedReadResponseModel
-  )(implicit messages: Messages): ExistingProtectionsDisplayModel = {
+  )(using Messages): ExistingProtectionsDisplayModel = {
     val activeProtection = model.activeProtection.map(createExistingProtectionDisplayModel)
 
     val dormantProtections      = protectionsOfStatusByType(ProtectionStatus.Dormant, model.inactiveProtections)
@@ -58,7 +58,7 @@ object ExistingProtectionsDisplayModelConstructor {
   private def protectionsOfStatusByType(
       status: ProtectionStatus,
       protections: Seq[ProtectionModel]
-  )(implicit messages: Messages): ExistingInactiveProtectionsByType = {
+  )(using Messages): ExistingInactiveProtectionsByType = {
     val grouped = protections
       .filter(_.status == status)
       .map(createExistingProtectionDisplayModel)
@@ -70,11 +70,11 @@ object ExistingProtectionsDisplayModelConstructor {
 
   private def createExistingProtectionDisplayModel(
       model: ProtectionModel
-  )(implicit messages: Messages): ExistingProtectionDisplayModel = {
+  )(using messages: Messages): ExistingProtectionDisplayModel = {
 
     val status              = model.status
     val protectionType      = model.protectionType
-    val protectionReference = model.protectionReference.getOrElse(Messages("pla.protection.protectionReference"))
+    val protectionReference = model.protectionReference.getOrElse(messages("pla.protection.protectionReference"))
 
     val protectedAmount =
       model.protectedAmount.map(protectedAmount => Display.currencyDisplayString(BigDecimal(protectedAmount)))

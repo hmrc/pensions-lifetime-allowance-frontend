@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,8 @@
  * limitations under the License.
  */
 
-package utils
+package util
 
-import play.api.http.Status.NO_CONTENT
-
-trait MockedAudit {
-
-  self: IntegrationBaseSpec =>
-
-  override def beforeEach(): Unit = {
-    resetWiremock()
-    stubPost("/write/audit/merged", NO_CONTENT, "")
-    stubPost("/write/audit", NO_CONTENT, "")
-  }
-
+trait JsonEnum {
+  val jsonString: String
 }

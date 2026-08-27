@@ -14,14 +14,16 @@
  * limitations under the License.
  *@
 
-@import play.api.data._
+@import play.api.data.Field
 @import models.amend.value.AmendPensionsTakenBeforeModel
 @import models.pla.AmendableProtectionType
 @import models.pla.request.AmendProtectionRequestStatus
 
+@import uk.gov.hmrc.govukfrontend.views.html.components.{RadioItem, Text, FormWithCSRF}
+
 @this(
     layout: Layout,
-    form: uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF,
+    form: FormWithCSRF,
     errorSummary: playHelpers.templates.errorSummary,
     plaInputRadioGroup: playHelpers.templates.plaInputRadioGroup,
     submitButton: playHelpers.templates.submitButton
@@ -31,7 +33,7 @@
     amendPensionsTakenBeforeForm: Form[AmendPensionsTakenBeforeModel],
     protectionType: AmendableProtectionType,
     status: AmendProtectionRequestStatus
-)(implicit request: RequestHeader, messages: Messages)
+)(using request: RequestHeader, messages: Messages)
 
 @title = @{
     if(amendPensionsTakenBeforeForm.errors.nonEmpty){
@@ -50,16 +52,16 @@
     @form(action = routes.AmendsPensionTakenBeforeController.submitAmendPensionsTakenBefore(protectionType, status)) {
 
         @plaInputRadioGroup(
-            legend = Messages("pla.pensionsTakenBefore.title"),
+            legend = messages("pla.pensionsTakenBefore.title"),
             legendClass = Some("govuk-fieldset__legend--xl"),
             items = Seq(
-                RadioItem(content = Text(Messages("pla.base.yes")), value = Option("yes")),
-                RadioItem(content = Text(Messages("pla.base.no")), value = Option("no"))
+                RadioItem(content = Text(messages("pla.base.yes")), value = Option("yes")),
+                RadioItem(content = Text(messages("pla.base.no")), value = Option("no"))
             ),
             inLine = true,
             field = amendPensionsTakenBeforeForm("amendedPensionsTakenBefore")
         )
 
-        @submitButton(Messages("pla.base.change"))
+        @submitButton(messages("pla.base.change"))
     }
 }

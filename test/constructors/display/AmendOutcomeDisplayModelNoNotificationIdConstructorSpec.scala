@@ -21,7 +21,7 @@ import common.Exceptions.OptionNotDefinedException
 class AmendOutcomeDisplayModelNoNotificationIdConstructorSpec extends DisplayConstructorsTestData {
 
   "createAmendOutcomeDisplayModelNoNotificationId" should {
-    import testdata.AmendProtectionDisplayModelTestData._
+    import testdata.AmendProtectionDisplayModelTestData.*
 
     "correctly transform AmendResponseModel into amendOutcomeDisplayModelNoNotificationId" in {
       AmendOutcomeDisplayModelNoNotificationIdConstructor.createAmendOutcomeDisplayModelNoNotificationId(

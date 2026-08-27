@@ -26,22 +26,20 @@ import org.scalatestplus.mockito.MockitoSugar
 import play.api.data.Form
 import testHelpers.CommonViewSpecHelper
 import testHelpers.messages.amends.AmendIP14PensionsWorthBeforeViewMessages
-import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.amendIP14PensionsWorthBefore
 
 class AmendIP14PensionsWorthBeforeViewSpec
     extends CommonViewSpecHelper
     with AmendIP14PensionsWorthBeforeViewMessages
     with MockitoSugar {
-  implicit val formWithCSRF: FormWithCSRF = inject[FormWithCSRF]
 
-  val view: amendIP14PensionsWorthBefore = inject[amendIP14PensionsWorthBefore]
+  private val view: amendIP14PensionsWorthBefore = inject[amendIP14PensionsWorthBefore]
 
-  val form: Form[AmendPensionsWorthBeforeModel] = AmendPensionsWorthBeforeForm
+  private val form: Form[AmendPensionsWorthBeforeModel] = AmendPensionsWorthBeforeForm
     .amendPensionsWorthBeforeForm(IndividualProtection2016)
     .bind(Map("amendedPensionsWorthBefore" -> "yes", "amendedPensionsTakenBeforeAmt" -> "12345"))
 
-  val doc: Document =
+  private val doc: Document =
     Jsoup.parse(view.apply(form, IndividualProtection2016, Open).body)
 
   "the AmendIP14PensionsWorthBeforeView" should {

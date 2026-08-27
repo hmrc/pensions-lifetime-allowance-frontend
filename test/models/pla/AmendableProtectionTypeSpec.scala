@@ -16,7 +16,7 @@
 
 package models.pla
 
-import models.pla.AmendableProtectionType._
+import models.pla.AmendableProtectionType.*
 import models.pla.response.ProtectionType
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
@@ -42,7 +42,7 @@ class AmendableProtectionTypeSpec extends AnyWordSpec with Matchers {
     }
 
     "return None" when {
-      import models.pla.response.ProtectionType._
+      import models.pla.response.ProtectionType.*
 
       val testValues = Seq(
         FixedProtection2016,

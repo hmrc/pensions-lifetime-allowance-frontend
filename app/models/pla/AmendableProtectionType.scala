@@ -18,48 +18,40 @@ package models.pla
 
 import models.pla.response.ProtectionType
 import play.api.mvc.PathBindable
-import utils.{Enumerable, EnumerableInstance}
+import util.{JsonEnum, JsonEnumFormat}
 
-sealed abstract class AmendableProtectionType(
-    name: String,
-    override val jsonValue: String
-) extends EnumerableInstance(name) {}
+enum AmendableProtectionType(
+    override val toString: String,
+    override val jsonString: String
+) extends JsonEnum {
 
-object AmendableProtectionType extends Enumerable.Implicits {
-
-  case object IndividualProtection2014
+  case IndividualProtection2014
       extends AmendableProtectionType(
         "IndividualProtection2014",
         "INDIVIDUAL PROTECTION 2014"
       )
 
-  case object IndividualProtection2016
+  case IndividualProtection2016
       extends AmendableProtectionType(
         "IndividualProtection2016",
         "INDIVIDUAL PROTECTION 2016"
       )
 
-  case object IndividualProtection2014LTA
+  case IndividualProtection2014LTA
       extends AmendableProtectionType(
         "IndividualProtection2014LTA",
         "INDIVIDUAL PROTECTION 2014 LTA"
       )
 
-  case object IndividualProtection2016LTA
+  case IndividualProtection2016LTA
       extends AmendableProtectionType(
         "IndividualProtection2016LTA",
         "INDIVIDUAL PROTECTION 2016 LTA"
       )
 
-  val values: Seq[AmendableProtectionType] = Seq(
-    IndividualProtection2014,
-    IndividualProtection2016,
-    IndividualProtection2014LTA,
-    IndividualProtection2016LTA
-  )
+}
 
-  implicit val toEnumerable: Enumerable[AmendableProtectionType] =
-    Enumerable(values.map(v => v.jsonValue -> v): _*)
+object AmendableProtectionType extends JsonEnumFormat[AmendableProtectionType] {
 
   def tryFromProtectionType(protectionType: ProtectionType): Option[AmendableProtectionType] =
     protectionType match {
@@ -70,7 +62,7 @@ object AmendableProtectionType extends Enumerable.Implicits {
       case _                                          => None
     }
 
-  implicit val pathBindable: PathBindable[AmendableProtectionType] =
+  given pathBindable: PathBindable[AmendableProtectionType] =
     new PathBindable[AmendableProtectionType] {
 
       override def bind(key: String, value: String): Either[String, AmendableProtectionType] =

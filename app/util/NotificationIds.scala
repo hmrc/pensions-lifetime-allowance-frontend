@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package utils
+package util
 
 import models.NotificationId
-import models.NotificationId._
+import models.NotificationId.*
 
 object NotificationIds {
 

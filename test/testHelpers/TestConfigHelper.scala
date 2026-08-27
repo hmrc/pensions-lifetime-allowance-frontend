@@ -24,10 +24,10 @@ import services.SessionCacheService
 
 trait TestConfigHelper extends FakeApplication with MockitoSugar {
 
-  val config: Configuration        = mock[Configuration]
-  val env: Environment             = mock[Environment]
-  implicit val system: ActorSystem = ActorSystem("test")
-  implicit val mat: Materializer   = mock[Materializer]
+  val config: Configuration = mock[Configuration]
+  val env: Environment      = mock[Environment]
+  given system: ActorSystem = ActorSystem("test")
+  given mat: Materializer   = mock[Materializer]
 }
 
 trait TestControllerHelper extends MockitoSugar with TestConfigHelper {

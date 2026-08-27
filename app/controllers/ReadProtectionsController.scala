@@ -17,20 +17,19 @@
 package controllers
 
 import auth.AuthActions
-import config.AppConfig
 import connectors.PlaConnectorError.LockedResponseError
 import connectors.{PlaConnector, PlaConnectorError}
 import constructors.display.DisplayConstructors
-import models._
+import models.*
 import models.amend.AmendProtectionModel
 import models.cache.CacheMap
+import play.api.Logging
 import play.api.i18n.Messages
-import play.api.mvc._
-import play.api.{Application, Logging}
+import play.api.mvc.*
 import services.SessionCacheService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import views.html._
+import views.html.*
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -44,14 +43,15 @@ class ReadProtectionsController @Inject() (
     authActions: AuthActions,
     technicalError: views.html.pages.fallback.technicalError,
     manualCorrespondenceNeeded: views.html.pages.result.manualCorrespondenceNeeded,
-    existingProtections: pages.existingProtections.existingProtections,
-    appConfig: AppConfig
+    existingProtections: pages.existingProtections.existingProtections
 )(
     using ExecutionContext
 ) extends FrontendController(mcc)
     with Logging {
 
-  def currentProtections: Action[AnyContent] = authActions.authenticateWithNino.async { implicit request =>
+  def currentProtections: Action[AnyContent] = authActions.authenticateWithNino.async { request =>
+    given MessagesRequest[?] = request
+
     fetchProtections(request.nino).flatMap {
 
       case Right(transformedReadResponseModel: TransformedReadResponseModel) =>
@@ -69,12 +69,12 @@ class ReadProtectionsController @Inject() (
 
   private[controllers] def fetchProtections(
       nino: String
-  )(implicit hc: HeaderCarrier): Future[Either[PlaConnectorError, TransformedReadResponseModel]] =
+  )(using HeaderCarrier): Future[Either[PlaConnectorError, TransformedReadResponseModel]] =
     plaConnector.readProtections(nino).map(_.map(TransformedReadResponseModel.from))
 
   private[controllers] def saveAndDisplayExistingProtections(
       transformedReadResponseModel: TransformedReadResponseModel
-  )(implicit request: RequestHeader, messages: Messages): Future[Result] =
+  )(using RequestHeader, Messages): Future[Result] =
     for {
       _ <- saveActiveProtection(transformedReadResponseModel.activeProtection)
       _ <- saveAmendableProtections(transformedReadResponseModel)
@@ -84,14 +84,14 @@ class ReadProtectionsController @Inject() (
 
   private[controllers] def saveActiveProtection(
       activeModel: Option[ProtectionModel]
-  )(implicit request: RequestHeader): Future[Option[CacheMap]] =
+  )(using RequestHeader): Future[Option[CacheMap]] =
     activeModel.map(sessionCacheService.saveOpenProtection) match {
       case Some(future) => future.map(Some(_))
       case None         => Future.successful(None)
     }
 
   private[controllers] def saveAmendableProtections(model: TransformedReadResponseModel)(
-      implicit request: RequestHeader
+      using RequestHeader
   ): Future[Seq[CacheMap]] = {
     val allProtections = getAllProtections(model)
     val protections    = allProtections.flatMap(saveIfAmendable)
@@ -102,7 +102,7 @@ class ReadProtectionsController @Inject() (
     model.activeProtection.toSeq ++ model.inactiveProtections
 
   private[controllers] def saveIfAmendable(protection: ProtectionModel)(
-      implicit request: RequestHeader
+      using RequestHeader
   ): Option[Future[CacheMap]] =
     AmendProtectionModel.tryFromProtection(protection).map(sessionCacheService.saveAmendProtectionModel)
 

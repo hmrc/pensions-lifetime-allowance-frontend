@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.govukfrontend.views.html.components.{GovukErrorSummary, ErrorSummary, Text, ErrorLink}
+
 @this(
     govukErrorSummary : GovukErrorSummary
 )
@@ -22,7 +24,7 @@
     errors: Seq[FormError],
     errorKey: Option[String] = None,
     errorSuffixes: Option[Map[String, String]] = None
-)(implicit messages: Messages)
+)(using messages: Messages)
 
 @if(errors.nonEmpty) {
     @govukErrorSummary(ErrorSummary(
@@ -31,7 +33,7 @@
             val suffix = errorSuffixes.flatMap(_.get(error.key).map(str => s".$str")).getOrElse("")
             ErrorLink(
                 href    = if(error.key.equals("")) Some(s"#${errorKey.get}") else Some(s"#${error.key + suffix}"),
-                content = Text(messages(error.message, error.args:_*))
+                content = Text(messages(error.message, error.args*))
             )
         }
     ))

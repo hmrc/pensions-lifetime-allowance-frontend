@@ -17,12 +17,13 @@
 @import models.display.AmendDisplayRowModel
 @import models.display.AmendDisplaySectionModel
 @import models.pla.AmendableProtectionType
+@import uk.gov.hmrc.govukfrontend.views.html.components.{GovukSummaryList, ActionItem, Text, SummaryListRow, Key, Value, HtmlContent, Actions, SummaryList}
 
 @this(
     govukSummaryList : GovukSummaryList
 )
 
-@(models: Seq[AmendDisplaySectionModel], protectionType: AmendableProtectionType)(implicit messages: Messages)
+@(models: Seq[AmendDisplaySectionModel], protectionType: AmendableProtectionType)(using messages: Messages)
 
 @amendRow(model: AmendDisplayRowModel, protectionType: AmendableProtectionType, sectionId: String, firstRow: Boolean, hasChildItem: Boolean) = @{
     val firstRowClass = if(hasChildItem) "has-child-item" else ""
@@ -39,7 +40,7 @@
             ActionItem(
                 href = changeLink.url,
                 content = Text(messages("pla.base.change")),
-                visuallyHiddenText = Some(Messages(s"pla.amends.$sectionId.$protectionType.${model.rowId}")),
+                visuallyHiddenText = Some(messages(s"pla.amends.$sectionId.$protectionType.${model.rowId}")),
                 attributes = Map("id" -> s"$sectionId-${model.rowId}-change-link")
         ))).flatten
 

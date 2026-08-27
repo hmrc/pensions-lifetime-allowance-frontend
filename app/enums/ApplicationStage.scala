@@ -16,21 +16,19 @@
 
 package enums
 
-sealed trait ApplicationStage
+enum ApplicationStage {
 
-object ApplicationStage {
-  case object PensionsTakenBefore extends ApplicationStage
+  case PensionsTakenBefore extends ApplicationStage
 
-  case object PensionsWorthBefore extends ApplicationStage
+  case PensionsWorthBefore extends ApplicationStage
 
-  case object PensionsTakenBetween extends ApplicationStage
+  case PensionsTakenBetween extends ApplicationStage
 
-  case object PensionsUsedBetween extends ApplicationStage
+  case PensionsUsedBetween extends ApplicationStage
 
-  case object OverseasPensions extends ApplicationStage
+  case OverseasPensions extends ApplicationStage
 
-  case object CurrentPensions extends ApplicationStage
+  case CurrentPensions extends ApplicationStage
 
-  case object CurrentPsos extends ApplicationStage
-
+  case CurrentPsos extends ApplicationStage
 }

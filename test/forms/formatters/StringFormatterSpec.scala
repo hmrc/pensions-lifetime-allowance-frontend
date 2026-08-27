@@ -22,13 +22,13 @@ import play.api.data.FormError
 
 class StringFormatterSpec extends AnyWordSpec with Matchers {
 
-  val mandatoryMessageKey = "mandatoryError"
+  private val mandatoryMessageKey = "mandatoryError"
 
-  val valueKey = "key"
+  private val valueKey = "key"
 
-  val mandatoryError = FormError(valueKey, mandatoryMessageKey)
+  private val mandatoryError = FormError(valueKey, mandatoryMessageKey)
 
-  val stringFormatter = StringFormatter(mandatoryMessageKey)
+  private val stringFormatter = StringFormatter(mandatoryMessageKey)
 
   "bind" should {
     "return mandatoryError" when {

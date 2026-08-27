@@ -19,7 +19,7 @@ package constructors.display
 import models.display.AmendPrintDisplayModel
 import models.{AmendResponseModel, NotificationId, PersonalDetailsModel}
 import play.api.i18n.Messages
-import utils.NotificationIds
+import util.NotificationIds
 
 object AmendPrintDisplayModelConstructor {
 
@@ -27,7 +27,7 @@ object AmendPrintDisplayModelConstructor {
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       protectionModel: AmendResponseModel,
       nino: String
-  )(implicit messages: Messages): AmendPrintDisplayModel = {
+  )(using Messages): AmendPrintDisplayModel = {
     val printDisplayModel =
       PrintDisplayModelConstructor.createPrintDisplayModel(
         personalDetailsModelOpt,

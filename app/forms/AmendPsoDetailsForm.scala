@@ -20,11 +20,11 @@ import forms.formatters.DateFormatter
 import forms.mappings.CurrencyMappings
 import models.amend.AmendPsoDetailsModel
 import models.pla.AmendableProtectionType
-import models.pla.AmendableProtectionType._
+import models.pla.AmendableProtectionType.*
 import play.api.data.Forms.{mapping, of}
 import play.api.data.Form
 import play.api.i18n.Messages
-import utils.Constants
+import util.Constants
 
 import java.time.LocalDate
 
@@ -35,7 +35,7 @@ object AmendPsoDetailsForm extends CurrencyMappings {
 
   def amendPsoDetailsForm(
       protectionType: AmendableProtectionType
-  )(implicit messages: Messages): Form[AmendPsoDetailsModel] = Form(
+  )(using Messages): Form[AmendPsoDetailsModel] = Form(
     mapping(
       key -> of(
         DateFormatter(

@@ -26,7 +26,7 @@ import org.scalatest.wordspec.AnyWordSpec
 
 class AmendProtectionModelSpec extends AnyWordSpec with Matchers with ModelGenerators {
 
-  val protectionModel = ProtectionModel(
+  private val protectionModel = ProtectionModel(
     psaCheckReference = "psaCheckReference",
     identifier = 10101,
     sequenceNumber = 20202,
@@ -47,7 +47,7 @@ class AmendProtectionModelSpec extends AnyWordSpec with Matchers with ModelGener
     enhancementFactor = None
   )
 
-  val amendProtectionModel = AmendProtectionModel(
+  private val amendProtectionModel = AmendProtectionModel(
     psaCheckReference = "psaCheckReference",
     identifier = 10101,
     sequenceNumber = 20202,
@@ -74,7 +74,7 @@ class AmendProtectionModelSpec extends AnyWordSpec with Matchers with ModelGener
     )
   )
 
-  val pensionDebitModel = PensionDebitModel(DateModel.of(2025, 12, 25), 200)
+  private val pensionDebitModel = PensionDebitModel(DateModel.of(2025, 12, 25), 200)
 
   "tryFromProtection" should {
     val protectionTypes = Seq[(ProtectionType, AmendableProtectionType)](

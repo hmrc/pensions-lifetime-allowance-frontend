@@ -17,11 +17,10 @@
 package controllers
 
 import auth.helpers.AuthMocks
-import config._
 import connectors.PlaConnectorError.{ConflictResponseError, LockedResponseError}
 import connectors.{CitizenDetailsConnector, PlaConnector}
 import constructors.display.DisplayConstructors
-import models.NotificationId._
+import models.NotificationId.*
 import models.amend.AmendsGAModel
 import models.cache.CacheMap
 import models.display.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel}
@@ -37,21 +36,20 @@ import models.pla.response.{
   ReadProtectionsResponse
 }
 import models.{DateModel, Person, PersonalDetailsModel, TimeModel}
-import org.mockito.ArgumentMatchers.{any, anyString, eq => eqTo}
-import org.mockito.Mockito._
+import org.mockito.ArgumentMatchers.{any, anyString, eq as eqTo}
+import org.mockito.Mockito.*
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.mvc.AnyContent
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.twirl.api.HtmlFormat
-import services.SessionCacheService
-import testHelpers._
-import testdata.AmendProtectionDisplayModelTestData._
+import testHelpers.*
+import testdata.AmendProtectionDisplayModelTestData.*
 import testdata.AmendProtectionModelTestData
 import testdata.PlaConnectorTestData.amendProtectionResponse
-import views.html.pages.amends._
+import views.html.pages.amends.*
 import views.html.pages.fallback.technicalError
 import views.html.pages.result.manualCorrespondenceNeeded
 
@@ -69,7 +67,6 @@ class AmendsControllerSpec
   private val displayConstructors: DisplayConstructors         = mock[DisplayConstructors]
   private val citizenDetailsConnector: CitizenDetailsConnector = mock[CitizenDetailsConnector]
   private val plaConnector: PlaConnector                       = mock[PlaConnector]
-  private val appConfig: AppConfig                             = mock[AppConfig]
 
   private val manualCorrespondenceNeededView: manualCorrespondenceNeeded     = mock[manualCorrespondenceNeeded]
   private val technicalErrorView: technicalError                             = mock[technicalError]
@@ -77,9 +74,7 @@ class AmendsControllerSpec
   private val amendOutcomeNoNotificationIdView: amendOutcomeNoNotificationId = mock[amendOutcomeNoNotificationId]
   private val amendSummaryView: amendSummary                                 = mock[amendSummary]
 
-  override val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
-
-  private val ec: ExecutionContext = inject[ExecutionContext]
+  private val executionContext: ExecutionContext = ExecutionContext.global
 
   private val controller = new AmendsController(
     sessionCacheService = mockSessionCacheService,
@@ -93,11 +88,10 @@ class AmendsControllerSpec
     amendOutcome = amendOutcomeView,
     amendOutcomeNoNotificationId = amendOutcomeNoNotificationIdView,
     amendSummary = amendSummaryView
-  )(ec)
+  )(using executionContext)
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockSessionCacheService)
     reset(citizenDetailsConnector)
     reset(plaConnector)
     reset(plaConnector)
@@ -107,17 +101,16 @@ class AmendsControllerSpec
     reset(amendOutcomeView)
     reset(amendOutcomeNoNotificationIdView)
     reset(amendSummaryView)
-    reset(appConfig)
 
     mockAuthSuccess(testNino)
-    when(manualCorrespondenceNeededView.apply()(any(), any())).thenReturn(HtmlFormat.empty)
-    when(technicalErrorView.apply()(any(), any())).thenReturn(HtmlFormat.empty)
-    when(amendOutcomeView.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
-    when(amendOutcomeNoNotificationIdView.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
-    when(amendSummaryView.apply(any(), any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
+    when(manualCorrespondenceNeededView.apply()(using any(), any())).thenReturn(HtmlFormat.empty)
+    when(technicalErrorView.apply()(using any(), any())).thenReturn(HtmlFormat.empty)
+    when(amendOutcomeView.apply(any())(using any(), any())).thenReturn(HtmlFormat.empty)
+    when(amendOutcomeNoNotificationIdView.apply(any())(using any(), any())).thenReturn(HtmlFormat.empty)
+    when(amendSummaryView.apply(any(), any(), any())(using any(), any())).thenReturn(HtmlFormat.empty)
   }
 
-  private implicit val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
+  private val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   private val testNino: String = "AB123456A"
 
@@ -197,12 +190,12 @@ class AmendsControllerSpec
       )(fakeRequest)
 
       status(result) shouldBe 500
-      verify(technicalErrorView).apply()(any(), any())
+      verify(technicalErrorView).apply()(using any(), any())
     }
 
     "there is a stored, updated amends model" in {
       mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2014))
-      when(displayConstructors.createAmendDisplayModel(any())(any())).thenReturn(testAmendDisplayModel)
+      when(displayConstructors.createAmendDisplayModel(any())(using any())).thenReturn(testAmendDisplayModel)
       val protectionType   = AmendableProtectionType.IndividualProtection2014
       val protectionStatus = AmendProtectionRequestStatus.Dormant
 
@@ -210,7 +203,7 @@ class AmendsControllerSpec
 
       status(result) shouldBe 200
       verify(amendSummaryView)
-        .apply(eqTo(testAmendDisplayModel), eqTo(protectionType), eqTo(protectionStatus))(any(), any())
+        .apply(eqTo(testAmendDisplayModel), eqTo(protectionType), eqTo(protectionStatus))(using any(), any())
     }
   }
 
@@ -218,7 +211,7 @@ class AmendsControllerSpec
 
     "PlaConnector returns a valid response should redirect to amendmentOutcome" in {
       mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2014))
-      when(plaConnector.amendProtection(any(), any())(any(), any()))
+      when(plaConnector.amendProtection(any(), any())(using any()))
         .thenReturn(Future.successful(Right(amendProtectionResponse)))
       mockSaveAmendResponseModel()
       mockSaveAmendsGAModel()
@@ -231,12 +224,12 @@ class AmendsControllerSpec
 
       status(result) shouldBe 303
       redirectLocation(result) shouldBe Some(s"${routes.AmendsController.amendmentOutcome}")
-      verify(mockSessionCacheService).saveAmendResponseModel(any())(any())
+      verify(mockSessionCacheService).saveAmendResponseModel(any())(using any())
     }
 
     "PlaConnector returns LockedResponseError should return Locked response and manual correspondence page" in {
       mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2014))
-      when(plaConnector.amendProtection(any(), any())(any(), any()))
+      when(plaConnector.amendProtection(any(), any())(using any()))
         .thenReturn(Future.successful(Left(LockedResponseError)))
       mockSaveAmendsGAModel()
 
@@ -247,12 +240,12 @@ class AmendsControllerSpec
         )(fakeRequest)
 
       status(result) shouldBe 423
-      verify(manualCorrespondenceNeededView).apply()(any(), any())
+      verify(manualCorrespondenceNeededView).apply()(using any(), any())
     }
 
     "PlaConnector returns ConflictResponseError should return InternalServerError and technical error page" in {
       mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2014))
-      when(plaConnector.amendProtection(any(), any())(any(), any()))
+      when(plaConnector.amendProtection(any(), any())(using any()))
         .thenReturn(Future.successful(Left(ConflictResponseError)))
       mockSaveAmendsGAModel()
 
@@ -263,7 +256,7 @@ class AmendsControllerSpec
         )(fakeRequest)
 
       status(result) shouldBe 500
-      verify(technicalErrorView).apply()(any(), any())
+      verify(technicalErrorView).apply()(using any(), any())
     }
 
     "PlaConnector returns a response with no notificationId" should {
@@ -290,7 +283,7 @@ class AmendsControllerSpec
         )
 
         mockFetchAmendProtectionModel(any(), any())(Some(amendDormantIndividualProtection2014))
-        when(plaConnector.amendProtection(any(), any())(any(), any()))
+        when(plaConnector.amendProtection(any(), any())(using any()))
           .thenReturn(Future.successful(Right(response)))
         mockSaveAmendsGAModel()
         mockSaveAmendResponseModel()
@@ -304,7 +297,7 @@ class AmendsControllerSpec
         status(result) shouldBe 303
         redirectLocation(result) shouldBe Some(routes.AmendsController.amendmentOutcome.url)
 
-        verify(mockSessionCacheService).saveAmendResponseModel(any())(any())
+        verify(mockSessionCacheService).saveAmendResponseModel(any())(using any())
       }
     }
   }
@@ -317,13 +310,13 @@ class AmendsControllerSpec
       "return Internal Server Error" in {
         mockFetchAmendResponseModel(None)
         mockFetchAmendsGAModel(Some(emptyAmendsGAModel))
-        when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
+        when(citizenDetailsConnector.getPersonDetails(anyString())(using any()))
           .thenReturn(Future.successful(Some(testPersonalDetails)))
 
         val result = controller.amendmentOutcome()(fakeRequest)
 
         status(result) shouldBe INTERNAL_SERVER_ERROR
-        verify(technicalErrorView).apply()(any(), any())
+        verify(technicalErrorView).apply()(using any(), any())
       }
     }
 
@@ -345,18 +338,18 @@ class AmendsControllerSpec
         "return Ok status with amendOutcome view" in {
           mockFetchAmendResponseModel(Some(amendResponseModel))
           mockFetchAmendsGAModel(Some(emptyAmendsGAModel))
-          when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
+          when(citizenDetailsConnector.getPersonDetails(anyString())(using any()))
             .thenReturn(Future.successful(Some(testPersonalDetails)))
-          when(mockSessionCacheService.saveOpenProtection(any())(any()))
+          when(mockSessionCacheService.saveOpenProtection(any())(using any()))
             .thenReturn(Future.successful(CacheMap("", Map.empty)))
-          when(displayConstructors.createAmendOutcomeDisplayModel(any(), any(), anyString(), any())(any()))
+          when(displayConstructors.createAmendOutcomeDisplayModel(any(), any(), anyString(), any())(using any()))
             .thenReturn(amendOutcomeDisplayModel)
 
           val result = controller.amendmentOutcome()(fakeRequest)
 
           status(result) shouldBe OK
-          verify(mockSessionCacheService).saveOpenProtection(eqTo(amendResponseModel.toProtectionModel))(any())
-          verify(amendOutcomeView).apply(eqTo(amendOutcomeDisplayModel))(any(), any())
+          verify(mockSessionCacheService).saveOpenProtection(eqTo(amendResponseModel.toProtectionModel))(using any())
+          verify(amendOutcomeView).apply(eqTo(amendOutcomeDisplayModel))(using any(), any())
         }
       }
     }
@@ -409,56 +402,56 @@ class AmendsControllerSpec
           "call PLAConnector" in {
             mockFetchAmendResponseModel(Some(amendResponseModel))
             mockFetchAmendsGAModel(Some(emptyAmendsGAModel))
-            when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
+            when(citizenDetailsConnector.getPersonDetails(anyString())(using any()))
               .thenReturn(Future.successful(Some(testPersonalDetails)))
-            when(plaConnector.readProtections(any())(any(), any()))
+            when(plaConnector.readProtections(any())(using any()))
               .thenReturn(Future.successful(Right(readProtectionResponseModel)))
-            when(displayConstructors.createAmendOutcomeDisplayModel(any(), any(), anyString(), any())(any()))
+            when(displayConstructors.createAmendOutcomeDisplayModel(any(), any(), anyString(), any())(using any()))
               .thenReturn(amendOutcomeDisplayModel)
 
             controller.amendmentOutcome()(fakeRequest).futureValue
 
-            verify(plaConnector).readProtections(eqTo(testNino))(any(), any())
+            verify(plaConnector).readProtections(eqTo(testNino))(using any())
           }
 
           "call SessionCacheService.saveFormData providing correct data" in {
             mockFetchAmendResponseModel(Some(amendResponseModel))
             mockFetchAmendsGAModel(Some(emptyAmendsGAModel))
-            when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
+            when(citizenDetailsConnector.getPersonDetails(anyString())(using any()))
               .thenReturn(Future.successful(Some(testPersonalDetails)))
-            when(plaConnector.readProtections(any())(any(), any()))
+            when(plaConnector.readProtections(any())(using any()))
               .thenReturn(Future.successful(Right(readProtectionResponseModel)))
-            when(mockSessionCacheService.saveOpenProtection(any())(any()))
+            when(mockSessionCacheService.saveOpenProtection(any())(using any()))
               .thenReturn(Future.successful(CacheMap("", Map.empty)))
-            when(displayConstructors.createAmendOutcomeDisplayModel(any(), any(), anyString(), any())(any()))
+            when(displayConstructors.createAmendOutcomeDisplayModel(any(), any(), anyString(), any())(using any()))
               .thenReturn(amendOutcomeDisplayModel)
 
             controller.amendmentOutcome()(fakeRequest).futureValue
 
             verify(mockSessionCacheService)
-              .saveOpenProtection(eqTo(amendResponseModel.toProtectionModel))(any())
+              .saveOpenProtection(eqTo(amendResponseModel.toProtectionModel))(using any())
           }
 
           "return Ok status with amendOutcome view" in {
             mockFetchAmendResponseModel(Some(amendResponseModel))
             mockFetchAmendsGAModel(Some(emptyAmendsGAModel))
-            when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
+            when(citizenDetailsConnector.getPersonDetails(anyString())(using any()))
               .thenReturn(Future.successful(Some(testPersonalDetails)))
-            when(plaConnector.readProtections(any())(any(), any()))
+            when(plaConnector.readProtections(any())(using any()))
               .thenReturn(Future.successful(Right(readProtectionResponseModel)))
-            when(displayConstructors.createAmendOutcomeDisplayModel(any(), any(), anyString(), any())(any()))
+            when(displayConstructors.createAmendOutcomeDisplayModel(any(), any(), anyString(), any())(using any()))
               .thenReturn(amendOutcomeDisplayModel)
 
             val result = controller.amendmentOutcome()(fakeRequest)
 
             status(result) shouldBe OK
-            verify(amendOutcomeView).apply(eqTo(amendOutcomeDisplayModel))(any(), any())
+            verify(amendOutcomeView).apply(eqTo(amendOutcomeDisplayModel))(using any(), any())
           }
         }
       }
 
     "AmendResponseModel stored in cache contains no notification ID" should {
-      import testdata.AmendProtectionDisplayModelTestData._
+      import testdata.AmendProtectionDisplayModelTestData.*
 
       "return Ok status with amendOutcomeNoNotificationId view" in {
         val amendResponseModel = amendResponseModelNoNotificationIdIndividualProtection2014
@@ -467,15 +460,15 @@ class AmendsControllerSpec
 
         mockFetchAmendResponseModel(Some(amendResponseModel))
         mockFetchAmendsGAModel(Some(emptyAmendsGAModel))
-        when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
+        when(citizenDetailsConnector.getPersonDetails(anyString())(using any()))
           .thenReturn(Future.successful(Some(testPersonalDetails)))
-        when(displayConstructors.createAmendOutcomeDisplayModelNoNotificationId(any(), any(), any())(any()))
+        when(displayConstructors.createAmendOutcomeDisplayModelNoNotificationId(any(), any(), any())(using any()))
           .thenReturn(amendResultDisplayModel)
 
         val result = controller.amendmentOutcome()(fakeRequest)
 
         status(result) shouldBe OK
-        verify(amendOutcomeNoNotificationIdView).apply(eqTo(amendResultDisplayModel))(any(), any())
+        verify(amendOutcomeNoNotificationIdView).apply(eqTo(amendResultDisplayModel))(using any(), any())
       }
 
     }

@@ -17,11 +17,11 @@
 package views.playhelpers.templates
 
 import models.NotificationId
-import models.NotificationId._
+import models.NotificationId.*
 import models.display.AmendPrintDisplayModel
 import org.jsoup.Jsoup
 import testHelpers.CommonViewSpecHelper
-import testdata.AmendProtectionDisplayModelTestData._
+import testdata.AmendProtectionDisplayModelTestData.*
 import views.html.playHelpers.templates.amendProtectionOutcomeTable
 
 /* This view used to contain lots of logic surrounding the notification id, motivating all of the tests here.

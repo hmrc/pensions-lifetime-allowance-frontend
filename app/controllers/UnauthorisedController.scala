@@ -18,8 +18,8 @@ package controllers
 
 import connectors.IdentityVerificationConnector
 import enums.IdentityVerificationResult
-import play.api.{Application, Logging}
-import play.api.mvc._
+import play.api.Logging
+import play.api.mvc.*
 import services.SessionCacheService
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -41,7 +41,9 @@ class UnauthorisedController @Inject() (
 ) extends FrontendController(mcc)
     with Logging {
 
-  def showNotAuthorised(journeyId: Option[String]): Action[AnyContent] = Action.async { implicit request =>
+  def showNotAuthorised(journeyId: Option[String]): Action[AnyContent] = Action.async { request =>
+    given MessagesRequest[?] = request
+
     val result: Future[Result] = journeyId
       .map { id =>
         val identityVerificationResult = identityVerificationConnector.identityVerificationResponse(id)

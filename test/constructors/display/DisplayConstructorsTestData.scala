@@ -25,7 +25,7 @@ import models.pla.request.AmendProtectionRequestStatus
 import models.pla.response.{AmendProtectionResponseStatus, ProtectionStatus, ProtectionType}
 import models.{
   AmendResponseModel,
-  AmendedProtectionType,
+  AmendResponseProtectionType,
   DateModel,
   PensionDebitModel,
   Person,
@@ -33,19 +33,13 @@ import models.{
   ProtectionModel,
   TimeModel
 }
-import org.scalatestplus.mockito.MockitoSugar.mock
-import play.api.i18n.{Lang, Messages}
-import play.api.mvc.{AnyContentAsEmpty, MessagesControllerComponents}
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 import testHelpers.FakeApplication
 
 trait DisplayConstructorsTestData extends FakeApplication {
 
-  implicit val mockLang: Lang                                   = mock[Lang]
-  implicit val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-
-  implicit val mockMessage: Messages =
-    inject[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
+  given messages: Messages = inject[MessagesApi].preferred(FakeRequest())
 
   val tstPsaCheckRef = "PSA33456789"
 
@@ -275,7 +269,7 @@ trait DisplayConstructorsTestData extends FakeApplication {
   val amendResponseModel = AmendResponseModel(
     identifier = 1,
     sequenceNumber = 1,
-    protectionType = AmendedProtectionType.IndividualProtection2014,
+    protectionType = AmendResponseProtectionType.IndividualProtection2014,
     status = AmendProtectionResponseStatus.Open,
     certificateDate = Some(DateModel.of(2016, 4, 17)),
     certificateTime = Some(TimeModel.of(15, 14, 0)),
@@ -296,7 +290,7 @@ trait DisplayConstructorsTestData extends FakeApplication {
     firstName = "Testy",
     surname = "Mctestface",
     nino = tstNino,
-    protectionType = AmendedProtectionType.IndividualProtection2014,
+    protectionType = AmendResponseProtectionType.IndividualProtection2014,
     status = None,
     psaCheckReference = Some(tstPsaCheckRef),
     protectionReference = Some("protectionReference"),

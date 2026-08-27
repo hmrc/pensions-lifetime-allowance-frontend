@@ -25,20 +25,17 @@ import org.jsoup.nodes.Document
 import play.api.data.Form
 import testHelpers.CommonViewSpecHelper
 import testHelpers.messages.amends.AmendIP16PensionsWorthBeforeViewMessages
-import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.amendIP16PensionsWorthBefore
 
 class AmendIP16PensionsWorthBeforeViewSpec extends CommonViewSpecHelper with AmendIP16PensionsWorthBeforeViewMessages {
 
-  implicit val formWithCSRF: FormWithCSRF = inject[FormWithCSRF]
+  private val view: amendIP16PensionsWorthBefore = inject[amendIP16PensionsWorthBefore]
 
-  val view: amendIP16PensionsWorthBefore = inject[amendIP16PensionsWorthBefore]
-
-  val form: Form[AmendPensionsWorthBeforeModel] = AmendPensionsWorthBeforeForm
+  private val form: Form[AmendPensionsWorthBeforeModel] = AmendPensionsWorthBeforeForm
     .amendPensionsWorthBeforeForm(IndividualProtection2016)
     .bind(Map("amendedPensionsWorthBefore" -> "yes", "amendedPensionsTakenBeforeAmt" -> "12345"))
 
-  val doc: Document =
+  private val doc: Document =
     Jsoup.parse(view.apply(form, IndividualProtection2016, Open).body)
 
   "the AmendPensionsWorthBeforeView" should {

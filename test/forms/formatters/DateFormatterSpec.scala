@@ -28,7 +28,7 @@ import java.time.format.DateTimeFormatter
 
 class DateFormatterSpec extends AnyWordSpec with FakeApplication with FakeRequestHelper with Matchers {
 
-  object Errors {
+  private object Errors {
     val dateRequiredError      = s"$testKey.error.required"
     val dayRequiredError       = s"$testKey.error.required.day"
     val dayMonthRequiredError  = s"$testKey.error.required.dayMonth"
@@ -54,22 +54,22 @@ class DateFormatterSpec extends AnyWordSpec with FakeApplication with FakeReques
     val dateMaxError = s"$testKey.error.range.max"
   }
 
-  val testKey  = "testKey"
-  val dayKey   = s"$testKey.day"
-  val monthKey = s"$testKey.month"
-  val yearKey  = s"$testKey.year"
+  private val testKey  = "testKey"
+  private val dayKey   = s"$testKey.day"
+  private val monthKey = s"$testKey.month"
+  private val yearKey  = s"$testKey.year"
 
-  val testDate: LocalDate    = LocalDate.of(2000, 2, 1)
-  val testMinDate: LocalDate = testDate.minusYears(1)
-  val testMaxDate: LocalDate = testDate.plusYears(1)
+  private val testDate: LocalDate    = LocalDate.of(2000, 2, 1)
+  private val testMinDate: LocalDate = testDate.minusYears(1)
+  private val testMaxDate: LocalDate = testDate.plusYears(1)
 
-  val messagesApi: MessagesApi    = inject[MessagesApi]
-  implicit val messages: Messages = messagesApi.preferred(fakeRequest)
+  private val messagesApi: MessagesApi = inject[MessagesApi]
+  private val messages: Messages       = messagesApi.preferred(fakeRequest)
 
-  val testFormatter: DateFormatter =
-    DateFormatter(testKey, Some(testMinDate), Some(testMaxDate))(messages)
+  private val testFormatter: DateFormatter =
+    DateFormatter(testKey, Some(testMinDate), Some(testMaxDate))(using messages)
 
-  val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy", messages.lang.toLocale)
+  private val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy", messages.lang.toLocale)
 
   "testFormatter.bind" when {
     "there is a single empty field" must {
@@ -332,7 +332,7 @@ class DateFormatterSpec extends AnyWordSpec with FakeApplication with FakeReques
     }
     "the formatter has inclusive date range" must {
       val testFormatter: DateFormatter =
-        DateFormatter(testKey, Some(testMinDate), Some(testMaxDate), rangeInclusive = true)(messages)
+        DateFormatter(testKey, Some(testMinDate), Some(testMaxDate), rangeInclusive = true)(using messages)
 
       "return global date error when date is valid but is too far in the future" in {
         val testDate = testMaxDate.plusDays(1)
@@ -392,7 +392,7 @@ class DateFormatterSpec extends AnyWordSpec with FakeApplication with FakeReques
       }
     }
     "the formatter does not have min and max dates" must {
-      val formatter = DateFormatter(testKey)
+      val formatter = DateFormatter(testKey)(using messages)
       "return the date when date is valid in the future" in {
         formatter.bind(
           testKey,

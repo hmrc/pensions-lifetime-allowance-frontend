@@ -25,7 +25,6 @@ import org.jsoup.nodes.Document
 import play.api.data.Form
 import testHelpers.CommonViewSpecHelper
 import testHelpers.messages.amends.{AmendIP16PensionsTakenBetweenViewMessages, AmendIP16PensionsUsedBetweenViewMessages}
-import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.amendIP16PensionsUsedBetween
 
 class AmendIP16PensionsUsedBetweenViewSpec
@@ -33,15 +32,13 @@ class AmendIP16PensionsUsedBetweenViewSpec
     with AmendIP16PensionsTakenBetweenViewMessages
     with AmendIP16PensionsUsedBetweenViewMessages {
 
-  implicit val formWithCSRF: FormWithCSRF = inject[FormWithCSRF]
+  private val view: amendIP16PensionsUsedBetween = inject[amendIP16PensionsUsedBetween]
 
-  val view: amendIP16PensionsUsedBetween = inject[amendIP16PensionsUsedBetween]
-
-  val form: Form[AmendPensionsUsedBetweenModel] = AmendPensionsUsedBetweenForm
+  private val form: Form[AmendPensionsUsedBetweenModel] = AmendPensionsUsedBetweenForm
     .amendPensionsUsedBetweenForm(IndividualProtection2016)
     .bind(Map("amendedPensionsUsedBetween" -> "yes", "amendedPensionsUsedBetweenAmt" -> "12345"))
 
-  val doc: Document = Jsoup.parse(view.apply(form, IndividualProtection2016, Open).body)
+  private val doc: Document = Jsoup.parse(view.apply(form, IndividualProtection2016, Open).body)
 
   "the AmendPensionsUsedBetweenView" should {
     "have the correct title" in {

@@ -16,7 +16,7 @@
 
 package controllers
 
-import play.api.mvc._
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, MessagesRequest}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.applicationClosed.{applicationClosed2014, applicationClosed2016}
 
@@ -29,7 +29,16 @@ class ApplicationClosedController @Inject() (
     applicationClosed2016: applicationClosed2016
 ) extends FrontendController(mcc) {
 
-  def showApplicationClosed2014(): Action[AnyContent] = Action(implicit request => Ok(applicationClosed2014()))
+  def showApplicationClosed2014(): Action[AnyContent] = Action { request =>
+    given MessagesRequest[?] = request
 
-  def showApplicationClosed2016(): Action[AnyContent] = Action(implicit request => Ok(applicationClosed2016()))
+    Ok(applicationClosed2014())
+  }
+
+  def showApplicationClosed2016(): Action[AnyContent] = Action { request =>
+    given MessagesRequest[?] = request
+
+    Ok(applicationClosed2016())
+  }
+
 }

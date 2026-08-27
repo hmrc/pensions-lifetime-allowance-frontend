@@ -16,14 +16,16 @@
 
 @import config.AppConfig
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage.{Banners, HmrcStandardPageParams, ServiceURLs, TemplateOverrides}
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.userresearchbanner.UserResearchBanner
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.{HmrcStandardPage, HmrcReportTechnicalIssueHelper, HmrcTimeoutDialogHelper}
+@import uk.gov.hmrc.govukfrontend.views.html.components.{ServiceNavigation, ServiceNavigationItem, BackLink, Text}
+@import uk.gov.hmrc.govukfrontend.views.Implicits.{RichServiceNavigation, RichString}
 
 @this(
     hmrcStandardPage: HmrcStandardPage,
-    twoThirdsMainContent: TwoThirdsMainContent,
     hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
     hmrcTimeoutDialogHelper: HmrcTimeoutDialogHelper,
     appConfig: AppConfig,
-    govukBackLink: GovukBackLink
 )
 
 @(
@@ -36,7 +38,7 @@
 )(
     contentBlock: Html
 )(
-    implicit request: RequestHeader,
+    using request: RequestHeader,
     messages: Messages
 )
 

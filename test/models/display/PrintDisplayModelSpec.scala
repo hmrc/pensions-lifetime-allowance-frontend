@@ -18,7 +18,7 @@ package models.display
 
 import models.pla.response.ProtectionStatus.Open
 import models.pla.response.ProtectionType
-import models.pla.response.ProtectionType._
+import models.pla.response.ProtectionType.*
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 

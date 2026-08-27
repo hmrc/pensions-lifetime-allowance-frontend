@@ -14,6 +14,9 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.govukfrontend.views.html.components.{GovukRadios, RadioItem, Radios, Fieldset, Legend, Text, Hint}
+@import uk.gov.hmrc.govukfrontend.views.Implicits.RichRadios
+
 @this(govukRadios : GovukRadios)
 
 @(
@@ -24,7 +27,7 @@
     isPageHeading: Boolean = true,
     inLine: Boolean = false,
     field: Field
-)(implicit messages: Messages)
+)(using messages: Messages)
 
 @govukRadios(
     Radios(

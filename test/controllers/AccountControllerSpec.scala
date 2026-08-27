@@ -20,15 +20,15 @@ import config.AppConfig
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.http.Status
 import play.api.mvc.MessagesControllerComponents
-import play.api.test.Helpers._
-import testHelpers._
+import play.api.test.Helpers.*
+import testHelpers.*
 
 class AccountControllerSpec extends FakeApplication with MockitoSugar {
 
-  val appConfig: AppConfig              = inject[AppConfig]
-  val mcc: MessagesControllerComponents = inject[MessagesControllerComponents]
+  private val appConfig: AppConfig              = inject[AppConfig]
+  private val mcc: MessagesControllerComponents = stubMessagesControllerComponents()
 
-  val controller = new AccountController(appConfig, mcc)
+  private val controller = new AccountController(appConfig, mcc)
 
   "navigating to signout with an existing session" in {
 
