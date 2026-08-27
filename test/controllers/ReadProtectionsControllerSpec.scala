@@ -111,11 +111,10 @@ class ReadProtectionsControllerSpec
     authActions,
     mockTechnicalError,
     mockManualCorrespondenceNeeded,
-    mockExistingProtections
+    mockExistingProtections,
+    mockAppConfig
   )(
-    application,
-    mockAppConfig,
-    executionContext
+    using executionContext
   )
 
   val individualProtection2016 = ProtectionModel(

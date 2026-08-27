@@ -18,15 +18,16 @@ package controllers
 
 import config.AppConfig
 import play.api.Application
-import play.api.mvc._
+import play.api.mvc.*
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class TimeoutController @Inject() (mcc: MessagesControllerComponents, Timeout: views.html.pages.timeout)(
-    implicit val appConfig: AppConfig,
-    implicit val application: Application
+class TimeoutController @Inject() (
+    mcc: MessagesControllerComponents,
+    Timeout: views.html.pages.timeout
+)(
 ) extends FrontendController(mcc) {
 
   def timeout: Action[AnyContent] = Action(implicit request => Ok(Timeout()))

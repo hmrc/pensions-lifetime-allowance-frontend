@@ -175,7 +175,7 @@ class CurrencyMappingsSpec extends AnyWordSpec with Matchers {
 
   "isBelowMax" should {
     "return true" when
-      Seq(
+      Seq[BigDecimal](
         10,
         maximumCurrencyAmount,
         0,
@@ -187,7 +187,7 @@ class CurrencyMappingsSpec extends AnyWordSpec with Matchers {
       }
 
     "return false" when
-      Seq(
+      Seq[BigDecimal](
         maximumCurrencyAmount + 0.01,
         10_000_000_000L,
         Int.MaxValue

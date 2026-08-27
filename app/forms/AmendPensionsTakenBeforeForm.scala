@@ -32,7 +32,7 @@ object AmendPensionsTakenBeforeForm extends YesNoMappings {
         messageKeyPrefix = "pla.pensionsTakenBefore.errors",
         protectionTypeSuffix = protectionType
       )
-    )(AmendPensionsTakenBeforeModel.apply)(AmendPensionsTakenBeforeModel.unapply)
+    )(AmendPensionsTakenBeforeModel.apply)(x => Some(x.amendedPensionsTakenBefore))
   )
 
 }
