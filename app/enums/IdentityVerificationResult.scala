@@ -46,7 +46,7 @@ enum IdentityVerificationResult {
 
 object IdentityVerificationResult extends Logging {
 
-  given formats: Format[IdentityVerificationResult] = new Format[IdentityVerificationResult] {
+  given Format[IdentityVerificationResult] = new Format[IdentityVerificationResult] {
     def reads(json: JsValue): JsResult[IdentityVerificationResult] =
       JsSuccess(IdentityVerificationResult.values.find(_.toString == json.as[String]).getOrElse {
         logger.warn(
