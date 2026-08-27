@@ -63,7 +63,7 @@ class AuthenticateWithNino @Inject() (
   private val enrolmentKey: String = "HMRC-NI"
 
   private def authErrorHandling[A](
-      using request: MessagesRequest[A]
+      using MessagesRequest[A]
   ): PartialFunction[Throwable, Left[Result, AuthenticatedRequest[A]]] = {
     case _: NoActiveSession =>
       Left(redirectToSignIn)
