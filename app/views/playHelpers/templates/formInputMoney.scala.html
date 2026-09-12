@@ -43,5 +43,5 @@
     prefix = Some(PrefixOrSuffix(
         content = Text("£")
     )),
-    errorMessage = if (errorMessage.get != "") Some(ErrorMessage(content = Text(errorMessage.get))) else None
+    errorMessage = if (errorMessage.get != "") Some(ErrorMessage.errorMessageWithDefaultStringsTranslated(content = Text(errorMessage.get))) else None
 ).withFormField(field))
