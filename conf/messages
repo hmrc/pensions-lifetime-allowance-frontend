@@ -12,7 +12,7 @@ pla.base.remove            = Remove
 pla.base.add               = Add
 pla.base.newTab            = opens in new tab
 pla.base.errorSummaryLabel = There are errors on this page
-site.title.error           = Error123: {0}
+site.title.error           = Error: {0}
 
 ## Service Navigation ##
 pla.service-navigation.home     = Account home
