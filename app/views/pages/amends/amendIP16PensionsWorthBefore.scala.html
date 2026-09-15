@@ -55,9 +55,12 @@
 }
 
 @errorMessage = @{
-    for(error <- amendPensionsWorthBeforeForm.errors) yield {
-        if(error.key.equals("amendedPensionsTakenBefore")) "" else messages(error.message, error.args*)
-    }
+    amendPensionsWorthBeforeForm.errors
+        .flatMap(error =>
+            Option.unless (error.key.equals("amendedPensionsTakenBefore")) {
+                messages(error.message, error.args *)
+            }
+        )
 }
 
 @title = @{
@@ -88,7 +91,7 @@
                 hintText = Some(messages("pla.pensionsWorthBefore.hint")),
                 hideLabel = true,
                 pageHeading = false,
-                errorMessage = if (amendPensionsWorthBeforeForm.errors.nonEmpty) Some(errorMessage.head) else Some("")
+                errorMessage = errorMessage.headOption,
           )
 
           @submitButton(submitText = messages("pla.base.change"))
