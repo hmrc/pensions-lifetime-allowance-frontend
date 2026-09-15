@@ -28,7 +28,7 @@
     pageHeading:Boolean = true,
     labelClass: Option[String] = None,
     hintText: Option[String] = None,
-    errorMessage: Option[String] = Some("")
+    errorMessage: Option[String] = None
 )(using messages: Messages)
 
 @govukInput(Input(
@@ -37,11 +37,11 @@
         classes = if(hideLabel) "govuk-visually-hidden" else labelClass.getOrElse("govuk-label--xl"),
         content = Text(question)
     ),
-    hint = hintText.map(text => (Hint(content = Text(text)))),
+    hint = hintText.map(text => Hint(content = Text(text))),
     classes = "govuk-input--width-10",
     spellcheck = Some(false),
     prefix = Some(PrefixOrSuffix(
         content = Text("£")
     )),
-    errorMessage = if (errorMessage.get != "") Some(ErrorMessage.errorMessageWithDefaultStringsTranslated(content = Text(errorMessage.get))) else None
+    errorMessage = errorMessage.map(errorMessage => ErrorMessage.errorMessageWithDefaultStringsTranslated(content = Text(errorMessage)))
 ).withFormField(field))

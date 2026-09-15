@@ -37,7 +37,7 @@ object AmendOutcomeDisplayModelNoNotificationIdConstructor {
       throw Exceptions.OptionNotDefinedException(
         "createAmendOutcomeDisplayModelNoNotificationId",
         "protectedAmount",
-        protectionType.toString
+        protectionType.toProtectionType
       )
     }
 
