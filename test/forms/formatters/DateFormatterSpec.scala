@@ -71,7 +71,7 @@ class DateFormatterSpec extends AnyWordSpec with FakeApplication with FakeReques
 
   private val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy", messages.lang.toLocale)
 
-  "testFormatter.bind" when {
+  "DateFormatter.bind" when {
     "there is a single empty field" must {
       "return day required error when only the day is missing" in {
         testFormatter.bind(
@@ -232,7 +232,7 @@ class DateFormatterSpec extends AnyWordSpec with FakeApplication with FakeReques
         ) shouldBe Left(List(FormError(testKey, Errors.dateInvalidError)))
       }
     }
-    "there input does not form a real date" must {
+    "input does not form a real date" must {
       "return invalid error on the day key when only the day is not real" in {
         testFormatter.bind(
           testKey,
@@ -284,55 +284,9 @@ class DateFormatterSpec extends AnyWordSpec with FakeApplication with FakeReques
         ) shouldBe Left(List(FormError(testKey, Errors.dateNotRealError)))
       }
     }
-    "the formatter has non inclusive date range" must {
-      "return global date error when date is valid but is too far in the future" in {
-        val testDate = testMaxDate.plusDays(1)
-        testFormatter.bind(
-          testKey,
-          Map(
-            dayKey   -> testDate.getDayOfMonth.toString,
-            monthKey -> testDate.getMonthValue.toString,
-            yearKey  -> testDate.getYear.toString
-          )
-        ) shouldBe Left(List(FormError(testKey, Errors.dateMaxError, List(dateFormatter.format(testMaxDate)))))
-      }
-      "return global date error when date is valid but is too far in the past" in {
-        val testDate = testMinDate.minusDays(1)
-        testFormatter.bind(
-          testKey,
-          Map(
-            dayKey   -> testDate.getDayOfMonth.toString,
-            monthKey -> testDate.getMonthValue.toString,
-            yearKey  -> testDate.getYear.toString
-          )
-        ) shouldBe Left(List(FormError(testKey, Errors.dateMinError, List(dateFormatter.format(testMinDate)))))
-      }
-      "return global date error when date is equal to the max boundary" in {
-        val testDate = testMaxDate
-        testFormatter.bind(
-          testKey,
-          Map(
-            dayKey   -> testDate.getDayOfMonth.toString,
-            monthKey -> testDate.getMonthValue.toString,
-            yearKey  -> testDate.getYear.toString
-          )
-        ) shouldBe Left(List(FormError(testKey, Errors.dateMaxError, List(dateFormatter.format(testMaxDate)))))
-      }
-      "return global date error when date is equal to the min boundary" in {
-        val testDate = testMinDate
-        testFormatter.bind(
-          testKey,
-          Map(
-            dayKey   -> testDate.getDayOfMonth.toString,
-            monthKey -> testDate.getMonthValue.toString,
-            yearKey  -> testDate.getYear.toString
-          )
-        ) shouldBe Left(List(FormError(testKey, Errors.dateMinError, List(dateFormatter.format(testMinDate)))))
-      }
-    }
-    "the formatter has inclusive date range" must {
+    "the formatter has a date range" must {
       val testFormatter: DateFormatter =
-        DateFormatter(testKey, Some(testMinDate), Some(testMaxDate), rangeInclusive = true)(using messages)
+        DateFormatter(testKey, Some(testMinDate), Some(testMaxDate))(using messages)
 
       "return global date error when date is valid but is too far in the future" in {
         val testDate = testMaxDate.plusDays(1)
