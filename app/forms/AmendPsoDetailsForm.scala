@@ -40,7 +40,7 @@ object AmendPsoDetailsForm extends CurrencyMappings {
       key -> of(
         DateFormatter(
           key,
-          optMinDate = Some(
+          minDate = Some(
             protectionType match {
               case IndividualProtection2014 | IndividualProtection2014LTA =>
                 Constants.minIndividualProtection2014PsoDate
@@ -48,7 +48,7 @@ object AmendPsoDetailsForm extends CurrencyMappings {
                 Constants.minIndividualProtection2016PsoDate
             }
           ),
-          optMaxDate = Some(LocalDate.now.plusDays(1))
+          maxDate = Some(LocalDate.now)
         )
       ),
       amount -> currencyMappingFromPrefix("pla.psoDetails.amount.errors")
