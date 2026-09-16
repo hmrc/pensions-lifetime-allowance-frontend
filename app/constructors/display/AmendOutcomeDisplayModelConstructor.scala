@@ -56,7 +56,7 @@ object AmendOutcomeDisplayModelConstructor {
         throw Exceptions.OptionNotDefinedException(
           "createAmendResultDisplayModel",
           "protectedAmount",
-          model.protectionType.toString
+          model.protectionType.toProtectionType
         )
       }
     }

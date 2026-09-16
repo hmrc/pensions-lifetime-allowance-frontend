@@ -27,7 +27,8 @@ lazy val scoverageSettings = {
       "-Wconf:msg=unused-imports&src=html/.*:s",
       "-Wconf:msg=unused-imports&src=routes/.*:s",
       "-Wconf:msg=unused&src=routes/.*:s",
-      "-Wconf:msg=Flag.*repeatedly:s"
+      "-Wconf:msg=Flag.*repeatedly:s",
+      "-Wconf:msg=Setting -Wunused set to all redundantly:s"
     )
   )
 }

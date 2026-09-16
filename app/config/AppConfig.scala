@@ -24,8 +24,8 @@ import scala.concurrent.duration.{Duration, DurationInt}
 
 @Singleton
 class AppConfig @Inject() (
-    val configuration: Configuration,
-    val servicesConfig: ServicesConfig
+    configuration: Configuration,
+    servicesConfig: ServicesConfig
 ) {
 
   val psaLookupWithdrawLinkUrl: String = servicesConfig.getString("psa.lookup.withdrawLink.url")
