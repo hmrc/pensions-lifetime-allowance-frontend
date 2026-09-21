@@ -32,9 +32,7 @@ class CitizenDetailsConnector @Inject() (appConfig: AppConfig, http: HttpClientV
     using ExecutionContext
 ) extends Logging {
 
-  private val citizenDetailsBaseUrl: String = appConfig.citizenDetailsBaseUrl
-
-  private def url(nino: String) = s"$citizenDetailsBaseUrl/citizen-details/$nino/designatory-details"
+  private def url(nino: String) = s"${appConfig.citizenDetailsBaseUrl}/citizen-details/$nino/designatory-details"
 
   def getPersonDetails(nino: String)(using HeaderCarrier): Future[Option[PersonalDetailsModel]] = {
     val cdUrl = url(nino)

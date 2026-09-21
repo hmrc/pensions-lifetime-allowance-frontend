@@ -16,13 +16,15 @@
 
 package common
 
+import models.pla.response.ProtectionType
+
 object Exceptions extends Exceptions
 
 trait Exceptions {
 
-  case class OptionNotDefinedException(functionName: String, optionName: String, applicationType: String)
+  case class OptionNotDefinedException(functionName: String, optionName: String, protectionType: ProtectionType)
       extends Exception(
-        s"Option not found for $optionName in $functionName for application type $applicationType"
+        s"Option not found for $optionName in $functionName for application type $protectionType"
       )
 
   case class RequiredValueNotDefinedException(functionName: String, optionName: String)
