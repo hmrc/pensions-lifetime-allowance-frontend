@@ -55,7 +55,7 @@ class RemovePensionSharingOrderViewSpec extends CommonViewSpecHelper with Remove
       val formElement = doc.select("form")
 
       formElement.attr("method") shouldBe "POST"
-      formElement.attr("action") shouldBe controllers.routes.removePensionSharingOrderController.submitRemovePso(IndividualProtection2016, Open)
+      formElement.attr("action") shouldBe controllers.routes.RemovePensionSharingOrderController.submitRemovePso(IndividualProtection2016, Open)
         .url
     }
 

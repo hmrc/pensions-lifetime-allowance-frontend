@@ -77,8 +77,8 @@ POST        /amend-protection/current-pensions/:protectionType/:status          
 GET         /amend-protection/pension-sharing-order/:protectionType/:status               @controllers.AmendsPensionSharingOrderController.amendPsoDetails(protectionType: models.pla.AmendableProtectionType, status: models.pla.request.AmendProtectionRequestStatus)
 POST        /amend-protection/pension-sharing-order/:protectionType/:status               @controllers.AmendsPensionSharingOrderController.submitAmendPsoDetails(protectionType: models.pla.AmendableProtectionType, status: models.pla.request.AmendProtectionRequestStatus, existingPSO: Boolean)
 
-GET         /amend-protection/pension-sharing-order/remove/:protectionType/:status        @controllers.removePensionSharingOrderController.removePso(protectionType: models.pla.AmendableProtectionType, status: models.pla.request.AmendProtectionRequestStatus)
-POST        /amend-protection/pension-sharing-order/remove/:protectionType/:status        @controllers.removePensionSharingOrderController.submitRemovePso(protectionType: models.pla.AmendableProtectionType, status: models.pla.request.AmendProtectionRequestStatus)
+GET         /amend-protection/pension-sharing-order/remove/:protectionType/:status        @controllers.RemovePensionSharingOrderController.removePso(protectionType: models.pla.AmendableProtectionType, status: models.pla.request.AmendProtectionRequestStatus)
+POST        /amend-protection/pension-sharing-order/remove/:protectionType/:status        @controllers.RemovePensionSharingOrderController.submitRemovePso(protectionType: models.pla.AmendableProtectionType, status: models.pla.request.AmendProtectionRequestStatus)
 
 POST        /amend-protection/submit-amendment/:protectionType/:status                    @controllers.AmendsController.amendProtection(protectionType: models.pla.AmendableProtectionType, status: models.pla.request.AmendProtectionRequestStatus)
 GET         /amend-protection/amendment-outcome                                           @controllers.AmendsController.amendmentOutcome

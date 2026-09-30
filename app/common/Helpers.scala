@@ -29,7 +29,7 @@ object Helpers {
     }
 
   def createPsoRemoveCall(model: AmendProtectionModel): Call = {
-    controllers.routes.removePensionSharingOrderController.removePso(model.protectionType, model.status)
+    controllers.routes.RemovePensionSharingOrderController.removePso(model.protectionType, model.status)
   }
 
   def createAmendCall(model: AmendProtectionModel, applicationSection: ApplicationStage): Call =

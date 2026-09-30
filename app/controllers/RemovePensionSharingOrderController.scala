@@ -32,7 +32,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class removePensionSharingOrderController @Inject()(
+class RemovePensionSharingOrderController @Inject()(
     sessionCacheService: SessionCacheService,
     mcc: MessagesControllerComponents,
     authActions: AuthActions,

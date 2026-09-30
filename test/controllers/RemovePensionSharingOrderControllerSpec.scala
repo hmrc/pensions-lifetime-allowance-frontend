@@ -55,7 +55,7 @@ class RemovePensionSharingOrderControllerSpec
   private val technicalErrorView: technicalError = inject[technicalError]
   private val removePsoDebitsView: removePensionSharingOrder = inject[removePensionSharingOrder]
 
-  private val controller = new removePensionSharingOrderController(
+  private val controller = new RemovePensionSharingOrderController(
     mockSessionCacheService,
     mcc,
     authActions,
