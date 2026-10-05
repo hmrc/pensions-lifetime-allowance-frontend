@@ -45,10 +45,11 @@ class DateFormatterSpec extends AnyWordSpec with FakeApplication with FakeReques
     val monthYearInvalidError = s"$testKey.error.invalid.monthYear"
     val yearInvalidError      = s"$testKey.error.invalid.year"
 
-    val dateNotRealError  = s"$testKey.error.notReal"
-    val dayNotRealError   = s"$testKey.error.notReal.day"
-    val monthNotRealError = s"$testKey.error.notReal.month"
-    val yearNotRealError  = s"$testKey.error.notReal.year"
+    val dateNotInRangeError         = s"$testKey.error.notInRange"
+    val dateNotInRangeForMonthError = s"$testKey.error.notInRange.day.forMonth"
+    val dayNotInRangeError          = s"$testKey.error.notInRange.day"
+    val monthNotInRangeError        = s"$testKey.error.notInRange.month"
+    val yearNotInRangeError         = s"$testKey.error.notInRange.year"
 
     val dateMinError = s"$testKey.error.range.min"
     val dateMaxError = s"$testKey.error.range.max"
@@ -241,7 +242,7 @@ class DateFormatterSpec extends AnyWordSpec with FakeApplication with FakeReques
             monthKey -> "1",
             yearKey  -> "2000"
           )
-        ) shouldBe Left(List(FormError(dayKey, Errors.dayNotRealError)))
+        ) shouldBe Left(List(FormError(dayKey, Errors.dayNotInRangeError)))
       }
       "return invalid error on the month key when only the month is not real" in {
         testFormatter.bind(
@@ -251,7 +252,7 @@ class DateFormatterSpec extends AnyWordSpec with FakeApplication with FakeReques
             monthKey -> "13",
             yearKey  -> "2000"
           )
-        ) shouldBe Left(List(FormError(monthKey, Errors.monthNotRealError)))
+        ) shouldBe Left(List(FormError(monthKey, Errors.monthNotInRangeError)))
       }
       "return invalid error on the year key when only the year is not real" in {
         testFormatter.bind(
@@ -261,7 +262,7 @@ class DateFormatterSpec extends AnyWordSpec with FakeApplication with FakeReques
             monthKey -> "1",
             yearKey  -> "10000"
           )
-        ) shouldBe Left(List(FormError(yearKey, Errors.yearNotRealError)))
+        ) shouldBe Left(List(FormError(yearKey, Errors.yearNotInRangeError)))
       }
       "return global invalid error when the day, month and year are not real" in {
         testFormatter.bind(
@@ -271,7 +272,7 @@ class DateFormatterSpec extends AnyWordSpec with FakeApplication with FakeReques
             monthKey -> "0",
             yearKey  -> "999"
           )
-        ) shouldBe Left(List(FormError(testKey, Errors.dateNotRealError)))
+        ) shouldBe Left(List(FormError(testKey, Errors.dateNotInRangeError)))
       }
       "return global invalid error when the inputs are real but do not form a real date" in {
         testFormatter.bind(
@@ -281,7 +282,7 @@ class DateFormatterSpec extends AnyWordSpec with FakeApplication with FakeReques
             monthKey -> "2",
             yearKey  -> "2001"
           )
-        ) shouldBe Left(List(FormError(testKey, Errors.dateNotRealError)))
+        ) shouldBe Left(List(FormError(dayKey, Errors.dateNotInRangeForMonthError)))
       }
     }
     "the formatter has a date range" must {
