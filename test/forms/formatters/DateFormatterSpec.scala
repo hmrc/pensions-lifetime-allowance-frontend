@@ -185,6 +185,18 @@ class DateFormatterSpec extends AnyWordSpec with FakeApplication with FakeReques
         ) shouldBe Left(List(FormError(yearKey, Errors.yearInvalidError)))
       }
     }
+    "fields contain whitespace" must {
+      "ignore any leading, trailing, or interior whitespace" in {
+        testFormatter.bind(
+          testKey,
+          Map(
+            dayKey   -> " 3 0 ",
+            monthKey -> " 1 1 ",
+            yearKey  -> " 2 0 0 0 "
+          )
+        ) shouldBe Right(LocalDate.of(2000, 11, 30))
+      }
+    }
     "there are a multiple invalid fields" must {
       "return invalid errors on day/month keys when the day and month are invalid" in {
         testFormatter.bind(

@@ -66,9 +66,9 @@ case class DateFormatter(
   private val yearKey  = s"$key.year"
 
   override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], LocalDate] = {
-    val optDayString   = data.get(s"$key.day").map(_.trim).filter(_.nonEmpty)
-    val optMonthString = data.get(s"$key.month").map(_.trim).filter(_.nonEmpty)
-    val optYearString  = data.get(s"$key.year").map(_.trim).filter(_.nonEmpty)
+    val optDayString   = stripWhitespace(data.get(s"$key.day"))
+    val optMonthString = stripWhitespace(data.get(s"$key.month"))
+    val optYearString  = stripWhitespace(data.get(s"$key.year"))
 
     for {
       stringTuple <- validateFieldsNonEmpty(optDayString, optMonthString, optYearString)
@@ -86,6 +86,9 @@ case class DateFormatter(
     s"$key.month" -> value.getMonthValue.toString,
     s"$key.year"  -> value.getYear.toString
   )
+
+  private def stripWhitespace(value: Option[String]): Option[String] =
+    value.map(_.replace(" ", "")).filter(_.nonEmpty)
 
   private def validateFieldsNonEmpty(
       optDay: Option[String],
