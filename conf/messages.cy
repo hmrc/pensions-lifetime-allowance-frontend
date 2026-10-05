@@ -686,4 +686,4 @@ pla.month.12 = Rhagfyr
 ## Delete pension sharing order
 pla.deletePensionSharing.title = Hoffech chi gael gwared ar eich gorchymyn rhannu pensiwn?
 pla.deletePensionSharing.heading = Hoffech chi gael gwared ar eich gorchymyn rhannu pensiwn?
-pla.deletePensionSharing.errors.mandatoryError.IndividualProtection2016 = Select if you want to remove pension sharing order
+pla.deletePensionSharing.errors.mandatoryError.IndividualProtection2016 = Select yes if you would like to remove yur pension order or no if you would like to keep your pension order

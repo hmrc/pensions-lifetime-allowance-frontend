@@ -685,4 +685,4 @@ pla.month.12 = December
 ## Delete pension sharing order
 pla.deletePensionSharing.title = Would you like to remove your pension sharing order ?
 pla.deletePensionSharing.heading = Would you like to remove your pension sharing order ?
-pla.deletePensionSharing.errors.mandatoryError.IndividualProtection2016 = Select if you want to remove pension sharing order
+pla.deletePensionSharing.errors.mandatoryError.IndividualProtection2016 = Select yes if you would like to remove your pension order or no if you would like to keep your pension order
