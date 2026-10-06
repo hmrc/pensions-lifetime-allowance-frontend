@@ -132,7 +132,7 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewMes
               .amendPsoDetails(IndividualProtection2016, Open)
           ),
           Some(
-            controllers.routes.AmendsRemovePensionSharingOrderController
+            controllers.routes.RemovePensionSharingOrderController
               .removePso(IndividualProtection2016, Open)
           ),
           "£123456",

@@ -523,8 +523,6 @@ pla.amends.pensionDebits.IndividualProtection2016.CurrentPsos-psoDetails.changeH
 pla.amends.pensionDebits.IndividualProtection2016LTA.CurrentPsos-psoDetails.changeHint = Change the details of your pension sharing order
 pla.amends.pensionDebits.IndividualProtection2016.CurrentPsos-psoDetails               = Date and amount of pension sharing order
 pla.amends.pensionDebits.IndividualProtection2016LTA.CurrentPsos-psoDetails            = Date and amount of pension sharing order
-pla.amends.pensionDebits.removePso                                                     = This will remove your pension sharing order.
-pla.amends.pensionDebits.cancelRemove                                                  = Do not remove
 
 pla.amends.CurrentPsos.IndividualProtection2014.YesNo                       = Have any of your pensions been shared in a divorce since 5 April 2014?
 pla.amends.CurrentPsos.IndividualProtection2014LTA.YesNo                    = Have any of your pensions been shared in a divorce since 5 April 2014?
@@ -683,3 +681,8 @@ pla.month.9  = September
 pla.month.10 = October
 pla.month.11 = November
 pla.month.12 = December
+
+## Delete pension sharing order
+pla.deletePensionSharing.title = Would you like to remove your pension sharing order ?
+pla.deletePensionSharing.heading = Would you like to remove your pension sharing order ?
+pla.deletePensionSharing.errors.mandatoryError.IndividualProtection2016 = Select if you want to remove pension sharing order

@@ -90,7 +90,7 @@ class AmendDisplayModelConstructorSpec extends DisplayConstructorsTestData {
                 )
               ),
               removeLinkCall = Some(
-                controllers.routes.AmendsRemovePensionSharingOrderController.removePso(
+                controllers.routes.RemovePensionSharingOrderController.removePso(
                   AmendableProtectionType.IndividualProtection2016,
                   AmendProtectionRequestStatus.Open
                 )

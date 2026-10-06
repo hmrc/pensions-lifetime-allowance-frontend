@@ -523,8 +523,6 @@ pla.amends.pensionDebits.IndividualProtection2016.CurrentPsos-psoDetails.changeH
 pla.amends.pensionDebits.IndividualProtection2016LTA.CurrentPsos-psoDetails.changeHint = Newidiwch fanylion eich gorchymyn rhannu pensiwn
 pla.amends.pensionDebits.IndividualProtection2016.CurrentPsos-psoDetails               = Dyddiad a swm y gorchymyn rhannu pensiwn
 pla.amends.pensionDebits.IndividualProtection2016LTA.CurrentPsos-psoDetails            = Dyddiad a swm y gorchymyn rhannu pensiwn
-pla.amends.pensionDebits.removePso                                                     = Bydd hyn yn dileu’ch gorchymyn rhannu pensiwn
-pla.amends.pensionDebits.cancelRemove                                                  = Peidiwch â dileu
 
 pla.amends.CurrentPsos.IndividualProtection2014.YesNo                       = A oes unrhyw un o’ch pensiynau wedi’i rannu mewn ysgariad er 5 Ebrill 2014?
 pla.amends.CurrentPsos.IndividualProtection2014LTA.YesNo                    = A oes unrhyw un o’ch pensiynau wedi’i rannu mewn ysgariad er 5 Ebrill 2014?
@@ -683,3 +681,9 @@ pla.month.9  = Medi
 pla.month.10 = Hydref
 pla.month.11 = Tachwedd
 pla.month.12 = Rhagfyr
+
+
+## Delete pension sharing order
+pla.deletePensionSharing.title = Hoffech chi gael gwared ar eich gorchymyn rhannu pensiwn?
+pla.deletePensionSharing.heading = Hoffech chi gael gwared ar eich gorchymyn rhannu pensiwn?
+pla.deletePensionSharing.errors.mandatoryError.IndividualProtection2016 = Select if you want to remove pension sharing order
