@@ -175,9 +175,9 @@ case class DateFormatter(
   private def validateDateWithinRange(date: LocalDate): Either[Seq[FormError], LocalDate] =
     (minDate, maxDate) match {
       case (Some(min), _) if date.isBefore(min) =>
-        Left(Seq(FormError(key, dateMinError, Seq(formatter.format(min)))))
+        Left(Seq(FormError(key, dateMinError, Seq(formatter.format(min.minusDays(1))))))
       case (_, Some(max)) if date.isAfter(max) =>
-        Left(Seq(FormError(key, dateMaxError, Seq(formatter.format(max)))))
+        Left(Seq(FormError(key, dateMaxError, Seq(formatter.format(max.plusDays(1))))))
       case _ => Right(date)
     }
 

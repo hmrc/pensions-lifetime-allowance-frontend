@@ -310,7 +310,9 @@ class DateFormatterSpec extends AnyWordSpec with FakeApplication with FakeReques
             monthKey -> testDate.getMonthValue.toString,
             yearKey  -> testDate.getYear.toString
           )
-        ) shouldBe Left(List(FormError(testKey, Errors.dateMaxError, List(dateFormatter.format(testMaxDate)))))
+        ) shouldBe Left(
+          List(FormError(testKey, Errors.dateMaxError, List(dateFormatter.format(testMaxDate.plusDays(1)))))
+        )
       }
       "return global date error when date is valid but is too far in the past" in {
         val testDate = testMinDate.minusDays(1)
@@ -321,7 +323,9 @@ class DateFormatterSpec extends AnyWordSpec with FakeApplication with FakeReques
             monthKey -> testDate.getMonthValue.toString,
             yearKey  -> testDate.getYear.toString
           )
-        ) shouldBe Left(List(FormError(testKey, Errors.dateMinError, List(dateFormatter.format(testMinDate)))))
+        ) shouldBe Left(
+          List(FormError(testKey, Errors.dateMinError, List(dateFormatter.format(testMinDate.minusDays(1)))))
+        )
       }
       "return the date when date is equal to the max boundary" in {
         val testDate = testMaxDate
