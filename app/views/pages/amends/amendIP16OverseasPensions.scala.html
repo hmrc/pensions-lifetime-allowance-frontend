@@ -35,9 +35,12 @@
 )(using request: RequestHeader, messages: Messages)
 
 @errorMessage = @{
-    for(error <- amendOverseasPensionsForm.errors) yield {
-        if(error.key.equals("amendedOverseasPensions")) "" else messages(error.message, error.args*)
-    }
+    amendOverseasPensionsForm.errors
+        .flatMap(error =>
+            Option.unless (error.key.equals("amendedOverseasPensions")) {
+                messages(error.message, error.args *)
+            }
+        )
 }
 
 @hiddenYesNoContent = {
@@ -48,7 +51,7 @@
         hintText = Some(messages("pla.overseasPensions.questionTwo.hint")),
         labelClass = Some("govuk-label--l"),
         pageHeading = false,
-        errorMessage = if (amendOverseasPensionsForm.errors.nonEmpty) Some(errorMessage.head) else Some("")
+        errorMessage = errorMessage.headOption,
     )
 }
 
@@ -68,7 +71,9 @@
 
     <h1 class="govuk-heading-xl">@messages("pla.overseasPensions.title")</h1>
 
-    <p class="govuk-body">@messages("pla.overseasPensions.question")</p>
+    <p class="govuk-body">
+        @messages("pla.overseasPensions.question")
+    </p>
 
     @form(action = routes.AmendsOverseasPensionController.submitAmendOverseasPensions(protectionType, status)) {
         @formHiddenYesNoRadio(
