@@ -45,10 +45,11 @@ class DateFormatterSpec extends AnyWordSpec with FakeApplication with FakeReques
     val monthYearInvalidError = s"$testKey.error.invalid.monthYear"
     val yearInvalidError      = s"$testKey.error.invalid.year"
 
-    val dateNotRealError  = s"$testKey.error.notReal"
-    val dayNotRealError   = s"$testKey.error.notReal.day"
-    val monthNotRealError = s"$testKey.error.notReal.month"
-    val yearNotRealError  = s"$testKey.error.notReal.year"
+    val dateNotInRangeError         = s"$testKey.error.notInRange"
+    val dateNotInRangeForMonthError = s"$testKey.error.notInRange.day.forMonth"
+    val dayNotInRangeError          = s"$testKey.error.notInRange.day"
+    val monthNotInRangeError        = s"$testKey.error.notInRange.month"
+    val yearNotInRangeError         = s"$testKey.error.notInRange.year"
 
     val dateMinError = s"$testKey.error.range.min"
     val dateMaxError = s"$testKey.error.range.max"
@@ -71,7 +72,7 @@ class DateFormatterSpec extends AnyWordSpec with FakeApplication with FakeReques
 
   private val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy", messages.lang.toLocale)
 
-  "testFormatter.bind" when {
+  "DateFormatter.bind" when {
     "there is a single empty field" must {
       "return day required error when only the day is missing" in {
         testFormatter.bind(
@@ -184,6 +185,18 @@ class DateFormatterSpec extends AnyWordSpec with FakeApplication with FakeReques
         ) shouldBe Left(List(FormError(yearKey, Errors.yearInvalidError)))
       }
     }
+    "fields contain whitespace" must {
+      "ignore any leading, trailing, or interior whitespace" in {
+        testFormatter.bind(
+          testKey,
+          Map(
+            dayKey   -> " 3 0 ",
+            monthKey -> " 1 1 ",
+            yearKey  -> " 2 0 0 0 "
+          )
+        ) shouldBe Right(LocalDate.of(2000, 11, 30))
+      }
+    }
     "there are a multiple invalid fields" must {
       "return invalid errors on day/month keys when the day and month are invalid" in {
         testFormatter.bind(
@@ -232,7 +245,7 @@ class DateFormatterSpec extends AnyWordSpec with FakeApplication with FakeReques
         ) shouldBe Left(List(FormError(testKey, Errors.dateInvalidError)))
       }
     }
-    "there input does not form a real date" must {
+    "input does not form a real date" must {
       "return invalid error on the day key when only the day is not real" in {
         testFormatter.bind(
           testKey,
@@ -241,7 +254,7 @@ class DateFormatterSpec extends AnyWordSpec with FakeApplication with FakeReques
             monthKey -> "1",
             yearKey  -> "2000"
           )
-        ) shouldBe Left(List(FormError(dayKey, Errors.dayNotRealError)))
+        ) shouldBe Left(List(FormError(dayKey, Errors.dayNotInRangeError)))
       }
       "return invalid error on the month key when only the month is not real" in {
         testFormatter.bind(
@@ -251,7 +264,7 @@ class DateFormatterSpec extends AnyWordSpec with FakeApplication with FakeReques
             monthKey -> "13",
             yearKey  -> "2000"
           )
-        ) shouldBe Left(List(FormError(monthKey, Errors.monthNotRealError)))
+        ) shouldBe Left(List(FormError(monthKey, Errors.monthNotInRangeError)))
       }
       "return invalid error on the year key when only the year is not real" in {
         testFormatter.bind(
@@ -261,7 +274,7 @@ class DateFormatterSpec extends AnyWordSpec with FakeApplication with FakeReques
             monthKey -> "1",
             yearKey  -> "10000"
           )
-        ) shouldBe Left(List(FormError(yearKey, Errors.yearNotRealError)))
+        ) shouldBe Left(List(FormError(yearKey, Errors.yearNotInRangeError)))
       }
       "return global invalid error when the day, month and year are not real" in {
         testFormatter.bind(
@@ -271,7 +284,7 @@ class DateFormatterSpec extends AnyWordSpec with FakeApplication with FakeReques
             monthKey -> "0",
             yearKey  -> "999"
           )
-        ) shouldBe Left(List(FormError(testKey, Errors.dateNotRealError)))
+        ) shouldBe Left(List(FormError(testKey, Errors.dateNotInRangeError)))
       }
       "return global invalid error when the inputs are real but do not form a real date" in {
         testFormatter.bind(
@@ -281,58 +294,12 @@ class DateFormatterSpec extends AnyWordSpec with FakeApplication with FakeReques
             monthKey -> "2",
             yearKey  -> "2001"
           )
-        ) shouldBe Left(List(FormError(testKey, Errors.dateNotRealError)))
+        ) shouldBe Left(List(FormError(dayKey, Errors.dateNotInRangeForMonthError)))
       }
     }
-    "the formatter has non inclusive date range" must {
-      "return global date error when date is valid but is too far in the future" in {
-        val testDate = testMaxDate.plusDays(1)
-        testFormatter.bind(
-          testKey,
-          Map(
-            dayKey   -> testDate.getDayOfMonth.toString,
-            monthKey -> testDate.getMonthValue.toString,
-            yearKey  -> testDate.getYear.toString
-          )
-        ) shouldBe Left(List(FormError(testKey, Errors.dateMaxError, List(dateFormatter.format(testMaxDate)))))
-      }
-      "return global date error when date is valid but is too far in the past" in {
-        val testDate = testMinDate.minusDays(1)
-        testFormatter.bind(
-          testKey,
-          Map(
-            dayKey   -> testDate.getDayOfMonth.toString,
-            monthKey -> testDate.getMonthValue.toString,
-            yearKey  -> testDate.getYear.toString
-          )
-        ) shouldBe Left(List(FormError(testKey, Errors.dateMinError, List(dateFormatter.format(testMinDate)))))
-      }
-      "return global date error when date is equal to the max boundary" in {
-        val testDate = testMaxDate
-        testFormatter.bind(
-          testKey,
-          Map(
-            dayKey   -> testDate.getDayOfMonth.toString,
-            monthKey -> testDate.getMonthValue.toString,
-            yearKey  -> testDate.getYear.toString
-          )
-        ) shouldBe Left(List(FormError(testKey, Errors.dateMaxError, List(dateFormatter.format(testMaxDate)))))
-      }
-      "return global date error when date is equal to the min boundary" in {
-        val testDate = testMinDate
-        testFormatter.bind(
-          testKey,
-          Map(
-            dayKey   -> testDate.getDayOfMonth.toString,
-            monthKey -> testDate.getMonthValue.toString,
-            yearKey  -> testDate.getYear.toString
-          )
-        ) shouldBe Left(List(FormError(testKey, Errors.dateMinError, List(dateFormatter.format(testMinDate)))))
-      }
-    }
-    "the formatter has inclusive date range" must {
+    "the formatter has a date range" must {
       val testFormatter: DateFormatter =
-        DateFormatter(testKey, Some(testMinDate), Some(testMaxDate), rangeInclusive = true)(using messages)
+        DateFormatter(testKey, Some(testMinDate), Some(testMaxDate))(using messages)
 
       "return global date error when date is valid but is too far in the future" in {
         val testDate = testMaxDate.plusDays(1)
@@ -343,7 +310,9 @@ class DateFormatterSpec extends AnyWordSpec with FakeApplication with FakeReques
             monthKey -> testDate.getMonthValue.toString,
             yearKey  -> testDate.getYear.toString
           )
-        ) shouldBe Left(List(FormError(testKey, Errors.dateMaxError, List(dateFormatter.format(testMaxDate)))))
+        ) shouldBe Left(
+          List(FormError(testKey, Errors.dateMaxError, List(dateFormatter.format(testMaxDate.plusDays(1)))))
+        )
       }
       "return global date error when date is valid but is too far in the past" in {
         val testDate = testMinDate.minusDays(1)
@@ -354,7 +323,9 @@ class DateFormatterSpec extends AnyWordSpec with FakeApplication with FakeReques
             monthKey -> testDate.getMonthValue.toString,
             yearKey  -> testDate.getYear.toString
           )
-        ) shouldBe Left(List(FormError(testKey, Errors.dateMinError, List(dateFormatter.format(testMinDate)))))
+        ) shouldBe Left(
+          List(FormError(testKey, Errors.dateMinError, List(dateFormatter.format(testMinDate.minusDays(1)))))
+        )
       }
       "return the date when date is equal to the max boundary" in {
         val testDate = testMaxDate

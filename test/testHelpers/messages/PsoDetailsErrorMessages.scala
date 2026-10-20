@@ -22,7 +22,7 @@ trait PsoDetailsErrorMessages extends CommonErrorMessages {
   val errorPsoDay                       = "pso.error.required.day"
   val errorPsoMonth                     = "pso.error.required.month"
   val errorPsoYear                      = "pso.error.required.year"
-  val errorPsoNotRealDay                = "pso.error.notReal.day"
+  val errorPsoNotRealDay                = "pso.error.notInRange.day"
   val errorPsoDateInFuture              = "pso.error.range.max"
   val errorPsoDateBeforeMin             = "pso.error.range.min"
 

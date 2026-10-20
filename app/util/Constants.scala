@@ -21,8 +21,8 @@ import java.time.LocalDate
 object Constants {
 
   val maximumCurrencyAmount: Double                 = 1_000_000_000
-  val minIndividualProtection2014PsoDate: LocalDate = LocalDate.of(2014, 4, 5)
-  val minIndividualProtection2016PsoDate: LocalDate = LocalDate.of(2016, 4, 5)
+  val minIndividualProtection2014PsoDate: LocalDate = LocalDate.of(2014, 4, 6)
+  val minIndividualProtection2016PsoDate: LocalDate = LocalDate.of(2016, 4, 6)
 
   val fixedProtection2016FixedAmount: Double = 1_250_000
 

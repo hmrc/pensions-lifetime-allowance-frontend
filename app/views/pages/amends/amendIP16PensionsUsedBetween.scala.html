@@ -52,9 +52,12 @@
 }
 
 @errorMessage = @{
-    for(error <- amendPensionsUsedBetweenForm.errors) yield {
-        if(error.key.equals("amendedPensionsUsedBetweenAmt")) "" else messages(error.message, error.args*)
-    }
+    amendPensionsUsedBetweenForm.errors
+        .flatMap(error =>
+            Option.unless (error.key.equals("amendedPensionsUsedBetweenAmt")) {
+                messages(error.message, error.args *)
+            }
+        )
 }
 
 
@@ -88,7 +91,7 @@
             hintText = Some(messages("pla.pensionsUsedBetween.hint")),
             hideLabel = true,
             pageHeading = false,
-            errorMessage = if (amendPensionsUsedBetweenForm.errors.nonEmpty) Some(errorMessage.head) else Some("")
+            errorMessage = errorMessage.headOption,
         )
 
         @submitButton(submitText = messages("pla.base.change"))

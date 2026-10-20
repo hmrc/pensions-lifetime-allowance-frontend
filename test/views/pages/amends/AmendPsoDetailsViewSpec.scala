@@ -117,7 +117,7 @@ class AmendPsoDetailsViewSpec
       errorDoc
         .select(".govuk-error-summary__list li")
         .eq(1)
-        .text shouldBe "The amount of the Pension Sharing Order must be a number"
+        .text shouldBe "The amount of the pension sharing order must be a number"
     }
 
     "not have errors on valid pages" in {
