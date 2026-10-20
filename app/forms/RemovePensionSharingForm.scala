@@ -29,7 +29,7 @@ object RemovePensionSharingForm extends YesNoMappings {
   ): Form[RemovePensionSharingModel] = Form(
     mapping(
       "removePensionSharing" -> yesNoMappingFromPrefixAndProtectionType(
-        messageKeyPrefix = "pla.deletePensionSharing.errors.mandatoryError",
+        messageKeyPrefix = "pla.deletePensionSharing",
         protectionTypeSuffix = protectionType
       )
     )(RemovePensionSharingModel.apply)(x => Some(x.removePensionSharing))
