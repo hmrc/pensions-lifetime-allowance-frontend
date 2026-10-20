@@ -20,7 +20,7 @@ trait RemovePensionSharingOrderViewMessages {
   val plaRemovePensionSharing     = "Would you like to remove your pension sharing order ?"
   val plaRemovePensionSharingtitle        = "Would you like to remove your pension sharing order ? - Check your pension protections and enhancements - GOV.UK"
   val plaContinue = "Continue"
-  val plaRemovePensionMandatoryError = "Select if you want to remove pension sharing order"
+  val plaRemovePensionMandatoryError = "Select yes if you would like to remove your pension sharing order"
   val plaRemovePensionSharingLink =
     "/check-your-pension-protections-and-enhancements/remove-new/individual-protection-2016/open"
 }
