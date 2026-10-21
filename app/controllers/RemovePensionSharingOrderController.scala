@@ -20,7 +20,12 @@ import auth.AuthActions
 import models.amend.value.RemovePensionSharingModel
 import forms.RemovePensionSharingForm.removePensionSharingForm
 import models.pla.AmendableProtectionType
-import models.pla.AmendableProtectionType.{IndividualProtection2014, IndividualProtection2014LTA, IndividualProtection2016, IndividualProtection2016LTA}
+import models.pla.AmendableProtectionType.{
+  IndividualProtection2014,
+  IndividualProtection2014LTA,
+  IndividualProtection2016,
+  IndividualProtection2016LTA
+}
 import models.pla.request.AmendProtectionRequestStatus
 import play.api.Logging
 import play.api.mvc.*
@@ -32,7 +37,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RemovePensionSharingOrderController @Inject()(
+class RemovePensionSharingOrderController @Inject() (
     sessionCacheService: SessionCacheService,
     mcc: MessagesControllerComponents,
     authActions: AuthActions,
@@ -45,30 +50,30 @@ class RemovePensionSharingOrderController @Inject()(
     with Logging {
 
   def removePso(
-                 protectionType: AmendableProtectionType,
-                 status: AmendProtectionRequestStatus
-               ): Action[AnyContent] = authActions.authenticateWithNino.async { request =>
+      protectionType: AmendableProtectionType,
+      status: AmendProtectionRequestStatus
+  ): Action[AnyContent] = authActions.authenticateWithNino.async { request =>
     given MessagesRequest[?] = request
 
     sessionCacheService
       .fetchAmendProtectionModel(protectionType, status)
-      .map {
-        case Some(_) =>
-          val form = removePensionSharingForm(protectionType)
-          protectionType match {
-            case IndividualProtection2016 | IndividualProtection2016LTA | IndividualProtection2014 | IndividualProtection2014LTA  =>
-              Ok(removePensionSharingOrder(form, protectionType, status))
-            case _ =>
-              logger.warn(couldNotRetrieveModelForNino(request.nino, "when removing the new pension debit"))
-              technicalErrorResult
-          }
+      .map { case Some(_) =>
+        val form = removePensionSharingForm(protectionType)
+        protectionType match {
+          case IndividualProtection2016 | IndividualProtection2016LTA | IndividualProtection2014 |
+              IndividualProtection2014LTA =>
+            Ok(removePensionSharingOrder(form, protectionType, status))
+          case _ =>
+            logger.warn(couldNotRetrieveModelForNino(request.nino, "when removing the new pension debit"))
+            technicalErrorResult
+        }
       }
   }
 
   def submitRemovePso(
-                       protectionType: AmendableProtectionType,
-                       status: AmendProtectionRequestStatus
-                     ): Action[AnyContent] = authActions.authenticateWithNino.async { request =>
+      protectionType: AmendableProtectionType,
+      status: AmendProtectionRequestStatus
+  ): Action[AnyContent] = authActions.authenticateWithNino.async { request =>
     given MessagesRequest[?] = request
 
     removePensionSharingForm(protectionType)
@@ -118,4 +123,5 @@ class RemovePensionSharingOrderController @Inject()(
             }
       )
   }
+
 }
