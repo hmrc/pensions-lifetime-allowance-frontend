@@ -27,7 +27,7 @@ import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers.{any, eq as eqTo}
 import org.mockito.Mockito.*
 import play.api.i18n.Messages
-import play.api.mvc.{AnyContentAsEmpty}
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import services.SessionCacheService
@@ -39,7 +39,7 @@ import views.html.pages.fallback.technicalError
 import scala.concurrent.{ExecutionContext, Future}
 
 class RemovePensionSharingOrderControllerSpec
-  extends FakeApplication
+    extends FakeApplication
     with MockSessionCacheService
     with AuthMocks
     with AmendProtectionModelTestData {
@@ -52,7 +52,7 @@ class RemovePensionSharingOrderControllerSpec
 
   override val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
 
-  private val technicalErrorView: technicalError = inject[technicalError]
+  private val technicalErrorView: technicalError             = inject[technicalError]
   private val removePsoDebitsView: removePensionSharingOrder = inject[removePensionSharingOrder]
 
   private val controller = new RemovePensionSharingOrderController(
@@ -177,4 +177,5 @@ class RemovePensionSharingOrderControllerSpec
         .saveAmendProtectionModel(any())(using any())
     }
   }
+
 }

@@ -31,7 +31,8 @@ class RemovePensionSharingOrderViewSpec extends CommonViewSpecHelper with Remove
 
   private val view: removePensionSharingOrder = inject[removePensionSharingOrder]
 
-  private val form: Form[RemovePensionSharingModel] = RemovePensionSharingForm.removePensionSharingForm(IndividualProtection2016)
+  private val form: Form[RemovePensionSharingModel] = RemovePensionSharingForm
+    .removePensionSharingForm(IndividualProtection2016)
     .bind(Map("removePensionSharing" -> "yes"))
 
   private val doc: Document = Jsoup.parse(view.apply(form, IndividualProtection2016, Open).body)
@@ -55,7 +56,8 @@ class RemovePensionSharingOrderViewSpec extends CommonViewSpecHelper with Remove
       val formElement = doc.select("form")
 
       formElement.attr("method") shouldBe "POST"
-      formElement.attr("action") shouldBe controllers.routes.RemovePensionSharingOrderController.submitRemovePso(IndividualProtection2016, Open)
+      formElement.attr("action") shouldBe controllers.routes.RemovePensionSharingOrderController
+        .submitRemovePso(IndividualProtection2016, Open)
         .url
     }
 
@@ -75,7 +77,7 @@ class RemovePensionSharingOrderViewSpec extends CommonViewSpecHelper with Remove
       errorForm.hasErrors shouldBe true
       errorDoc.select(".govuk-error-summary__title").text shouldBe plaBaseErrorSummaryLabel
       errorDoc.select(".govuk-error-message").text shouldBe s"Error: $plaRemovePensionMandatoryError"
-  }
+    }
 
     "not have errors on valid pages" in {
       form.hasErrors shouldBe false
