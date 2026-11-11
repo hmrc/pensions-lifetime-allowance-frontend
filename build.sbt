@@ -9,7 +9,7 @@ lazy val appDependencies: Seq[ModuleID] = Seq.empty
 lazy val plugins: Seq[Plugins]          = Seq.empty
 lazy val playSettings: Seq[Setting[?]]  = Seq.empty
 
-val scala3_3_7 = "3.3.7"
+val scala3_3_7 = "3.3.9"
 
 ThisBuild / majorVersion := 2
 ThisBuild / scalaVersion := scala3_3_7
