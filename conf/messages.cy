@@ -691,3 +691,4 @@ pla.month.12 = Rhagfyr
 pla.deletePensionSharing.title = Hoffech chi gael gwared ar eich gorchymyn rhannu pensiwn?
 pla.deletePensionSharing.heading = Hoffech chi gael gwared ar eich gorchymyn rhannu pensiwn?
 pla.deletePensionSharing.mandatoryError.IndividualProtection2016 = Dewiswch ‘Iawn’ os hoffech chi dynnu eich gorchymyn rhannu pensiwn
+pla.deletePensionSharing.mandatoryError.IndividualProtection2014 = Dewiswch ‘Iawn’ os hoffech chi dynnu eich gorchymyn rhannu pensiwn
